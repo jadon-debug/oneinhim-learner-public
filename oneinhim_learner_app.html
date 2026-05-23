@@ -3678,51 +3678,50 @@ body.learning-mode .view.active {
   right: 0;
   bottom: 24px;
   z-index: 4;
-  display: grid;
-  grid-template-columns: 42px 1fr 42px;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
-  width: min(520px, calc(100% - 36px));
+  width: min(300px, calc(100% - 36px));
   margin: 0 auto;
   pointer-events: none;
 }
 
-.gateway-hero-arrow,
 .gateway-hero-dot {
   pointer-events: auto;
-}
-
-.gateway-hero-arrow {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--oih-sand-mid);
-  border-radius: 999px;
-  background: rgba(255,255,255,0.88);
-  color: var(--oih-black);
-  font-size: 24px;
-  font-weight: 900;
-  box-shadow: 0 10px 26px rgba(9, 10, 10, 0.1);
 }
 
 .gateway-hero-dots {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 7px;
 }
 
 .gateway-hero-dot {
-  width: 48px;
-  height: 5px;
+  position: relative;
+  width: 58px;
+  height: 24px;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
-  background: rgba(9,10,10,0.24);
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
   font-size: 0;
 }
 
-.gateway-hero-dot.active {
+.gateway-hero-dot::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 5px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: rgba(9,10,10,0.24);
+}
+
+.gateway-hero-dot.active::before {
   background: var(--oih-orange);
 }
 
@@ -8322,17 +8321,11 @@ body.documentary-hero-active .lang-btn {
 
   body.gateway-mode .gateway-hero-controls {
     bottom: 18px !important;
-    grid-template-columns: 38px 1fr 38px !important;
-    width: min(330px, calc(100% - 32px)) !important;
-  }
-
-  body.gateway-mode .gateway-hero-arrow {
-    width: 38px !important;
-    height: 38px !important;
+    width: min(240px, calc(100% - 32px)) !important;
   }
 
   body.gateway-mode .gateway-hero-dot {
-    width: 36px !important;
+    width: 46px !important;
   }
 }
 </style>
@@ -8415,13 +8408,11 @@ body.documentary-hero-active .lang-btn {
           </article>
 
           <div class="gateway-hero-controls" aria-label="Hero slides">
-            <button class="gateway-hero-arrow" type="button" data-hero-next="-1" aria-label="Previous hero">‹</button>
             <div class="gateway-hero-dots">
-              <button class="gateway-hero-dot active" type="button" data-hero-dot="0" aria-label="Show first hero"></button>
-              <button class="gateway-hero-dot" type="button" data-hero-dot="1" aria-label="Show second hero"></button>
-              <button class="gateway-hero-dot" type="button" data-hero-dot="2" aria-label="Show third hero"></button>
+              <button class="gateway-hero-dot active" type="button" data-hero-dot="0" aria-label="Show hero slide 1"></button>
+              <button class="gateway-hero-dot" type="button" data-hero-dot="1" aria-label="Show hero slide 2"></button>
+              <button class="gateway-hero-dot" type="button" data-hero-dot="2" aria-label="Show hero slide 3"></button>
             </div>
-            <button class="gateway-hero-arrow" type="button" data-hero-next="1" aria-label="Next hero">›</button>
           </div>
         </div>
 
@@ -9645,6 +9636,9 @@ const state = {
   saved: new Set()
 };
 
+const GATEWAY_HERO_AUTOPLAY_MS = 9000;
+let gatewayHeroAutoplayTimer = null;
+
 const viewText = {
   en: {
     gatewayView: ["Start", "A clear first step for your Christian journey."],
@@ -10478,11 +10472,29 @@ function renderGatewayHeroSlider() {
   });
 }
 
-function setGatewayHero(index) {
+function setGatewayHero(index, options = {}) {
   const slides = document.querySelectorAll("[data-gateway-hero-slide]");
   if (!slides.length) return;
   state.gatewayHeroIndex = ((Number(index) || 0) + slides.length) % slides.length;
   renderGatewayHeroSlider();
+  if (options.restartAutoplay !== false) scheduleGatewayHeroAutoplay();
+}
+
+function stopGatewayHeroAutoplay() {
+  if (!gatewayHeroAutoplayTimer) return;
+  window.clearTimeout(gatewayHeroAutoplayTimer);
+  gatewayHeroAutoplayTimer = null;
+}
+
+function scheduleGatewayHeroAutoplay() {
+  stopGatewayHeroAutoplay();
+  const slides = document.querySelectorAll("[data-gateway-hero-slide]");
+  if (state.activeView !== "gatewayView" || document.hidden || slides.length < 2) return;
+  gatewayHeroAutoplayTimer = window.setTimeout(() => {
+    gatewayHeroAutoplayTimer = null;
+    if (state.activeView !== "gatewayView" || document.hidden) return;
+    setGatewayHero(state.gatewayHeroIndex + 1);
+  }, GATEWAY_HERO_AUTOPLAY_MS);
 }
 
 function setGatewayNavActive(target) {
@@ -11131,7 +11143,12 @@ function setView(viewId) {
   const nextViewId = deprecatedViews[viewId] || viewId;
   state.activeView = nextViewId;
   document.body.classList.toggle("gateway-mode", nextViewId === "gatewayView");
-  if (nextViewId !== "gatewayView") document.body.classList.remove("documentary-hero-active");
+  if (nextViewId === "gatewayView") {
+    scheduleGatewayHeroAutoplay();
+  } else {
+    stopGatewayHeroAutoplay();
+    document.body.classList.remove("documentary-hero-active");
+  }
   document.body.classList.toggle("discovery-detail-mode", nextViewId === "discoveryDetailView");
   document.body.classList.toggle("journey-mode", nextViewId === "stageDetailView");
   document.body.classList.toggle("learning-mode", nextViewId === "moduleDetailView" || nextViewId === "moduleQuizView");
@@ -13304,6 +13321,7 @@ function renderShare() {
 
 function renderAll() {
   renderGatewayHeroSlider();
+  scheduleGatewayHeroAutoplay();
   renderHome();
   renderDiscoveryDetail();
   renderPathSelect();
@@ -13701,11 +13719,12 @@ function wireStaticActions() {
   document.querySelectorAll("[data-gateway-nav]").forEach((button) => {
     button.addEventListener("click", () => handleGatewayNav(button.dataset.gatewayNav));
   });
-  document.querySelectorAll("[data-hero-next]").forEach((button) => {
-    button.addEventListener("click", () => setGatewayHero(state.gatewayHeroIndex + (Number(button.dataset.heroNext) || 1)));
-  });
   document.querySelectorAll("[data-hero-dot]").forEach((button) => {
     button.addEventListener("click", () => setGatewayHero(Number(button.dataset.heroDot) || 0));
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopGatewayHeroAutoplay();
+    else scheduleGatewayHeroAutoplay();
   });
   els.langButtons.forEach((button) => {
     button.addEventListener("click", () => applyLanguage(button.dataset.lang, true));
