@@ -3596,6 +3596,12 @@ body.learning-mode .view.active {
   color: rgba(255, 255, 255, 0.82);
 }
 
+.gateway-slide.documentary-hero .gateway-copy .hero-actions {
+  width: min(420px, 100%);
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .gateway-slide.journey-hero .gateway-illustration img {
   max-height: 440px;
   border-radius: 18px;
@@ -3723,6 +3729,14 @@ body.learning-mode .view.active {
 }
 
 .gateway-hero-dot.active::before {
+  background: var(--oih-orange);
+}
+
+body.documentary-hero-active .gateway-hero-dot::before {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+body.documentary-hero-active .gateway-hero-dot.active::before {
   background: var(--oih-orange);
 }
 
