@@ -8613,31 +8613,52 @@ body.gateway-mode .discovery-row .tile-art {
   width: 100%;
   min-height: 0;
   aspect-ratio: 16 / 9;
+  position: relative;
+  display: block;
   border-radius: 7px;
-  align-items: end;
   padding: 14px;
   box-shadow: none;
 }
 
-body.gateway-mode .discovery-row .tile-copy {
-  display: block;
-  margin-top: 10px;
+body.gateway-mode .discovery-row .tile-symbol {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  z-index: 1;
 }
 
-body.gateway-mode .discovery-row .tile-copy strong {
+body.gateway-mode .discovery-row .content-kind {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  z-index: 2;
+}
+
+body.gateway-mode .discovery-row .tile-art-title {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  z-index: 1;
   color: #fff;
-  font-size: 16px;
-  line-height: 1.2;
+  font-family: Montserrat, sans-serif;
+  font-size: clamp(18px, 1.7vw, 28px);
+  font-weight: 950;
+  line-height: 1.05;
+  letter-spacing: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
 }
 
-body.gateway-mode .discovery-row .tile-copy span {
-  color: rgba(255, 255, 255, 0.66);
-  font-size: 12px;
-  line-height: 1.35;
-}
-
+body.gateway-mode .discovery-row .tile-copy,
 body.gateway-mode .discovery-row .tile-meta {
-  margin-top: 8px;
+  display: none !important;
+}
+
+body.gateway-mode .documentary-tile .content-kind {
+  left: auto;
+  bottom: auto;
+  right: 14px;
+  top: 14px;
 }
 
 body.gateway-mode .content-chip {
@@ -8900,6 +8921,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">▶</span>
                   <span class="content-kind" data-i18n="discover.video">Video</span>
+                  <span class="tile-art-title" data-i18n="discover.featuredTitle">Why Jesus Came Near</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="discover.featuredTitle">Why Jesus Came Near</strong>
@@ -8914,6 +8936,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">B</span>
                   <span class="content-kind" data-i18n="discover.lesson">Lesson</span>
+                  <span class="tile-art-title" data-i18n="discover.bibleTitle">Read the Bible without feeling lost</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="discover.bibleTitle">Read the Bible without feeling lost</strong>
@@ -8928,6 +8951,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">1</span>
                   <span class="content-kind" data-i18n="discover.read">Read</span>
+                  <span class="tile-art-title" data-i18n="homeDiscover.oneBasicsTitle">One Basics: Eternal Life</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="homeDiscover.oneBasicsTitle">One Basics: Eternal Life</strong>
@@ -8942,6 +8966,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">S</span>
                   <span class="content-kind" data-i18n="homeDiscover.course">Course</span>
+                  <span class="tile-art-title" data-i18n="homeDiscover.shareTitle">Share your faith naturally</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="homeDiscover.shareTitle">Share your faith naturally</strong>
@@ -8956,6 +8981,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">P</span>
                   <span class="content-kind" data-i18n="homeDiscover.training">Training</span>
+                  <span class="tile-art-title" data-i18n="homeDiscover.pastorTitle">Explore pastoral calling</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="homeDiscover.pastorTitle">Explore pastoral calling</strong>
@@ -8982,6 +9008,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <img src="assets/outoftheshadows-brenda-hero.png" alt="Out of the Shadows documentary">
                   <span class="content-kind" data-i18n="homeDiscover.documentaryLabel">Documentary</span>
+                  <span class="tile-art-title" data-i18n="homeDiscover.brendaDocTitle">Out of the Shadows</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="homeDiscover.brendaDocTitle">Out of the Shadows</strong>
@@ -9076,6 +9103,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">“</span>
                   <span class="content-kind" data-i18n="discover.read">Read</span>
+                  <span class="tile-art-title" data-i18n="discover.prayerTitle">A simple prayer for when words feel hard</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="discover.prayerTitle">A simple prayer for when words feel hard</strong>
@@ -9090,6 +9118,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">“</span>
                   <span class="content-kind" data-i18n="discover.read">Read</span>
+                  <span class="tile-art-title" data-i18n="discover.peaceTitle">Peace when life feels heavy</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="discover.peaceTitle">Peace when life feels heavy</strong>
@@ -9104,6 +9133,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">C</span>
                   <span class="content-kind" data-i18n="homeDiscover.guide">Guide</span>
+                  <span class="tile-art-title" data-i18n="homeDiscover.communityTitle">Find Christian community</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="homeDiscover.communityTitle">Find Christian community</strong>
@@ -9118,6 +9148,7 @@ body.gateway-mode .courses-row .content-kind {
                 <span class="tile-art">
                   <span class="tile-symbol">+</span>
                   <span class="content-kind" data-i18n="homeDiscover.path">Path</span>
+                  <span class="tile-art-title" data-i18n="homeDiscover.multiplyTitle">Disciple someone else</span>
                 </span>
                 <span class="tile-copy">
                   <strong data-i18n="homeDiscover.multiplyTitle">Disciple someone else</strong>
