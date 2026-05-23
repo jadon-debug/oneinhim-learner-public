@@ -8406,13 +8406,22 @@ body.gateway-mode .courses-section-head h2 {
 }
 
 body.gateway-mode .courses-row {
+  display: flex !important;
   gap: 24px;
   align-items: start;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x mandatory !important;
+  padding: 2px 2px 18px;
 }
 
 body.gateway-mode .courses-row .series-tile,
 body.gateway-mode .courses-row .discovery-tile {
   display: block !important;
+  flex: 0 0 clamp(420px, 38vw, 540px) !important;
+  width: clamp(420px, 38vw, 540px) !important;
+  min-width: clamp(420px, 38vw, 540px) !important;
+  max-width: clamp(420px, 38vw, 540px) !important;
   min-height: 0 !important;
   padding: 0 !important;
   border: 0 !important;
@@ -8447,8 +8456,7 @@ body.gateway-mode .courses-row .series-stack {
 }
 
 body.gateway-mode .courses-row .tile-copy {
-  display: block;
-  margin-top: 14px;
+  display: none !important;
 }
 
 body.gateway-mode .courses-row .tile-copy strong {
@@ -8484,20 +8492,10 @@ body.gateway-mode .courses-row .tile-meta {
 
   body.gateway-mode .courses-row .discovery-tile,
   body.gateway-mode .courses-row .series-tile {
-    flex: 0 0 min(360px, calc(100vw - 48px)) !important;
-    width: min(360px, calc(100vw - 48px)) !important;
-    min-width: min(360px, calc(100vw - 48px)) !important;
-    max-width: min(360px, calc(100vw - 48px)) !important;
-  }
-
-  body.gateway-mode .courses-row .tile-copy strong {
-    font-size: 21px !important;
-    line-height: 1.08 !important;
-  }
-
-  body.gateway-mode .courses-row .tile-copy span {
-    font-size: 14px !important;
-    line-height: 1.35 !important;
+    flex: 0 0 min(390px, calc(100vw - 42px)) !important;
+    width: min(390px, calc(100vw - 42px)) !important;
+    min-width: min(390px, calc(100vw - 42px)) !important;
+    max-width: min(390px, calc(100vw - 42px)) !important;
   }
 }
 </style>
