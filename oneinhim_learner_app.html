@@ -3602,9 +3602,14 @@ body.learning-mode .view.active {
   margin-right: 0;
 }
 
-.gateway-slide.journey-hero .gateway-illustration img {
+.gateway-slide.journey-hero .gateway-illustration img,
+.gateway-slide.one-basics-hero .gateway-illustration img {
   max-height: 440px;
   border-radius: 18px;
+}
+
+.gateway-slide.one-basics-hero .gateway-illustration img {
+  box-shadow: 0 24px 44px rgba(9, 10, 10, 0.14);
 }
 
 .hero-eyebrow {
@@ -8407,17 +8412,16 @@ body.documentary-hero-active .lang-btn {
             </div>
           </article>
 
-          <article class="gateway-slide journey-hero" data-gateway-hero-slide="2">
+          <article class="gateway-slide one-basics-hero" data-gateway-hero-slide="2">
             <div class="gateway-illustration" aria-hidden="true">
-              <img src="assets/oneinhim-discipleship-hero.png" alt="" />
+              <img src="assets/one-basics-1-1-eternal-life-cover.png" alt="" />
             </div>
             <div class="gateway-copy">
-              <span class="hero-eyebrow" data-i18n="gateway.guideEyebrow">Find your next step</span>
-              <h2 data-i18n="gateway.guideHeadline">Ask a real question</h2>
-              <p data-i18n="gateway.guideCopy">Tell the app what you are wondering, and it will guide you to a good section and node to begin.</p>
+              <span class="hero-eyebrow" data-i18n="gateway.basicsEyebrow">One Basics</span>
+              <h2 data-i18n="gateway.basicsHeadline">Start with Eternal Life</h2>
+              <p data-i18n="gateway.basicsCopy">Watch the full One Basics 1.1 episode and begin the foundation of knowing God personally through Jesus.</p>
               <div class="hero-actions">
-                <button class="primary-btn" type="button" data-nav-jump="askView" data-i18n="gateway.guideButton">Ask for guidance</button>
-                <button class="soft-btn" type="button" data-gateway-choice="newChristian" data-i18n="gateway.guideAlt">Start as a new Christian</button>
+                <button class="primary-btn" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-i18n="gateway.basicsButton">Watch full episode</button>
               </div>
             </div>
           </article>
@@ -9722,11 +9726,10 @@ const i18n = {
     "gateway.watchCopy": "A powerful documentary story of hope, healing, and stepping into the light.",
     "gateway.watchButton": "Watch now",
     "gateway.watchJourney": "Open the journey",
-    "gateway.guideEyebrow": "Find your next step",
-    "gateway.guideHeadline": "Ask a real question",
-    "gateway.guideCopy": "Tell the app what you are wondering, and it will guide you to a good section and node to begin.",
-    "gateway.guideButton": "Ask for guidance",
-    "gateway.guideAlt": "Start as a new Christian",
+    "gateway.basicsEyebrow": "One Basics",
+    "gateway.basicsHeadline": "Start with Eternal Life",
+    "gateway.basicsCopy": "Watch the full One Basics 1.1 episode and begin the foundation of knowing God personally through Jesus.",
+    "gateway.basicsButton": "Watch full episode",
     "gateway.accountToast": "Account profiles are coming later. For now, your progress is saved on this device.",
     "gateway.optionsTitle": "Find your starting point",
     "gateway.optionsCopy": "Choose what sounds closest, or ask your own question.",
@@ -10021,11 +10024,10 @@ const i18n = {
     "gateway.watchCopy": "Een krachtige documentaire over hoop, herstel en leven in het licht.",
     "gateway.watchButton": "Bekijk nu",
     "gateway.watchJourney": "Open de reis",
-    "gateway.guideEyebrow": "Vind je volgende stap",
-    "gateway.guideHeadline": "Stel een echte vraag",
-    "gateway.guideCopy": "Vertel wat je je afvraagt, dan wijst de app je naar een goede sectie en node om te beginnen.",
-    "gateway.guideButton": "Vraag begeleiding",
-    "gateway.guideAlt": "Start als nieuwe christen",
+    "gateway.basicsEyebrow": "One Basics",
+    "gateway.basicsHeadline": "Begin met eeuwig leven",
+    "gateway.basicsCopy": "Bekijk de volledige One Basics 1.1-aflevering en begin bij de basis: God persoonlijk kennen door Jezus.",
+    "gateway.basicsButton": "Bekijk volledige aflevering",
     "gateway.accountToast": "Accountprofielen komen later. Voor nu wordt je voortgang op dit apparaat bewaard.",
     "gateway.optionsTitle": "Vind jouw startpunt",
     "gateway.optionsCopy": "Kies wat het beste past, of stel je eigen vraag.",
