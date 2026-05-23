@@ -4242,6 +4242,51 @@ body.documentary-hero-active .gateway-hero-dot.active::before {
   text-transform: uppercase;
 }
 
+.documentaries-row {
+  gap: 18px;
+}
+
+.documentary-tile {
+  flex: 0 0 min(720px, calc(100vw - 52px));
+  width: min(720px, calc(100vw - 52px));
+  min-height: 0;
+  text-decoration: none;
+}
+
+.documentary-tile .tile-art {
+  position: relative;
+  min-height: 260px;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  align-items: stretch;
+  background: var(--oih-black);
+}
+
+.documentary-tile .tile-art img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.documentary-tile .tile-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(4, 6, 8, 0.56), rgba(4, 6, 8, 0.08) 48%, rgba(4, 6, 8, 0.2));
+  pointer-events: none;
+}
+
+.documentary-tile .content-kind {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 1;
+  color: #fff;
+  background: rgba(238, 115, 38, 0.92);
+}
+
 .tile-copy strong {
   display: block;
   font-size: 17px;
@@ -8749,6 +8794,32 @@ body.gateway-mode .courses-row .tile-meta {
             </div>
           </section>
 
+          <section class="discovery-band documentaries-band">
+            <div class="discovery-section-head">
+              <div>
+                <p class="eyebrow" data-i18n="homeDiscover.documentariesEyebrow">Documentaries</p>
+                <h2 data-i18n="homeDiscover.documentariesTitle">Stories of hope and healing</h2>
+                <p data-i18n="homeDiscover.documentariesCopy">Long-form stories that help people see what Jesus can do in real lives.</p>
+              </div>
+            </div>
+            <div class="discovery-row documentaries-row">
+              <a class="discovery-tile documentary-tile" href="https://www.youtube.com/watch?v=SI_eEn-FRV4&t=28s" target="_blank" rel="noopener">
+                <span class="tile-art">
+                  <img src="assets/outoftheshadows-brenda-hero.png" alt="Out of the Shadows documentary">
+                  <span class="content-kind" data-i18n="homeDiscover.documentaryLabel">Documentary</span>
+                </span>
+                <span class="tile-copy">
+                  <strong data-i18n="homeDiscover.brendaDocTitle">Out of the Shadows</strong>
+                  <span data-i18n="homeDiscover.brendaDocCopy">Brenda’s story of hope, healing, and stepping into the light.</span>
+                </span>
+                <span class="tile-meta">
+                  <span class="content-chip" data-i18n="homeDiscover.watchNow">Watch now</span>
+                  <span class="content-chip">Brenda</span>
+                </span>
+              </a>
+            </div>
+          </section>
+
           <section class="discovery-band sand courses-band">
             <div class="discovery-section-head courses-section-head">
               <div>
@@ -10051,6 +10122,13 @@ const i18n = {
     "homeDiscover.watchEyebrow": "Watch",
     "homeDiscover.watchTitle": "Featured teachings",
     "homeDiscover.watchCopy": "Short, clear videos that give people a taste of the quality before they commit to a path.",
+    "homeDiscover.documentariesEyebrow": "Documentaries",
+    "homeDiscover.documentariesTitle": "Stories of hope and healing",
+    "homeDiscover.documentariesCopy": "Long-form stories that help people see what Jesus can do in real lives.",
+    "homeDiscover.documentaryLabel": "Documentary",
+    "homeDiscover.brendaDocTitle": "Out of the Shadows",
+    "homeDiscover.brendaDocCopy": "Brenda’s story of hope, healing, and stepping into the light.",
+    "homeDiscover.watchNow": "Watch now",
     "homeDiscover.seriesEyebrow": "Series",
     "homeDiscover.seriesTitle": "Full courses and series",
     "homeDiscover.seriesCopy": "Longer teachings for people ready to sit with a whole theme, still colour-coded to the journey.",
@@ -10349,6 +10427,13 @@ const i18n = {
     "homeDiscover.watchEyebrow": "Kijken",
     "homeDiscover.watchTitle": "Aanbevolen teachings",
     "homeDiscover.watchCopy": "Korte, heldere video's die mensen de kwaliteit laten proeven voordat ze een pad kiezen.",
+    "homeDiscover.documentariesEyebrow": "Documentaires",
+    "homeDiscover.documentariesTitle": "Verhalen van hoop en herstel",
+    "homeDiscover.documentariesCopy": "Langere verhalen die laten zien wat Jezus in echte levens kan doen.",
+    "homeDiscover.documentaryLabel": "Documentaire",
+    "homeDiscover.brendaDocTitle": "Uit de schaduw",
+    "homeDiscover.brendaDocCopy": "Brenda's verhaal van hoop, herstel en opnieuw in het licht stappen.",
+    "homeDiscover.watchNow": "Bekijk nu",
     "homeDiscover.seriesEyebrow": "Series",
     "homeDiscover.seriesTitle": "Volledige cursussen en series",
     "homeDiscover.seriesCopy": "Langere lessen voor mensen die klaar zijn om bij een heel thema stil te staan, met dezelfde kleuren als de reis.",
