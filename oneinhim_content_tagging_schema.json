@@ -1,0 +1,393 @@
+{
+  "schemaVersion": "0.1",
+  "name": "One In Him Content Tagging Schema",
+  "purpose": "Make every resource findable, recommendable, reusable in journeys, and easy for the team to check.",
+  "guidingQuestions": [
+    "What is this?",
+    "Who is it from?",
+    "Who does it help?",
+    "What topic, question, or stage does it serve?",
+    "What should someone do next?"
+  ],
+  "requiredForMvp": [
+    "contentId",
+    "contentType",
+    "title",
+    "speakerOrAuthor",
+    "language",
+    "format",
+    "length",
+    "summaryShort",
+    "primaryTopic",
+    "journeyStage",
+    "questionsAnswered",
+    "suggestedNextStep",
+    "reviewStatus"
+  ],
+  "controlledLists": {
+    "contentTypes": [
+      "full_video",
+      "short_clip",
+      "audio",
+      "book",
+      "book_excerpt",
+      "lesson",
+      "prayer",
+      "question_answer",
+      "journey_package",
+      "speaker_profile"
+    ],
+    "formats": [
+      "watch",
+      "listen",
+      "read",
+      "reflect",
+      "practice",
+      "group_discussion"
+    ],
+    "journeyStages": [
+      "explore",
+      "foundations",
+      "formation",
+      "community",
+      "mission",
+      "multiply"
+    ],
+    "resourceRoles": [
+      "answer",
+      "testimony",
+      "teaching",
+      "practice",
+      "reflection",
+      "prayer",
+      "challenge",
+      "deep_dive",
+      "community_step"
+    ],
+    "difficulty": [
+      "starter",
+      "growing",
+      "deeper",
+      "leader"
+    ],
+    "sensitivityLevels": [
+      "normal",
+      "careful",
+      "connect_to_person"
+    ],
+    "emotionalTones": [
+      "curious",
+      "encouraging",
+      "peaceful",
+      "challenging",
+      "hopeful",
+      "comforting",
+      "practical",
+      "urgent"
+    ],
+    "reviewStatuses": [
+      "draft",
+      "auto_tagged",
+      "needs_cleanup",
+      "ready",
+      "published",
+      "archived"
+    ],
+    "nextStepTypes": [
+      "watch_next",
+      "start_journey",
+      "answer_question",
+      "pray",
+      "reflect",
+      "practice",
+      "join_group",
+      "talk_to_mentor",
+      "share",
+      "read_more"
+    ]
+  },
+  "contentItem": {
+    "identity": {
+      "contentId": "string, stable internal id",
+      "contentType": "one of controlledLists.contentTypes",
+      "title": "public title",
+      "slug": "public URL-friendly id",
+      "speakerOrAuthor": {
+        "id": "string",
+        "name": "string",
+        "role": "speaker, author, host, mentor, or team"
+      },
+      "series": {
+        "id": "optional string",
+        "title": "optional string"
+      },
+      "source": {
+        "sourceId": "original source id",
+        "sourceType": "video, audio, book, pdf, manuscript, study_guide, live_event, podcast",
+        "sourceTitle": "original source title",
+        "sourceLocation": "storage path, hosting id, or admin link"
+      },
+      "permissions": {
+        "usage": "owned, licensed, permission_needed, public_domain, unknown",
+        "notes": "short permission note"
+      }
+    },
+    "experience": {
+      "language": "BCP-47 language code, for example en, nl, fr",
+      "originalLanguage": "BCP-47 language code",
+      "format": "one or more controlledLists.formats",
+      "length": {
+        "seconds": "number for media",
+        "readingMinutes": "number for text",
+        "display": "short human label, for example 90 sec or 8 min"
+      },
+      "summaryShort": "one sentence for cards and recommendations",
+      "summaryLong": "one paragraph for detail pages",
+      "thumbnail": "image id or URL",
+      "bestUse": "alone, group, leader-led, daily moment, journey lesson, quick answer"
+    },
+    "discovery": {
+      "primaryTopic": "main topic",
+      "secondaryTopics": [
+        "additional topics"
+      ],
+      "questionsAnswered": [
+        "real questions this resource helps answer"
+      ],
+      "keywords": [
+        "search words and phrases"
+      ],
+      "scriptureReferences": [
+        {
+          "book": "John",
+          "chapter": 3,
+          "verseStart": 16,
+          "verseEnd": 17,
+          "label": "John 3:16-17"
+        }
+      ],
+      "emotionalTone": [
+        "one or more controlledLists.emotionalTones"
+      ],
+      "audienceFit": [
+        "new believer",
+        "curious seeker",
+        "disciple",
+        "leader",
+        "group"
+      ]
+    },
+    "journeyFit": {
+      "journeyStage": "one of controlledLists.journeyStages",
+      "milestone": "optional milestone name",
+      "difficulty": "one of controlledLists.difficulty",
+      "resourceRole": "one or more controlledLists.resourceRoles",
+      "lessonUse": "intro, main_teaching, story, practice, reflection, recap, next_step",
+      "prerequisites": [
+        "optional content ids or stages"
+      ],
+      "followUps": [
+        "optional content ids, package ids, or journey ids"
+      ],
+      "suggestedNextStep": {
+        "type": "one of controlledLists.nextStepTypes",
+        "label": "short action label",
+        "targetId": "optional content, package, group, or journey id"
+      }
+    },
+    "careAndTrust": {
+      "sensitivityLevel": "one of controlledLists.sensitivityLevels",
+      "sensitiveTopics": [
+        "optional topics that need care"
+      ],
+      "pastoralNotes": "internal note for reviewers and mentors",
+      "shouldSuggestHumanHelp": "boolean",
+      "reviewStatus": "one of controlledLists.reviewStatuses",
+      "reviewer": {
+        "id": "optional reviewer id",
+        "name": "optional reviewer name",
+        "reviewedAt": "ISO date string"
+      },
+      "publicSafetyNote": "optional user-facing note"
+    },
+    "reuse": {
+      "segments": [
+        {
+          "segmentId": "clip or excerpt id",
+          "title": "short segment title",
+          "startSeconds": "media start time if applicable",
+          "endSeconds": "media end time if applicable",
+          "pageStart": "book page start if applicable",
+          "pageEnd": "book page end if applicable",
+          "chapter": "chapter label if applicable",
+          "quote": "short quote or excerpt preview",
+          "recommendedAsShortClip": "boolean",
+          "suggestedTopics": [
+            "topics for this segment"
+          ],
+          "suggestedJourneyStage": "stage for this segment"
+        }
+      ],
+      "packageCandidates": [
+        "topic or journey package ideas"
+      ],
+      "relatedContentIds": [
+        "related content ids"
+      ]
+    },
+    "learningSignals": {
+      "completionRate": "number from 0 to 1",
+      "helpfulMarks": "number",
+      "saves": "number",
+      "shares": "number",
+      "continuesToNextStep": "number",
+      "lastReviewedForRecommendation": "ISO date string"
+    }
+  },
+  "exampleContentItem": {
+    "identity": {
+      "contentId": "vid_jesus_001",
+      "contentType": "short_clip",
+      "title": "Why Jesus Came Near",
+      "slug": "why-jesus-came-near",
+      "speakerOrAuthor": {
+        "id": "speaker_001",
+        "name": "Example Speaker",
+        "role": "speaker"
+      },
+      "series": {
+        "id": "series_start_here",
+        "title": "Start Here"
+      },
+      "source": {
+        "sourceId": "full_video_jesus_001",
+        "sourceType": "video",
+        "sourceTitle": "Who Is Jesus?",
+        "sourceLocation": "video-host-id-or-admin-link"
+      },
+      "permissions": {
+        "usage": "owned",
+        "notes": "Approved for app, clips, and journey use."
+      }
+    },
+    "experience": {
+      "language": "en",
+      "originalLanguage": "en",
+      "format": [
+        "watch",
+        "listen"
+      ],
+      "length": {
+        "seconds": 92,
+        "readingMinutes": 1,
+        "display": "90 sec"
+      },
+      "summaryShort": "A short invitation to see Jesus as God coming near, not religion staying distant.",
+      "summaryLong": "This clip introduces Jesus in a warm, clear way for someone exploring faith or returning after distance.",
+      "thumbnail": "thumb_jesus_001",
+      "bestUse": "quick answer"
+    },
+    "discovery": {
+      "primaryTopic": "Jesus",
+      "secondaryTopics": [
+        "grace",
+        "God's love",
+        "faith basics"
+      ],
+      "questionsAnswered": [
+        "Who is Jesus?",
+        "Does God care about me?",
+        "Where do I start with faith?"
+      ],
+      "keywords": [
+        "Jesus",
+        "God near",
+        "start faith",
+        "grace"
+      ],
+      "scriptureReferences": [
+        {
+          "book": "John",
+          "chapter": 1,
+          "verseStart": 14,
+          "verseEnd": 14,
+          "label": "John 1:14"
+        }
+      ],
+      "emotionalTone": [
+        "hopeful",
+        "encouraging"
+      ],
+      "audienceFit": [
+        "curious seeker",
+        "new believer"
+      ]
+    },
+    "journeyFit": {
+      "journeyStage": "explore",
+      "milestone": "Meet Jesus",
+      "difficulty": "starter",
+      "resourceRole": [
+        "answer",
+        "teaching"
+      ],
+      "lessonUse": "intro",
+      "prerequisites": [],
+      "followUps": [
+        "lesson_who_is_jesus"
+      ],
+      "suggestedNextStep": {
+        "type": "start_journey",
+        "label": "Start: Who is Jesus?",
+        "targetId": "journey_start_here"
+      }
+    },
+    "careAndTrust": {
+      "sensitivityLevel": "normal",
+      "sensitiveTopics": [],
+      "pastoralNotes": "Good first-touch content. Keep recommendation copy gentle.",
+      "shouldSuggestHumanHelp": false,
+      "reviewStatus": "ready",
+      "reviewer": {
+        "id": "team_001",
+        "name": "One In Him Reviewer",
+        "reviewedAt": "2026-05-16"
+      },
+      "publicSafetyNote": ""
+    },
+    "reuse": {
+      "segments": [
+        {
+          "segmentId": "clip_jesus_001_00_03_01_35",
+          "title": "God came near",
+          "startSeconds": 3,
+          "endSeconds": 95,
+          "pageStart": null,
+          "pageEnd": null,
+          "chapter": null,
+          "quote": "Jesus shows us that God comes close.",
+          "recommendedAsShortClip": true,
+          "suggestedTopics": [
+            "Jesus",
+            "faith basics"
+          ],
+          "suggestedJourneyStage": "explore"
+        }
+      ],
+      "packageCandidates": [
+        "Start Here: Who is Jesus?"
+      ],
+      "relatedContentIds": [
+        "lesson_who_is_jesus"
+      ]
+    },
+    "learningSignals": {
+      "completionRate": 0,
+      "helpfulMarks": 0,
+      "saves": 0,
+      "shares": 0,
+      "continuesToNextStep": 0,
+      "lastReviewedForRecommendation": "2026-05-16"
+    }
+  }
+}
