@@ -3537,6 +3537,64 @@ body.learning-mode .view.active {
   filter: none;
 }
 
+.gateway-slide.documentary-hero {
+  min-height: 660px;
+  grid-template-columns: minmax(0, 1180px);
+  justify-content: center;
+  align-items: end;
+  padding: 150px max(28px, calc((100vw - 1180px) / 2)) 92px;
+  overflow: hidden;
+  color: #fff;
+}
+
+.gateway-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(1.08) contrast(1.04);
+}
+
+.gateway-slide.documentary-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(4, 6, 8, 0.88) 0%, rgba(4, 6, 8, 0.62) 38%, rgba(4, 6, 8, 0.18) 72%),
+    linear-gradient(0deg, rgba(4, 6, 8, 0.78) 0%, rgba(4, 6, 8, 0.24) 46%, rgba(4, 6, 8, 0.56) 100%);
+}
+
+.gateway-slide.documentary-hero .gateway-copy {
+  max-width: 560px;
+  margin: 0;
+  text-align: left;
+}
+
+.gateway-slide.documentary-hero .hero-eyebrow {
+  color: var(--oih-gold);
+}
+
+.gateway-slide.documentary-hero .gateway-copy h2,
+.gateway-slide.documentary-hero .gateway-copy p {
+  margin-left: 0;
+  margin-right: 0;
+  color: #fff;
+}
+
+.gateway-slide.documentary-hero .gateway-copy h2 {
+  max-width: 620px;
+  text-shadow: 0 14px 32px rgba(0, 0, 0, 0.46);
+}
+
+.gateway-slide.documentary-hero .gateway-copy p {
+  max-width: 460px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
 .gateway-slide.journey-hero .gateway-illustration img {
   max-height: 440px;
   border-radius: 18px;
@@ -3590,12 +3648,15 @@ body.learning-mode .view.active {
 .gateway-copy .primary-btn,
 .gateway-copy .soft-btn,
 .gateway-copy .ghost-btn {
+  display: inline-flex;
+  align-items: center;
   min-height: 58px;
   border-radius: 13px;
   font-size: 14px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   justify-content: center;
+  text-decoration: none;
 }
 
 .gateway-copy .primary-btn {
@@ -7974,10 +8035,31 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
 }
 
 /* Current home navigation and hero slider overrides. */
+body.gateway-mode .gateway-panel {
+  position: relative;
+}
+
 body.gateway-mode .gateway-header {
   position: sticky !important;
   top: 0 !important;
   z-index: 90 !important;
+  margin-bottom: -96px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.78) 72%, rgba(255,255,255,0));
+  backdrop-filter: blur(14px);
+}
+
+body.gateway-mode .gateway-landing {
+  width: 100%;
+  max-width: none;
+  min-height: 640px;
+}
+
+body.gateway-mode .gateway-slide:not(.documentary-hero) {
+  box-sizing: border-box;
+  width: min(1160px, calc(100% - 40px));
+  margin: 0 auto;
+  padding-top: 130px;
 }
 
 body.gateway-mode .gateway-slide .gateway-copy h2 {
@@ -7987,6 +8069,43 @@ body.gateway-mode .gateway-slide .gateway-copy h2 {
 
 body.gateway-mode .gateway-slide .gateway-copy p {
   font-size: 16px;
+}
+
+body.gateway-mode .gateway-slide.documentary-hero .gateway-copy h2 {
+  font-size: clamp(48px, 5.8vw, 82px);
+}
+
+body.gateway-mode .gateway-slide.documentary-hero .gateway-copy p {
+  font-size: 18px;
+}
+
+body.documentary-hero-active .gateway-header {
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(3, 5, 7, 0.74), rgba(3, 5, 7, 0.32) 72%, rgba(3, 5, 7, 0)) !important;
+  backdrop-filter: none;
+}
+
+body.documentary-hero-active .gateway-logo,
+body.documentary-hero-active .gateway-nav-btn {
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+}
+
+body.documentary-hero-active .gateway-logo:hover span,
+body.documentary-hero-active .gateway-nav-btn:hover,
+body.documentary-hero-active .gateway-nav-btn.active {
+  color: #fff;
+}
+
+body.documentary-hero-active .gateway-language {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+body.documentary-hero-active .lang-btn {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 @media (max-width: 1040px) {
@@ -8011,7 +8130,14 @@ body.gateway-mode .gateway-slide .gateway-copy p {
   body.gateway-mode .gateway-slide.watch-hero {
     grid-template-columns: 1fr;
     gap: 18px;
-    padding: 24px 0 74px;
+    padding: 122px 0 74px;
+  }
+
+  body.gateway-mode .gateway-slide.documentary-hero {
+    width: 100%;
+    max-width: none;
+    min-height: 620px;
+    padding: 138px 28px 76px;
   }
 
   body.gateway-mode .gateway-slide.watch-hero .gateway-illustration {
@@ -8043,6 +8169,7 @@ body.gateway-mode .gateway-slide .gateway-copy p {
     align-items: center !important;
     gap: 8px 12px !important;
     padding: 8px 16px 6px !important;
+    margin-bottom: -111px !important;
     overflow: visible !important;
   }
 
@@ -8123,7 +8250,13 @@ body.gateway-mode .gateway-slide .gateway-copy p {
     display: none !important;
     grid-template-columns: 1fr !important;
     gap: 14px !important;
-    padding: 18px 16px 78px !important;
+    padding: 128px 16px 78px !important;
+  }
+
+  body.gateway-mode .gateway-slide.documentary-hero {
+    min-height: 660px !important;
+    padding: 138px 16px 78px !important;
+    align-items: end !important;
   }
 
   body.gateway-mode .gateway-slide.active {
@@ -8162,11 +8295,29 @@ body.gateway-mode .gateway-slide .gateway-copy p {
     line-height: 1.04 !important;
   }
 
+  body.gateway-mode .gateway-slide.documentary-hero .gateway-copy {
+    text-align: left !important;
+  }
+
+  body.gateway-mode .gateway-slide.documentary-hero .gateway-copy h2 {
+    width: min(100%, 340px) !important;
+    max-width: min(100%, 340px) !important;
+    font-size: 42px !important;
+    line-height: 0.98 !important;
+  }
+
   body.gateway-mode .gateway-slide .gateway-copy p {
     width: min(100%, 330px) !important;
     max-width: min(100%, 330px) !important;
     font-size: 14px !important;
     line-height: 1.38 !important;
+  }
+
+  body.gateway-mode .gateway-slide.documentary-hero .gateway-copy p {
+    width: min(100%, 320px) !important;
+    max-width: min(100%, 320px) !important;
+    margin-left: 0 !important;
+    font-size: 15px !important;
   }
 
   body.gateway-mode .gateway-hero-controls {
@@ -8236,18 +8387,15 @@ body.gateway-mode .gateway-slide .gateway-copy p {
             </div>
           </article>
 
-          <article class="gateway-slide watch-hero" data-gateway-hero-slide="1">
+          <article class="gateway-slide documentary-hero" data-gateway-hero-slide="1">
+            <img class="gateway-hero-bg" src="assets/outoftheshadows-darker.webp" alt="" />
             <div class="gateway-copy">
-              <span class="hero-eyebrow" data-i18n="gateway.watchEyebrow">Watch this week</span>
-              <h2 data-i18n="gateway.watchHeadline">One Basics full teaching</h2>
-              <p data-i18n="gateway.watchCopy">Watch the full episode on the home page, then keep moving in the journey through shorter clips.</p>
+              <span class="hero-eyebrow" data-i18n="gateway.watchEyebrow">New to the ONEapp</span>
+              <h2 data-i18n="gateway.watchHeadline">Out of the Shadows</h2>
+              <p data-i18n="gateway.watchCopy">A powerful documentary story of hope, healing, and stepping into the light.</p>
               <div class="hero-actions">
-                <button class="primary-btn" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-i18n="gateway.watchButton">Watch episode</button>
-                <button class="soft-btn" type="button" data-nav-jump="pathSelectView" data-i18n="gateway.watchJourney">Open the journey</button>
+                <a class="primary-btn" href="https://www.youtube.com/watch?v=SI_eEn-FRV4&t=28s" target="_blank" rel="noopener" data-i18n="gateway.watchButton">Watch now</a>
               </div>
-            </div>
-            <div class="gateway-illustration" aria-hidden="true">
-              <img src="assets/one-basics-1-1-eternal-life-cover.png" alt="" />
             </div>
           </article>
 
@@ -9550,10 +9698,10 @@ const i18n = {
     "gateway.copy": "Find a clear next step through short teachings, prayer, Scripture, trusted voices, and guided milestones.",
     "gateway.start": "Get started",
     "gateway.browse": "Continue my discipleship journey",
-    "gateway.watchEyebrow": "Watch this week",
-    "gateway.watchHeadline": "One Basics full teaching",
-    "gateway.watchCopy": "Watch the full episode on the home page, then keep moving in the journey through shorter clips.",
-    "gateway.watchButton": "Watch episode",
+    "gateway.watchEyebrow": "New to the ONEapp",
+    "gateway.watchHeadline": "Out of the Shadows",
+    "gateway.watchCopy": "A powerful documentary story of hope, healing, and stepping into the light.",
+    "gateway.watchButton": "Watch now",
     "gateway.watchJourney": "Open the journey",
     "gateway.guideEyebrow": "Find your next step",
     "gateway.guideHeadline": "Ask a real question",
@@ -9849,10 +9997,10 @@ const i18n = {
     "gateway.copy": "Vind een duidelijke volgende stap met korte teachings, gebed, de Bijbel, vertrouwde stemmen en begeleide mijlpalen.",
     "gateway.start": "Begin hier",
     "gateway.browse": "Ga verder met mijn discipelschapsreis",
-    "gateway.watchEyebrow": "Kijk deze week",
-    "gateway.watchHeadline": "Volledige One Basics-les",
-    "gateway.watchCopy": "Bekijk de volledige aflevering op de homepagina en ga daarna verder in de reis met kortere clips.",
-    "gateway.watchButton": "Bekijk aflevering",
+    "gateway.watchEyebrow": "Nieuw in de ONEapp",
+    "gateway.watchHeadline": "Out of the Shadows",
+    "gateway.watchCopy": "Een krachtige documentaire over hoop, herstel en leven in het licht.",
+    "gateway.watchButton": "Bekijk nu",
     "gateway.watchJourney": "Open de reis",
     "gateway.guideEyebrow": "Vind je volgende stap",
     "gateway.guideHeadline": "Stel een echte vraag",
@@ -10324,6 +10472,7 @@ function renderGatewayHeroSlider() {
     slide.classList.toggle("active", isActive);
     slide.setAttribute("aria-hidden", isActive ? "false" : "true");
   });
+  document.body.classList.toggle("documentary-hero-active", slides[activeIndex]?.classList.contains("documentary-hero"));
   document.querySelectorAll("[data-hero-dot]").forEach((dot) => {
     dot.classList.toggle("active", Number(dot.dataset.heroDot) === activeIndex);
   });
@@ -10982,6 +11131,7 @@ function setView(viewId) {
   const nextViewId = deprecatedViews[viewId] || viewId;
   state.activeView = nextViewId;
   document.body.classList.toggle("gateway-mode", nextViewId === "gatewayView");
+  if (nextViewId !== "gatewayView") document.body.classList.remove("documentary-hero-active");
   document.body.classList.toggle("discovery-detail-mode", nextViewId === "discoveryDetailView");
   document.body.classList.toggle("journey-mode", nextViewId === "stageDetailView");
   document.body.classList.toggle("learning-mode", nextViewId === "moduleDetailView" || nextViewId === "moduleQuizView");
