@@ -8348,6 +8348,122 @@ body.documentary-hero-active .lang-btn {
     width: 46px !important;
   }
 }
+
+body.gateway-mode .courses-band {
+  background: #fff;
+}
+
+body.gateway-mode .courses-section-head {
+  display: block;
+  margin-bottom: 18px;
+}
+
+body.gateway-mode .courses-section-head h2 {
+  margin: 0;
+  max-width: none;
+  color: var(--ink);
+  font-family: Montserrat, sans-serif;
+  font-size: clamp(24px, 2vw, 34px);
+  line-height: 1.05;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+body.gateway-mode .courses-row {
+  gap: 24px;
+  align-items: start;
+}
+
+body.gateway-mode .courses-row .series-tile,
+body.gateway-mode .courses-row .discovery-tile {
+  display: block !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+body.gateway-mode .courses-row .tile-art,
+body.gateway-mode .courses-row .tile-art.episode-cover-art {
+  width: 100% !important;
+  min-height: 0 !important;
+  aspect-ratio: 16 / 9;
+  padding: 0 !important;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f6ca35, #ee7326) !important;
+  box-shadow: none;
+}
+
+body.gateway-mode .courses-row .episode-cover-art img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+body.gateway-mode .courses-row .series-stack {
+  transform: scale(1.42);
+}
+
+body.gateway-mode .courses-row .tile-copy {
+  display: block;
+  margin-top: 14px;
+}
+
+body.gateway-mode .courses-row .tile-copy strong {
+  display: block;
+  color: var(--ink);
+  font-size: clamp(22px, 1.8vw, 28px);
+  line-height: 1.08;
+}
+
+body.gateway-mode .courses-row .tile-copy span {
+  display: block;
+  margin-top: 6px;
+  color: #5f5f5f;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+body.gateway-mode .courses-row .content-kind,
+body.gateway-mode .courses-row .series-next,
+body.gateway-mode .courses-row .tile-meta {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  body.gateway-mode .courses-section-head h2 {
+    max-width: calc(100vw - 32px) !important;
+    font-size: 24px !important;
+  }
+
+  body.gateway-mode .courses-row {
+    gap: 18px !important;
+  }
+
+  body.gateway-mode .courses-row .discovery-tile,
+  body.gateway-mode .courses-row .series-tile {
+    flex: 0 0 min(360px, calc(100vw - 48px)) !important;
+    width: min(360px, calc(100vw - 48px)) !important;
+    min-width: min(360px, calc(100vw - 48px)) !important;
+    max-width: min(360px, calc(100vw - 48px)) !important;
+  }
+
+  body.gateway-mode .courses-row .tile-copy strong {
+    font-size: 21px !important;
+    line-height: 1.08 !important;
+  }
+
+  body.gateway-mode .courses-row .tile-copy span {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+  }
+}
 </style>
 </head>
 <body class="gateway-mode">
@@ -8599,16 +8715,13 @@ body.documentary-hero-active .lang-btn {
             </div>
           </section>
 
-          <section class="discovery-band sand">
-            <div class="discovery-section-head">
+          <section class="discovery-band sand courses-band">
+            <div class="discovery-section-head courses-section-head">
               <div>
-                <p class="eyebrow" data-i18n="homeDiscover.seriesEyebrow">Series</p>
                 <h2 data-i18n="homeDiscover.seriesTitle">Full courses and series</h2>
-                <p data-i18n="homeDiscover.seriesCopy">Longer teachings for people ready to sit with a whole theme, still colour-coded to the journey.</p>
               </div>
-              <button class="soft-btn" type="button" data-nav-jump="pathSelectView" data-i18n="homeDiscover.openSeries">Open series</button>
             </div>
-            <div class="discovery-row series-row">
+            <div class="discovery-row series-row courses-row">
               <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video">
                 <span class="tile-art">
                   <span class="series-stack" aria-hidden="true">
