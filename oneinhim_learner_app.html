@@ -8507,6 +8507,217 @@ body.gateway-mode .courses-row .tile-meta {
     max-width: min(390px, calc(100vw - 42px)) !important;
   }
 }
+
+/* Streaming-style Discover shelves: compact titles, fuller rows, less empty space. */
+body.gateway-mode .gateway-discover {
+  background: #111111;
+  color: #fff;
+  padding: 14px 0 34px;
+}
+
+body.gateway-mode .discovery-band,
+body.gateway-mode .discovery-band.sand,
+body.gateway-mode .discovery-band.dark,
+body.gateway-mode .courses-band {
+  padding: 24px max(22px, 3vw) 12px;
+  border-bottom: 0;
+  background: #111111 !important;
+  color: #fff;
+}
+
+body.gateway-mode .discovery-band + .discovery-band {
+  padding-top: 16px;
+}
+
+body.gateway-mode .discovery-section-head,
+body.gateway-mode .courses-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 30px;
+  margin-bottom: 12px;
+}
+
+body.gateway-mode .discovery-section-head .eyebrow,
+body.gateway-mode .discovery-section-head p {
+  display: none !important;
+}
+
+body.gateway-mode .discovery-section-head h2,
+body.gateway-mode .courses-section-head h2 {
+  margin: 0;
+  max-width: none;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: Montserrat, sans-serif;
+  font-size: clamp(18px, 1.45vw, 24px);
+  font-weight: 900;
+  line-height: 1.18;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+body.gateway-mode .discovery-section-head .soft-btn {
+  min-width: 0;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  box-shadow: none;
+}
+
+body.gateway-mode .today-discovery {
+  grid-template-columns: minmax(360px, 1.08fr) minmax(300px, 0.92fr);
+  gap: 18px;
+}
+
+body.gateway-mode .today-feature {
+  min-height: 260px;
+  border: 0;
+  border-radius: 7px;
+  box-shadow: none;
+}
+
+body.gateway-mode .today-feature h3 {
+  max-width: 620px;
+  font-size: clamp(42px, 5.8vw, 72px);
+}
+
+body.gateway-mode .discovery-mini {
+  min-height: 80px;
+  border: 0;
+  background: #1b1b1b;
+}
+
+body.gateway-mode .discovery-row,
+body.gateway-mode .series-row,
+body.gateway-mode .courses-row {
+  gap: 18px !important;
+  padding: 0 2px 12px;
+}
+
+body.gateway-mode .discovery-row .discovery-tile {
+  flex: 0 0 clamp(340px, 31vw, 520px);
+  width: clamp(340px, 31vw, 520px);
+  min-width: 340px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+}
+
+body.gateway-mode .discovery-row .tile-art {
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  border-radius: 7px;
+  align-items: end;
+  padding: 14px;
+  box-shadow: none;
+}
+
+body.gateway-mode .discovery-row .tile-copy {
+  display: block;
+  margin-top: 10px;
+}
+
+body.gateway-mode .discovery-row .tile-copy strong {
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+body.gateway-mode .discovery-row .tile-copy span {
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+body.gateway-mode .discovery-row .tile-meta {
+  margin-top: 8px;
+}
+
+body.gateway-mode .content-chip {
+  color: rgba(255, 255, 255, 0.74);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body.gateway-mode .documentary-tile {
+  flex-basis: clamp(520px, 52vw, 760px);
+  width: clamp(520px, 52vw, 760px);
+  min-width: 520px;
+}
+
+body.gateway-mode .voice-strip {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: none;
+}
+
+body.gateway-mode .voice-strip::-webkit-scrollbar {
+  display: none;
+}
+
+body.gateway-mode .voice-button {
+  flex: 0 0 clamp(240px, 22vw, 320px);
+  min-height: 74px;
+  border: 0;
+  background: #1b1b1b;
+  color: #fff;
+}
+
+body.gateway-mode .voice-button span:not(.voice-avatar) {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+body.gateway-mode .courses-row .tile-copy,
+body.gateway-mode .courses-row .tile-meta,
+body.gateway-mode .courses-row .series-next,
+body.gateway-mode .courses-row .content-kind {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  body.gateway-mode .gateway-discover {
+    padding-top: 8px;
+  }
+
+  body.gateway-mode .discovery-band,
+  body.gateway-mode .discovery-band.sand,
+  body.gateway-mode .discovery-band.dark,
+  body.gateway-mode .courses-band {
+    padding: 20px 16px 8px !important;
+  }
+
+  body.gateway-mode .discovery-section-head h2,
+  body.gateway-mode .courses-section-head h2 {
+    max-width: calc(100vw - 32px) !important;
+    font-size: 20px !important;
+  }
+
+  body.gateway-mode .today-discovery {
+    grid-template-columns: 1fr;
+  }
+
+  body.gateway-mode .today-feature {
+    min-height: 230px;
+  }
+
+  body.gateway-mode .discovery-row .discovery-tile,
+  body.gateway-mode .documentary-tile,
+  body.gateway-mode .courses-row .discovery-tile,
+  body.gateway-mode .courses-row .series-tile {
+    flex: 0 0 min(390px, calc(100vw - 42px)) !important;
+    width: min(390px, calc(100vw - 42px)) !important;
+    min-width: min(390px, calc(100vw - 42px)) !important;
+    max-width: min(390px, calc(100vw - 42px)) !important;
+  }
+}
 </style>
 </head>
 <body class="gateway-mode">
