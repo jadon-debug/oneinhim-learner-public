@@ -9014,6 +9014,393 @@ body.gateway-mode .courses-row .content-kind {
   }
 }
 
+/* Mobile app chrome and admin account entry. */
+.gateway-mobile-action,
+.gateway-nav-icon {
+  display: none;
+}
+
+.mobile-nav-only {
+  display: none;
+}
+
+.account-shell {
+  min-height: 100vh;
+  width: min(1040px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: clamp(22px, 4vw, 42px) 0 72px;
+}
+
+.account-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(28px, 5vw, 64px);
+}
+
+.account-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(320px, 0.78fr);
+  gap: clamp(22px, 5vw, 56px);
+  align-items: start;
+}
+
+.account-copy h2 {
+  margin: 0;
+  font-family: Oswald, Montserrat, sans-serif;
+  font-size: clamp(52px, 7vw, 92px);
+  line-height: 0.94;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.account-copy p {
+  margin: 18px 0 0;
+  max-width: 620px;
+  color: var(--muted);
+  font-size: clamp(17px, 2vw, 22px);
+  line-height: 1.45;
+}
+
+.admin-auth-panel {
+  display: grid;
+  gap: 16px;
+  padding: clamp(18px, 3vw, 28px);
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: inset 0 -5px 0 rgba(9, 10, 10, 0.07);
+}
+
+.admin-auth-panel[hidden] {
+  display: none;
+}
+
+.admin-field {
+  display: grid;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.admin-field input {
+  min-height: 50px;
+  width: 100%;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 0 14px;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+}
+
+.admin-field input:focus {
+  border-color: var(--oih-orange);
+  box-shadow: 0 0 0 4px rgba(238, 115, 38, 0.12);
+}
+
+.admin-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.admin-status-card {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--oih-sand);
+}
+
+.admin-status-card strong {
+  font-size: 18px;
+}
+
+.admin-status-card span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.admin-action-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-action-row .primary-btn,
+.admin-action-row .soft-btn {
+  flex: 1 1 180px;
+  justify-content: center;
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  body.gateway-mode {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  body.gateway-mode .gateway-panel {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  body.gateway-mode .gateway-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 160 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    display: grid !important;
+    grid-template-columns: 64px minmax(0, 1fr) 64px !important;
+    grid-template-areas: "account brand search" !important;
+    align-items: center !important;
+    min-height: calc(96px + env(safe-area-inset-top)) !important;
+    padding: calc(14px + env(safe-area-inset-top)) 22px 16px !important;
+    margin: 0 !important;
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.72), rgba(3, 5, 7, 0.16) 74%, rgba(3, 5, 7, 0)) !important;
+    color: #fff !important;
+    backdrop-filter: none !important;
+  }
+
+  body.gateway-mode .gateway-mobile-action {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #fff;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+  }
+
+  body.gateway-mode .gateway-mobile-action svg {
+    width: 31px;
+    height: 31px;
+    display: block;
+    stroke: currentColor;
+  }
+
+  body.gateway-mode .gateway-account-shortcut {
+    grid-area: account;
+    justify-self: start;
+  }
+
+  body.gateway-mode .gateway-search-shortcut {
+    grid-area: search;
+    justify-self: end;
+  }
+
+  body.gateway-mode .gateway-logo {
+    grid-area: brand !important;
+    justify-self: center !important;
+    justify-content: center !important;
+    max-width: 70px !important;
+    min-width: 0 !important;
+    width: 70px !important;
+    gap: 0 !important;
+    color: #fff !important;
+  }
+
+  body.gateway-mode .gateway-logo span {
+    display: none !important;
+  }
+
+  body.gateway-mode .gateway-logo-img {
+    width: 48px !important;
+    height: 58px !important;
+    border-radius: 9px !important;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  body.gateway-mode .gateway-header-actions {
+    display: none !important;
+  }
+
+  body.gateway-mode .desktop-nav-only {
+    display: none !important;
+  }
+
+  body.gateway-mode .mobile-nav-only {
+    display: grid !important;
+  }
+
+  body.gateway-mode .gateway-nav {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 170 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: calc(74px + env(safe-area-inset-bottom)) !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    padding: 7px 10px max(7px, env(safe-area-inset-bottom)) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(13, 13, 13, 0.96);
+    box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.34);
+    overflow: visible !important;
+  }
+
+  body.gateway-mode .gateway-nav-btn {
+    min-width: 0 !important;
+    min-height: 58px !important;
+    display: grid !important;
+    place-items: center !important;
+    align-content: center !important;
+    gap: 4px !important;
+    padding: 0 !important;
+    border-radius: 14px !important;
+    color: rgba(255, 255, 255, 0.58) !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    text-transform: none !important;
+    text-shadow: none !important;
+  }
+
+  body.gateway-mode .gateway-nav-btn.active {
+    color: #fff !important;
+  }
+
+  body.gateway-mode .gateway-nav-btn.active::after {
+    display: none !important;
+  }
+
+  body.gateway-mode .gateway-nav-btn.desktop-nav-only {
+    display: none !important;
+  }
+
+  body.gateway-mode .gateway-nav-btn.mobile-nav-only {
+    display: grid !important;
+  }
+
+  body.gateway-mode .gateway-nav-icon {
+    position: relative;
+    width: 28px;
+    height: 27px;
+    display: block;
+    color: currentColor;
+  }
+
+  body.gateway-mode .gateway-nav-icon.discover::before {
+    content: "";
+    position: absolute;
+    inset: 1px 4px 3px;
+    background: currentColor;
+    clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
+  }
+
+  body.gateway-mode .gateway-nav-icon.watch::before {
+    content: "";
+    position: absolute;
+    inset: 4px 2px 3px;
+    border-radius: 3px;
+    background: currentColor;
+  }
+
+  body.gateway-mode .gateway-nav-icon.listen::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 4px;
+    height: 17px;
+    border: 5px solid currentColor;
+    border-bottom: 0;
+    border-radius: 18px 18px 0 0;
+  }
+
+  body.gateway-mode .gateway-nav-icon.listen::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    height: 10px;
+    border-radius: 8px;
+    background: currentColor;
+  }
+
+  body.gateway-mode .gateway-nav-icon.kids::before {
+    content: "";
+    position: absolute;
+    inset: 5px 3px 2px;
+    transform: skewX(-13deg);
+    border-radius: 3px;
+    background: currentColor;
+  }
+
+  body.gateway-mode .gateway-nav-icon.library::before,
+  body.gateway-mode .gateway-nav-icon.library::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    height: 6px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  body.gateway-mode .gateway-nav-icon.library::before {
+    top: 6px;
+  }
+
+  body.gateway-mode .gateway-nav-icon.library::after {
+    bottom: 6px;
+  }
+
+  body.gateway-mode .gateway-slide.documentary-hero {
+    min-height: 100svh !important;
+    padding-top: calc(118px + env(safe-area-inset-top)) !important;
+    padding-bottom: 118px !important;
+  }
+
+  body.gateway-mode .gateway-slide:not(.documentary-hero),
+  body.gateway-mode .gateway-slide.watch-hero {
+    min-height: 100svh !important;
+    padding-top: calc(118px + env(safe-area-inset-top)) !important;
+    padding-bottom: 118px !important;
+  }
+
+  body.gateway-mode .gateway-popular {
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .account-card {
+    grid-template-columns: 1fr;
+  }
+
+  .account-top {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .account-shell {
+    width: min(100%, calc(100% - 28px));
+    padding-top: 18px;
+  }
+
+  .account-copy h2 {
+    font-size: clamp(44px, 14vw, 64px);
+  }
+
+  .admin-action-row {
+    display: grid;
+  }
+}
+
 @media (max-width: 360px) {
   body.gateway-mode .gateway-logo span {
     display: none !important;
@@ -9035,21 +9422,53 @@ body.gateway-mode .courses-row .content-kind {
       </div>
     </header>
 
-    <section class="view active" id="gatewayView">
-      <section class="gateway-panel">
-        <header class="gateway-header">
-          <button class="gateway-logo" type="button" data-nav-jump="gatewayView" aria-label="Home">
-            <img class="gateway-logo-img" src="assets/oneinhim-logo-primary.jpg" alt="One In Him Foundation" />
-            <span>One In Him</span>
-          </button>
-          <nav class="gateway-nav" aria-label="Home navigation">
-            <button class="gateway-nav-btn active" type="button" data-gateway-nav="discover" data-i18n="homeNav.discover">Discover</button>
-            <button class="gateway-nav-btn" type="button" data-gateway-nav="watch" data-i18n="homeNav.watch">Watch</button>
-            <button class="gateway-nav-btn" type="button" data-gateway-nav="listen" data-i18n="homeNav.listen">Listen</button>
-            <button class="gateway-nav-btn" type="button" data-gateway-nav="account" data-i18n="homeNav.account">Account</button>
-          </nav>
-          <div class="gateway-header-actions">
-            <div class="gateway-language" aria-label="Site language">
+	    <section class="view active" id="gatewayView">
+	      <section class="gateway-panel">
+	        <header class="gateway-header">
+	          <button class="gateway-mobile-action gateway-account-shortcut" type="button" data-gateway-nav="account" aria-label="Account">
+	            <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+	              <circle cx="16" cy="11" r="5.2"></circle>
+	              <path d="M6.8 26.2c1.7-5 5-7.5 9.2-7.5s7.5 2.5 9.2 7.5"></path>
+	              <circle cx="16" cy="16" r="13"></circle>
+	            </svg>
+	          </button>
+	          <button class="gateway-logo" type="button" data-nav-jump="gatewayView" aria-label="Home">
+	            <img class="gateway-logo-img" src="assets/oneinhim-logo-primary.jpg" alt="One In Him Foundation" />
+	            <span>One In Him</span>
+	          </button>
+	          <button class="gateway-mobile-action gateway-search-shortcut" type="button" data-nav-jump="askView" aria-label="Search">
+	            <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+	              <circle cx="14.2" cy="14.2" r="8"></circle>
+	              <path d="M20.2 20.2 27 27"></path>
+	            </svg>
+	          </button>
+	          <nav class="gateway-nav" aria-label="Home navigation">
+	            <button class="gateway-nav-btn active" type="button" data-gateway-nav="discover">
+	              <span class="gateway-nav-icon discover" aria-hidden="true"></span>
+	              <span data-i18n="homeNav.discover">Discover</span>
+	            </button>
+	            <button class="gateway-nav-btn" type="button" data-gateway-nav="watch">
+	              <span class="gateway-nav-icon watch" aria-hidden="true"></span>
+	              <span data-i18n="homeNav.watch">Watch</span>
+	            </button>
+	            <button class="gateway-nav-btn" type="button" data-gateway-nav="listen">
+	              <span class="gateway-nav-icon listen" aria-hidden="true"></span>
+	              <span data-i18n="homeNav.listen">Listen</span>
+	            </button>
+	            <button class="gateway-nav-btn mobile-nav-only" type="button" data-gateway-nav="kids">
+	              <span class="gateway-nav-icon kids" aria-hidden="true"></span>
+	              <span data-i18n="homeNav.kids">Kids</span>
+	            </button>
+	            <button class="gateway-nav-btn mobile-nav-only" type="button" data-gateway-nav="library">
+	              <span class="gateway-nav-icon library" aria-hidden="true"></span>
+	              <span data-i18n="homeNav.library">Library</span>
+	            </button>
+	            <button class="gateway-nav-btn desktop-nav-only" type="button" data-gateway-nav="account">
+	              <span data-i18n="homeNav.account">Account</span>
+	            </button>
+	          </nav>
+	          <div class="gateway-header-actions">
+	            <div class="gateway-language" aria-label="Site language">
               <button class="lang-btn active" type="button" data-lang="en">English</button>
               <button class="lang-btn" type="button" data-lang="nl">Nederlands</button>
             </div>
@@ -9302,7 +9721,7 @@ body.gateway-mode .courses-row .content-kind {
             </div>
           </section>
 
-          <section class="discovery-band sand courses-band">
+	          <section class="discovery-band sand courses-band home-anchor" data-home-section="library">
             <div class="discovery-section-head courses-section-head">
               <div>
                 <h2 data-i18n="homeDiscover.seriesTitle">Full courses and series</h2>
@@ -9488,11 +9907,58 @@ body.gateway-mode .courses-row .content-kind {
             </article>
           </div>
         </div>
-      </section>
-    </section>
+	      </section>
+	    </section>
 
-    <section class="view" id="onboardingView">
-      <div class="onboarding-shell">
+	    <section class="view" id="accountView">
+	      <section class="account-shell">
+	        <header class="account-top">
+	          <button class="path-home-brand" type="button" data-nav-jump="gatewayView" aria-label="Home">
+	            <img src="assets/oneinhim-logo-primary.jpg" alt="" />
+	            <span>One In Him</span>
+	          </button>
+	          <button class="path-home-button" type="button" data-nav-jump="gatewayView">
+	            <span>Home</span>
+	          </button>
+	        </header>
+
+	        <main class="account-card">
+	          <section class="account-copy">
+	            <p class="eyebrow" data-i18n="account.eyebrow">Account</p>
+	            <h2 data-i18n="account.title">Admin workshop</h2>
+	            <p data-i18n="account.copy">Sign in as an admin to open the content workshop and prepare videos, text, audio, and journey clips for the app.</p>
+	          </section>
+
+	          <section class="admin-auth-panel" id="adminSignedOut">
+	            <label class="admin-field" for="adminEmail">
+	              <span data-i18n="account.email">Admin email</span>
+	              <input id="adminEmail" type="email" autocomplete="username" placeholder="admin@oneinhim.org" />
+	            </label>
+	            <label class="admin-field" for="adminPassword">
+	              <span data-i18n="account.password">Password</span>
+	              <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Password" />
+	            </label>
+	            <button class="primary-btn" id="adminLogin" type="button" data-i18n="account.signIn">Sign in as admin</button>
+	            <p class="admin-note" data-i18n="account.prototypeNote">Prototype note: this unlocks admin mode on this device. Before launch, we will connect this to Supabase Auth and protected database rules.</p>
+	          </section>
+
+	          <section class="admin-auth-panel" id="adminSignedIn" hidden>
+	            <div class="admin-status-card">
+	              <strong data-i18n="account.signedIn">Admin mode is on</strong>
+	              <span id="adminSessionLabel">Signed in on this device.</span>
+	            </div>
+	            <div class="admin-action-row">
+	              <a class="primary-btn" id="adminWorkshopLink" href="oneinhim_content_workshop.html" data-i18n="account.openWorkshop">Open content workshop</a>
+	              <button class="soft-btn" id="adminLogout" type="button" data-i18n="account.signOut">Sign out</button>
+	            </div>
+	            <p class="admin-note" data-i18n="account.nextSecurity">Next security step: real admin accounts in Supabase, then only approved admins can publish content.</p>
+	          </section>
+	        </main>
+	      </section>
+	    </section>
+
+	    <section class="view" id="onboardingView">
+	      <div class="onboarding-shell">
         <header class="onboarding-top">
           <button class="onboarding-back" type="button" id="onboardingBack" aria-label="Back">‹</button>
           <div class="onboarding-progress" aria-label="Onboarding progress">
@@ -10282,6 +10748,7 @@ const embeddedContentPackages = [{"packageId":"pkg_one_basics_1_1_eternal_life",
 
 let sharedContentPackages = [];
 const WORKSHOP_PUBLISHED_PACKAGES_KEY = "oneinhim.workshop.publishedPackages.v1";
+const ADMIN_SESSION_KEY = "oneinhim.admin.session.v1";
 const TEAM_SYNC_CONFIG_KEY = "oneinhim.teamSyncConfig.v1";
 const TEAM_SYNC_DEFAULT_CONFIG = {
   enabled: false,
@@ -10409,8 +10876,9 @@ const gatewayHeroSwipe = {
 
 const viewText = {
   en: {
-    gatewayView: ["Start", "A clear first step for your Christian journey."],
-    onboardingView: ["Get started", "A few quick choices to find the right first step."],
+	    gatewayView: ["Start", "A clear first step for your Christian journey."],
+	    accountView: ["Account", "Admin access and content workshop."],
+	    onboardingView: ["Get started", "A few quick choices to find the right first step."],
     pathSelectView: ["Get started", "Choose the place in your discipleship journey that fits today."],
     discoveryDetailView: ["Discover", "Watch or read without leaving discovery."],
     stageDetailView: ["Journey", "Sections, units, and lessons in one path."],
@@ -10424,8 +10892,9 @@ const viewText = {
     shareView: ["Share", "Something useful for someone you care about."]
   },
   nl: {
-    gatewayView: ["Start", "Een duidelijke eerste stap voor je reis met Jezus."],
-    onboardingView: ["Begin hier", "Een paar snelle keuzes om de juiste eerste stap te vinden."],
+	    gatewayView: ["Start", "Een duidelijke eerste stap voor je reis met Jezus."],
+	    accountView: ["Account", "Admin toegang en content workshop."],
+	    onboardingView: ["Begin hier", "Een paar snelle keuzes om de juiste eerste stap te vinden."],
     pathSelectView: ["Begin hier", "Kies de plek in je discipelschapsreis die vandaag past."],
     discoveryDetailView: ["Ontdek", "Kijk, luister of lees zonder ontdekking te verlaten."],
     stageDetailView: ["Reis", "Secties, units en lessen in een pad."],
@@ -10452,10 +10921,12 @@ const i18n = {
     "nav.speakers": "Speakers",
     "nav.share": "Share",
     "top.statePill": "No wasted minutes",
-    "homeNav.discover": "Discover",
-    "homeNav.watch": "Watch",
-    "homeNav.listen": "Listen",
-    "homeNav.account": "Account",
+	    "homeNav.discover": "Discover",
+	    "homeNav.watch": "Watch",
+	    "homeNav.listen": "Listen",
+	    "homeNav.kids": "Kids",
+	    "homeNav.library": "Library",
+	    "homeNav.account": "Account",
     "gateway.headline": "Want to grow in your Christian journey?",
     "gateway.copy": "Find a clear next step through short teachings, prayer, Scripture, trusted voices, and guided milestones.",
     "gateway.start": "Get started",
@@ -10469,7 +10940,22 @@ const i18n = {
     "gateway.basicsHeadline": "Start with Eternal Life",
     "gateway.basicsCopy": "Watch the full One Basics 1.1 episode and begin the foundation of knowing God personally through Jesus.",
     "gateway.basicsButton": "Watch full episode",
-    "gateway.accountToast": "Account profiles are coming later. For now, your progress is saved on this device.",
+	    "gateway.accountToast": "Account profiles are coming later. For now, your progress is saved on this device.",
+	    "gateway.kidsToast": "Kids content is coming next.",
+	    "account.eyebrow": "Account",
+	    "account.title": "Admin workshop",
+	    "account.copy": "Sign in as an admin to open the content workshop and prepare videos, text, audio, and journey clips for the app.",
+	    "account.email": "Admin email",
+	    "account.password": "Password",
+	    "account.signIn": "Sign in as admin",
+	    "account.signOut": "Sign out",
+	    "account.openWorkshop": "Open content workshop",
+	    "account.signedIn": "Admin mode is on",
+	    "account.prototypeNote": "Prototype note: this unlocks admin mode on this device. Before launch, we will connect this to Supabase Auth and protected database rules.",
+	    "account.nextSecurity": "Next security step: real admin accounts in Supabase, then only approved admins can publish content.",
+	    "account.loginNeeded": "Add your admin email and password to continue.",
+	    "account.loginSuccess": "Admin mode is on",
+	    "account.logoutSuccess": "Signed out of admin mode",
     "gateway.optionsTitle": "Find your starting point",
     "gateway.optionsCopy": "Choose what sounds closest, or ask your own question.",
     "gateway.choiceExploreTitle": "I am exploring Jesus",
@@ -10757,10 +11243,12 @@ const i18n = {
     "nav.speakers": "Sprekers",
     "nav.share": "Delen",
     "top.statePill": "Geen minuut verspild",
-    "homeNav.discover": "Ontdek",
-    "homeNav.watch": "Kijken",
-    "homeNav.listen": "Luisteren",
-    "homeNav.account": "Account",
+	    "homeNav.discover": "Ontdek",
+	    "homeNav.watch": "Kijken",
+	    "homeNav.listen": "Luisteren",
+	    "homeNav.kids": "Kids",
+	    "homeNav.library": "Bibliotheek",
+	    "homeNav.account": "Account",
     "gateway.headline": "Wil je groeien in je christelijke reis?",
     "gateway.copy": "Vind een duidelijke volgende stap met korte teachings, gebed, de Bijbel, vertrouwde stemmen en begeleide mijlpalen.",
     "gateway.start": "Begin hier",
@@ -10774,7 +11262,22 @@ const i18n = {
     "gateway.basicsHeadline": "Begin met eeuwig leven",
     "gateway.basicsCopy": "Bekijk de volledige One Basics 1.1-aflevering en begin bij de basis: God persoonlijk kennen door Jezus.",
     "gateway.basicsButton": "Bekijk volledige aflevering",
-    "gateway.accountToast": "Accountprofielen komen later. Voor nu wordt je voortgang op dit apparaat bewaard.",
+	    "gateway.accountToast": "Accountprofielen komen later. Voor nu wordt je voortgang op dit apparaat bewaard.",
+	    "gateway.kidsToast": "Kids-content komt later.",
+	    "account.eyebrow": "Account",
+	    "account.title": "Admin workshop",
+	    "account.copy": "Log in als admin om de content workshop te openen en video's, tekst, audio en journey clips voor de app klaar te zetten.",
+	    "account.email": "Admin e-mail",
+	    "account.password": "Wachtwoord",
+	    "account.signIn": "Log in als admin",
+	    "account.signOut": "Uitloggen",
+	    "account.openWorkshop": "Open content workshop",
+	    "account.signedIn": "Adminmodus staat aan",
+	    "account.prototypeNote": "Prototype-opmerking: dit ontgrendelt adminmodus op dit apparaat. Voor lancering koppelen we dit aan Supabase Auth en beveiligde database-regels.",
+	    "account.nextSecurity": "Volgende beveiligingsstap: echte adminaccounts in Supabase, zodat alleen goedgekeurde admins content kunnen publiceren.",
+	    "account.loginNeeded": "Vul je admin e-mail en wachtwoord in om verder te gaan.",
+	    "account.loginSuccess": "Adminmodus staat aan",
+	    "account.logoutSuccess": "Uitgelogd uit adminmodus",
     "gateway.optionsTitle": "Vind jouw startpunt",
     "gateway.optionsCopy": "Kies wat het beste past, of stel je eigen vraag.",
     "gateway.choiceExploreTitle": "Ik ontdek wie Jezus is",
@@ -11065,9 +11568,17 @@ const els = {
   viewSubtitle: document.getElementById("viewSubtitle"),
   langButtons: document.querySelectorAll("[data-lang]"),
   popularRail: document.getElementById("popularRail"),
-  gatewayQuestion: document.getElementById("gatewayQuestion"),
-  gatewayCharacterArt: document.getElementById("gatewayCharacterArt"),
-  onboardingProgress: document.getElementById("onboardingProgress"),
+	  gatewayQuestion: document.getElementById("gatewayQuestion"),
+	  gatewayCharacterArt: document.getElementById("gatewayCharacterArt"),
+	  adminEmail: document.getElementById("adminEmail"),
+	  adminPassword: document.getElementById("adminPassword"),
+	  adminLogin: document.getElementById("adminLogin"),
+	  adminLogout: document.getElementById("adminLogout"),
+	  adminSignedOut: document.getElementById("adminSignedOut"),
+	  adminSignedIn: document.getElementById("adminSignedIn"),
+	  adminSessionLabel: document.getElementById("adminSessionLabel"),
+	  adminWorkshopLink: document.getElementById("adminWorkshopLink"),
+	  onboardingProgress: document.getElementById("onboardingProgress"),
   onboardingPrompt: document.getElementById("onboardingPrompt"),
   onboardingContent: document.getElementById("onboardingContent"),
   onboardingGuideArt: document.getElementById("onboardingGuideArt"),
@@ -11344,10 +11855,78 @@ function scrollHomeSection(target) {
   section.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function getAdminSession() {
+  const session = readLocalJson(ADMIN_SESSION_KEY, null);
+  return session && session.admin === true ? session : null;
+}
+
+function setAdminSession(email) {
+  try {
+    localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({
+      admin: true,
+      email,
+      signedInAt: new Date().toISOString()
+    }));
+  } catch (error) {
+    // Admin mode can still render for this visit if storage is unavailable.
+  }
+}
+
+function clearAdminSession() {
+  try {
+    localStorage.removeItem(ADMIN_SESSION_KEY);
+  } catch (error) {
+    // Ignore storage errors in private browsing modes.
+  }
+}
+
+function renderAdminAccount() {
+  if (!els.adminSignedOut || !els.adminSignedIn) return;
+  const session = getAdminSession();
+  els.adminSignedOut.hidden = Boolean(session);
+  els.adminSignedIn.hidden = !session;
+  if (els.adminWorkshopLink) {
+    els.adminWorkshopLink.href = "oneinhim_content_workshop.html";
+  }
+  if (session && els.adminSessionLabel) {
+    const signedInDate = session.signedInAt ? new Date(session.signedInAt) : null;
+    const dateText = signedInDate && !Number.isNaN(signedInDate.getTime())
+      ? signedInDate.toLocaleString()
+      : "";
+    els.adminSessionLabel.textContent = `${session.email || "Admin"}${dateText ? ` · ${dateText}` : ""}`;
+  }
+}
+
+function handleAdminLogin() {
+  if (!els.adminEmail || !els.adminPassword) return;
+  const email = els.adminEmail.value.trim();
+  const password = els.adminPassword.value.trim();
+  if (!email || !password) {
+    toast(t("account.loginNeeded"));
+    return;
+  }
+  setAdminSession(email);
+  els.adminPassword.value = "";
+  renderAdminAccount();
+  toast(t("account.loginSuccess"));
+}
+
+function handleAdminLogout() {
+  clearAdminSession();
+  renderAdminAccount();
+  toast(t("account.logoutSuccess"));
+}
+
 function handleGatewayNav(target) {
   if (target === "account") {
     setGatewayNavActive(target);
-    toast(t("gateway.accountToast"));
+    setView("accountView");
+    renderAdminAccount();
+    return;
+  }
+  if (target === "kids") {
+    setGatewayNavActive(target);
+    toast(t("gateway.kidsToast"));
     return;
   }
   setGatewayNavActive(target);
@@ -11991,10 +12570,11 @@ function setView(viewId) {
   if (nextViewId !== "moduleQuizView") document.body.classList.remove("quiz-checked");
   document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === nextViewId));
   document.querySelectorAll(".nav-btn").forEach((button) => button.classList.toggle("active", button.dataset.nav === nextViewId));
-  const [title, subtitle] = currentViewText(nextViewId);
-  els.viewTitle.textContent = title;
-  els.viewSubtitle.textContent = subtitle;
-  if (nextViewId === "onboardingView") renderOnboarding();
+	  const [title, subtitle] = currentViewText(nextViewId);
+	  els.viewTitle.textContent = title;
+	  els.viewSubtitle.textContent = subtitle;
+	  if (nextViewId === "accountView") renderAdminAccount();
+	  if (nextViewId === "onboardingView") renderOnboarding();
   window.scrollTo({ top: 0, behavior: "auto" });
   if (nextViewId === "stageDetailView") {
     const targetStageChoice = state.activeStageId;
@@ -14562,12 +15142,23 @@ function wireStaticActions() {
     else scheduleGatewayHeroAutoplay();
   });
   wireGatewayHeroSwipe();
-  els.langButtons.forEach((button) => {
-    button.addEventListener("click", () => applyLanguage(button.dataset.lang, true));
-  });
-  document.querySelectorAll("[data-popular-start]").forEach((button) => {
-    button.addEventListener("click", () => handlePopularStart(button.dataset.popularStart));
-  });
+	  els.langButtons.forEach((button) => {
+	    button.addEventListener("click", () => applyLanguage(button.dataset.lang, true));
+	  });
+	  if (els.adminLogin) {
+	    els.adminLogin.addEventListener("click", handleAdminLogin);
+	  }
+	  if (els.adminPassword) {
+	    els.adminPassword.addEventListener("keydown", (event) => {
+	      if (event.key === "Enter") handleAdminLogin();
+	    });
+	  }
+	  if (els.adminLogout) {
+	    els.adminLogout.addEventListener("click", handleAdminLogout);
+	  }
+	  document.querySelectorAll("[data-popular-start]").forEach((button) => {
+	    button.addEventListener("click", () => handlePopularStart(button.dataset.popularStart));
+	  });
   document.querySelectorAll("[data-popular-scroll]").forEach((button) => {
     button.addEventListener("click", () => {
       const direction = Number(button.dataset.popularScroll) || 1;
@@ -14656,11 +15247,12 @@ async function boot() {
   await loadContentPackages();
   wireStaticActions();
   applyLanguage("en");
-  renderAll();
-  renderAsk();
-  renderOnboarding();
-  setView("gatewayView");
-}
+	  renderAll();
+	  renderAsk();
+	  renderOnboarding();
+	  renderAdminAccount();
+	  setView("gatewayView");
+	}
 
 boot();
 </script>

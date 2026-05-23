@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>One In Him Content Pipeline Map</title>
+<style>
+:root {
+  --bg: #f6f3ee;
+  --paper: #ffffff;
+  --ink: #090a0a;
+  --muted: #65605b;
+  --line: #ddd6cb;
+  --orange: #ee7326;
+  --gold: #f6ca35;
+  --olive: #446523;
+  --clay: #8b2218;
+  --black: #090a0a;
+  --cream: #fffaf4;
+  --shadow: 0 20px 60px rgba(9, 10, 10, 0.1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button { font: inherit; cursor: pointer; }
+
+.page {
+  min-height: 100vh;
+  padding: 22px;
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--orange);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 900px;
+  margin: 0;
+  font-size: clamp(38px, 5vw, 76px);
+  line-height: 0.92;
+  letter-spacing: 0;
+}
+
+.intro p {
+  max-width: 850px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.open-workshop {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 900;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.intro-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.open-workshop.primary {
+  border-color: var(--orange);
+  background: var(--orange);
+  color: #fff;
+  box-shadow: inset 0 -4px 0 rgba(9, 10, 10, 0.16);
+}
+
+.rules-panel {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.rules-head {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 8px;
+}
+
+.rules-head h2 {
+  margin: 0;
+  max-width: 320px;
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 0.95;
+}
+
+.rules-head p:last-child {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.rule-card {
+  min-width: 160px;
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 2px solid color-mix(in srgb, var(--stage-color) 45%, var(--line));
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--stage-color) 10%, #fff) 0%, #fff 72%);
+}
+
+.rule-number {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--stage-color);
+  color: var(--number-color, #fff);
+  font-size: 22px;
+  font-weight: 950;
+  box-shadow: inset 0 -4px 0 rgba(9, 10, 10, 0.12);
+}
+
+.rule-card h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.05;
+}
+
+.rule-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.rule-card strong {
+  color: var(--ink);
+}
+
+.rule-pill {
+  width: fit-content;
+  margin-top: auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--stage-color) 18%, #fff);
+  color: color-mix(in srgb, var(--stage-color) 72%, #111);
+  font-size: 11px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(760px, 1fr) 360px;
+  gap: 16px;
+  align-items: start;
+}
+
+.map-shell,
+.side {
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.map-shell {
+  overflow: auto;
+  padding: 14px;
+}
+
+.map {
+  position: relative;
+  width: 1180px;
+  height: 760px;
+  border-radius: 12px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(9,10,10,0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(9,10,10,0.03) 1px, transparent 1px),
+    var(--cream);
+  background-size: 64px 64px;
+}
+
+.lane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dashed rgba(9,10,10,0.1);
+}
+
+.lane:last-child {
+  border-right: 1px dashed rgba(9,10,10,0.1);
+}
+
+.lane-title {
+  position: absolute;
+  top: 18px;
+  left: 14px;
+  right: 14px;
+  color: rgba(9,10,10,0.34);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.node {
+  position: absolute;
+  z-index: 4;
+  width: 178px;
+  min-height: 88px;
+  padding: 12px;
+  border: 2px solid #d8d0c3;
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: inset 0 -4px 0 rgba(9,10,10,0.07);
+}
+
+.node.active {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 5px rgba(238,115,38,0.16), inset 0 -4px 0 rgba(9,10,10,0.07);
+}
+
+.node strong {
+  display: block;
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.node span {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.node::before {
+  content: attr(data-kind);
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  padding: 2px 7px;
+  margin-bottom: 8px;
+  border-radius: 999px;
+  background: #f3ede3;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.node.source::before { background: #ffe7d7; color: #9c4315; }
+.node.ai::before { background: #eef3e8; color: var(--olive); }
+.node.check::before { background: #fff4bf; color: #7a5a00; }
+.node.package::before { background: #f1e5df; color: var(--clay); }
+.node.publish::before { background: #eceeed; color: var(--black); }
+
+svg {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.edge {
+  stroke: #beb5a7;
+  stroke-width: 3;
+  fill: none;
+  opacity: 0.45;
+}
+
+.edge.active {
+  stroke: var(--orange);
+  stroke-width: 5;
+  opacity: 1;
+}
+
+.step-dot {
+  opacity: 0;
+}
+
+.step-dot.active {
+  opacity: 1;
+}
+
+.step-dot circle {
+  fill: var(--orange);
+  stroke: var(--paper);
+  stroke-width: 4;
+}
+
+.step-dot text {
+  fill: #fff;
+  font-size: 13px;
+  font-weight: 950;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.side {
+  position: sticky;
+  top: 16px;
+  overflow: hidden;
+}
+
+.side-head,
+.steps-head {
+  padding: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.side-head h2,
+.steps-head h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.side-head p,
+.steps-head p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.flow-list {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.flow-button {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--line);
+  border-radius: 11px;
+  background: var(--paper);
+  color: var(--ink);
+  text-align: left;
+}
+
+.flow-button.active {
+  border-color: var(--orange);
+  background: #fff4ed;
+}
+
+.flow-button strong {
+  display: block;
+  font-size: 14px;
+}
+
+.flow-button span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.steps {
+  border-top: 1px solid var(--line);
+  max-height: 420px;
+  overflow: auto;
+}
+
+.step-list {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.step-card {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fbfaf7;
+}
+
+.step-number {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 950;
+}
+
+.step-card strong {
+  display: block;
+  font-size: 13px;
+}
+
+.step-card p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.clear {
+  margin: 0 14px 14px;
+  min-height: 38px;
+  border: 2px dashed var(--line);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+@media (max-width: 980px) {
+  .intro,
+  .rules-panel,
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .side {
+    position: static;
+  }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="intro">
+    <div>
+      <p class="eyebrow">One In Him admin</p>
+      <h1>How content becomes useful in the app.</h1>
+      <p>Pick a flow to see how pre-approved videos, books, audio, and lesson notes move from an upload into stage-coloured content for Discover and Journey.</p>
+    </div>
+    <div class="intro-actions">
+      <a class="open-workshop" href="oneinhim_content_item_preview.html">Content Item Template</a>
+      <a class="open-workshop primary" href="oneinhim_content_workshop.html">Open Content Workshop</a>
+    </div>
+  </header>
+
+  <section class="rules-panel" aria-label="Content depth rules">
+    <div class="rules-head">
+      <p class="eyebrow">Content depth rules</p>
+      <h2>Content should grow with the person.</h2>
+      <p>Early stages should feel short, clear, and easy to finish. Further along, the app can invite people into longer teaching, books, deep dives, courses, and leadership formation.</p>
+    </div>
+    <div class="rules-grid" id="rulesGrid"></div>
+  </section>
+
+  <main class="layout">
+    <section class="map-shell" aria-label="Content pipeline map">
+      <div class="map" id="map">
+        <div class="lane" style="left: 0; width: 196px;"><div class="lane-title">Sources</div></div>
+        <div class="lane" style="left: 196px; width: 196px;"><div class="lane-title">Preparation</div></div>
+        <div class="lane" style="left: 392px; width: 196px;"><div class="lane-title">Tagging</div></div>
+        <div class="lane" style="left: 588px; width: 196px;"><div class="lane-title">Quality check</div></div>
+        <div class="lane" style="left: 784px; width: 196px;"><div class="lane-title">Packaging</div></div>
+        <div class="lane" style="left: 980px; width: 200px;"><div class="lane-title">Learner app</div></div>
+
+        <svg viewBox="0 0 1180 760" preserveAspectRatio="none" aria-hidden="true" id="edgeLayer"></svg>
+        <div id="nodeLayer"></div>
+      </div>
+    </section>
+
+    <aside class="side">
+      <div class="side-head">
+        <h2>Flows</h2>
+        <p>Click one action to highlight what happens and what gets passed along.</p>
+      </div>
+      <div class="flow-list" id="flowList"></div>
+      <button class="clear" id="clearFlow">Clear selection</button>
+      <section class="steps">
+        <div class="steps-head">
+          <h2>Steps</h2>
+          <p id="stepsIntro">Choose a flow to see the plain-English process.</p>
+        </div>
+        <div class="step-list" id="stepList"></div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script type="application/json" id="pipelineData">
+{
+  "rules": [
+    {
+      "stage": 1,
+      "title": "Explore Jesus",
+      "colour": "#ee7326",
+      "numberColour": "#ffffff",
+      "length": "60 sec to 5 min",
+      "formats": "Short clips, simple answers, testimonies, clear first steps.",
+      "rule": "Very low pressure. One useful thought, one gentle invitation, easy to share."
+    },
+    {
+      "stage": 2,
+      "title": "Start Following Jesus",
+      "colour": "#f6ca35",
+      "numberColour": "#090a0a",
+      "length": "3 to 10 min",
+      "formats": "First lessons, prayer, Bible basics, baptism, simple daily practices.",
+      "rule": "Keep it practical. Each piece should end with one clear thing to try."
+    },
+    {
+      "stage": 3,
+      "title": "Grow Deep Roots",
+      "colour": "#446523",
+      "numberColour": "#ffffff",
+      "length": "8 to 20 min",
+      "formats": "Teaching, guided readings, audio, hard questions, reflection.",
+      "rule": "Go deeper, but stay caring. Give room for notes, Scripture, and honest questions."
+    },
+    {
+      "stage": 4,
+      "title": "Live on Mission",
+      "colour": "#8b2218",
+      "numberColour": "#ffffff",
+      "length": "10 to 30 min",
+      "formats": "Short courses, service, evangelism, small group practice, real-life challenges.",
+      "rule": "Move toward action. Content should help someone love, serve, share, or disciple."
+    },
+    {
+      "stage": 5,
+      "title": "Lead and Multiply",
+      "colour": "#090a0a",
+      "numberColour": "#ffffff",
+      "length": "20 to 60+ min",
+      "formats": "Courses, books, deep dives, leadership, theology, ministry formation.",
+      "rule": "Longer formats are welcome here, often with accountability, a cohort, or a mentor."
+    }
+  ],
+  "nodes": [
+    { "id": "upload", "kind": "source", "title": "Upload folder", "subtitle": "New video, audio, PDF, notes", "x": 26, "y": 118 },
+    { "id": "speaker", "kind": "source", "title": "Speaker profile", "subtitle": "Approved voice, language, audience", "x": 26, "y": 302 },
+    { "id": "rights", "kind": "source", "title": "Source approval", "subtitle": "Owned, licensed, already cleared", "x": 26, "y": 486 },
+    { "id": "extract", "kind": "ai", "title": "Extract text", "subtitle": "Transcript, book text, notes", "x": 222, "y": 118 },
+    { "id": "prepare", "kind": "ai", "title": "Prepare draft", "subtitle": "Summary, moments, rough tags", "x": 222, "y": 302 },
+    { "id": "segments", "kind": "ai", "title": "Useful moments", "subtitle": "Clips, excerpts, quotes", "x": 222, "y": 486 },
+    { "id": "schema", "kind": "ai", "title": "Tagging schema", "subtitle": "Stage, topic, questions, format", "x": 418, "y": 118 },
+    { "id": "recommend", "kind": "ai", "title": "Recommendation fit", "subtitle": "Who this helps and why", "x": 418, "y": 302 },
+    { "id": "care", "kind": "check", "title": "Care note", "subtitle": "Normal, sensitive, needs support", "x": 418, "y": 486 },
+    { "id": "editor", "kind": "check", "title": "Content check", "subtitle": "Title, summary, clips, quality", "x": 614, "y": 118 },
+    { "id": "publishReady", "kind": "check", "title": "Publish ready", "subtitle": "Ready, revise, or archive", "x": 614, "y": 486 },
+    { "id": "discoverPackage", "kind": "package", "title": "Discover item", "subtitle": "Standalone content people can open", "x": 810, "y": 98 },
+    { "id": "journeyPackage", "kind": "package", "title": "Journey module", "subtitle": "Ordered lesson with next step", "x": 810, "y": 274 },
+    { "id": "seriesPackage", "kind": "package", "title": "Series / course", "subtitle": "Episodes or training path", "x": 810, "y": 450 },
+    { "id": "discover", "kind": "publish", "title": "Home Discover", "subtitle": "Taste content immediately", "x": 1002, "y": 98 },
+    { "id": "journey", "kind": "publish", "title": "Discipleship journey", "subtitle": "Stage-coloured path", "x": 1002, "y": 274 },
+    { "id": "profile", "kind": "publish", "title": "Learner profile", "subtitle": "Notes, saves, progress", "x": 1002, "y": 450 },
+    { "id": "share", "kind": "publish", "title": "Share links", "subtitle": "Send a useful moment", "x": 1002, "y": 626 }
+  ],
+  "flows": [
+    {
+      "id": "video",
+      "title": "Add a new video",
+      "subtitle": "From upload folder to Discovery and Journey",
+      "path": ["upload", "extract", "prepare", "schema", "editor", "discoverPackage", "discover"],
+      "steps": [
+        { "from": "Upload folder", "to": "Extract text", "copy": "The video file and title are captured; the system creates a transcript." },
+        { "from": "Extract text", "to": "Prepare draft", "copy": "Transcript becomes a summary, suggested title, suggested clips, and rough tags." },
+        { "from": "Prepare draft", "to": "Tagging schema", "copy": "The draft is mapped to stage, topic, questions answered, format, next step, and the right depth for that stage." },
+        { "from": "Tagging schema", "to": "Content check", "copy": "A team member checks whether the clips, summary, stage colour, and public wording are useful." },
+        { "from": "Content check", "to": "Discover item", "copy": "Because the source is pre-approved, the item can be packaged for immediate use once the quality check is done." },
+        { "from": "Discover item", "to": "Home Discover", "copy": "It appears on the home page with stage colour and an option to join the journey." }
+      ]
+    },
+    {
+      "id": "book",
+      "title": "Prepare a book or PDF",
+      "subtitle": "From long text to searchable excerpts",
+      "path": ["upload", "rights", "extract", "segments", "schema", "editor", "journeyPackage", "journey"],
+      "steps": [
+        { "from": "Upload folder", "to": "Source approval", "copy": "The team records that this book or PDF is owned, licensed, or already cleared for use." },
+        { "from": "Source approval", "to": "Extract text", "copy": "The PDF/book text is extracted into searchable passages." },
+        { "from": "Extract text", "to": "Useful moments", "copy": "The system suggests short excerpts, quotes, reflection prompts, and useful sections." },
+        { "from": "Useful moments", "to": "Tagging schema", "copy": "Each excerpt gets topics, questions, journey stage, difficulty, care level, and a length/depth check." },
+        { "from": "Tagging schema", "to": "Content check", "copy": "The editor checks excerpts and makes sure wording is clear, fair, and useful." },
+        { "from": "Content check", "to": "Journey module", "copy": "Prepared excerpts can become a reading session inside a module." },
+        { "from": "Journey module", "to": "Discipleship journey", "copy": "The learner reads it in the right stage, then responds with reflection or a next step." }
+      ]
+    },
+    {
+      "id": "clip",
+      "title": "Create short clips",
+      "subtitle": "Make long content snappy and shareable",
+      "path": ["upload", "extract", "segments", "recommend", "editor", "discoverPackage", "share"],
+      "steps": [
+        { "from": "Upload folder", "to": "Extract text", "copy": "A long recording enters the system with transcript and timestamps." },
+        { "from": "Extract text", "to": "Useful moments", "copy": "The system finds short moments that answer one clear question." },
+        { "from": "Useful moments", "to": "Recommendation fit", "copy": "Each clip gets matched to likely questions, stages, and audience needs." },
+        { "from": "Recommendation fit", "to": "Content check", "copy": "A team member chooses the clips that are worth someone’s time." },
+        { "from": "Content check", "to": "Discover item", "copy": "Clips are given clear titles, summaries, thumbnails, and next steps." },
+        { "from": "Discover item", "to": "Share links", "copy": "A clip can be sent to a friend with context and a gentle next step." }
+      ]
+    },
+    {
+      "id": "journey",
+      "title": "Build a journey module",
+      "subtitle": "Turn content into a guided discipleship step",
+      "path": ["schema", "recommend", "care", "journeyPackage", "journey", "profile"],
+      "steps": [
+        { "from": "Tagging schema", "to": "Recommendation fit", "copy": "The team starts with the person’s stage, the question this module answers, and the default depth rule for that stage." },
+        { "from": "Recommendation fit", "to": "Care note", "copy": "The system flags whether this is normal content, sensitive content, or something that should point to personal support." },
+        { "from": "Care note", "to": "Journey module", "copy": "Video, audio, reading, Scripture, reflection, and action are ordered into one module." },
+        { "from": "Journey module", "to": "Discipleship journey", "copy": "The module appears on the stage path with progress and clear next steps." },
+        { "from": "Discipleship journey", "to": "Learner profile", "copy": "Notes, saves, and progress are stored so the journey can continue." }
+      ]
+    },
+    {
+      "id": "publish",
+      "title": "Check and publish",
+      "subtitle": "Light quality check after pre-approved intake",
+      "path": ["prepare", "schema", "editor", "publishReady", "discoverPackage", "journeyPackage", "discover", "journey"],
+      "steps": [
+        { "from": "Prepare draft", "to": "Tagging schema", "copy": "The draft must have required tags before it can be packaged." },
+        { "from": "Tagging schema", "to": "Content check", "copy": "The editor checks usefulness, clarity, title, summary, clips, and stage fit." },
+        { "from": "Content check", "to": "Publish ready", "copy": "The item is marked ready, sent back for cleanup, or archived if it is not useful enough." },
+        { "from": "Publish ready", "to": "Discover item", "copy": "Some content is published for open discovery." },
+        { "from": "Publish ready", "to": "Journey module", "copy": "Some content becomes part of a guided path." },
+        { "from": "Discover item", "to": "Home Discover", "copy": "Discover content remains optional and easy to consume." },
+        { "from": "Journey module", "to": "Discipleship journey", "copy": "Journey content leads people through milestones." }
+      ]
+    }
+  ]
+}
+</script>
+
+<script>
+const data = JSON.parse(document.getElementById("pipelineData").textContent);
+const nodeLayer = document.getElementById("nodeLayer");
+const edgeLayer = document.getElementById("edgeLayer");
+const flowList = document.getElementById("flowList");
+const stepList = document.getElementById("stepList");
+const stepsIntro = document.getElementById("stepsIntro");
+const rulesGrid = document.getElementById("rulesGrid");
+let activeFlowId = "video";
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#039;"
+  }[char]));
+}
+
+function nodeCenter(id) {
+  const node = data.nodes.find((item) => item.id === id);
+  return { x: node.x + 89, y: node.y + 44 };
+}
+
+function edgePath(from, to) {
+  const a = nodeCenter(from);
+  const b = nodeCenter(to);
+  const mid = Math.max(42, Math.abs(b.x - a.x) * 0.42);
+  return `M ${a.x} ${a.y} C ${a.x + mid} ${a.y}, ${b.x - mid} ${b.y}, ${b.x} ${b.y}`;
+}
+
+function renderNodes(activePath = []) {
+  nodeLayer.innerHTML = data.nodes.map((node) => `
+    <article class="node ${esc(node.kind)} ${activePath.includes(node.id) ? "active" : ""}" data-kind="${esc(node.kind)}" style="left:${node.x}px; top:${node.y}px;">
+      <strong>${esc(node.title)}</strong>
+      <span>${esc(node.subtitle)}</span>
+    </article>
+  `).join("");
+}
+
+function renderEdges(activeFlow) {
+  const path = activeFlow ? activeFlow.path : [];
+  const pairs = [];
+  data.flows.forEach((flow) => {
+    for (let index = 0; index < flow.path.length - 1; index += 1) {
+      pairs.push({ from: flow.path[index], to: flow.path[index + 1], active: activeFlow && flow.id === activeFlow.id, step: index + 1 });
+    }
+  });
+  edgeLayer.innerHTML = pairs.map((pair) => {
+    const active = pair.active ? " active" : "";
+    const center = nodeCenter(pair.to);
+    return `
+      <path class="edge${active}" d="${edgePath(pair.from, pair.to)}"></path>
+      ${pair.active ? `<g class="step-dot active"><circle cx="${center.x - 72}" cy="${center.y - 38}" r="15"></circle><text x="${center.x - 72}" y="${center.y - 38}">${pair.step}</text></g>` : ""}
+    `;
+  }).join("");
+}
+
+function renderFlows() {
+  flowList.innerHTML = data.flows.map((flow) => `
+    <button class="flow-button ${flow.id === activeFlowId ? "active" : ""}" type="button" data-flow="${esc(flow.id)}">
+      <strong>${esc(flow.title)}</strong>
+      <span>${esc(flow.subtitle)}</span>
+    </button>
+  `).join("");
+  document.querySelectorAll("[data-flow]").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeFlowId = button.dataset.flow;
+      render();
+    });
+  });
+}
+
+function renderSteps(activeFlow) {
+  if (!activeFlow) {
+    stepsIntro.textContent = "Choose a flow to see the plain-English process.";
+    stepList.innerHTML = "";
+    return;
+  }
+  stepsIntro.textContent = activeFlow.subtitle;
+  stepList.innerHTML = activeFlow.steps.map((step, index) => `
+    <article class="step-card">
+      <span class="step-number">${index + 1}</span>
+      <div>
+        <strong>${esc(step.from)} → ${esc(step.to)}</strong>
+        <p>${esc(step.copy)}</p>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderRules() {
+  rulesGrid.innerHTML = data.rules.map((rule) => `
+    <article class="rule-card" style="--stage-color: ${esc(rule.colour)}; --number-color: ${esc(rule.numberColour)};">
+      <span class="rule-number">${esc(rule.stage)}</span>
+      <h3>${esc(rule.title)}</h3>
+      <p><strong>${esc(rule.length)}</strong></p>
+      <p>${esc(rule.formats)}</p>
+      <p>${esc(rule.rule)}</p>
+      <span class="rule-pill">Stage ${esc(rule.stage)} default</span>
+    </article>
+  `).join("");
+}
+
+function render() {
+  const activeFlow = data.flows.find((flow) => flow.id === activeFlowId);
+  renderNodes(activeFlow ? activeFlow.path : []);
+  renderEdges(activeFlow);
+  renderFlows();
+  renderSteps(activeFlow);
+}
+
+document.getElementById("clearFlow").addEventListener("click", () => {
+  activeFlowId = "";
+  render();
+});
+
+renderRules();
+render();
+</script>
+</body>
+</html>

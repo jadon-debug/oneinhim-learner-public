@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>One In Him Content Item Preview</title>
+<style>
+:root {
+  --bg: #f6f3ee;
+  --paper: #ffffff;
+  --ink: #090a0a;
+  --muted: #65605b;
+  --line: #ddd6cb;
+  --orange: #ee7326;
+  --gold: #f6ca35;
+  --olive: #446523;
+  --clay: #8b2218;
+  --black: #090a0a;
+  --cream: #fffaf4;
+  --shadow: 0 20px 60px rgba(9, 10, 10, 0.1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 22px;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--orange);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 980px;
+  margin: 0;
+  font-size: clamp(38px, 5vw, 74px);
+  line-height: 0.92;
+  letter-spacing: 0;
+}
+
+.top p {
+  max-width: 840px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.link-button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 950;
+  text-decoration: none;
+}
+
+.link-button.primary {
+  border-color: var(--orange);
+  background: var(--orange);
+  color: #fff;
+  box-shadow: inset 0 -4px 0 rgba(9, 10, 10, 0.16);
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.8fr) minmax(210px, 0.58fr) minmax(360px, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.panel {
+  min-width: 0;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.panel-head {
+  padding: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-head h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.panel-head p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.raw-list,
+.field-list,
+.check-list {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+
+.raw-item,
+.field-item,
+.check-item {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fbfaf7;
+  padding: 12px;
+}
+
+.raw-item span,
+.field-item span,
+.check-item span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.raw-item strong,
+.field-item strong,
+.check-item strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.check-item {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.check-dot {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 950;
+  box-shadow: inset 0 -4px 0 rgba(9, 10, 10, 0.14);
+}
+
+.app-preview {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  background: var(--cream);
+}
+
+.hero-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 16px;
+  padding: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.stage-badge {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--stage-colour) 16%, #fff);
+  color: color-mix(in srgb, var(--stage-colour) 72%, #111);
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.stage-dot {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--stage-colour);
+  color: var(--stage-number-colour, #fff);
+}
+
+.hero-card h2 {
+  margin: 14px 0 0;
+  font-size: clamp(34px, 4vw, 58px);
+  line-height: 0.92;
+}
+
+.summary {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.media-card {
+  min-height: 210px;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--stage-colour) 85%, #fff), color-mix(in srgb, var(--stage-colour) 28%, #fff)),
+    var(--stage-colour);
+  box-shadow: inset 0 -6px 0 rgba(9, 10, 10, 0.14);
+}
+
+.play {
+  width: 82px;
+  height: 82px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--stage-colour);
+  font-size: 30px;
+  font-weight: 950;
+  box-shadow: 0 8px 0 rgba(9, 10, 10, 0.14);
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.chip {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f1ece4;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.chip.stage {
+  background: color-mix(in srgb, var(--stage-colour) 18%, #fff);
+  color: color-mix(in srgb, var(--stage-colour) 76%, #111);
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.75fr);
+  gap: 16px;
+  padding: 18px;
+}
+
+.section {
+  border-top: 5px solid var(--stage-colour);
+  background: var(--paper);
+  padding: 16px;
+}
+
+.section h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.section p,
+.section li {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.section ul {
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.next-button {
+  width: fit-content;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--stage-colour);
+  color: #fff;
+  font-weight: 950;
+  box-shadow: inset 0 -4px 0 rgba(9, 10, 10, 0.18);
+}
+
+.schema-strip {
+  margin-top: 16px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.schema-strip .panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.schema-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 10px;
+  padding: 16px;
+}
+
+.mini-field {
+  padding: 12px;
+  border-radius: 10px;
+  background: #fbfaf7;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.mini-field strong {
+  display: block;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+@media (max-width: 1120px) {
+  .flow,
+  .top,
+  .hero-card,
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .schema-grid {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .page { padding: 14px; }
+  .schema-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Content item template</p>
+      <h1>One upload becomes one useful app resource.</h1>
+      <p>This page shows the bridge between the admin pipeline and the learner app: a raw video, book, or audio file becomes a prepared content item for Discover, Journey, notes, sharing, and next steps.</p>
+    </div>
+    <nav class="actions" aria-label="Prototype links">
+      <a class="link-button" href="oneinhim_content_pipeline_map.html">Pipeline map</a>
+      <a class="link-button primary" href="oneinhim_content_workshop.html">Content Workshop</a>
+    </nav>
+  </header>
+
+  <main class="flow" id="previewRoot" aria-live="polite"></main>
+
+  <section class="schema-strip">
+    <div class="panel-head">
+      <div>
+        <p class="eyebrow">JSON fields</p>
+        <h2>What every prepared item needs</h2>
+        <p>These fields make the same content usable in search, Discover, Journey, sharing, notes, and future recommendations.</p>
+      </div>
+      <a class="link-button" href="oneinhim_content_item_template.json">Open JSON</a>
+    </div>
+    <div class="schema-grid" id="schemaGrid"></div>
+  </section>
+</div>
+
+<script type="application/json" id="fallbackTemplate">
+{
+  "requiredFields": [
+    "contentId",
+    "title",
+    "speakerOrAuthor",
+    "language",
+    "primaryMedium",
+    "availableMediums",
+    "journeyStage",
+    "stageColour",
+    "length",
+    "summaryShort",
+    "questionsAnswered",
+    "topics",
+    "recommendedNextStep",
+    "discoverPlacement",
+    "journeyPlacement",
+    "reflectionPrompt",
+    "shareText"
+  ],
+  "exampleRawUpload": {
+    "uploadId": "upload_2026_05_18_001",
+    "fileName": "who_is_jesus_full_teaching.mp4",
+    "sourceType": "video",
+    "language": "en",
+    "speaker": "Example Speaker",
+    "sourcePreApproved": true,
+    "duration": "18 min 42 sec",
+    "roughDescription": "A clear teaching on who Jesus is and why he came near."
+  },
+  "examplePreparedItem": {
+    "contentId": "content_who_is_jesus_001",
+    "title": "Who Is Jesus?",
+    "speakerOrAuthor": { "name": "Example Speaker", "role": "speaker" },
+    "language": "en",
+    "primaryMedium": "watch",
+    "availableMediums": ["watch", "listen", "read"],
+    "journeyStage": { "stage": 1, "name": "Explore Jesus", "colour": "#ee7326" },
+    "length": { "display": "5 min", "seconds": 302, "readingMinutes": 3 },
+    "summaryShort": "A simple first answer for someone asking who Jesus is and where to begin.",
+    "summaryLong": "This prepared session introduces Jesus warmly and clearly, with a short teaching, a simple reflection, and an invitation to start the Explore Jesus path.",
+    "questionsAnswered": ["Who is Jesus?", "Why does Jesus matter?", "Where do I start if I am curious about faith?"],
+    "topics": ["Jesus", "faith basics", "gospel", "starting point"],
+    "scriptureReferences": ["John 1:14", "John 3:16-17"],
+    "discoverPlacement": { "showOnHome": true, "shelf": "Featured teachings", "cardLabel": "Start here" },
+    "journeyPlacement": { "stage": 1, "moduleTitle": "Explore Jesus", "lessonOrder": 1, "isOptional": false },
+    "recommendedNextStep": { "label": "Start the Explore Jesus journey", "type": "join_journey", "targetId": "stage_1_explore_jesus" },
+    "reflectionPrompt": "What is one honest question you have about Jesus right now?",
+    "shareText": "This helped me think about who Jesus is in a simple way. Thought you might like it.",
+    "admin": { "sourcePreApproved": true, "qualityStatus": "ready" }
+  }
+}
+</script>
+
+<script>
+const fallbackTemplate = JSON.parse(document.getElementById("fallbackTemplate").textContent);
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#039;"
+  }[char]));
+}
+
+async function loadTemplate() {
+  try {
+    const response = await fetch("oneinhim_content_item_template.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Could not load template JSON");
+    return await response.json();
+  } catch (error) {
+    return fallbackTemplate;
+  }
+}
+
+function renderRawUpload(raw) {
+  const items = [
+    ["File", raw.fileName],
+    ["Type", raw.sourceType],
+    ["Speaker", raw.speaker],
+    ["Language", raw.language],
+    ["Length", raw.duration],
+    ["Pre-approved", raw.sourcePreApproved ? "Yes" : "No"],
+    ["Rough note", raw.roughDescription]
+  ];
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <p class="eyebrow">Raw upload</p>
+        <h2>What the team adds first</h2>
+        <p>A file arrives with enough information to prepare it, but not enough to place it well in the app yet.</p>
+      </div>
+      <div class="raw-list">
+        ${items.map(([label, value]) => `
+          <article class="raw-item">
+            <span>${esc(label)}</span>
+            <strong>${esc(value)}</strong>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderProcess() {
+  const steps = [
+    ["1", "Extract", "Transcript, text, or excerpts are pulled out."],
+    ["2", "Tag", "Stage, topics, questions, medium, and length are set."],
+    ["3", "Shape", "Title, summary, clips, next step, and share text are prepared."],
+    ["4", "Place", "The item gets a Discover shelf and Journey module."],
+    ["5", "Publish", "The item is ready to open, save, share, or continue from."]
+  ];
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <p class="eyebrow">Preparation</p>
+        <h2>What the system creates</h2>
+        <p>The pipeline turns the source into a clear app resource without adding a heavy approval gate.</p>
+      </div>
+      <div class="check-list">
+        ${steps.map(([number, title, copy]) => `
+          <article class="check-item">
+            <span class="check-dot">${esc(number)}</span>
+            <div>
+              <span>${esc(title)}</span>
+              <strong>${esc(copy)}</strong>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderPreparedItem(item) {
+  const stage = item.journeyStage;
+  const stageColour = stage.colour || "#ee7326";
+  const stageNumberColour = stage.stage === 2 ? "#090a0a" : "#ffffff";
+  const chips = [
+    `Stage ${stage.stage}`,
+    item.primaryMedium,
+    item.length.display,
+    item.discoverPlacement.shelf,
+    item.admin.qualityStatus
+  ];
+  return `
+    <section class="panel app-preview" style="--stage-colour: ${esc(stageColour)}; --stage-number-colour: ${esc(stageNumberColour)};">
+      <div class="panel-head">
+        <p class="eyebrow">Prepared app resource</p>
+        <h2>What the learner sees</h2>
+        <p>One item can open in Discover, sit inside a Journey module, offer fallback formats, and lead to a next step.</p>
+      </div>
+      <div class="hero-card">
+        <div>
+          <span class="stage-badge"><span class="stage-dot">${esc(stage.stage)}</span>${esc(stage.name)}</span>
+          <h2>${esc(item.title)}</h2>
+          <p class="summary">${esc(item.summaryShort)}</p>
+          <div class="chips">
+            ${chips.map((chip, index) => `<span class="chip ${index === 0 ? "stage" : ""}">${esc(chip)}</span>`).join("")}
+          </div>
+        </div>
+        <div class="media-card" aria-label="${esc(item.primaryMedium)} preview">
+          <span class="play">${item.primaryMedium === "read" ? "\"" : "▶"}</span>
+        </div>
+      </div>
+      <div class="app-grid">
+        <article class="section">
+          <h3>Discovery card</h3>
+          <p>${esc(item.summaryLong)}</p>
+          <ul>
+            <li>Answers: ${esc(item.questionsAnswered.join(", "))}</li>
+            <li>Topics: ${esc(item.topics.join(", "))}</li>
+            <li>Scripture: ${esc(item.scriptureReferences.join(", "))}</li>
+          </ul>
+          <button class="next-button" type="button">${esc(item.recommendedNextStep.label)}</button>
+        </article>
+        <article class="section">
+          <h3>Journey placement</h3>
+          <p><strong>${esc(item.journeyPlacement.moduleTitle)}</strong>, lesson ${esc(item.journeyPlacement.lessonOrder)}</p>
+          <p>${esc(item.reflectionPrompt)}</p>
+          <p><strong>Fallback formats:</strong> ${esc(item.availableMediums.join(", "))}</p>
+          <p><strong>Share:</strong> ${esc(item.shareText)}</p>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function renderSchemaFields(fields) {
+  const descriptions = {
+    contentId: "Stable internal id.",
+    title: "Public title people understand.",
+    speakerOrAuthor: "Who the content is from.",
+    language: "English, Dutch, or another language.",
+    primaryMedium: "Watch, listen, or read.",
+    availableMediums: "Fallback options for different moments.",
+    journeyStage: "Which discipleship stage this best serves.",
+    stageColour: "Colour coding that links Discover and Journey.",
+    length: "Snappy early, deeper later.",
+    summaryShort: "One-line card summary.",
+    questionsAnswered: "Real questions this helps with.",
+    topics: "Search and recommendation tags.",
+    recommendedNextStep: "The action after finishing.",
+    discoverPlacement: "Where it appears on the home page.",
+    journeyPlacement: "Where it belongs in the path.",
+    reflectionPrompt: "Prompt before notes or test step.",
+    shareText: "Text for inviting someone else."
+  };
+  document.getElementById("schemaGrid").innerHTML = fields.map((field) => `
+    <article class="mini-field">
+      <strong>${esc(field)}</strong>
+      ${esc(descriptions[field] || "Required field.")}
+    </article>
+  `).join("");
+}
+
+async function init() {
+  const template = await loadTemplate();
+  document.getElementById("previewRoot").innerHTML = [
+    renderRawUpload(template.exampleRawUpload),
+    renderProcess(),
+    renderPreparedItem(template.examplePreparedItem)
+  ].join("");
+  renderSchemaFields(template.requiredFields);
+}
+
+init();
+</script>
+</body>
+</html>
