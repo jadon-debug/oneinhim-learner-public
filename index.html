@@ -3454,6 +3454,7 @@ body.learning-mode .view.active {
   margin: 0 auto;
   padding: 0;
   overflow: hidden;
+  touch-action: pan-y;
 }
 
 .gateway-slide {
@@ -9637,7 +9638,17 @@ const state = {
 };
 
 const GATEWAY_HERO_AUTOPLAY_MS = 9000;
+const GATEWAY_HERO_SWIPE_MIN_PX = 48;
+const GATEWAY_HERO_SWIPE_AXIS_RATIO = 1.25;
 let gatewayHeroAutoplayTimer = null;
+const gatewayHeroSwipe = {
+  active: false,
+  startX: 0,
+  startY: 0,
+  lastX: 0,
+  lastY: 0,
+  suppressClick: false
+};
 
 const viewText = {
   en: {
@@ -10495,6 +10506,61 @@ function scheduleGatewayHeroAutoplay() {
     if (state.activeView !== "gatewayView" || document.hidden) return;
     setGatewayHero(state.gatewayHeroIndex + 1);
   }, GATEWAY_HERO_AUTOPLAY_MS);
+}
+
+function resetGatewayHeroSwipe() {
+  gatewayHeroSwipe.active = false;
+  gatewayHeroSwipe.startX = 0;
+  gatewayHeroSwipe.startY = 0;
+  gatewayHeroSwipe.lastX = 0;
+  gatewayHeroSwipe.lastY = 0;
+}
+
+function handleGatewayHeroSwipeStart(event) {
+  const target = event.target;
+  if (event.touches.length !== 1 || (target instanceof Element && target.closest("[data-hero-dot]"))) return;
+  const touch = event.touches[0];
+  gatewayHeroSwipe.active = true;
+  gatewayHeroSwipe.startX = touch.clientX;
+  gatewayHeroSwipe.startY = touch.clientY;
+  gatewayHeroSwipe.lastX = touch.clientX;
+  gatewayHeroSwipe.lastY = touch.clientY;
+}
+
+function handleGatewayHeroSwipeMove(event) {
+  if (!gatewayHeroSwipe.active || event.touches.length !== 1) return;
+  const touch = event.touches[0];
+  gatewayHeroSwipe.lastX = touch.clientX;
+  gatewayHeroSwipe.lastY = touch.clientY;
+}
+
+function handleGatewayHeroSwipeEnd() {
+  if (!gatewayHeroSwipe.active) return;
+  const deltaX = gatewayHeroSwipe.lastX - gatewayHeroSwipe.startX;
+  const deltaY = gatewayHeroSwipe.lastY - gatewayHeroSwipe.startY;
+  resetGatewayHeroSwipe();
+  if (Math.abs(deltaX) < GATEWAY_HERO_SWIPE_MIN_PX) return;
+  if (Math.abs(deltaX) < Math.abs(deltaY) * GATEWAY_HERO_SWIPE_AXIS_RATIO) return;
+  gatewayHeroSwipe.suppressClick = true;
+  window.setTimeout(() => {
+    gatewayHeroSwipe.suppressClick = false;
+  }, 450);
+  setGatewayHero(state.gatewayHeroIndex + (deltaX < 0 ? 1 : -1));
+}
+
+function wireGatewayHeroSwipe() {
+  const hero = document.querySelector(".gateway-landing");
+  if (!hero) return;
+  hero.addEventListener("touchstart", handleGatewayHeroSwipeStart, { passive: true });
+  hero.addEventListener("touchmove", handleGatewayHeroSwipeMove, { passive: true });
+  hero.addEventListener("touchend", handleGatewayHeroSwipeEnd, { passive: true });
+  hero.addEventListener("touchcancel", resetGatewayHeroSwipe, { passive: true });
+  hero.addEventListener("click", (event) => {
+    if (!gatewayHeroSwipe.suppressClick) return;
+    gatewayHeroSwipe.suppressClick = false;
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
 }
 
 function setGatewayNavActive(target) {
@@ -13726,6 +13792,7 @@ function wireStaticActions() {
     if (document.hidden) stopGatewayHeroAutoplay();
     else scheduleGatewayHeroAutoplay();
   });
+  wireGatewayHeroSwipe();
   els.langButtons.forEach((button) => {
     button.addEventListener("click", () => applyLanguage(button.dataset.lang, true));
   });
