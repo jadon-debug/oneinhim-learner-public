@@ -9078,7 +9078,7 @@ body.gateway-mode .courses-row .content-kind {
               <h2 data-i18n="gateway.watchHeadline">Out of the Shadows</h2>
               <p data-i18n="gateway.watchCopy">A powerful documentary story of hope, healing, and stepping into the light.</p>
               <div class="hero-actions">
-                <a class="primary-btn" href="https://www.youtube.com/watch?v=SI_eEn-FRV4&t=28s" target="_blank" rel="noopener" data-i18n="gateway.watchButton">Watch now</a>
+                <button class="primary-btn" type="button" data-discover-open="mux_out_of_shadows_documentary" data-i18n="gateway.watchButton">Watch now</button>
               </div>
             </div>
           </article>
@@ -9284,7 +9284,7 @@ body.gateway-mode .courses-row .content-kind {
               </div>
             </div>
             <div class="discovery-row documentaries-row">
-              <a class="discovery-tile documentary-tile" href="https://www.youtube.com/watch?v=SI_eEn-FRV4&t=28s" target="_blank" rel="noopener">
+              <button class="discovery-tile documentary-tile" type="button" data-discover-open="mux_out_of_shadows_documentary">
                 <span class="tile-art">
                   <img src="assets/outoftheshadows-brenda-hero.png" alt="Out of the Shadows documentary">
                   <span class="content-kind" data-i18n="homeDiscover.documentaryLabel">Documentary</span>
@@ -9298,7 +9298,7 @@ body.gateway-mode .courses-row .content-kind {
                   <span class="content-chip" data-i18n="homeDiscover.watchNow">Watch now</span>
                   <span class="content-chip">Brenda</span>
                 </span>
-              </a>
+              </button>
             </div>
           </section>
 
@@ -10183,6 +10183,41 @@ const resources = [
       "Start small. Read a short passage and ask: what does this show me about God?",
       "The Bible is not a test to pass. It is a place to meet God and learn his story.",
       "A good first practice is to write down one thing you notice and one honest question."
+    ]
+  },
+  {
+    id: "mux_out_of_shadows_documentary",
+    visualType: "video",
+    contentType: "documentary",
+    title: "Out of the Shadows",
+    speaker: "Brenda",
+    speakerId: "speaker_brenda",
+    language: "en",
+    format: ["watch"],
+    length: "21 min",
+    seconds: 1274,
+    summary: "Brenda's story of hope, healing, and stepping into the light.",
+    topic: "Testimony",
+    stage: "explore",
+    questions: ["Can God restore my story?", "Where can I find hope?", "Can Jesus heal what feels hidden?"],
+    tone: ["hopeful", "honest", "restorative"],
+    nextStep: "Watch Brenda's story",
+    nextTarget: "out_of_the_shadows",
+    seriesId: "documentaries",
+    episode: 1,
+    showInJourney: false,
+    shareLine: "Brenda's story is a powerful reminder that hope can break through.",
+    videoHost: {
+      provider: "mux",
+      assetId: "01UcTqv1oG8ulp8y7fb01xT01h5JPyO44LjRIcRERUJjks",
+      playbackId: "UEYuKRnSWcVDYYOhCokfkeRhBEYpKStcc4RIyZXP5xM",
+      status: "ready",
+      hlsUrl: "https://stream.mux.com/UEYuKRnSWcVDYYOhCokfkeRhBEYpKStcc4RIyZXP5xM.m3u8",
+      thumbnailUrl: "https://image.mux.com/UEYuKRnSWcVDYYOhCokfkeRhBEYpKStcc4RIyZXP5xM/thumbnail.jpg?time=1",
+      verified: true
+    },
+    transcript: [
+      "This full documentary is streamed from Mux as the approved Out of the Shadows source video."
     ]
   },
   {
