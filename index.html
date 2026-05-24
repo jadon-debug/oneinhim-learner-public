@@ -3383,6 +3383,11 @@ body.learning-mode .view.active {
   box-shadow: 0 8px 22px rgba(9, 10, 10, 0.12);
 }
 
+.gateway-logo-picture {
+  display: block;
+  line-height: 0;
+}
+
 .gateway-nav {
   min-width: 0;
   display: flex;
@@ -9333,9 +9338,11 @@ body.gateway-mode .courses-row .content-kind {
   }
 
   body.gateway-mode .gateway-logo-img {
-    width: 48px !important;
-    height: 58px !important;
-    border-radius: 9px !important;
+    width: 52px !important;
+    height: 52px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 999px !important;
     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3) !important;
   }
 
@@ -9681,7 +9688,10 @@ body.gateway-mode .courses-row .content-kind {
 
   body.gateway-mode .gateway-logo-img {
     width: 52px !important;
-    height: 62px !important;
+    height: 52px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 999px !important;
   }
 
   body.gateway-mode .mobile-nav-only {
@@ -9832,7 +9842,10 @@ body.gateway-mode .courses-row .content-kind {
 	            </svg>
 	          </button>
 	          <button class="gateway-logo" type="button" data-nav-jump="gatewayView" aria-label="Home">
-	            <img class="gateway-logo-img" src="assets/oneinhim-logo-primary.jpg" alt="One In Him Foundation" />
+	            <picture class="gateway-logo-picture">
+	              <source media="(max-width: 760px)" srcset="assets/oih-logo-symbol.png" />
+	              <img class="gateway-logo-img" src="assets/oneinhim-logo-primary.jpg" alt="One In Him Foundation" />
+	            </picture>
 	            <span>One In Him</span>
 	          </button>
 	          <button class="gateway-mobile-action gateway-search-shortcut" type="button" data-nav-jump="askView" aria-label="Search">
