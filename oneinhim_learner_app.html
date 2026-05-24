@@ -8198,6 +8198,7 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
 /* Current home navigation and hero slider overrides. */
 body.gateway-mode .gateway-panel {
   position: relative;
+  overflow: visible;
 }
 
 body.gateway-mode .gateway-header {
@@ -8208,6 +8209,15 @@ body.gateway-mode .gateway-header {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.78) 72%, rgba(255,255,255,0));
   backdrop-filter: blur(14px);
+}
+
+@media (min-width: 761px) {
+  body.gateway-mode .gateway-header {
+    position: fixed !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
 }
 
 body.gateway-mode .gateway-landing {
