@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#ffffff" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="ONEapp" />
 <title>One In Him Learner App Prototype</title>
 <link rel="manifest" href="oneinhim.webmanifest" />
@@ -9717,8 +9717,7 @@ body.gateway-mode .courses-row .content-kind {
     height: env(safe-area-inset-top);
     z-index: 150;
     pointer-events: none;
-    background:
-      linear-gradient(180deg, rgba(3, 5, 7, 0.2), rgba(3, 5, 7, 0.05) 74%, rgba(3, 5, 7, 0));
+    background: #fff;
   }
 
   body.gateway-mode.one-basics-hero-active::before {
@@ -9950,8 +9949,7 @@ body.gateway-mode .courses-row .content-kind {
     height: env(safe-area-inset-top);
     z-index: 170;
     pointer-events: none;
-    background:
-      linear-gradient(180deg, rgba(3, 5, 7, 0.2), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0));
+    background: #fff;
   }
 
   body.gateway-mode.one-basics-hero-active::before {
@@ -12562,7 +12560,7 @@ function setGatewayChromeColor(isDarkHero) {
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
   if (themeMeta) themeMeta.setAttribute("content", isDarkHero ? "#090a0a" : "#ffffff");
-  if (statusMeta) statusMeta.setAttribute("content", "black-translucent");
+  if (statusMeta) statusMeta.setAttribute("content", isDarkHero ? "black-translucent" : "default");
 }
 
 function setGatewayHero(index, options = {}) {
