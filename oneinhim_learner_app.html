@@ -9479,16 +9479,54 @@ body.gateway-mode .courses-row .content-kind {
   }
 
   body.gateway-mode .gateway-slide.documentary-hero {
-    min-height: 100svh !important;
-    padding-top: calc(118px + env(safe-area-inset-top)) !important;
-    padding-bottom: 118px !important;
+    min-height: clamp(560px, 74svh, 620px) !important;
+    padding-top: calc(108px + env(safe-area-inset-top)) !important;
+    padding-bottom: 74px !important;
   }
 
   body.gateway-mode .gateway-slide:not(.documentary-hero),
   body.gateway-mode .gateway-slide.watch-hero {
-    min-height: 100svh !important;
-    padding-top: calc(118px + env(safe-area-inset-top)) !important;
-    padding-bottom: 118px !important;
+    min-height: clamp(560px, 74svh, 620px) !important;
+    padding-top: calc(100px + env(safe-area-inset-top)) !important;
+    padding-bottom: 52px !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] {
+    gap: 4px !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    min-height: 148px !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-illustration img {
+    max-height: 150px !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    font-size: 28px !important;
+    line-height: 1.01 !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+    margin-top: 8px !important;
+    font-size: 12.5px !important;
+    line-height: 1.28 !important;
+  }
+
+  body.gateway-mode .gateway-copy .hero-actions {
+    margin-top: 10px !important;
+    gap: 8px !important;
+  }
+
+  body.gateway-mode .gateway-copy .primary-btn,
+  body.gateway-mode .gateway-copy .soft-btn,
+  body.gateway-mode .gateway-copy .ghost-btn {
+    min-height: 46px !important;
+  }
+
+  body.gateway-mode .gateway-hero-controls {
+    bottom: 8px !important;
   }
 
   body.gateway-mode .gateway-popular {
