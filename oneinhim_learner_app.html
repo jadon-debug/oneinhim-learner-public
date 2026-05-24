@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="ONEapp" />
 <title>One In Him Learner App Prototype</title>
 <link rel="manifest" href="oneinhim.webmanifest" />
-<link rel="icon" href="assets/oneinhim-logo-primary.jpg" />
-<link rel="apple-touch-icon" href="assets/oneinhim-logo-primary.jpg" />
+<link rel="icon" href="assets/oih-logo-2023-orange.png" />
+<link rel="apple-touch-icon" href="assets/oih-logo-2023-orange.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -3377,10 +3377,10 @@ body.learning-mode .view.active {
   width: 58px;
   height: 68px;
   display: block;
-  object-fit: cover;
-  object-position: center 58%;
-  border-radius: 9px;
-  box-shadow: 0 8px 22px rgba(9, 10, 10, 0.12);
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .gateway-logo-picture {
@@ -8233,6 +8233,29 @@ body.gateway-mode .gateway-slide:not(.documentary-hero) {
   padding-top: 130px;
 }
 
+@media (min-width: 1041px) {
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: clamp(660px, 76vh, 780px) !important;
+    grid-template-columns: minmax(500px, 1.06fr) minmax(430px, 0.94fr) !important;
+    gap: clamp(46px, 6vw, 110px) !important;
+    margin: 0 !important;
+    padding: 136px max(56px, calc((100vw - 1180px) / 2)) 92px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    min-height: 430px !important;
+    margin: 0 !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-illustration img {
+    max-height: 520px !important;
+  }
+}
+
 body.gateway-mode .gateway-slide .gateway-copy h2 {
   font-size: 58px;
   line-height: 1.02;
@@ -10153,8 +10176,8 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
 	          </button>
 	          <button class="gateway-logo" type="button" data-nav-jump="gatewayView" aria-label="Home">
 	            <picture class="gateway-logo-picture">
-	              <source media="(max-width: 760px)" srcset="assets/oih-logo-symbol.png" />
-	              <img class="gateway-logo-img" src="assets/oneinhim-logo-primary.jpg" alt="One In Him Foundation" />
+	              <source media="(max-width: 760px)" srcset="assets/oih-logo-2023-orange.png" />
+	              <img class="gateway-logo-img" src="assets/oih-logo-2023-orange.png" alt="One In Him Foundation" />
 	            </picture>
 	            <span>One In Him</span>
 	          </button>
