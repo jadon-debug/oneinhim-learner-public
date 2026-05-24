@@ -1,0 +1,19 @@
+{
+  "name": "One In Him",
+  "short_name": "ONEapp",
+  "description": "Discipleship journeys, videos, reading, and guided next steps from One In Him.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090a0a",
+  "theme_color": "#ee7326",
+  "icons": [
+    {
+      "src": "assets/oneinhim-logo-primary.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

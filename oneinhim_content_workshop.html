@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#ee7326" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="ONEapp Workshop" />
 <title>One In Him Content Workshop</title>
+<link rel="manifest" href="oneinhim.webmanifest" />
+<link rel="icon" href="assets/oneinhim-logo-primary.jpg" />
+<link rel="apple-touch-icon" href="assets/oneinhim-logo-primary.jpg" />
 <style>
 :root {
   --page: #f5f7f8;
@@ -3160,11 +3167,11 @@ body.workshop-locked .shell {
       <button class="primary-btn" id="workshopAdminLogin" type="button">Sign in</button>
       <a class="soft-btn" href="oneinhim_learner_app.html">Back to app</a>
     </div>
-    <p class="panel-copy">Prototype lock: this uses the same device admin session as the learner app. Supabase Auth is the next step for real launch security.</p>
+    <p class="panel-copy" id="workshopAuthMessage">This uses Supabase Auth. Only approved One In Him admins can edit workshop content.</p>
   </div>
 </section>
 
-<div class="shell" id="workshopShell">
+<div class="shell" id="workshopShell" hidden>
   <header class="topbar">
     <div class="brand">
       <div class="mark" aria-hidden="true"></div>
@@ -3788,6 +3795,7 @@ body.workshop-locked .shell {
 </div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
   schemaVersion: "0.1",
@@ -4161,8 +4169,8 @@ const state = {
 };
 
 const WORKSHOP_PUBLISHED_PACKAGES_KEY = "oneinhim.workshop.publishedPackages.v1";
-const ADMIN_SESSION_KEY = "oneinhim.admin.session.v1";
 const TEAM_SYNC_CONFIG_KEY = "oneinhim.teamSyncConfig.v1";
+const ADMIN_TABLE_NAME = "oih_admin_users";
 const MUX_VIDEO_INTAKE_TABLE = "oih_mux_video_intake";
 const MUX_PLAYBACK_ID_REPLACEMENTS = {
   rR8P8mSaKDzzO2TsftugTUdI00cQPJX00Oy: "167yz8JQrceeB2Lb1fnB4WK5W3pksV6GiE00KL6DUGbs"
@@ -5034,10 +5042,59 @@ function teamSyncIsReady(config = getTeamSyncConfig()) {
   return Boolean(config.enabled && config.supabaseUrl && config.supabaseAnonKey && config.tableName);
 }
 
-function supabaseHeaders(config) {
+let supabaseAuthClient = null;
+let supabaseAuthClientKey = "";
+let workshopAdminAuthState = {
+  loaded: false,
+  session: null,
+  profile: null,
+  notApproved: false
+};
+
+function getSupabaseAuthClient() {
+  const config = getTeamSyncConfig();
+  if (!teamSyncIsReady(config) || !window.supabase?.createClient) return null;
+  const cacheKey = `${config.supabaseUrl}|${config.supabaseAnonKey}`;
+  if (!supabaseAuthClient || supabaseAuthClientKey !== cacheKey) {
+    supabaseAuthClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+    supabaseAuthClientKey = cacheKey;
+  }
+  return supabaseAuthClient;
+}
+
+async function loadWorkshopAdminAuthState() {
+  const client = getSupabaseAuthClient();
+  workshopAdminAuthState = { loaded: true, session: null, profile: null, notApproved: false };
+  if (!client) return workshopAdminAuthState;
+
+  const { data: sessionData } = await client.auth.getSession();
+  const session = sessionData?.session || null;
+  if (!session) return workshopAdminAuthState;
+
+  const { data: profile, error } = await client
+    .from(ADMIN_TABLE_NAME)
+    .select("email, role, active")
+    .maybeSingle();
+
+  workshopAdminAuthState.session = session;
+  if (!error && profile?.active) {
+    workshopAdminAuthState.profile = profile;
+    workshopAdminAuthState.notApproved = false;
+  } else {
+    workshopAdminAuthState.notApproved = true;
+  }
+  return workshopAdminAuthState;
+}
+
+function currentAdminAccessToken() {
+  return workshopAdminAuthState.session?.access_token || "";
+}
+
+function supabaseHeaders(config, options = {}) {
+  const accessToken = options.accessToken || currentAdminAccessToken();
   return {
     apikey: config.supabaseAnonKey,
-    Authorization: `Bearer ${config.supabaseAnonKey}`,
+    Authorization: `Bearer ${accessToken || config.supabaseAnonKey}`,
     "Content-Type": "application/json"
   };
 }
@@ -6999,33 +7056,12 @@ function wireActions() {
 
 let workshopAppStarted = false;
 
-function getWorkshopAdminSession() {
-  const session = readLocalJson(ADMIN_SESSION_KEY, null);
-  return session && session.admin === true ? session : null;
+function setWorkshopAuthMessage(message) {
+  const node = document.getElementById("workshopAuthMessage");
+  if (node) node.textContent = message;
 }
 
-function setWorkshopAdminSession(email) {
-  try {
-    localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({
-      admin: true,
-      email,
-      signedInAt: new Date().toISOString()
-    }));
-  } catch (error) {
-    // The workshop can still continue for this visit if storage is unavailable.
-  }
-}
-
-function clearWorkshopAdminSession() {
-  try {
-    localStorage.removeItem(ADMIN_SESSION_KEY);
-  } catch (error) {
-    // Ignore storage errors in private browsing modes.
-  }
-}
-
-function renderWorkshopAuthGate() {
-  const signedIn = Boolean(getWorkshopAdminSession());
+function renderWorkshopAuthGate(signedIn = Boolean(workshopAdminAuthState.profile)) {
   const authScreen = document.getElementById("workshopAuthScreen");
   const shell = document.getElementById("workshopShell");
   document.body.classList.toggle("workshop-locked", !signedIn);
@@ -7053,8 +7089,17 @@ async function startWorkshopApp() {
   loadMuxVideoInbox();
 }
 
+function registerAppInstallWorker() {
+  if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
+  navigator.serviceWorker.register("oneinhim_service_worker.js").catch(() => {
+    // Workshop still works in browser mode if install support is unavailable.
+  });
+}
+
 async function boot() {
-  renderWorkshopAuthGate();
+  registerAppInstallWorker();
+  await loadWorkshopAdminAuthState();
+  renderWorkshopAuthGate(Boolean(workshopAdminAuthState.profile));
   const loginButton = document.getElementById("workshopAdminLogin");
   const emailInput = document.getElementById("workshopAdminEmail");
   const passwordInput = document.getElementById("workshopAdminPassword");
@@ -7067,9 +7112,28 @@ async function boot() {
       if (passwordInput) passwordInput.focus();
       return;
     }
-    setWorkshopAdminSession(email);
+    const client = getSupabaseAuthClient();
+    if (!client) {
+      setWorkshopAuthMessage("Supabase Auth is not connected yet.");
+      return;
+    }
+    setWorkshopAuthMessage("Signing in...");
+    const { error } = await client.auth.signInWithPassword({ email, password });
     if (passwordInput) passwordInput.value = "";
-    renderWorkshopAuthGate();
+    if (error) {
+      setWorkshopAuthMessage("Could not sign in. Check the email and password.");
+      return;
+    }
+    await loadWorkshopAdminAuthState();
+    if (!workshopAdminAuthState.profile) {
+      await client.auth.signOut();
+      await loadWorkshopAdminAuthState();
+      renderWorkshopAuthGate(false);
+      setWorkshopAuthMessage("This account is signed in, but it is not approved as a One In Him admin.");
+      return;
+    }
+    renderWorkshopAuthGate(true);
+    setWorkshopAuthMessage("Admin signed in.");
     await startWorkshopApp();
   };
 
@@ -7080,13 +7144,16 @@ async function boot() {
     });
   }
   if (signOutButton) {
-    signOutButton.addEventListener("click", () => {
-      clearWorkshopAdminSession();
-      renderWorkshopAuthGate();
+    signOutButton.addEventListener("click", async () => {
+      const client = getSupabaseAuthClient();
+      if (client) await client.auth.signOut();
+      await loadWorkshopAdminAuthState();
+      renderWorkshopAuthGate(false);
+      setWorkshopAuthMessage("Signed out. Sign in as an approved admin to edit workshop content.");
     });
   }
 
-  if (getWorkshopAdminSession()) {
+  if (workshopAdminAuthState.profile) {
     await startWorkshopApp();
   }
 }

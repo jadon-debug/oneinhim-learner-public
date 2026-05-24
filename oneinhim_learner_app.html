@@ -3,8 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#ee7326" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="ONEapp" />
 <title>One In Him Learner App Prototype</title>
-<link rel="icon" href="data:," />
+<link rel="manifest" href="oneinhim.webmanifest" />
+<link rel="icon" href="assets/oneinhim-logo-primary.jpg" />
+<link rel="apple-touch-icon" href="assets/oneinhim-logo-primary.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -10536,6 +10542,7 @@ body.gateway-mode .courses-row .content-kind {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
   schemaVersion: "0.1",
@@ -10748,8 +10755,8 @@ const embeddedContentPackages = [{"packageId":"pkg_one_basics_1_1_eternal_life",
 
 let sharedContentPackages = [];
 const WORKSHOP_PUBLISHED_PACKAGES_KEY = "oneinhim.workshop.publishedPackages.v1";
-const ADMIN_SESSION_KEY = "oneinhim.admin.session.v1";
 const TEAM_SYNC_CONFIG_KEY = "oneinhim.teamSyncConfig.v1";
+const ADMIN_TABLE_NAME = "oih_admin_users";
 const TEAM_SYNC_DEFAULT_CONFIG = {
   enabled: false,
   provider: "supabase",
@@ -10865,6 +10872,14 @@ const GATEWAY_HERO_AUTOPLAY_MS = 9000;
 const GATEWAY_HERO_SWIPE_MIN_PX = 48;
 const GATEWAY_HERO_SWIPE_AXIS_RATIO = 1.25;
 let gatewayHeroAutoplayTimer = null;
+let supabaseAuthClient = null;
+let supabaseAuthClientKey = "";
+let adminAuthState = {
+  loaded: false,
+  session: null,
+  profile: null,
+  notApproved: false
+};
 const gatewayHeroSwipe = {
   active: false,
   startX: 0,
@@ -10951,11 +10966,14 @@ const i18n = {
 	    "account.signOut": "Sign out",
 	    "account.openWorkshop": "Open content workshop",
 	    "account.signedIn": "Admin mode is on",
-	    "account.prototypeNote": "Prototype note: this unlocks admin mode on this device. Before launch, we will connect this to Supabase Auth and protected database rules.",
-	    "account.nextSecurity": "Next security step: real admin accounts in Supabase, then only approved admins can publish content.",
+	    "account.prototypeNote": "Uses Supabase Auth. Only approved admin accounts can open the workshop and publish content.",
+	    "account.nextSecurity": "Protected by Supabase Auth and database rules. Public learners can read content, but only admins can edit it.",
 	    "account.loginNeeded": "Add your admin email and password to continue.",
 	    "account.loginSuccess": "Admin mode is on",
 	    "account.logoutSuccess": "Signed out of admin mode",
+	    "account.loginFailed": "Could not sign in. Check your email and password.",
+	    "account.notApproved": "This account is signed in, but it is not approved as a One In Him admin.",
+	    "account.authUnavailable": "Admin sign-in needs the Supabase connection.",
     "gateway.optionsTitle": "Find your starting point",
     "gateway.optionsCopy": "Choose what sounds closest, or ask your own question.",
     "gateway.choiceExploreTitle": "I am exploring Jesus",
@@ -11273,11 +11291,14 @@ const i18n = {
 	    "account.signOut": "Uitloggen",
 	    "account.openWorkshop": "Open content workshop",
 	    "account.signedIn": "Adminmodus staat aan",
-	    "account.prototypeNote": "Prototype-opmerking: dit ontgrendelt adminmodus op dit apparaat. Voor lancering koppelen we dit aan Supabase Auth en beveiligde database-regels.",
-	    "account.nextSecurity": "Volgende beveiligingsstap: echte adminaccounts in Supabase, zodat alleen goedgekeurde admins content kunnen publiceren.",
+	    "account.prototypeNote": "Gebruikt Supabase Auth. Alleen goedgekeurde adminaccounts kunnen de workshop openen en content publiceren.",
+	    "account.nextSecurity": "Beveiligd met Supabase Auth en database-regels. Publieke gebruikers kunnen content lezen, maar alleen admins kunnen die aanpassen.",
 	    "account.loginNeeded": "Vul je admin e-mail en wachtwoord in om verder te gaan.",
 	    "account.loginSuccess": "Adminmodus staat aan",
 	    "account.logoutSuccess": "Uitgelogd uit adminmodus",
+	    "account.loginFailed": "Inloggen lukt niet. Controleer je e-mail en wachtwoord.",
+	    "account.notApproved": "Dit account is ingelogd, maar is niet goedgekeurd als One In Him admin.",
+	    "account.authUnavailable": "Admin-login heeft de Supabase-verbinding nodig.",
     "gateway.optionsTitle": "Vind jouw startpunt",
     "gateway.optionsCopy": "Kies wat het beste past, of stel je eigen vraag.",
     "gateway.choiceExploreTitle": "Ik ontdek wie Jezus is",
@@ -11855,49 +11876,74 @@ function scrollHomeSection(target) {
   section.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function getAdminSession() {
-  const session = readLocalJson(ADMIN_SESSION_KEY, null);
-  return session && session.admin === true ? session : null;
-}
-
-function setAdminSession(email) {
-  try {
-    localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({
-      admin: true,
-      email,
-      signedInAt: new Date().toISOString()
-    }));
-  } catch (error) {
-    // Admin mode can still render for this visit if storage is unavailable.
+function getSupabaseAuthClient() {
+  const config = getTeamSyncConfig();
+  if (!teamSyncIsReady(config) || !window.supabase?.createClient) return null;
+  const cacheKey = `${config.supabaseUrl}|${config.supabaseAnonKey}`;
+  if (!supabaseAuthClient || supabaseAuthClientKey !== cacheKey) {
+    supabaseAuthClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+    supabaseAuthClientKey = cacheKey;
   }
+  return supabaseAuthClient;
 }
 
-function clearAdminSession() {
-  try {
-    localStorage.removeItem(ADMIN_SESSION_KEY);
-  } catch (error) {
-    // Ignore storage errors in private browsing modes.
+async function loadAdminAuthState() {
+  const client = getSupabaseAuthClient();
+  adminAuthState = { loaded: true, session: null, profile: null, notApproved: false };
+  if (!client) return adminAuthState;
+
+  const { data: sessionData } = await client.auth.getSession();
+  const session = sessionData?.session || null;
+  if (!session) return adminAuthState;
+
+  const { data: profile, error } = await client
+    .from(ADMIN_TABLE_NAME)
+    .select("email, role, active")
+    .maybeSingle();
+
+  adminAuthState.session = session;
+  if (!error && profile?.active) {
+    adminAuthState.profile = profile;
+    adminAuthState.notApproved = false;
+  } else {
+    adminAuthState.notApproved = true;
   }
+  return adminAuthState;
 }
 
-function renderAdminAccount() {
+async function getAdminSession() {
+  const auth = await loadAdminAuthState();
+  if (!auth.session || !auth.profile) return null;
+  return {
+    admin: true,
+    email: auth.profile.email || auth.session.user?.email,
+    role: auth.profile.role || "admin",
+    signedInAt: auth.session.user?.last_sign_in_at || auth.session.user?.created_at
+  };
+}
+
+async function renderAdminAccount() {
   if (!els.adminSignedOut || !els.adminSignedIn) return;
-  const session = getAdminSession();
+  const session = await getAdminSession();
   els.adminSignedOut.hidden = Boolean(session);
   els.adminSignedIn.hidden = !session;
   if (els.adminWorkshopLink) {
     els.adminWorkshopLink.href = "oneinhim_content_workshop.html";
   }
-  if (session && els.adminSessionLabel) {
-    const signedInDate = session.signedInAt ? new Date(session.signedInAt) : null;
-    const dateText = signedInDate && !Number.isNaN(signedInDate.getTime())
-      ? signedInDate.toLocaleString()
-      : "";
-    els.adminSessionLabel.textContent = `${session.email || "Admin"}${dateText ? ` · ${dateText}` : ""}`;
+  if (els.adminSessionLabel) {
+    if (session) {
+      const signedInDate = session.signedInAt ? new Date(session.signedInAt) : null;
+      const dateText = signedInDate && !Number.isNaN(signedInDate.getTime())
+        ? signedInDate.toLocaleString()
+        : "";
+      els.adminSessionLabel.textContent = `${session.email || "Admin"}${session.role ? ` · ${labelize(session.role)}` : ""}${dateText ? ` · ${dateText}` : ""}`;
+    } else if (adminAuthState.notApproved) {
+      els.adminSessionLabel.textContent = t("account.notApproved");
+    }
   }
 }
 
-function handleAdminLogin() {
+async function handleAdminLogin() {
   if (!els.adminEmail || !els.adminPassword) return;
   const email = els.adminEmail.value.trim();
   const password = els.adminPassword.value.trim();
@@ -11905,15 +11951,34 @@ function handleAdminLogin() {
     toast(t("account.loginNeeded"));
     return;
   }
-  setAdminSession(email);
+  const client = getSupabaseAuthClient();
+  if (!client) {
+    toast(t("account.authUnavailable"));
+    return;
+  }
+  const { error } = await client.auth.signInWithPassword({ email, password });
   els.adminPassword.value = "";
-  renderAdminAccount();
+  if (error) {
+    toast(t("account.loginFailed"));
+    return;
+  }
+  const session = await getAdminSession();
+  if (!session) {
+    await client.auth.signOut();
+    await loadAdminAuthState();
+    await renderAdminAccount();
+    toast(t("account.notApproved"));
+    return;
+  }
+  await renderAdminAccount();
   toast(t("account.loginSuccess"));
 }
 
-function handleAdminLogout() {
-  clearAdminSession();
-  renderAdminAccount();
+async function handleAdminLogout() {
+  const client = getSupabaseAuthClient();
+  if (client) await client.auth.signOut();
+  adminAuthState = { loaded: true, session: null, profile: null, notApproved: false };
+  await renderAdminAccount();
   toast(t("account.logoutSuccess"));
 }
 
@@ -15242,7 +15307,15 @@ function toast(message) {
   toast.timer = window.setTimeout(() => els.toast.classList.remove("show"), 1300);
 }
 
+function registerAppInstallWorker() {
+  if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
+  navigator.serviceWorker.register("oneinhim_service_worker.js").catch(() => {
+    // The app still works in the browser if install support is unavailable.
+  });
+}
+
 async function boot() {
+  registerAppInstallWorker();
   await loadSchema();
   await loadContentPackages();
   wireStaticActions();
@@ -15250,7 +15323,7 @@ async function boot() {
 	  renderAll();
 	  renderAsk();
 	  renderOnboarding();
-	  renderAdminAccount();
+	  await renderAdminAccount();
 	  setView("gatewayView");
 	}
 
