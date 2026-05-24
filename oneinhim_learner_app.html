@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#090a0a" />
+<meta name="theme-color" content="#ffffff" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -9295,7 +9295,7 @@ body.gateway-mode .courses-row .content-kind {
     padding: calc(14px + env(safe-area-inset-top)) 22px 16px !important;
     margin: 0 !important;
     background:
-      linear-gradient(180deg, rgba(3, 5, 7, 0.72), rgba(3, 5, 7, 0.16) 74%, rgba(3, 5, 7, 0)) !important;
+      linear-gradient(180deg, rgba(3, 5, 7, 0.26), rgba(3, 5, 7, 0.08) 74%, rgba(3, 5, 7, 0)) !important;
     color: #fff !important;
     backdrop-filter: none !important;
   }
@@ -9549,8 +9549,42 @@ body.gateway-mode .courses-row .content-kind {
     margin-top: 0 !important;
   }
 
+  body.gateway-mode::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top);
+    z-index: 150;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.2), rgba(3, 5, 7, 0.05) 74%, rgba(3, 5, 7, 0));
+  }
+
+  body.gateway-mode.one-basics-hero-active::before {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
+      url("assets/one-basics-1-1-eternal-life-mobile-hero.png");
+    background-size: cover;
+    background-position: center top;
+  }
+
+  body.gateway-mode.documentary-hero-active::before {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
+      url("assets/outoftheshadows-brenda-hero.png");
+    background-size: cover;
+    background-position: center top;
+  }
+
   html,
   body.gateway-mode {
+    background: #fff !important;
+  }
+
+  html.dark-gateway-hero-active,
+  body.gateway-mode.dark-gateway-hero-active {
     background: #090a0a !important;
   }
 
@@ -9559,6 +9593,14 @@ body.gateway-mode .courses-row .content-kind {
   body.gateway-mode #gatewayView,
   body.gateway-mode .gateway-panel,
   body.gateway-mode .gateway-landing {
+    background: #fff !important;
+  }
+
+  body.gateway-mode.dark-gateway-hero-active .app-shell,
+  body.gateway-mode.dark-gateway-hero-active .main,
+  body.gateway-mode.dark-gateway-hero-active #gatewayView,
+  body.gateway-mode.dark-gateway-hero-active .gateway-panel,
+  body.gateway-mode.dark-gateway-hero-active .gateway-landing {
     background: #090a0a !important;
   }
 
@@ -9735,9 +9777,38 @@ body.gateway-mode .courses-row .content-kind {
     padding: calc(12px + env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) 14px max(22px, env(safe-area-inset-left)) !important;
     margin: 0 !important;
     background:
-      linear-gradient(180deg, rgba(3, 5, 7, 0.72), rgba(3, 5, 7, 0.2) 72%, rgba(3, 5, 7, 0)) !important;
+      linear-gradient(180deg, rgba(3, 5, 7, 0.26), rgba(3, 5, 7, 0.08) 72%, rgba(3, 5, 7, 0)) !important;
     color: #fff !important;
     backdrop-filter: none !important;
+  }
+
+  body.gateway-mode::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top);
+    z-index: 170;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.2), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0));
+  }
+
+  body.gateway-mode.one-basics-hero-active::before {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
+      url("assets/one-basics-1-1-eternal-life-mobile-hero.png");
+    background-size: cover;
+    background-position: center top;
+  }
+
+  body.gateway-mode.documentary-hero-active::before {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
+      url("assets/outoftheshadows-brenda-hero.png");
+    background-size: cover;
+    background-position: center top;
   }
 
   body.gateway-mode .gateway-mobile-action {
@@ -12287,11 +12358,24 @@ function renderGatewayHeroSlider() {
     slide.setAttribute("aria-hidden", isActive ? "false" : "true");
   });
   const activeSlide = slides[activeIndex];
-  document.body.classList.toggle("documentary-hero-active", activeSlide?.classList.contains("documentary-hero"));
-  document.body.classList.toggle("one-basics-hero-active", activeSlide?.classList.contains("one-basics-hero"));
+  const isDocumentaryHero = activeSlide?.classList.contains("documentary-hero");
+  const isOneBasicsHero = activeSlide?.classList.contains("one-basics-hero");
+  const isDarkHero = Boolean(isDocumentaryHero || isOneBasicsHero);
+  document.body.classList.toggle("documentary-hero-active", isDocumentaryHero);
+  document.body.classList.toggle("one-basics-hero-active", isOneBasicsHero);
+  document.body.classList.toggle("dark-gateway-hero-active", isDarkHero);
+  document.documentElement.classList.toggle("dark-gateway-hero-active", isDarkHero);
+  setGatewayChromeColor(isDarkHero);
   document.querySelectorAll("[data-hero-dot]").forEach((dot) => {
     dot.classList.toggle("active", Number(dot.dataset.heroDot) === activeIndex);
   });
+}
+
+function setGatewayChromeColor(isDarkHero) {
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+  if (themeMeta) themeMeta.setAttribute("content", isDarkHero ? "#090a0a" : "#ffffff");
+  if (statusMeta) statusMeta.setAttribute("content", "black-translucent");
 }
 
 function setGatewayHero(index, options = {}) {
@@ -13168,6 +13252,9 @@ function setView(viewId) {
     stopGatewayHeroAutoplay();
     document.body.classList.remove("documentary-hero-active");
     document.body.classList.remove("one-basics-hero-active");
+    document.body.classList.remove("dark-gateway-hero-active");
+    document.documentElement.classList.remove("dark-gateway-hero-active");
+    setGatewayChromeColor(false);
   }
   document.body.classList.toggle("discovery-detail-mode", nextViewId === "discoveryDetailView");
   document.body.classList.toggle("journey-mode", nextViewId === "stageDetailView");
