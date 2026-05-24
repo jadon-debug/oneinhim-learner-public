@@ -7,7 +7,7 @@
   "display": "standalone",
   "orientation": "any",
   "background_color": "#090a0a",
-  "theme_color": "#ee7326",
+  "theme_color": "#090a0a",
   "icons": [
     {
       "src": "assets/oneinhim-logo-primary.jpg",

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#ee7326" />
+<meta name="theme-color" content="#090a0a" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -9479,14 +9479,16 @@ body.gateway-mode .courses-row .content-kind {
   }
 
   body.gateway-mode .gateway-slide.documentary-hero {
-    min-height: clamp(560px, 74svh, 620px) !important;
+    min-height: calc(clamp(560px, 74svh, 620px) + env(safe-area-inset-top)) !important;
+    margin-top: calc(-1 * env(safe-area-inset-top)) !important;
     padding-top: calc(108px + env(safe-area-inset-top)) !important;
     padding-bottom: 74px !important;
   }
 
   body.gateway-mode .gateway-slide:not(.documentary-hero),
   body.gateway-mode .gateway-slide.watch-hero {
-    min-height: clamp(560px, 74svh, 620px) !important;
+    min-height: calc(clamp(560px, 74svh, 620px) + env(safe-area-inset-top)) !important;
+    margin-top: calc(-1 * env(safe-area-inset-top)) !important;
     padding-top: calc(100px + env(safe-area-inset-top)) !important;
     padding-bottom: 52px !important;
   }
@@ -9531,6 +9533,23 @@ body.gateway-mode .courses-row .content-kind {
 
   body.gateway-mode .gateway-popular {
     margin-top: 0 !important;
+  }
+
+  html,
+  body.gateway-mode {
+    background: #090a0a !important;
+  }
+
+  body.gateway-mode .app-shell,
+  body.gateway-mode .main,
+  body.gateway-mode #gatewayView,
+  body.gateway-mode .gateway-panel,
+  body.gateway-mode .gateway-landing {
+    background: #090a0a !important;
+  }
+
+  body.gateway-mode .gateway-slide:not(.documentary-hero):not(.watch-hero) {
+    background: #fff !important;
   }
 }
 
@@ -11245,6 +11264,7 @@ const state = {
 const GATEWAY_HERO_AUTOPLAY_MS = 9000;
 const GATEWAY_HERO_SWIPE_MIN_PX = 48;
 const GATEWAY_HERO_SWIPE_AXIS_RATIO = 1.25;
+const GATEWAY_HERO_TAP_MAX_PX = 12;
 let gatewayHeroAutoplayTimer = null;
 let supabaseAuthClient = null;
 let supabaseAuthClientKey = "";
@@ -12213,14 +12233,43 @@ function handleGatewayHeroSwipeEnd() {
   if (!gatewayHeroSwipe.active) return;
   const deltaX = gatewayHeroSwipe.lastX - gatewayHeroSwipe.startX;
   const deltaY = gatewayHeroSwipe.lastY - gatewayHeroSwipe.startY;
+  const movedBeyondTap = Math.hypot(deltaX, deltaY) > GATEWAY_HERO_TAP_MAX_PX;
   resetGatewayHeroSwipe();
-  if (Math.abs(deltaX) < GATEWAY_HERO_SWIPE_MIN_PX) return;
-  if (Math.abs(deltaX) < Math.abs(deltaY) * GATEWAY_HERO_SWIPE_AXIS_RATIO) return;
+  if (Math.abs(deltaX) < GATEWAY_HERO_SWIPE_MIN_PX || Math.abs(deltaX) < Math.abs(deltaY) * GATEWAY_HERO_SWIPE_AXIS_RATIO) {
+    if (movedBeyondTap) {
+      gatewayHeroSwipe.suppressClick = true;
+      window.setTimeout(() => {
+        gatewayHeroSwipe.suppressClick = false;
+      }, 450);
+    }
+    return;
+  }
   gatewayHeroSwipe.suppressClick = true;
   window.setTimeout(() => {
     gatewayHeroSwipe.suppressClick = false;
   }, 450);
   setGatewayHero(state.gatewayHeroIndex + (deltaX < 0 ? 1 : -1));
+}
+
+function activateGatewayHeroPrimaryAction(event) {
+  if (event.defaultPrevented) return;
+  const target = event.target;
+  if (target instanceof Element && target.closest("button, a, input, textarea, select, [data-hero-dot], .gateway-header, .gateway-nav")) return;
+  const activeSlide = document.querySelector("[data-gateway-hero-slide].active");
+  const primaryAction = activeSlide?.querySelector(".hero-actions .primary-btn");
+  if (!primaryAction) return;
+  event.preventDefault();
+  const resourceId = primaryAction.dataset.discoverOpen;
+  if (resourceId) {
+    setDiscoveryResource(resourceId);
+    return;
+  }
+  if (primaryAction.id === "gatewayStart") {
+    openOnboarding();
+    return;
+  }
+  const navTarget = primaryAction.dataset.navJump;
+  if (navTarget) setView(navTarget);
 }
 
 function wireGatewayHeroSwipe() {
@@ -12236,6 +12285,7 @@ function wireGatewayHeroSwipe() {
     event.preventDefault();
     event.stopPropagation();
   }, true);
+  hero.addEventListener("click", activateGatewayHeroPrimaryAction);
 }
 
 function setGatewayNavActive(target) {
