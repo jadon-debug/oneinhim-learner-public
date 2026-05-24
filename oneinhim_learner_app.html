@@ -9021,6 +9021,46 @@ body.gateway-mode .courses-row .content-kind {
   }
 }
 
+/* Compact the mobile streaming shelves now that card text is hidden inside the art. */
+@media (max-width: 760px) {
+  body.gateway-mode .discovery-band,
+  body.gateway-mode .discovery-band.sand,
+  body.gateway-mode .discovery-band.dark,
+  body.gateway-mode .courses-band {
+    padding-top: 14px !important;
+    padding-bottom: 4px !important;
+  }
+
+  body.gateway-mode .discovery-band + .discovery-band {
+    padding-top: 10px !important;
+  }
+
+  body.gateway-mode .discovery-section-head,
+  body.gateway-mode .courses-section-head {
+    min-height: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  body.gateway-mode .discovery-row,
+  body.gateway-mode .series-row,
+  body.gateway-mode .courses-row {
+    padding-top: 0 !important;
+    padding-bottom: 8px !important;
+  }
+
+  body.gateway-mode .discovery-row .discovery-tile,
+  body.gateway-mode .documentary-tile {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  body.gateway-mode .discovery-row .tile-art,
+  body.gateway-mode .documentary-tile .tile-art {
+    min-height: 0 !important;
+  }
+}
+
 /* Mobile app chrome and admin account entry. */
 .gateway-mobile-action,
 .gateway-nav-icon {
