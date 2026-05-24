@@ -5926,42 +5926,111 @@ body.documentary-hero-active .gateway-hero-dot.active::before {
     min-height: 260px;
   }
 
+  #onboardingView {
+    min-height: 100svh;
+    margin-top: -12px;
+  }
+
   .onboarding-shell {
-    padding: 16px 14px;
+    min-height: 100svh;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    padding: 6px 14px 8px;
   }
 
   .onboarding-top {
-    grid-template-columns: 38px minmax(0, 1fr) 70px;
-    gap: 10px;
+    grid-template-columns: 34px minmax(0, 1fr) 62px;
+    gap: 8px;
+  }
+
+  .onboarding-back {
+    width: 34px;
+    height: 34px;
+    font-size: 28px;
+  }
+
+  .onboarding-progress {
+    height: 15px;
+  }
+
+  .onboarding-skip {
+    min-height: 34px;
+    font-size: 11px;
+  }
+
+  .onboarding-body {
+    gap: 14px;
+    padding: 12px 0 8px;
   }
 
   .onboarding-guide {
     align-items: flex-start;
-    gap: 12px;
+    gap: 8px;
+  }
+
+  .onboarding-guide img {
+    width: 72px;
+    max-height: 58px;
   }
 
   .onboarding-bubble {
-    min-height: 58px;
-    padding: 13px 15px;
-    font-size: 20px;
+    min-height: 54px;
+    padding: 11px 13px;
+    border-width: 2px;
+    border-radius: 16px;
+    font-size: 18px;
+  }
+
+  .onboarding-bubble::before,
+  .onboarding-bubble::after {
+    left: -18px;
+    border-top-width: 12px;
+    border-bottom-width: 12px;
+    border-right-width: 18px;
+  }
+
+  .onboarding-bubble::after {
+    left: -14px;
+  }
+
+  .onboarding-panel {
+    gap: 9px;
   }
 
   .onboarding-choice {
-    grid-template-columns: 46px minmax(0, 1fr);
-    padding: 12px;
+    min-height: 68px;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 11px;
+    padding: 9px 11px;
+    border-width: 2px;
+    border-radius: 14px;
   }
 
   .onboarding-choice-icon {
-    width: 46px;
-    height: 46px;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    font-size: 20px;
+  }
+
+  .onboarding-choice strong {
+    font-size: 15px;
+    line-height: 1.15;
+  }
+
+  .onboarding-choice span:last-child {
+    margin-top: 2px;
+    font-size: 12px;
+    line-height: 1.22;
   }
 
   .onboarding-footer {
-    min-height: 86px;
+    min-height: 60px;
+    padding-top: 8px;
   }
 
   .onboarding-continue {
     width: 100%;
+    min-height: 50px;
   }
 
   .path-select {
