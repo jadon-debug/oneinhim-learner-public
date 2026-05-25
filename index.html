@@ -10865,6 +10865,129 @@ body.feed-mode .main {
   }
 }
 
+/* Desktop home hero: keep the slider on the same full-width rhythm as Discover. */
+@media (min-width: 1041px) {
+  body.gateway-mode .gateway-header {
+    box-sizing: border-box !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    width: 100vw !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 max(48px, 3vw) !important;
+  }
+
+  body.gateway-mode .gateway-landing {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: clamp(650px, 76vh, 780px) !important;
+    margin: 0 !important;
+  }
+
+  body.gateway-mode .gateway-slide:not(.documentary-hero) {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: clamp(650px, 76vh, 780px) !important;
+    margin: 0 !important;
+    padding: 136px max(48px, 3vw) 96px !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] {
+    grid-template-columns: minmax(560px, 1.04fr) minmax(460px, 0.96fr) !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero {
+    grid-template-columns: minmax(0, 640px) !important;
+    align-items: end !important;
+    justify-content: start !important;
+    overflow: hidden !important;
+    background: #090a0a !important;
+    color: #fff !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(4, 6, 8, 0.9) 0%, rgba(4, 6, 8, 0.7) 36%, rgba(4, 6, 8, 0.28) 72%, rgba(4, 6, 8, 0.12) 100%),
+      linear-gradient(0deg, rgba(4, 6, 8, 0.82) 0%, rgba(4, 6, 8, 0.24) 50%, rgba(4, 6, 8, 0.46) 100%);
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-illustration {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: -2 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    border-radius: 0 !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-illustration picture {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-illustration img {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-copy {
+    position: relative !important;
+    z-index: 1 !important;
+    width: min(100%, 560px) !important;
+    max-width: 560px !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .hero-eyebrow {
+    color: var(--oih-gold) !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-copy h2,
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-copy p {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    color: #fff !important;
+    text-shadow: 0 12px 30px rgba(0, 0, 0, 0.46) !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-copy p {
+    max-width: 500px !important;
+    color: rgba(255, 255, 255, 0.82) !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .hero-actions {
+    width: min(420px, 100%) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  body.one-basics-hero-active .gateway-hero-dot::before {
+    background: rgba(255, 255, 255, 0.42);
+  }
+
+  body.one-basics-hero-active .gateway-hero-dot.active::before {
+    background: var(--oih-orange);
+  }
+}
+
 body.gateway-mode.gateway-filter-watch [data-home-mode]:not([data-home-mode~="watch"]),
 body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) {
   display: none !important;
