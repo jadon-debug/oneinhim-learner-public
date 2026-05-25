@@ -12523,6 +12523,14 @@ const GATEWAY_HERO_TAP_MAX_PX = 12;
 const FEED_POSTS_STORAGE_KEY = "oneinhim.feed.posts.v2";
 const FEED_LIKES_STORAGE_KEY = "oneinhim.feed.likes.v2";
 let gatewayHeroAutoplayTimer = null;
+const mobileDocumentTouchScroll = {
+  active: false,
+  manual: false,
+  startX: 0,
+  startY: 0,
+  startScrollY: 0,
+  lastY: 0
+};
 let supabaseAuthClient = null;
 let supabaseAuthClientKey = "";
 let adminAuthState = {
@@ -14628,6 +14636,64 @@ async function loadContentPackages() {
   }
 }
 
+function primeMobileDocumentScroll(viewId) {
+  if (!window.matchMedia("(max-width: 760px)").matches || viewId === "gatewayView") return;
+  window.requestAnimationFrame(() => {
+    const scroller = document.scrollingElement || document.documentElement;
+    if (!scroller || scroller.scrollHeight <= window.innerHeight + 1) return;
+    scroller.scrollTop = 1;
+    window.requestAnimationFrame(() => {
+      if (scroller.scrollTop <= 1) scroller.scrollTop = 0;
+    });
+  });
+}
+
+function mobileDocumentScrollTargetAllowed(target) {
+  if (!window.matchMedia("(max-width: 760px)").matches || state.activeView === "gatewayView") return false;
+  if (!(target instanceof Element)) return true;
+  if (target.closest("input, textarea, select, video, audio, mux-player, .gateway-landing")) return false;
+  return true;
+}
+
+function handleMobileDocumentTouchStart(event) {
+  if (event.touches.length !== 1 || !mobileDocumentScrollTargetAllowed(event.target)) {
+    mobileDocumentTouchScroll.active = false;
+    return;
+  }
+  const touch = event.touches[0];
+  mobileDocumentTouchScroll.active = true;
+  mobileDocumentTouchScroll.manual = false;
+  mobileDocumentTouchScroll.startX = touch.clientX;
+  mobileDocumentTouchScroll.startY = touch.clientY;
+  mobileDocumentTouchScroll.lastY = touch.clientY;
+  mobileDocumentTouchScroll.startScrollY = window.scrollY;
+}
+
+function handleMobileDocumentTouchMove(event) {
+  if (!mobileDocumentTouchScroll.active || event.touches.length !== 1) return;
+  const touch = event.touches[0];
+  const deltaX = touch.clientX - mobileDocumentTouchScroll.startX;
+  const deltaYTotal = touch.clientY - mobileDocumentTouchScroll.startY;
+  const deltaY = mobileDocumentTouchScroll.lastY - touch.clientY;
+  if (!mobileDocumentTouchScroll.manual) {
+    const verticalIntent = Math.abs(deltaYTotal) > 8 && Math.abs(deltaYTotal) > Math.abs(deltaX) * 1.25;
+    const nativeScrollHasNotStarted = Math.abs(window.scrollY - mobileDocumentTouchScroll.startScrollY) < 1;
+    const canScrollDown = deltaY > 0 && window.scrollY < document.documentElement.scrollHeight - window.innerHeight - 1;
+    const canScrollUp = deltaY < 0 && window.scrollY > 0;
+    mobileDocumentTouchScroll.manual = verticalIntent && nativeScrollHasNotStarted && (canScrollDown || canScrollUp);
+  }
+  if (mobileDocumentTouchScroll.manual) {
+    event.preventDefault();
+    window.scrollBy(0, deltaY);
+  }
+  mobileDocumentTouchScroll.lastY = touch.clientY;
+}
+
+function resetMobileDocumentTouchScroll() {
+  mobileDocumentTouchScroll.active = false;
+  mobileDocumentTouchScroll.manual = false;
+}
+
 function setView(viewId) {
   closeGuidebook();
   const deprecatedViews = {
@@ -14665,6 +14731,7 @@ function setView(viewId) {
 	  if (nextViewId === "feedView") renderFeed();
 	  if (nextViewId === "onboardingView") renderOnboarding();
   window.scrollTo({ top: 0, behavior: "auto" });
+  primeMobileDocumentScroll(nextViewId);
   if (nextViewId === "stageDetailView") {
     const targetStageChoice = state.activeStageId;
     const targetSectionIndex = Number.isFinite(state.selectedSectionIndex) ? state.selectedSectionIndex : 0;
@@ -17216,6 +17283,10 @@ function wireStaticActions() {
     updateDuoPathCurve();
     updateStickyStageBanner();
   });
+  document.addEventListener("touchstart", handleMobileDocumentTouchStart, { passive: true, capture: true });
+  document.addEventListener("touchmove", handleMobileDocumentTouchMove, { passive: false, capture: true });
+  document.addEventListener("touchend", resetMobileDocumentTouchScroll, { passive: true, capture: true });
+  document.addEventListener("touchcancel", resetMobileDocumentTouchScroll, { passive: true, capture: true });
   document.addEventListener("click", handleJourneyOutsideClick);
   document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
   document.querySelectorAll(".nav-btn").forEach((button) => {
