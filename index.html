@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#090a0a" />
+<meta name="theme-color" content="#ffffff" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <meta name="apple-mobile-web-app-title" content="ONEapp" />
 <title>One In Him Learner App Prototype</title>
 <link rel="manifest" href="oneinhim.webmanifest" />
-<link rel="icon" href="assets/oneinhim-logo-primary.jpg" />
-<link rel="apple-touch-icon" href="assets/oneinhim-logo-primary.jpg" />
+<link rel="icon" href="assets/oih-logo-2023-orange.png" />
+<link rel="apple-touch-icon" href="assets/oih-logo-2023-orange.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -3377,10 +3377,10 @@ body.learning-mode .view.active {
   width: 58px;
   height: 68px;
   display: block;
-  object-fit: cover;
-  object-position: center 58%;
-  border-radius: 9px;
-  box-shadow: 0 8px 22px rgba(9, 10, 10, 0.12);
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .gateway-logo-picture {
@@ -3897,6 +3897,11 @@ body.documentary-hero-active .gateway-hero-dot.active::before {
 .gateway-discover {
   margin: 0;
   background: #fff;
+}
+
+body.gateway-filter-watch [data-home-mode]:not([data-home-mode~="watch"]),
+body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) {
+  display: none !important;
 }
 
 .discovery-band {
@@ -8193,6 +8198,7 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
 /* Current home navigation and hero slider overrides. */
 body.gateway-mode .gateway-panel {
   position: relative;
+  overflow: visible;
 }
 
 body.gateway-mode .gateway-header {
@@ -8203,6 +8209,15 @@ body.gateway-mode .gateway-header {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.78) 72%, rgba(255,255,255,0));
   backdrop-filter: blur(14px);
+}
+
+@media (min-width: 761px) {
+  body.gateway-mode .gateway-header {
+    position: fixed !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
 }
 
 body.gateway-mode .gateway-landing {
@@ -8216,6 +8231,29 @@ body.gateway-mode .gateway-slide:not(.documentary-hero) {
   width: min(1160px, calc(100% - 40px));
   margin: 0 auto;
   padding-top: 130px;
+}
+
+@media (min-width: 1041px) {
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: clamp(660px, 76vh, 780px) !important;
+    grid-template-columns: minmax(500px, 1.06fr) minmax(430px, 0.94fr) !important;
+    gap: clamp(46px, 6vw, 110px) !important;
+    margin: 0 !important;
+    padding: 136px max(56px, calc((100vw - 1180px) / 2)) 92px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    min-height: 430px !important;
+    margin: 0 !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-illustration img {
+    max-height: 520px !important;
+  }
 }
 
 body.gateway-mode .gateway-slide .gateway-copy h2 {
@@ -8235,7 +8273,8 @@ body.gateway-mode .gateway-slide.documentary-hero .gateway-copy p {
   font-size: 18px;
 }
 
-body.documentary-hero-active .gateway-header {
+body.documentary-hero-active .gateway-header,
+body.one-basics-hero-active .gateway-header {
   color: #fff;
   background:
     linear-gradient(180deg, rgba(3, 5, 7, 0.74), rgba(3, 5, 7, 0.32) 72%, rgba(3, 5, 7, 0)) !important;
@@ -8243,24 +8282,31 @@ body.documentary-hero-active .gateway-header {
 }
 
 body.documentary-hero-active .gateway-logo,
-body.documentary-hero-active .gateway-nav-btn {
+body.documentary-hero-active .gateway-nav-btn,
+body.one-basics-hero-active .gateway-logo,
+body.one-basics-hero-active .gateway-nav-btn {
   color: rgba(255, 255, 255, 0.82);
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
 }
 
 body.documentary-hero-active .gateway-logo:hover span,
 body.documentary-hero-active .gateway-nav-btn:hover,
-body.documentary-hero-active .gateway-nav-btn.active {
+body.documentary-hero-active .gateway-nav-btn.active,
+body.one-basics-hero-active .gateway-logo:hover span,
+body.one-basics-hero-active .gateway-nav-btn:hover,
+body.one-basics-hero-active .gateway-nav-btn.active {
   color: #fff;
 }
 
-body.documentary-hero-active .gateway-language {
+body.documentary-hero-active .gateway-language,
+body.one-basics-hero-active .gateway-language {
   border-color: rgba(255, 255, 255, 0.32);
   background: rgba(255, 255, 255, 0.13);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
 }
 
-body.documentary-hero-active .lang-btn {
+body.documentary-hero-active .lang-btn,
+body.one-basics-hero-active .lang-btn {
   color: rgba(255, 255, 255, 0.78);
 }
 
@@ -8309,6 +8355,92 @@ body.documentary-hero-active .lang-btn {
   body.gateway-mode .gateway-slide.watch-hero .gateway-copy p {
     margin-left: auto;
     margin-right: auto;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: clamp(560px, 74vh, 640px) !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: end !important;
+    justify-content: start !important;
+    margin: 0 !important;
+    padding: 138px clamp(22px, 6vw, 62px) 76px !important;
+    overflow: hidden !important;
+    background: #090a0a !important;
+    color: #fff !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(4, 6, 8, 0.8) 0%, rgba(4, 6, 8, 0.46) 48%, rgba(4, 6, 8, 0.16) 100%),
+      linear-gradient(0deg, rgba(4, 6, 8, 0.76) 0%, rgba(4, 6, 8, 0.18) 54%, rgba(4, 6, 8, 0.34) 100%);
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-illustration {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: -2 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    border-radius: 0 !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-illustration picture {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-illustration img {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-copy {
+    position: relative !important;
+    z-index: 1 !important;
+    max-width: min(520px, 76vw) !important;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .hero-eyebrow {
+    color: var(--oih-gold) !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-copy h2,
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-copy p {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    color: #fff !important;
+    text-shadow: 0 10px 28px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .gateway-copy p {
+    max-width: 470px !important;
+    color: rgba(255, 255, 255, 0.82) !important;
+  }
+
+  body.gateway-mode .gateway-slide.one-basics-hero .hero-actions {
+    width: min(420px, 100%) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
 
@@ -8850,6 +8982,9 @@ body.gateway-mode .courses-row .content-kind {
 
   body.gateway-mode .gateway-header {
     box-sizing: border-box !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
     width: 100vw !important;
     max-width: 100vw !important;
     height: auto !important;
@@ -9281,7 +9416,7 @@ body.gateway-mode .courses-row .content-kind {
 
   body.gateway-mode .gateway-header {
     position: fixed !important;
-    top: calc(-1 * env(safe-area-inset-top)) !important;
+    top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     z-index: 160 !important;
@@ -9291,11 +9426,11 @@ body.gateway-mode .courses-row .content-kind {
     grid-template-columns: 64px minmax(0, 1fr) 64px !important;
     grid-template-areas: "account brand search" !important;
     align-items: center !important;
-    min-height: calc(96px + env(safe-area-inset-top)) !important;
-    padding: calc(14px + env(safe-area-inset-top)) 22px 16px !important;
+    min-height: calc(150px + env(safe-area-inset-top)) !important;
+    padding: max(58px, calc(28px + env(safe-area-inset-top))) 22px 18px !important;
     margin: 0 !important;
     background:
-      linear-gradient(180deg, rgba(3, 5, 7, 0.72), rgba(3, 5, 7, 0.16) 74%, rgba(3, 5, 7, 0)) !important;
+      linear-gradient(180deg, rgba(3, 5, 7, 0.26), rgba(3, 5, 7, 0.08) 74%, rgba(3, 5, 7, 0)) !important;
     color: #fff !important;
     backdrop-filter: none !important;
   }
@@ -9512,7 +9647,9 @@ body.gateway-mode .courses-row .content-kind {
   }
 
   body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-illustration {
-    min-height: 148px !important;
+    min-height: 176px !important;
+    box-sizing: border-box !important;
+    padding-top: 26px !important;
   }
 
   body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-illustration img {
@@ -9530,15 +9667,39 @@ body.gateway-mode .courses-row .content-kind {
     line-height: 1.28 !important;
   }
 
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-copy {
+    width: auto !important;
+    max-width: none !important;
+    margin-left: 24px !important;
+    margin-right: 24px !important;
+  }
+
   body.gateway-mode .gateway-copy .hero-actions {
     margin-top: 10px !important;
     gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 
   body.gateway-mode .gateway-copy .primary-btn,
   body.gateway-mode .gateway-copy .soft-btn,
   body.gateway-mode .gateway-copy .ghost-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    flex: 0 1 auto !important;
     min-height: 46px !important;
+  }
+
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-copy .primary-btn,
+  body.gateway-mode .gateway-slide[data-gateway-hero-slide="0"] .gateway-copy .soft-btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 
   body.gateway-mode .gateway-hero-controls {
@@ -9549,8 +9710,41 @@ body.gateway-mode .courses-row .content-kind {
     margin-top: 0 !important;
   }
 
+  body.gateway-mode::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top);
+    z-index: 150;
+    pointer-events: none;
+    background: #fff;
+  }
+
+  body.gateway-mode.one-basics-hero-active::before {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
+      url("assets/one-basics-1-1-eternal-life-mobile-hero.png");
+    background-size: cover;
+    background-position: center top;
+  }
+
+  body.gateway-mode.documentary-hero-active::before {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
+      url("assets/outoftheshadows-brenda-hero.png");
+    background-size: cover;
+    background-position: center top;
+  }
+
   html,
   body.gateway-mode {
+    background: #fff !important;
+  }
+
+  html.dark-gateway-hero-active,
+  body.gateway-mode.dark-gateway-hero-active {
     background: #090a0a !important;
   }
 
@@ -9559,6 +9753,14 @@ body.gateway-mode .courses-row .content-kind {
   body.gateway-mode #gatewayView,
   body.gateway-mode .gateway-panel,
   body.gateway-mode .gateway-landing {
+    background: #fff !important;
+  }
+
+  body.gateway-mode.dark-gateway-hero-active .app-shell,
+  body.gateway-mode.dark-gateway-hero-active .main,
+  body.gateway-mode.dark-gateway-hero-active #gatewayView,
+  body.gateway-mode.dark-gateway-hero-active .gateway-panel,
+  body.gateway-mode.dark-gateway-hero-active .gateway-landing {
     background: #090a0a !important;
   }
 
@@ -9690,7 +9892,7 @@ body.gateway-mode .courses-row .content-kind {
 }
 
 /* Phone landscape: use the whole screen instead of keeping portrait-width gutters. */
-@media (orientation: landscape) and (max-height: 560px) {
+@media (orientation: landscape) and (max-height: 560px) and (max-width: 960px) and (pointer: coarse) {
   html,
   body {
     width: 100vw !important;
@@ -9721,23 +9923,51 @@ body.gateway-mode .courses-row .content-kind {
 
   body.gateway-mode .gateway-header {
     position: fixed !important;
-    top: calc(-1 * env(safe-area-inset-top)) !important;
+    top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     z-index: 180 !important;
     width: 100vw !important;
     max-width: 100vw !important;
-    min-height: calc(76px + env(safe-area-inset-top)) !important;
+    min-height: calc(108px + env(safe-area-inset-top)) !important;
     display: grid !important;
     grid-template-columns: minmax(54px, 1fr) minmax(60px, auto) minmax(54px, 1fr) !important;
     grid-template-areas: "account brand search" !important;
-    align-items: start !important;
-    padding: calc(12px + env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) 14px max(22px, env(safe-area-inset-left)) !important;
+    align-items: center !important;
+    padding: max(36px, calc(22px + env(safe-area-inset-top))) max(22px, env(safe-area-inset-right)) 14px max(22px, env(safe-area-inset-left)) !important;
     margin: 0 !important;
     background:
-      linear-gradient(180deg, rgba(3, 5, 7, 0.72), rgba(3, 5, 7, 0.2) 72%, rgba(3, 5, 7, 0)) !important;
+      linear-gradient(180deg, rgba(3, 5, 7, 0.26), rgba(3, 5, 7, 0.08) 72%, rgba(3, 5, 7, 0)) !important;
     color: #fff !important;
     backdrop-filter: none !important;
+  }
+
+  body.gateway-mode::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top);
+    z-index: 170;
+    pointer-events: none;
+    background: #fff;
+  }
+
+  body.gateway-mode.one-basics-hero-active::before {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
+      url("assets/one-basics-1-1-eternal-life-mobile-hero.png");
+    background-size: cover;
+    background-position: center top;
+  }
+
+  body.gateway-mode.documentary-hero-active::before {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
+      url("assets/outoftheshadows-brenda-hero.png");
+    background-size: cover;
+    background-position: center top;
   }
 
   body.gateway-mode .gateway-mobile-action {
@@ -9913,6 +10143,11 @@ body.gateway-mode .courses-row .content-kind {
     max-width: 100vw !important;
   }
 }
+
+body.gateway-mode.gateway-filter-watch [data-home-mode]:not([data-home-mode~="watch"]),
+body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) {
+  display: none !important;
+}
 </style>
 </head>
 <body class="gateway-mode">
@@ -9941,8 +10176,8 @@ body.gateway-mode .courses-row .content-kind {
 	          </button>
 	          <button class="gateway-logo" type="button" data-nav-jump="gatewayView" aria-label="Home">
 	            <picture class="gateway-logo-picture">
-	              <source media="(max-width: 760px)" srcset="assets/oih-logo-symbol.png" />
-	              <img class="gateway-logo-img" src="assets/oneinhim-logo-primary.jpg" alt="One In Him Foundation" />
+	              <source media="(max-width: 760px)" srcset="assets/oih-logo-2023-orange.png" />
+	              <img class="gateway-logo-img" src="assets/oih-logo-2023-orange.png" alt="One In Him Foundation" />
 	            </picture>
 	            <span>One In Him</span>
 	          </button>
@@ -9986,7 +10221,7 @@ body.gateway-mode .courses-row .content-kind {
         </header>
 
         <div class="gateway-landing" aria-label="Featured home slides">
-          <article class="gateway-slide active" data-gateway-hero-slide="0">
+          <article class="gateway-slide active" data-gateway-hero-slide="0" data-hero-mode="discover">
             <div class="gateway-illustration" aria-hidden="true">
               <img id="gatewayCharacterArt" src="assets/oneinhim-characters-international.png" alt="" />
             </div>
@@ -10000,7 +10235,7 @@ body.gateway-mode .courses-row .content-kind {
             </div>
           </article>
 
-          <article class="gateway-slide documentary-hero" data-gateway-hero-slide="1">
+          <article class="gateway-slide documentary-hero" data-gateway-hero-slide="1" data-hero-mode="discover watch">
             <img class="gateway-hero-bg" src="assets/outoftheshadows-brenda-hero.png" alt="" />
             <div class="gateway-copy">
               <span class="hero-eyebrow" data-i18n="gateway.watchEyebrow">New to the ONEapp</span>
@@ -10012,7 +10247,7 @@ body.gateway-mode .courses-row .content-kind {
             </div>
           </article>
 
-          <article class="gateway-slide one-basics-hero" data-gateway-hero-slide="2">
+          <article class="gateway-slide one-basics-hero" data-gateway-hero-slide="2" data-hero-mode="discover watch">
             <div class="gateway-illustration" aria-hidden="true">
               <picture>
                 <source media="(max-width: 760px)" srcset="assets/one-basics-1-1-eternal-life-mobile-hero.png" />
@@ -10038,7 +10273,7 @@ body.gateway-mode .courses-row .content-kind {
           </div>
         </div>
 
-        <div class="gateway-popular" aria-label="Popular starting points">
+        <div class="gateway-popular" aria-label="Popular starting points" data-home-mode="discover">
           <div class="gateway-popular-inner">
             <button class="popular-arrow" type="button" data-popular-scroll="-1" aria-label="Previous popular options">‹</button>
             <div class="popular-rail" id="popularRail">
@@ -10072,7 +10307,7 @@ body.gateway-mode .courses-row .content-kind {
         </div>
 
         <main class="gateway-discover home-anchor" data-home-section="discover" aria-label="Discovery">
-          <section class="discovery-band dark home-anchor" data-home-section="watch">
+          <section class="discovery-band dark home-anchor" data-home-section="watch" data-home-mode="discover watch">
             <div class="discovery-section-head">
               <div>
                 <p class="eyebrow" data-i18n="homeDiscover.eyebrow">Discover</p>
@@ -10082,7 +10317,7 @@ body.gateway-mode .courses-row .content-kind {
               <button class="soft-btn" type="button" data-nav-jump="pathSelectView" data-i18n="homeDiscover.journeyButton">Start the guided journey</button>
             </div>
             <div class="today-discovery">
-              <button class="today-feature stage-1" type="button" data-discover-open="vid_jesus_001">
+              <button class="today-feature stage-1" type="button" data-discover-open="vid_jesus_001" data-content-kind="video">
                 <span class="stage-chip" data-i18n="homeDiscover.stageOne">Section 1 · Explore Jesus</span>
                 <h3 data-i18n="homeDiscover.featureTitle">Why Jesus Came Near</h3>
                 <p data-i18n="homeDiscover.featureCopy">A clear, short invitation for anyone curious, unsure, or starting again.</p>
@@ -10091,7 +10326,7 @@ body.gateway-mode .courses-row .content-kind {
                   <span class="content-chip">90 sec</span>
                 </span>
               </button>
-              <div class="discovery-mini-stack" aria-label="Quick discovery starts">
+              <div class="discovery-mini-stack" aria-label="Quick discovery starts" data-home-mode="discover">
                 <button class="discovery-mini stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life">
                   <span class="mini-thumb">1</span>
                   <span>
@@ -10120,7 +10355,7 @@ body.gateway-mode .courses-row .content-kind {
             </div>
           </section>
 
-          <section class="discovery-band sand">
+          <section class="discovery-band sand" data-home-mode="discover watch">
             <div class="discovery-section-head">
               <div>
                 <p class="eyebrow" data-i18n="homeDiscover.watchEyebrow">Watch</p>
@@ -10129,7 +10364,7 @@ body.gateway-mode .courses-row .content-kind {
               </div>
             </div>
             <div class="discovery-row">
-              <button class="discovery-tile stage-1" type="button" data-discover-open="vid_jesus_001">
+              <button class="discovery-tile stage-1" type="button" data-discover-open="vid_jesus_001" data-content-kind="video">
                 <span class="tile-art">
                   <span class="tile-symbol">▶</span>
                   <span class="content-kind" data-i18n="discover.video">Video</span>
@@ -10144,7 +10379,7 @@ body.gateway-mode .courses-row .content-kind {
                   <span class="content-chip">90 sec</span>
                 </span>
               </button>
-              <button class="discovery-tile stage-2" type="button" data-discover-open="lesson_bible_004">
+              <button class="discovery-tile stage-2" type="button" data-discover-open="lesson_bible_004" data-content-kind="text">
                 <span class="tile-art">
                   <span class="tile-symbol">B</span>
                   <span class="content-kind" data-i18n="discover.lesson">Lesson</span>
@@ -10159,7 +10394,7 @@ body.gateway-mode .courses-row .content-kind {
                   <span class="content-chip">7 min</span>
                 </span>
               </button>
-              <button class="discovery-tile stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life">
+              <button class="discovery-tile stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life" data-content-kind="text">
                 <span class="tile-art">
                   <span class="tile-symbol">1</span>
                   <span class="content-kind" data-i18n="discover.read">Read</span>
@@ -10174,7 +10409,7 @@ body.gateway-mode .courses-row .content-kind {
                   <span class="content-chip">12 min read</span>
                 </span>
               </button>
-              <button class="discovery-tile stage-4" type="button" data-gateway-choice="shareFaith">
+              <button class="discovery-tile stage-4" type="button" data-gateway-choice="shareFaith" data-content-kind="path">
                 <span class="tile-art">
                   <span class="tile-symbol">S</span>
                   <span class="content-kind" data-i18n="homeDiscover.course">Course</span>
@@ -10189,7 +10424,7 @@ body.gateway-mode .courses-row .content-kind {
                   <span class="content-chip" data-i18n="homeDiscover.mission">Mission</span>
                 </span>
               </button>
-              <button class="discovery-tile stage-5" type="button" data-gateway-choice="pastor">
+              <button class="discovery-tile stage-5" type="button" data-gateway-choice="pastor" data-content-kind="path">
                 <span class="tile-art">
                   <span class="tile-symbol">P</span>
                   <span class="content-kind" data-i18n="homeDiscover.training">Training</span>
@@ -10207,7 +10442,7 @@ body.gateway-mode .courses-row .content-kind {
             </div>
           </section>
 
-          <section class="discovery-band documentaries-band">
+          <section class="discovery-band documentaries-band" data-home-mode="discover watch">
             <div class="discovery-section-head">
               <div>
                 <p class="eyebrow" data-i18n="homeDiscover.documentariesEyebrow">Documentaries</p>
@@ -10216,7 +10451,7 @@ body.gateway-mode .courses-row .content-kind {
               </div>
             </div>
             <div class="discovery-row documentaries-row">
-              <button class="discovery-tile documentary-tile" type="button" data-discover-open="mux_out_of_shadows_documentary">
+              <button class="discovery-tile documentary-tile" type="button" data-discover-open="mux_out_of_shadows_documentary" data-content-kind="video">
                 <span class="tile-art">
                   <img src="assets/outoftheshadows-brenda-hero.png" alt="Out of the Shadows documentary">
                   <span class="content-kind" data-i18n="homeDiscover.documentaryLabel">Documentary</span>
@@ -10234,14 +10469,14 @@ body.gateway-mode .courses-row .content-kind {
             </div>
           </section>
 
-	          <section class="discovery-band sand courses-band home-anchor" data-home-section="library">
+		          <section class="discovery-band sand courses-band home-anchor" data-home-section="library" data-home-mode="discover watch">
             <div class="discovery-section-head courses-section-head">
               <div>
                 <h2 data-i18n="homeDiscover.seriesTitle">Full courses and series</h2>
               </div>
             </div>
             <div class="discovery-row series-row courses-row">
-              <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video">
+              <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video">
                 <span class="tile-art">
                   <span class="series-stack" aria-hidden="true">
                     <span>1.1</span>
@@ -10263,7 +10498,7 @@ body.gateway-mode .courses-row .content-kind {
                   <span class="content-chip" data-i18n="homeDiscover.fullVideo">Full video</span>
                 </span>
               </button>
-              <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video">
+              <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video">
                 <span class="tile-art episode-cover-art">
                   <img src="assets/one-basics-1-1-eternal-life-course-cover.png" alt="One Basics 1.1 Eternal Life course cover">
                 </span>
@@ -10277,7 +10512,7 @@ body.gateway-mode .courses-row .content-kind {
                   <span class="content-chip">Video</span>
                 </span>
               </button>
-              <button class="discovery-tile series-tile muted-series stage-3" type="button" data-gateway-choice="growRoots">
+              <button class="discovery-tile series-tile muted-series stage-3" type="button" data-gateway-choice="growRoots" data-content-kind="path">
                 <span class="tile-art">
                   <span class="series-stack" aria-hidden="true">
                     <span>2.1</span>
@@ -10302,7 +10537,7 @@ body.gateway-mode .courses-row .content-kind {
             </div>
           </section>
 
-          <section class="discovery-band home-anchor" data-home-section="listen">
+          <section class="discovery-band home-anchor" data-home-section="listen" data-home-mode="discover">
             <div class="discovery-section-head">
               <div>
                 <p class="eyebrow" data-i18n="homeDiscover.listenReadEyebrow">Read and reflect</p>
@@ -10374,7 +10609,7 @@ body.gateway-mode .courses-row .content-kind {
             </div>
           </section>
 
-          <section class="discovery-band sand">
+          <section class="discovery-band sand" data-home-mode="discover">
             <div class="discovery-section-head">
               <div>
                 <p class="eyebrow" data-i18n="homeDiscover.voiceEyebrow">Trusted voices</p>
@@ -10403,7 +10638,7 @@ body.gateway-mode .courses-row .content-kind {
           </section>
         </main>
 
-        <div class="gateway-quotes">
+        <div class="gateway-quotes" data-home-mode="discover">
           <p class="eyebrow" data-i18n="gateway.quotesTitle">What people say</p>
           <div class="quote-grid">
             <article class="quote-card">
@@ -11350,6 +11585,7 @@ const state = {
   activeStageId: "exploreJesus",
   activeModuleIndex: 0,
   gatewayHeroIndex: 0,
+  gatewayContentMode: "discover",
   onboardingStep: 0,
   onboardingStartMode: "find",
   onboardingStage: "exploreJesus",
@@ -12276,28 +12512,63 @@ function parseStageGroupTarget(value) {
   };
 }
 
+function gatewayHeroSlideAllowed(slide) {
+  if (!slide) return false;
+  const mode = state.gatewayContentMode || "discover";
+  const modes = String(slide.dataset.heroMode || "discover").split(/\s+/).filter(Boolean);
+  if (mode === "watch") return modes.includes("watch");
+  return modes.includes("discover");
+}
+
+function normalizeGatewayHeroIndex(index, slides = Array.from(document.querySelectorAll("[data-gateway-hero-slide]"))) {
+  if (!slides.length) return 0;
+  const startIndex = ((Number(index) || 0) + slides.length) % slides.length;
+  if (gatewayHeroSlideAllowed(slides[startIndex])) return startIndex;
+  for (let offset = 1; offset <= slides.length; offset += 1) {
+    const nextIndex = (startIndex + offset) % slides.length;
+    if (gatewayHeroSlideAllowed(slides[nextIndex])) return nextIndex;
+  }
+  return startIndex;
+}
+
 function renderGatewayHeroSlider() {
   const slides = Array.from(document.querySelectorAll("[data-gateway-hero-slide]"));
   if (!slides.length) return;
-  const activeIndex = ((Number(state.gatewayHeroIndex) || 0) + slides.length) % slides.length;
+  const activeIndex = normalizeGatewayHeroIndex(state.gatewayHeroIndex, slides);
   state.gatewayHeroIndex = activeIndex;
   slides.forEach((slide, index) => {
-    const isActive = index === activeIndex;
+    const isActive = index === activeIndex && gatewayHeroSlideAllowed(slide);
     slide.classList.toggle("active", isActive);
     slide.setAttribute("aria-hidden", isActive ? "false" : "true");
   });
   const activeSlide = slides[activeIndex];
-  document.body.classList.toggle("documentary-hero-active", activeSlide?.classList.contains("documentary-hero"));
-  document.body.classList.toggle("one-basics-hero-active", activeSlide?.classList.contains("one-basics-hero"));
+  const isDocumentaryHero = activeSlide?.classList.contains("documentary-hero");
+  const isOneBasicsHero = activeSlide?.classList.contains("one-basics-hero");
+  const isDarkHero = Boolean(isDocumentaryHero || isOneBasicsHero);
+  document.body.classList.toggle("documentary-hero-active", isDocumentaryHero);
+  document.body.classList.toggle("one-basics-hero-active", isOneBasicsHero);
+  document.body.classList.toggle("dark-gateway-hero-active", isDarkHero);
+  document.documentElement.classList.toggle("dark-gateway-hero-active", isDarkHero);
+  setGatewayChromeColor(isDarkHero);
   document.querySelectorAll("[data-hero-dot]").forEach((dot) => {
-    dot.classList.toggle("active", Number(dot.dataset.heroDot) === activeIndex);
+    const dotIndex = Number(dot.dataset.heroDot);
+    const isAllowed = gatewayHeroSlideAllowed(slides[dotIndex]);
+    dot.hidden = !isAllowed;
+    dot.classList.toggle("active", isAllowed && dotIndex === activeIndex);
   });
 }
 
+function setGatewayChromeColor(isDarkHero) {
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+  if (themeMeta) themeMeta.setAttribute("content", isDarkHero ? "#090a0a" : "#ffffff");
+  if (statusMeta) statusMeta.setAttribute("content", isDarkHero ? "black-translucent" : "default");
+}
+
 function setGatewayHero(index, options = {}) {
-  const slides = document.querySelectorAll("[data-gateway-hero-slide]");
+  const slides = Array.from(document.querySelectorAll("[data-gateway-hero-slide]"));
   if (!slides.length) return;
-  state.gatewayHeroIndex = ((Number(index) || 0) + slides.length) % slides.length;
+  state.gatewayHeroIndex = normalizeGatewayHeroIndex(index, slides);
   renderGatewayHeroSlider();
   if (options.restartAutoplay !== false) scheduleGatewayHeroAutoplay();
 }
@@ -12408,6 +12679,14 @@ function setGatewayNavActive(target) {
   document.querySelectorAll("[data-gateway-nav]").forEach((button) => {
     button.classList.toggle("active", button.dataset.gatewayNav === target);
   });
+}
+
+function setGatewayContentMode(mode = "discover") {
+  const nextMode = mode === "watch" ? "watch" : "discover";
+  state.gatewayContentMode = nextMode;
+  document.body.classList.toggle("gateway-filter-watch", nextMode === "watch");
+  setGatewayHero(state.gatewayHeroIndex, { restartAutoplay: false });
+  scheduleGatewayHeroAutoplay();
 }
 
 function scrollHomeSection(target) {
@@ -12525,6 +12804,7 @@ async function handleAdminLogout() {
 function handleGatewayNav(target) {
   if (target === "account") {
     setGatewayNavActive(target);
+    setGatewayContentMode("discover");
     setView("accountView");
     renderAdminAccount();
     return;
@@ -12534,6 +12814,29 @@ function handleGatewayNav(target) {
     toast(t("gateway.kidsToast"));
     return;
   }
+  if (target === "watch") {
+    setGatewayNavActive(target);
+    setGatewayContentMode("watch");
+    if (state.activeView !== "gatewayView") {
+      setView("gatewayView");
+    }
+    window.requestAnimationFrame(() => {
+      document.querySelector(".gateway-landing")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return;
+  }
+  if (target === "discover") {
+    setGatewayNavActive(target);
+    setGatewayContentMode("discover");
+    if (state.activeView !== "gatewayView") {
+      setView("gatewayView");
+    }
+    window.requestAnimationFrame(() => {
+      document.querySelector(".gateway-landing")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return;
+  }
+  setGatewayContentMode("discover");
   setGatewayNavActive(target);
   if (state.activeView !== "gatewayView") {
     setView("gatewayView");
@@ -13168,6 +13471,9 @@ function setView(viewId) {
     stopGatewayHeroAutoplay();
     document.body.classList.remove("documentary-hero-active");
     document.body.classList.remove("one-basics-hero-active");
+    document.body.classList.remove("dark-gateway-hero-active");
+    document.documentElement.classList.remove("dark-gateway-hero-active");
+    setGatewayChromeColor(false);
   }
   document.body.classList.toggle("discovery-detail-mode", nextViewId === "discoveryDetailView");
   document.body.classList.toggle("journey-mode", nextViewId === "stageDetailView");
