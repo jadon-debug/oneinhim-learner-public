@@ -10876,12 +10876,47 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
     --mobile-safe-top: max(58px, calc(18px + env(safe-area-inset-top)));
   }
 
+  html {
+    overflow-y: auto;
+  }
+
+  body:not(.gateway-mode) {
+    min-height: 100svh;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body:not(.gateway-mode)::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--mobile-safe-top);
+    z-index: 80;
+    pointer-events: none;
+    background: #fff;
+  }
+
   body:not(.gateway-mode) .topbar {
     padding-top: var(--mobile-safe-top) !important;
   }
 
+  body:not(.gateway-mode) .app-shell,
+  body:not(.gateway-mode) .main {
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+  }
+
+  #pathSelectView {
+    overflow: visible !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
   #pathSelectView .path-select {
     padding-top: 0 !important;
+    touch-action: pan-y;
   }
 
   #pathSelectView .path-select-top,
@@ -10892,6 +10927,16 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
     padding-left: 14px !important;
     padding-right: 14px !important;
     background: linear-gradient(180deg, #fff 0%, #fff 84%, rgba(255,255,255,0));
+  }
+
+  #pathSelectView .path-select-top {
+    position: relative !important;
+    top: auto !important;
+    z-index: 1 !important;
+  }
+
+  #onboardingView .onboarding-shell {
+    padding-top: calc(var(--mobile-safe-top) + 8px) !important;
   }
 
   #askView .ask-guide-shell {
