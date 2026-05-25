@@ -10869,6 +10869,58 @@ body.gateway-mode.gateway-filter-watch [data-home-mode]:not([data-home-mode~="wa
 body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) {
   display: none !important;
 }
+
+/* Keep non-hero mobile screens below the phone status area. */
+@media (max-width: 760px) {
+  :root {
+    --mobile-safe-top: max(58px, calc(18px + env(safe-area-inset-top)));
+  }
+
+  body:not(.gateway-mode) .topbar {
+    padding-top: var(--mobile-safe-top) !important;
+  }
+
+  #pathSelectView .path-select {
+    padding-top: 0 !important;
+  }
+
+  #pathSelectView .path-select-top,
+  #askView .ask-guide-top {
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+    padding-top: var(--mobile-safe-top) !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    background: linear-gradient(180deg, #fff 0%, #fff 84%, rgba(255,255,255,0));
+  }
+
+  #askView .ask-guide-shell {
+    padding-top: 0 !important;
+  }
+
+  #stageDetailView .duo-unit-banner {
+    top: var(--mobile-safe-top) !important;
+  }
+
+  #stageDetailView .stage-section-list.duo-lesson-path {
+    padding-top: 208px !important;
+  }
+
+  #moduleDetailView .module-shell,
+  #moduleQuizView .module-quiz-shell {
+    padding-top: var(--mobile-safe-top) !important;
+  }
+
+  body.discovery-detail-mode .discover-watch-main,
+  body.feed-mode .feed-shell,
+  .account-shell {
+    padding-top: var(--mobile-safe-top) !important;
+  }
+
+  body.discovery-detail-mode .discover-watch-main {
+    margin-top: 0 !important;
+  }
+}
 </style>
 </head>
 <body class="gateway-mode">
