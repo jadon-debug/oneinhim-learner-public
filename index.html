@@ -6317,13 +6317,15 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
 
   #onboardingView {
     min-height: 100svh;
-    margin-top: -12px;
+    margin-top: 0;
   }
 
   .onboarding-shell {
     min-height: 100svh;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    padding: 6px 14px 8px;
+    grid-template-rows: auto auto auto;
+    align-content: start;
+    gap: 12px;
+    padding: max(46px, calc(14px + env(safe-area-inset-top))) 14px max(14px, env(safe-area-inset-bottom));
   }
 
   .onboarding-top {
@@ -6347,8 +6349,8 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   }
 
   .onboarding-body {
-    gap: 14px;
-    padding: 12px 0 8px;
+    gap: 10px;
+    padding: 0;
   }
 
   .onboarding-guide {
@@ -6382,7 +6384,7 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   }
 
   .onboarding-panel {
-    gap: 9px;
+    gap: 10px;
   }
 
   .onboarding-choice {
@@ -6413,8 +6415,9 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   }
 
   .onboarding-footer {
-    min-height: 60px;
-    padding-top: 8px;
+    min-height: 0;
+    padding-top: 2px;
+    border-top: 0;
   }
 
   .onboarding-continue {
