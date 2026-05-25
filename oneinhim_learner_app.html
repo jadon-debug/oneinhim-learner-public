@@ -689,8 +689,183 @@ body.learning-mode .view.active {
 
 .path-card-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+  gap: 20px;
+  align-items: stretch;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.path-map-card,
+.path-preview-card {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: inset 0 -4px 0 rgba(9,10,10,0.08), 0 16px 34px rgba(9,10,10,0.06);
+}
+
+.path-map-card {
+  position: relative;
+  display: grid;
+  gap: 11px;
+  padding: 16px;
+  overflow: hidden;
+}
+
+.path-map-card::before {
+  content: "";
+  position: absolute;
+  top: 46px;
+  bottom: 46px;
+  left: 46px;
+  width: 8px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(238,115,38,0.34), rgba(246,202,53,0.34), rgba(68,101,35,0.34), rgba(127,24,16,0.28), rgba(9,10,10,0.18));
+}
+
+.path-map-node {
+  position: relative;
+  z-index: 1;
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 13px;
+  align-items: center;
+  padding: 9px 10px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.94);
+  color: var(--ink);
+  text-align: left;
+  box-shadow: 0 8px 20px rgba(9,10,10,0.05);
+}
+
+.path-map-node:hover {
+  transform: translateX(3px);
+  border-color: color-mix(in srgb, var(--stage-color) 55%, transparent);
+}
+
+.path-map-node.active {
+  border-color: var(--stage-color);
+  background: linear-gradient(180deg, #fff, color-mix(in srgb, var(--stage-color) 10%, #fff));
+  box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--stage-color) 24%, transparent), 0 12px 26px rgba(9,10,10,0.09);
+}
+
+.path-map-index {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--stage-color);
+  color: var(--stage-text, #fff);
+  font-family: Oswald, Montserrat, sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,0.14);
+}
+
+.path-map-node.stage-start .path-map-index {
+  color: var(--oih-black);
+}
+
+.path-map-label strong,
+.path-preview-card h3 {
+  font-family: Oswald, Montserrat, sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.path-map-label strong {
+  display: block;
+  font-size: clamp(21px, 2.2vw, 28px);
+  line-height: 0.95;
+}
+
+.path-map-label span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.path-map-progress {
+  min-width: 54px;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--stage-color) 13%, #f3f0e8);
+  color: color-mix(in srgb, var(--stage-color) 72%, #1f1f1f);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.path-preview-card {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--stage-color) 10%, #fff), #fff 58%);
+}
+
+.path-preview-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--stage-color);
+  color: var(--stage-text, #fff);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.path-preview-card.stage-start .path-preview-kicker {
+  color: var(--oih-black);
+}
+
+.path-preview-card h3 {
+  margin: 0;
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 0.92;
+}
+
+.path-preview-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.52;
+}
+
+.path-preview-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.path-preview-topic {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--stage-color) 12%, #f2f0e8);
+  color: color-mix(in srgb, var(--stage-color) 72%, #242424);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.path-preview-card .primary-btn {
+  width: 100%;
+  justify-content: center;
 }
 
 .path-choice {
@@ -6245,6 +6420,82 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
     grid-template-columns: 1fr;
   }
 
+  .path-card-grid {
+    gap: 14px;
+  }
+
+  .path-select-head {
+    max-width: 520px;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+
+  .path-select-head h2 {
+    font-size: clamp(32px, 9vw, 42px);
+    line-height: 1;
+  }
+
+  .path-select-head p {
+    max-width: 420px;
+    margin-left: 0;
+    margin-right: 0;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .path-map-card {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .path-map-card::before {
+    left: 34px;
+    top: 34px;
+    bottom: 34px;
+    width: 6px;
+  }
+
+  .path-map-node {
+    min-height: 58px;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 10px;
+    padding: 8px;
+  }
+
+  .path-map-index {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    font-size: 22px;
+  }
+
+  .path-map-label strong {
+    font-size: 23px;
+  }
+
+  .path-map-label span {
+    display: none;
+  }
+
+  .path-map-progress {
+    display: none;
+  }
+
+  .path-preview-card {
+    position: static;
+    gap: 11px;
+    padding: 16px;
+  }
+
+  .path-preview-card h3 {
+    font-size: clamp(34px, 10vw, 44px);
+  }
+
+  .path-preview-card p {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
   .module-hero,
   .module-session-bar,
   .module-content-grid {
@@ -6426,12 +6677,12 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   }
 
   .path-select {
-    padding: 16px 0 34px;
+    padding: 10px 0 28px;
   }
 
   .path-select-top {
-    margin: -16px 0 22px;
-    padding: 12px 14px 16px;
+    margin: -10px 0 12px;
+    padding: 10px 14px 10px;
   }
 
   .path-home-brand {
@@ -11038,7 +11289,7 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
   }
 
   #pathSelectView .path-select {
-    padding-top: 0 !important;
+    padding-top: var(--mobile-safe-top) !important;
     touch-action: pan-y;
   }
 
@@ -11053,6 +11304,7 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
   }
 
   #pathSelectView .path-select-top {
+    display: none !important;
     position: relative !important;
     top: auto !important;
     z-index: 1 !important;
@@ -11739,15 +11991,11 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
             <img src="assets/oneinhim-logo-primary.jpg" alt="" />
             <span>One In Him</span>
           </button>
-          <button class="path-home-button" type="button" data-nav-jump="gatewayView">
-            <span>⌂</span>
-            <span data-i18n="path.home">Home</span>
-          </button>
         </div>
         <div class="path-select-head">
           <p class="eyebrow" data-i18n="paths.eyebrow">Choose your section</p>
-          <h2 data-i18n="paths.title">Where do you want to start?</h2>
-          <p data-i18n="paths.copy">Start with a Section. Each Section contains Units, and each Unit contains Lessons.</p>
+          <h2 data-i18n="paths.title">Choose your starting point</h2>
+          <p data-i18n="paths.copy">Tap a section to preview it, then begin at the first node.</p>
         </div>
         <div class="path-card-grid" id="pathGrid"></div>
         <div class="path-question-panel">
@@ -12624,6 +12872,7 @@ const state = {
   practicalUse: false,
   selectedSectionIndex: 0,
   selectedPathNode: "",
+  pathPreviewStageId: "exploreJesus",
   guidedPathNode: "",
   nodeMediumPreference: {},
   libraryFilter: "all",
@@ -12832,8 +13081,8 @@ const i18n = {
     "popular.farFromGod": "I feel far from God",
     "popular.speakers": "Popular speakers",
     "paths.eyebrow": "Choose your section",
-    "paths.title": "Where are you in your discipleship journey?",
-    "paths.copy": "Start with a Section. Each Section contains Units, and each Unit contains Lessons.",
+    "paths.title": "Choose your starting point",
+    "paths.copy": "Tap a section to preview it, then begin at the first node.",
     "path.home": "Home",
     "paths.questionTitle": "Not sure where you fit?",
     "paths.questionCopy": "Ask your real question and we will guide you to a good first step.",
@@ -13173,8 +13422,8 @@ const i18n = {
     "popular.farFromGod": "Ik voel mij ver van God",
     "popular.speakers": "Populaire sprekers",
     "paths.eyebrow": "Kies je sectie",
-    "paths.title": "Waar sta je in je discipelschapsreis?",
-    "paths.copy": "Begin met een sectie. Elke sectie bevat units, en elke unit bevat lessen.",
+    "paths.title": "Kies je startpunt",
+    "paths.copy": "Tik op een sectie voor een preview en begin daarna bij de eerste stap.",
     "path.home": "Home",
     "paths.questionTitle": "Weet je niet zeker waar je past?",
     "paths.questionCopy": "Stel je echte vraag en we leiden je naar een goede eerste stap.",
@@ -14120,6 +14369,7 @@ function renderOnboarding() {
 
 function finishOnboarding() {
   state.activeStageId = state.onboardingStage || "exploreJesus";
+  state.pathPreviewStageId = state.activeStageId;
   state.selectedPathNode = "";
   if (state.onboardingStartMode === "ask") {
     setView("askView");
@@ -15003,6 +15253,7 @@ function handleGatewayChoice(choice) {
   const selected = choices[choice] || choices.explore;
   if (selected.stageId) state.activeStageId = selected.stageId;
   if (pathOptions.some((stage) => stage.choice === choice)) state.activeStageId = choice;
+  state.pathPreviewStageId = state.activeStageId;
   state.selectedSectionIndex = 0;
   state.selectedPathNode = "";
   state.guidedPathNode = "";
@@ -15011,6 +15262,7 @@ function handleGatewayChoice(choice) {
   if (selected.view === "moduleDetailView") {
     const target = moduleTargetForResource(selected.resourceId);
     state.activeStageId = target.stageId;
+    state.pathPreviewStageId = state.activeStageId;
     state.activeModuleIndex = target.moduleIndex;
     state.moduleMode = target.mode;
     state.quizChoice = "";
@@ -15027,6 +15279,7 @@ function handleGatewayChoice(choice) {
 function openJourneySectionStart(stageChoice) {
   const stage = stageForChoice(stageChoice);
   state.activeStageId = stage.choice;
+  state.pathPreviewStageId = stage.choice;
   state.selectedSectionIndex = 0;
   state.selectedPathNode = "";
   state.guidedPathNode = "";
@@ -15076,6 +15329,7 @@ function handlePopularStart(choice) {
   };
   const selected = starts[choice] || starts.newChristian;
   if (selected.stageId) state.activeStageId = selected.stageId;
+  state.pathPreviewStageId = state.activeStageId;
   state.selectedSectionIndex = 0;
   state.selectedPathNode = "";
   state.guidedPathNode = "";
@@ -15084,6 +15338,7 @@ function handlePopularStart(choice) {
   if (selected.view === "moduleDetailView") {
     const target = moduleTargetForResource(selected.resourceId);
     state.activeStageId = target.stageId;
+    state.pathPreviewStageId = state.activeStageId;
     state.activeModuleIndex = target.moduleIndex;
     state.moduleMode = target.mode;
     state.quizChoice = "";
@@ -15184,17 +15439,46 @@ function renderDiscoveryDetail() {
 }
 
 function renderPathSelect() {
-  els.pathGrid.innerHTML = pathOptions.map((option) => `
-    <button class="path-choice ${esc(option.color)}" type="button" data-path-section-start="${esc(option.choice)}">
-      <span>
-        <span class="path-choice-icon">${esc(option.icon)}</span>
-        <strong>${esc(t(option.titleKey))}</strong>
-        <span class="path-choice-copy">${esc(t(option.copyKey))}</span>
-        <span class="stage-topics">${t(option.topicsKey).split("|").map((topic) => `<span class="stage-topic">${esc(topic)}</span>`).join("")}</span>
-      </span>
-      <span class="path-choice-meta">${esc(t(option.metaKey))}</span>
-    </button>
-  `).join("");
+  const previewChoice = pathOptions.some((option) => option.choice === state.pathPreviewStageId)
+    ? state.pathPreviewStageId
+    : state.activeStageId;
+  const activeOption = pathOptions.find((option) => option.choice === previewChoice) || pathOptions[0];
+  const activeTopics = t(activeOption.topicsKey).split("|").filter(Boolean);
+  const activeUnits = stageSectionGroups(activeOption).length || parseStageSections(activeOption).length;
+  els.pathGrid.innerHTML = `
+    <div class="path-map-card" aria-label="Journey sections">
+      ${pathOptions.map((option) => {
+        const isActive = option.choice === activeOption.choice;
+        const stageText = option.color === "stage-start" ? "var(--oih-black)" : "#fff";
+        return `
+          <button
+            class="path-map-node ${esc(option.color)}${isActive ? " active" : ""}"
+            type="button"
+            data-path-preview-section="${esc(option.choice)}"
+            aria-pressed="${isActive ? "true" : "false"}"
+            style="--stage-color: ${esc(option.stageColor)}; --stage-text: ${stageText};"
+          >
+            <span class="path-map-index">${esc(option.icon)}</span>
+            <span class="path-map-label">
+              <strong>${esc(t(option.titleKey))}</strong>
+              <span>${esc(t(option.copyKey))}</span>
+            </span>
+            <span class="path-map-progress">${esc(option.progress ? `${option.progress}%` : "New")}</span>
+          </button>
+        `;
+      }).join("")}
+    </div>
+    <aside class="path-preview-card ${esc(activeOption.color)}" style="--stage-color: ${esc(activeOption.stageColor)}; --stage-text: ${activeOption.color === "stage-start" ? "var(--oih-black)" : "#fff"};">
+      <span class="path-preview-kicker">${esc(t(activeOption.metaKey))}</span>
+      <h3>${esc(t(activeOption.titleKey))}</h3>
+      <p>${esc(t(activeOption.copyKey))}</p>
+      <div class="path-preview-topics">
+        ${activeTopics.map((topic) => `<span class="path-preview-topic">${esc(topic)}</span>`).join("")}
+      </div>
+      <p>${esc(`${activeUnits} unit${activeUnits === 1 ? "" : "s"} ready to explore.`)}</p>
+      <button class="primary-btn" type="button" data-path-section-start="${esc(activeOption.choice)}">Begin section</button>
+    </aside>
+  `;
 }
 
 function parseStageSections(stage) {
@@ -16815,6 +17099,7 @@ function openQuestionGuide(question, sourceInput = null) {
   els.gatewayQuestion.value = cleanQuestion;
   els.askInput.value = cleanQuestion;
   state.activeStageId = guide.stageChoice;
+  state.pathPreviewStageId = guide.stageChoice;
   state.selectedSectionIndex = guide.groupIndex;
   state.selectedPathNode = guide.nodeKey;
   state.guidedPathNode = guide.nodeKey;
@@ -17072,6 +17357,13 @@ function bindDynamicActions() {
   });
   document.querySelectorAll("[data-path-section-start]").forEach((button) => {
     button.onclick = () => openJourneySectionStart(button.dataset.pathSectionStart);
+  });
+  document.querySelectorAll("[data-path-preview-section]").forEach((button) => {
+    button.onclick = () => {
+      state.pathPreviewStageId = button.dataset.pathPreviewSection;
+      renderPathSelect();
+      bindDynamicActions();
+    };
   });
   document.querySelectorAll("[data-module]").forEach((button) => {
     button.onclick = () => {
