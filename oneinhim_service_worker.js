@@ -1,9 +1,10 @@
-const ONEINHIM_CACHE = "oneinhim-app-v20";
+const ONEINHIM_CACHE = "oneinhim-app-v21";
 
 const APP_SHELL = [
   "./",
   "./index.html",
   "./oneinhim_learner_app.html",
+  "./oneinhim.webmanifest",
   "./oneinhim_content_workshop.html",
   "./oneinhim_team_sync_config.js",
   "./oneinhim_content_packages.json",

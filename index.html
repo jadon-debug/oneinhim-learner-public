@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#ffffff" />
+<meta name="theme-color" content="#090a0a" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="ONEapp" />
 <title>One In Him Learner App Prototype</title>
 <link rel="manifest" href="oneinhim.webmanifest" />
@@ -9723,7 +9723,8 @@ body.gateway-mode .courses-row .content-kind {
   }
 
   body.gateway-mode::before {
-    content: "";
+    content: none !important;
+    display: none !important;
     position: fixed;
     top: 0;
     left: 0;
@@ -9955,7 +9956,8 @@ body.gateway-mode .courses-row .content-kind {
   }
 
   body.gateway-mode::before {
-    content: "";
+    content: none !important;
+    display: none !important;
     position: fixed;
     top: 0;
     left: 0;
@@ -12580,8 +12582,10 @@ function renderGatewayHeroSlider() {
 function setGatewayChromeColor(isDarkHero) {
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-  if (themeMeta) themeMeta.setAttribute("content", isDarkHero ? "#090a0a" : "#ffffff");
-  if (statusMeta) statusMeta.setAttribute("content", isDarkHero ? "black-translucent" : "default");
+  const mobileGatewayChrome = window.matchMedia("(max-width: 760px)").matches && document.body.classList.contains("gateway-mode");
+  const useDarkChrome = isDarkHero || mobileGatewayChrome;
+  if (themeMeta) themeMeta.setAttribute("content", useDarkChrome ? "#090a0a" : "#ffffff");
+  if (statusMeta) statusMeta.setAttribute("content", useDarkChrome ? "black-translucent" : "default");
 }
 
 function setGatewayHero(index, options = {}) {

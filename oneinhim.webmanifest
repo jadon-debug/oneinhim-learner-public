@@ -6,8 +6,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#090a0a",
+  "theme_color": "#090a0a",
   "icons": [
     {
       "src": "assets/oih-logo-2023-orange.png",
