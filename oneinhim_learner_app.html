@@ -3575,6 +3575,20 @@ body.learning-mode .view.active {
   filter: saturate(1.08) contrast(1.04);
 }
 
+.gateway-hero-bg-picture {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  display: block;
+  overflow: hidden;
+}
+
+.gateway-hero-bg-picture .gateway-hero-bg {
+  position: static;
+  z-index: auto;
+  display: block;
+}
+
 .gateway-slide.documentary-hero::before {
   content: "";
   position: absolute;
@@ -9168,7 +9182,7 @@ body.gateway-mode .courses-row .content-kind {
   }
 
   body.gateway-mode .gateway-slide.documentary-hero .gateway-hero-bg {
-    object-position: 66% center !important;
+    object-position: center center !important;
   }
 
   body.gateway-mode .gateway-slide.documentary-hero .gateway-copy {
@@ -9731,7 +9745,7 @@ body.gateway-mode .courses-row .content-kind {
   body.gateway-mode.documentary-hero-active::before {
     background:
       linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
-      url("assets/outoftheshadows-brenda-hero.png");
+      url("assets/outoftheshadows-brenda-mobile-hero.jpg");
     background-size: cover;
     background-position: center top;
   }
@@ -9963,7 +9977,7 @@ body.gateway-mode .courses-row .content-kind {
   body.gateway-mode.documentary-hero-active::before {
     background:
       linear-gradient(180deg, rgba(3, 5, 7, 0.18), rgba(3, 5, 7, 0.04) 74%, rgba(3, 5, 7, 0)),
-      url("assets/outoftheshadows-brenda-hero.png");
+      url("assets/outoftheshadows-brenda-mobile-hero.jpg");
     background-size: cover;
     background-position: center top;
   }
@@ -10096,6 +10110,10 @@ body.gateway-mode .courses-row .content-kind {
 
   body.gateway-mode .gateway-slide.documentary-hero {
     padding: calc(88px + env(safe-area-inset-top)) max(28px, env(safe-area-inset-right)) calc(92px + env(safe-area-inset-bottom)) max(28px, env(safe-area-inset-left)) !important;
+  }
+
+  body.gateway-mode .gateway-slide.documentary-hero .gateway-hero-bg {
+    object-position: center center !important;
   }
 
   body.gateway-mode .gateway-slide.one-basics-hero .gateway-illustration {
@@ -10234,7 +10252,10 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
           </article>
 
           <article class="gateway-slide documentary-hero" data-gateway-hero-slide="1" data-hero-mode="discover watch">
-            <img class="gateway-hero-bg" src="assets/outoftheshadows-brenda-hero.png" alt="" />
+            <picture class="gateway-hero-bg-picture" aria-hidden="true">
+              <source media="(max-width: 760px)" srcset="assets/outoftheshadows-brenda-mobile-hero.jpg" />
+              <img class="gateway-hero-bg" src="assets/outoftheshadows-brenda-hero.png" alt="" />
+            </picture>
             <div class="gateway-copy">
               <span class="hero-eyebrow" data-i18n="gateway.watchEyebrow">New to the ONEapp</span>
               <h2 data-i18n="gateway.watchHeadline">Out of the Shadows</h2>
