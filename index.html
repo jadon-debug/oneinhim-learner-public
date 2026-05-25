@@ -4656,6 +4656,10 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   display: block;
 }
 
+.discover-watch-bottom-nav {
+  display: none;
+}
+
 .discover-watch-main {
   order: 3;
   width: min(1120px, calc(100% - 36px));
@@ -5846,6 +5850,169 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   .main,
   .sidebar {
     padding: 12px;
+  }
+
+  body.discovery-detail-mode {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  body.discovery-detail-mode .discover-watch-shell {
+    min-height: 100svh;
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  body.discovery-detail-mode .discover-watch-nav {
+    display: none !important;
+  }
+
+  body.discovery-detail-mode .discover-watch-main {
+    order: 1;
+    width: min(100% - 36px, 560px);
+    margin: max(22px, calc(12px + env(safe-area-inset-top))) auto 0;
+  }
+
+  body.discovery-detail-mode .discover-watch-media {
+    border-radius: 13px;
+  }
+
+  body.discovery-detail-mode .discover-watch-info {
+    order: 2;
+    width: min(100% - 36px, 560px);
+    margin: 24px auto 0;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  body.discovery-detail-mode .discover-watch-info h2 {
+    font-size: 34px;
+    line-height: 1.08;
+  }
+
+  body.discovery-detail-mode .discover-watch-buttons {
+    flex-wrap: wrap;
+  }
+
+  body.discovery-detail-mode .discover-related {
+    order: 3;
+    width: min(100% - 36px, 560px);
+    margin-top: 28px;
+    padding-bottom: 24px;
+  }
+
+  body.discovery-detail-mode .discover-related-list {
+    grid-template-columns: 1fr;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 190;
+    min-height: calc(74px + env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    padding: 7px 10px max(7px, env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(13, 13, 13, 0.96);
+    box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.34);
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav-btn {
+    min-width: 0;
+    min-height: 58px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 4px;
+    padding: 0;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav-btn.active {
+    color: #fff;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon {
+    position: relative;
+    width: 28px;
+    height: 27px;
+    display: block;
+    color: currentColor;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.discover::before {
+    content: "";
+    position: absolute;
+    inset: 1px 4px 3px;
+    background: currentColor;
+    clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.watch::before {
+    content: "";
+    position: absolute;
+    inset: 4px 2px 3px;
+    border-radius: 3px;
+    background: currentColor;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.listen::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 4px;
+    height: 17px;
+    border: 5px solid currentColor;
+    border-bottom: 0;
+    border-radius: 18px 18px 0 0;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.listen::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    height: 10px;
+    border-radius: 8px;
+    background: currentColor;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.kids::before {
+    content: "";
+    position: absolute;
+    inset: 5px 3px 2px;
+    transform: skewX(-13deg);
+    border-radius: 3px;
+    background: currentColor;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.library::before,
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.library::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    height: 6px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.library::before {
+    top: 6px;
+  }
+
+  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.library::after {
+    bottom: 6px;
   }
 
   .sidebar {
@@ -10921,6 +11088,29 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
           <h3 id="discoverRelatedTitle">Recommended next</h3>
           <div class="discover-related-list" id="discoverRelatedList"></div>
         </section>
+
+        <nav class="discover-watch-bottom-nav" aria-label="Bottom navigation">
+          <button class="discover-watch-bottom-nav-btn active" type="button" data-gateway-nav="discover">
+            <span class="gateway-nav-icon discover" aria-hidden="true"></span>
+            <span data-i18n="homeNav.discover">Discover</span>
+          </button>
+          <button class="discover-watch-bottom-nav-btn" type="button" data-gateway-nav="watch">
+            <span class="gateway-nav-icon watch" aria-hidden="true"></span>
+            <span data-i18n="homeNav.watch">Watch</span>
+          </button>
+          <button class="discover-watch-bottom-nav-btn" type="button" data-gateway-nav="listen">
+            <span class="gateway-nav-icon listen" aria-hidden="true"></span>
+            <span data-i18n="homeNav.listen">Listen</span>
+          </button>
+          <button class="discover-watch-bottom-nav-btn" type="button" data-gateway-nav="kids">
+            <span class="gateway-nav-icon kids" aria-hidden="true"></span>
+            <span data-i18n="homeNav.kids">Kids</span>
+          </button>
+          <button class="discover-watch-bottom-nav-btn" type="button" data-gateway-nav="library">
+            <span class="gateway-nav-icon library" aria-hidden="true"></span>
+            <span data-i18n="homeNav.library">Library</span>
+          </button>
+        </nav>
       </div>
     </section>
 
