@@ -17397,6 +17397,10 @@ function bindDynamicActions() {
       }
       const shouldRestoreModulePlayer = targetView === "moduleDetailView" && state.activeView === "moduleQuizView";
       if (shouldRestoreModulePlayer) renderModuleDetail();
+      if (targetView === "gatewayView") {
+        setGatewayContentMode("discover");
+        setGatewayNavActive("discover");
+      }
       setView(targetView);
       if (shouldRestoreModulePlayer) bindDynamicActions();
     };
