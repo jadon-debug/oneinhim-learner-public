@@ -2942,18 +2942,11 @@ body.learning-mode .view.active {
   background: #fff;
 }
 
-#moduleDetailView .module-next-row::before {
-  content: "Skip";
+#moduleDetailView .module-next-row .soft-btn {
   min-width: 120px;
   min-height: 48px;
-  display: inline-grid;
-  place-items: center;
-  border: 2px solid #e0dfdc;
-  border-radius: 14px;
-  color: #b7b7b7;
-  font-weight: 950;
+  justify-content: center;
   text-transform: uppercase;
-  box-shadow: inset 0 -4px 0 rgba(9,10,10,0.08);
 }
 
 #moduleDetailView .module-next-row .primary-btn {
@@ -12227,6 +12220,7 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
             <h3 id="moduleReadTitle">Read</h3>
             <div id="moduleRead"></div>
             <div class="module-next-row">
+              <button class="soft-btn" type="button" id="moduleSkipStep">Skip</button>
               <button class="primary-btn" type="button" id="moduleNextStep">Next</button>
             </div>
           </article>
@@ -13716,6 +13710,7 @@ const els = {
   modulePlayer: document.getElementById("modulePlayer"),
   moduleContentGrid: document.getElementById("moduleContentGrid"),
   moduleNextStep: document.getElementById("moduleNextStep"),
+  moduleSkipStep: document.getElementById("moduleSkipStep"),
   modulePlayIcon: document.getElementById("modulePlayIcon"),
   modulePlayerLabel: document.getElementById("modulePlayerLabel"),
   moduleReadTitle: document.getElementById("moduleReadTitle"),
@@ -15093,6 +15088,10 @@ function setView(viewId) {
     shareView: "gatewayView"
   };
   const nextViewId = deprecatedViews[viewId] || viewId;
+  const previousViewId = state.activeView;
+  if (previousViewId && previousViewId !== nextViewId) {
+    stopEmbeddedMediaInView(previousViewId);
+  }
   state.activeView = nextViewId;
   document.body.classList.toggle("gateway-mode", nextViewId === "gatewayView");
   if (nextViewId === "gatewayView") {
@@ -16655,6 +16654,26 @@ function closeGuidebook() {
   els.guidebookOverlay.setAttribute("aria-hidden", "true");
 }
 
+function stopEmbeddedMediaInView(viewId) {
+  const view = document.getElementById(viewId);
+  if (!view) return;
+  view.querySelectorAll("iframe.mux-frame").forEach((frame) => {
+    frame.src = "about:blank";
+  });
+  view.querySelectorAll("video, audio").forEach((media) => {
+    try {
+      media.pause();
+      media.currentTime = 0;
+    } catch (error) {
+      // Best effort only; embedded players are stopped by clearing their iframe src.
+    }
+  });
+}
+
+function stopModulePlayback() {
+  stopEmbeddedMediaInView("moduleDetailView");
+}
+
 function muxPlayerUrl(resource) {
   const playbackId = resourceMuxPlaybackId(resource);
   if (!playbackId) return "";
@@ -16820,6 +16839,7 @@ function renderModuleDetail() {
   els.moduleNotes.value = getModuleNote(stage, state.activeModuleIndex);
   els.moduleSaveNotes.textContent = t("module.saveNotes");
   els.moduleNoteStatus.textContent = t("module.notesReady");
+  if (els.moduleSkipStep) els.moduleSkipStep.textContent = "Skip";
   els.moduleNextStep.textContent = "Continue";
   if (els.sectionContentQueue) {
     els.sectionContentQueue.style.setProperty("--stage-color", stage.stageColor);
@@ -16911,6 +16931,36 @@ function markCurrentLearningStepComplete() {
   state.completedPieces.add(pieceProgressKey(stage, state.activeModuleIndex));
   const resource = moduleResourceFor(stage, state.activeModuleIndex);
   if (resource) state.completed.add(resource.id);
+}
+
+function resetModuleStepState() {
+  state.quizChoice = "";
+  state.quizChecked = false;
+  state.sectionReview = null;
+  state.sectionPicker = null;
+  state.practicalUse = false;
+}
+
+function openNextModuleStep() {
+  stopModulePlayback();
+  const stage = activeStage();
+  const info = activeSectionPieceInfo(stage, state.activeModuleIndex);
+  const nextPiece = info.group && info.group.modules[info.pieceIndex + 1];
+  resetModuleStepState();
+  if (nextPiece) {
+    state.activeModuleIndex = Number(nextPiece.moduleIndex) || 0;
+    const nextResource = moduleResourceFor(stage, state.activeModuleIndex);
+    state.moduleMode = nodeModeForResource(stage, info.group, nextResource);
+    state.selectedSectionIndex = info.groupIndex;
+    state.selectedPathNode = pathNodeKey("content", stage, info.groupIndex);
+    renderModuleDetail();
+    setView("moduleDetailView");
+    bindDynamicActions();
+    return;
+  }
+  renderStageDetail();
+  setView("stageDetailView");
+  bindDynamicActions();
 }
 
 function renderModuleQuiz() {
@@ -17345,7 +17395,10 @@ function bindDynamicActions() {
         state.sectionPicker = null;
         targetView = "stageDetailView";
       }
+      const shouldRestoreModulePlayer = targetView === "moduleDetailView" && state.activeView === "moduleQuizView";
+      if (shouldRestoreModulePlayer) renderModuleDetail();
       setView(targetView);
+      if (shouldRestoreModulePlayer) bindDynamicActions();
     };
   });
   document.querySelectorAll("[data-share]").forEach((button) => {
@@ -17559,6 +17612,7 @@ function bindDynamicActions() {
   });
   document.querySelectorAll("[data-section-content]").forEach((button) => {
     button.onclick = () => {
+      stopModulePlayback();
       state.activeModuleIndex = Number(button.dataset.sectionContent) || 0;
       const resource = moduleResourceFor(activeStage(), state.activeModuleIndex);
       const info = activeSectionPieceInfo(activeStage(), state.activeModuleIndex);
@@ -17577,6 +17631,7 @@ function bindDynamicActions() {
   });
   if (els.moduleFallback) {
     els.moduleFallback.onclick = () => {
+      stopModulePlayback();
       const fallbackResourceId = els.moduleFallback.dataset.moduleFallbackResourceId || "";
       const fallbackModuleIndex = Number(els.moduleFallback.dataset.moduleFallbackIndex);
       if (Number.isFinite(fallbackModuleIndex) && fallbackModuleIndex >= 0) {
@@ -17612,6 +17667,7 @@ function bindDynamicActions() {
   });
   if (els.moduleNextStep) {
     els.moduleNextStep.onclick = () => {
+      stopModulePlayback();
       state.quizChoice = "";
       state.quizChecked = false;
       state.sectionReview = null;
@@ -17620,6 +17676,9 @@ function bindDynamicActions() {
       setView("moduleQuizView");
       bindDynamicActions();
     };
+  }
+  if (els.moduleSkipStep) {
+    els.moduleSkipStep.onclick = () => openNextModuleStep();
   }
   if (els.quizCheck) {
     els.quizCheck.onclick = () => {
