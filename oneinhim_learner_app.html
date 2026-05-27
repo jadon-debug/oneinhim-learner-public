@@ -15205,6 +15205,13 @@ function setDiscoveryResource(id) {
   bindDynamicActions();
 }
 
+const sourceBackedQuickStarts = {
+  bible: "book_one_basics_1_14_effective_bible_reading",
+  newChristian: "book_one_basics_1_1_eternal_life",
+  jesus: "book_one_basics_1_1_eternal_life",
+  prayer: "book_one_basics_1_16_praying_to_god"
+};
+
 function handleGatewayChoice(choice) {
   const choices = {
     explore: {
@@ -15215,13 +15222,13 @@ function handleGatewayChoice(choice) {
       message: t("toast.choiceExplore")
     },
     prayer: {
-      resourceId: "book_prayer_002",
+      resourceId: sourceBackedQuickStarts.prayer,
       question: t("choice.prayer.question"),
-      view: "askView",
+      view: "moduleDetailView",
       message: t("toast.choicePrayer")
     },
     bible: {
-      resourceId: "lesson_bible_004",
+      resourceId: sourceBackedQuickStarts.bible,
       question: t("choice.bible.question"),
       view: "moduleDetailView",
       message: t("toast.choiceBible")
@@ -15239,7 +15246,7 @@ function handleGatewayChoice(choice) {
       message: t("toast.choiceExplore")
     },
     startFollowing: {
-      resourceId: "lesson_bible_004",
+      resourceId: sourceBackedQuickStarts.newChristian,
       question: t("quick.newChristian.question"),
       view: "stageDetailView",
       message: t("toast.choiceBible")
@@ -15263,9 +15270,9 @@ function handleGatewayChoice(choice) {
       message: t("toast.choicePastor")
     },
     newChristian: {
-      resourceId: "vid_jesus_001",
+      resourceId: sourceBackedQuickStarts.newChristian,
       question: t("quick.newChristian.question"),
-      view: "stageDetailView",
+      view: "moduleDetailView",
       stageId: "startFollowing",
       message: t("toast.choiceExplore")
     },
@@ -15365,25 +15372,25 @@ function openJourneySectionStart(stageChoice) {
 function handlePopularStart(choice) {
   const starts = {
     bible: {
-      resourceId: "lesson_bible_004",
+      resourceId: sourceBackedQuickStarts.bible,
       question: t("quick.bible.question"),
       view: "moduleDetailView"
     },
     newChristian: {
-      resourceId: "vid_jesus_001",
+      resourceId: sourceBackedQuickStarts.newChristian,
       question: t("quick.newChristian.question"),
-      view: "stageDetailView",
+      view: "moduleDetailView",
       stageId: "startFollowing"
     },
     jesus: {
-      resourceId: "vid_jesus_001",
+      resourceId: sourceBackedQuickStarts.jesus,
       question: t("quick.jesus.question"),
       view: "moduleDetailView"
     },
     prayer: {
-      resourceId: "book_prayer_002",
+      resourceId: sourceBackedQuickStarts.prayer,
       question: t("quick.prayer.question"),
-      view: "askView"
+      view: "moduleDetailView"
     },
     farFromGod: {
       resourceId: "vid_jesus_001",
@@ -17244,6 +17251,12 @@ function openQuestionGuide(question, sourceInput = null) {
 function matchResources(question) {
   const text = String(question || "").toLowerCase();
   const guide = questionGuideFor(question);
+  const sourceBackedBoosts = [
+    { id: sourceBackedQuickStarts.bible, terms: ["bible", "scripture", "read my bible", "read the bible", "word of god"] },
+    { id: sourceBackedQuickStarts.prayer, terms: ["pray", "prayer", "talk to god", "praying"] },
+    { id: sourceBackedQuickStarts.newChristian, terms: ["new christian", "new believer", "where do i start", "starting again", "follow jesus"] },
+    { id: sourceBackedQuickStarts.jesus, terms: ["who is jesus", "why jesus", "jesus"] }
+  ];
   return resources
     .map((resource) => {
       const questionScore = resource.questions.some((q) => q.toLowerCase().split(/\W+/).filter((word) => word.length > 3).some((word) => text.includes(word))) ? 4 : 0;
@@ -17251,7 +17264,10 @@ function matchResources(question) {
       const careScore = text.includes("talk") || text.includes("someone") ? (resource.topic === "Anxiety" ? 2 : 0) : 0;
       const startScore = text.includes("start") || text.includes("far") ? (resource.stage === "explore" ? 2 : 0) : 0;
       const guideScore = resource.stage === guide.resourceStageSlug ? 3 : 0;
-      return { resource, score: questionScore + topicScore + careScore + startScore + guideScore };
+      const sourceScore = sourceBackedBoosts.some((entry) =>
+        entry.id === resource.id && entry.terms.some((term) => text.includes(term))
+      ) ? 8 : 0;
+      return { resource, score: questionScore + topicScore + careScore + startScore + guideScore + sourceScore };
     })
     .sort((a, b) => b.score - a.score)
     .map((entry) => entry.resource);
