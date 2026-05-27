@@ -7532,6 +7532,11 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
     transform: translateX(var(--mobile-node-x, 0));
   }
 
+  #stageDetailView .duo-path-node.selected:nth-child(odd),
+  #stageDetailView .duo-path-node.selected:nth-child(even) {
+    transform: none;
+  }
+
   #stageDetailView .duo-node-button {
     width: 104px;
     height: 92px;
@@ -7556,11 +7561,35 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
   }
 
   #stageDetailView .duo-node-popout {
-    position: relative;
+    position: fixed;
     top: auto;
-    left: auto;
-    margin-top: 14px;
+    left: max(16px, env(safe-area-inset-left));
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(98px + env(safe-area-inset-bottom));
+    z-index: 112;
+    width: auto;
+    max-width: none;
+    max-height: min(46vh, 430px);
+    margin: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     transform: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #stageDetailView .duo-node-popout::before {
+    display: none;
+  }
+
+  #stageDetailView .duo-node-popout h3,
+  #stageDetailView .duo-node-popout p,
+  #stageDetailView .duo-node-piece-list,
+  #stageDetailView .duo-node-piece-list span,
+  #stageDetailView .duo-node-piece-list em,
+  #stageDetailView .duo-node-piece-list strong,
+  #stageDetailView .duo-node-piece-list small {
+    min-width: 0;
+    overflow-wrap: break-word;
   }
 
   #stageDetailView .mobile-bottom-nav {

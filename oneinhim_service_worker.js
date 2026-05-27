@@ -1,4 +1,4 @@
-const ONEINHIM_CACHE = "oneinhim-app-v41";
+const ONEINHIM_CACHE = "oneinhim-app-v42";
 
 const APP_SHELL = [
   "./",
