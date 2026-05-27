@@ -11316,16 +11316,27 @@ body.gateway-mode.gateway-nav-scrolled .gateway-header {
   background: rgba(13, 13, 13, 0.9) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28) !important;
-  backdrop-filter: blur(18px) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-body.gateway-mode.gateway-nav-scrolled .gateway-logo,
-body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn,
-body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn:hover,
-body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn.active {
+body.gateway-mode.gateway-nav-scrolled .gateway-logo {
   color: #fff !important;
   text-shadow: none !important;
+}
+
+@media (min-width: 761px) {
+  body.gateway-mode.gateway-nav-scrolled .gateway-header {
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn,
+  body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn:hover,
+  body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn.active {
+    color: #fff !important;
+    text-shadow: none !important;
+  }
 }
 
 body.gateway-mode.gateway-nav-scrolled .gateway-language {
@@ -11361,6 +11372,22 @@ body.gateway-mode.gateway-nav-scrolled .lang-btn.active {
   body.gateway-mode.gateway-nav-scrolled .gateway-mobile-action {
     color: #fff !important;
     filter: none !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .gateway-nav {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    background: rgba(13, 13, 13, 0.96) !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn {
+    color: rgba(255, 255, 255, 0.58) !important;
+    text-shadow: none !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn.active {
+    color: #fff !important;
   }
 }
 
