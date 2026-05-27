@@ -11298,6 +11298,72 @@ body.feed-mode .main {
   }
 }
 
+/* Home header: clear over the hero, grounded once the page scrolls. */
+body.gateway-mode .gateway-header {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    backdrop-filter 180ms ease;
+}
+
+body.gateway-mode.gateway-nav-scrolled .gateway-header {
+  background: rgba(13, 13, 13, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+body.gateway-mode.gateway-nav-scrolled .gateway-logo,
+body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn,
+body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn:hover,
+body.gateway-mode.gateway-nav-scrolled .gateway-nav-btn.active {
+  color: #fff !important;
+  text-shadow: none !important;
+}
+
+body.gateway-mode.gateway-nav-scrolled .gateway-language {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.13) !important;
+  box-shadow: none !important;
+}
+
+body.gateway-mode.gateway-nav-scrolled .lang-btn {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+body.gateway-mode.gateway-nav-scrolled .lang-btn.active {
+  color: #fff !important;
+}
+
+@media (max-width: 760px) {
+  body.gateway-mode:not(.gateway-nav-scrolled) .gateway-header {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.gateway-mode:not(.dark-gateway-hero-active):not(.gateway-nav-scrolled) .gateway-mobile-action {
+    color: var(--oih-black) !important;
+    filter: drop-shadow(0 4px 14px rgba(255, 255, 255, 0.85)) !important;
+  }
+
+  body.gateway-mode.dark-gateway-hero-active:not(.gateway-nav-scrolled) .gateway-mobile-action {
+    color: #fff !important;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.48)) !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .gateway-mobile-action {
+    color: #fff !important;
+    filter: none !important;
+  }
+}
+
 /* Desktop guide page: full-width structure with readable inner rhythm. */
 @media (min-width: 961px) {
   #askView {
@@ -14035,6 +14101,7 @@ function renderGatewayHeroSlider() {
   document.body.classList.toggle("dark-gateway-hero-active", isDarkHero);
   document.documentElement.classList.toggle("dark-gateway-hero-active", isDarkHero);
   setGatewayChromeColor(isDarkHero);
+  updateGatewayNavScrollState();
   document.querySelectorAll("[data-hero-dot]").forEach((dot) => {
     const dotIndex = Number(dot.dataset.heroDot);
     const isAllowed = gatewayHeroSlideAllowed(slides[dotIndex]);
@@ -14052,11 +14119,18 @@ function setGatewayChromeColor(isDarkHero) {
   if (statusMeta) statusMeta.setAttribute("content", useDarkChrome ? "black-translucent" : "default");
 }
 
+function updateGatewayNavScrollState() {
+  const shouldShowBackground = state.activeView === "gatewayView" && document.body.classList.contains("gateway-mode") && window.scrollY > 18;
+  document.body.classList.toggle("gateway-nav-scrolled", shouldShowBackground);
+  document.documentElement.classList.toggle("gateway-nav-scrolled", shouldShowBackground);
+}
+
 function setGatewayHero(index, options = {}) {
   const slides = Array.from(document.querySelectorAll("[data-gateway-hero-slide]"));
   if (!slides.length) return;
   state.gatewayHeroIndex = normalizeGatewayHeroIndex(index, slides);
   renderGatewayHeroSlider();
+  updateGatewayNavScrollState();
   if (options.restartAutoplay !== false) scheduleGatewayHeroAutoplay();
 }
 
@@ -15250,7 +15324,9 @@ function setView(viewId) {
     document.body.classList.remove("documentary-hero-active");
     document.body.classList.remove("one-basics-hero-active");
     document.body.classList.remove("dark-gateway-hero-active");
+    document.body.classList.remove("gateway-nav-scrolled");
     document.documentElement.classList.remove("dark-gateway-hero-active");
+    document.documentElement.classList.remove("gateway-nav-scrolled");
     setGatewayChromeColor(false);
   }
   document.body.classList.toggle("discovery-detail-mode", nextViewId === "discoveryDetailView");
@@ -15266,8 +15342,9 @@ function setView(viewId) {
 	  els.viewSubtitle.textContent = subtitle;
 	  if (nextViewId === "accountView") renderAdminAccount();
 	  if (nextViewId === "feedView") renderFeed();
-	  if (nextViewId === "onboardingView") renderOnboarding();
+  if (nextViewId === "onboardingView") renderOnboarding();
   window.scrollTo({ top: 0, behavior: "auto" });
+  updateGatewayNavScrollState();
   primeMobileDocumentScroll(nextViewId);
   if (nextViewId === "stageDetailView") {
     const targetStageChoice = state.activeStageId;
@@ -17937,10 +18014,14 @@ function bindDynamicActions() {
 }
 
 function wireStaticActions() {
-  window.addEventListener("scroll", updateStickyStageBanner, { passive: true });
+  window.addEventListener("scroll", () => {
+    updateStickyStageBanner();
+    updateGatewayNavScrollState();
+  }, { passive: true });
   window.addEventListener("resize", () => {
     updateDuoPathCurve();
     updateStickyStageBanner();
+    updateGatewayNavScrollState();
   });
   document.addEventListener("touchstart", handleMobileDocumentTouchStart, { passive: true, capture: true });
   document.addEventListener("touchmove", handleMobileDocumentTouchMove, { passive: false, capture: true });
