@@ -5572,6 +5572,7 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
 .ask-guide-shell {
   min-height: calc(100vh - 72px);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-content: start;
   gap: clamp(28px, 5vw, 56px);
   padding: clamp(18px, 4vw, 42px) 0 64px;
@@ -11294,6 +11295,100 @@ body.feed-mode .main {
 
   body.gateway-mode .gateway-hero-controls {
     bottom: clamp(22px, 4vh, 42px) !important;
+  }
+}
+
+/* Desktop guide page: full-width structure with readable inner rhythm. */
+@media (min-width: 961px) {
+  #askView {
+    min-height: 100vh;
+    margin: -16px calc(50% - 50vw);
+    padding: 0 max(48px, 4vw) 80px;
+    background: var(--bg);
+  }
+
+  #askView .ask-layout {
+    width: 100%;
+    max-width: none;
+  }
+
+  #askView .ask-guide-shell {
+    min-height: 100vh;
+    padding: clamp(30px, 4vw, 56px) 0 0;
+    gap: clamp(30px, 4vw, 52px);
+  }
+
+  #askView .ask-guide-top,
+  #askView .ask-guide-hero,
+  #askView .ask-result-zone {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #askView .ask-guide-hero {
+    min-height: clamp(420px, 50vh, 560px);
+    grid-template-columns: minmax(420px, 0.92fr) minmax(420px, 0.72fr);
+    align-items: center;
+    justify-items: stretch;
+    gap: clamp(36px, 6vw, 104px);
+    text-align: left;
+  }
+
+  #askView .ask-guide-hero > .eyebrow,
+  #askView .ask-guide-hero > h2,
+  #askView .ask-guide-hero > p {
+    justify-self: start;
+  }
+
+  #askView .ask-guide-hero > .eyebrow {
+    align-self: end;
+    margin-bottom: -10px;
+  }
+
+  #askView .ask-guide-hero h2 {
+    width: min(680px, 100%);
+    font-size: clamp(68px, 6.2vw, 116px);
+  }
+
+  #askView .ask-guide-hero > p {
+    width: min(640px, 100%);
+  }
+
+  #askView .ask-question-wrap {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    width: 100%;
+    align-self: center;
+  }
+
+  #askView .ask-result-zone {
+    gap: 28px;
+  }
+
+  #askView .ask-guidance-card {
+    width: 100%;
+  }
+}
+
+@media (min-width: 961px) and (max-width: 1180px) {
+  #askView .ask-guide-hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+    text-align: center;
+    justify-items: center;
+  }
+
+  #askView .ask-guide-hero > .eyebrow,
+  #askView .ask-guide-hero > h2,
+  #askView .ask-guide-hero > p {
+    justify-self: center;
+  }
+
+  #askView .ask-question-wrap {
+    grid-column: auto;
+    grid-row: auto;
+    width: min(820px, 100%);
   }
 }
 
