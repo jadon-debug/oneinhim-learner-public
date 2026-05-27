@@ -6221,6 +6221,10 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
     padding: max(24px, calc(12px + env(safe-area-inset-top))) 24px calc(102px + env(safe-area-inset-bottom));
   }
 
+  body.feed-mode .feed-home-row {
+    margin-bottom: 18px;
+  }
+
   body.feed-mode .feed-top {
     margin-bottom: 16px;
   }
@@ -10034,6 +10038,13 @@ body.gateway-mode .courses-row .content-kind {
   padding: clamp(22px, 4vw, 42px) 0 96px;
 }
 
+.feed-home-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: clamp(22px, 4vw, 34px);
+}
+
 .feed-top {
   display: flex;
   align-items: center;
@@ -11905,6 +11916,12 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
 
 	    <section class="view" id="feedView">
 	      <section class="feed-shell">
+	        <div class="feed-home-row">
+	          <button class="path-home-brand" type="button" data-nav-jump="gatewayView" aria-label="Home">
+	            <img src="assets/oneinhim-logo-primary.jpg" alt="" />
+	            <span>One In Him</span>
+	          </button>
+	        </div>
 	        <header class="feed-top">
 	          <div class="feed-heading">
 	            <p class="eyebrow" data-i18n="feed.eyebrow">Community</p>
