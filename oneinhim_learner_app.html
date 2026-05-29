@@ -610,19 +610,6 @@ body.learning-mode .view.active {
   box-shadow: none;
 }
 
-.path-select-top {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin: calc(clamp(22px, 4vw, 42px) * -1) 0 26px;
-  padding: 14px 0 18px;
-  background: linear-gradient(180deg, #fff 0%, #fff 78%, rgba(255,255,255,0));
-}
-
 .path-home-brand {
   display: inline-flex;
   align-items: center;
@@ -3233,12 +3220,13 @@ body.learning-mode .view.active {
 }
 
 .section-picker-mode .quiz-main {
-  width: min(820px, 100%);
+  width: min(680px, 100%);
+  margin-top: clamp(32px, 7vh, 74px);
 }
 
 .section-picker-mode .quiz-options {
   grid-template-columns: 1fr;
-  margin-top: 38px;
+  margin-top: 24px;
 }
 
 .quiz-option {
@@ -3303,33 +3291,122 @@ body.learning-mode .view.active {
 }
 
 .section-picker-mode .quiz-option {
-  min-height: 220px;
+  min-height: 0;
   display: grid;
-  grid-template-rows: auto auto;
-  padding: 22px;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
   cursor: default;
 }
 
 .section-picker-mode .quiz-option-symbol {
-  min-height: 112px;
+  width: 76px;
+  min-height: 76px;
   border-radius: 999px;
   background: var(--stage-color, var(--oih-orange));
   color: #fff;
+  font-size: 32px;
   box-shadow: inset 0 -5px 0 rgba(0,0,0,0.14);
 }
 
 .section-picker-mode .quiz-option strong {
   display: block;
-  font-size: clamp(22px, 3vw, 34px);
+  font-size: clamp(19px, 3vw, 28px);
+  line-height: 1.08;
 }
 
 .section-picker-mode .quiz-option small {
+  display: block;
   float: none;
   width: max-content;
+  max-width: 100%;
   margin-top: 8px;
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 13px;
+  line-height: 1.25;
+}
+
+.section-picker-lessons {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.section-picker-lesson {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.section-picker-lesson b {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--stage-color, var(--oih-orange)) 14%, #fff);
+  color: var(--stage-color, var(--oih-orange));
+  font-size: 11px;
+}
+
+.section-picker-lesson span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.section-picker-lesson em {
+  color: #aaa;
+  font-size: 11px;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .section-picker-mode .module-quiz-shell {
+    padding-bottom: 118px;
+  }
+
+  .section-picker-mode .quiz-main {
+    margin-top: 28px;
+  }
+
+  .section-picker-mode .quiz-option {
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .section-picker-mode .quiz-option-symbol {
+    width: 58px;
+    min-height: 58px;
+    font-size: 24px;
+  }
+
+  .section-picker-mode .quiz-option small {
+    width: 100%;
+  }
+
+  .section-picker-lessons {
+    gap: 7px;
+    margin-top: 12px;
+  }
+
+  .section-picker-lesson {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .section-picker-lesson em {
+    display: none;
+  }
 }
 
 .quiz-feedback {
@@ -3531,8 +3608,7 @@ body.learning-mode .view.active {
 }
 
 .gateway-logo,
-.path-home-brand,
-.discover-watch-logo-button {
+.path-home-brand {
   cursor: pointer;
 }
 
@@ -4765,69 +4841,6 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   color: var(--ink);
 }
 
-.discover-watch-nav {
-  order: 1;
-  width: min(1120px, calc(100% - 36px));
-  min-height: 74px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: 20px;
-  padding: 0;
-  border-bottom: 2px solid var(--line);
-}
-
-.discover-watch-tabs,
-.discover-watch-actions {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.discover-watch-actions {
-  justify-content: flex-end;
-}
-
-.discover-watch-tabs button,
-.discover-watch-actions button {
-  min-height: 42px;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font-weight: 950;
-  letter-spacing: 0;
-}
-
-.discover-watch-tabs button.active {
-  color: var(--ink);
-  box-shadow: 0 4px 0 var(--oih-orange);
-}
-
-.discover-watch-logo {
-  width: 44px;
-  height: 44px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.discover-watch-logo-button {
-  width: 44px;
-  height: 44px;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  justify-self: center;
-}
-
-.discover-watch-logo-button .discover-watch-logo {
-  display: block;
-}
-
-.discover-watch-bottom-nav {
-  display: none;
-}
-
 .discover-watch-main {
   order: 3;
   width: min(1120px, calc(100% - 36px));
@@ -5578,13 +5591,6 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   padding: clamp(18px, 4vw, 42px) 0 64px;
 }
 
-.ask-guide-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
 .ask-guide-hero {
   display: grid;
   justify-items: center;
@@ -6000,38 +6006,12 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
     grid-template-columns: 1fr;
   }
 
-  .discover-watch-nav {
-    grid-template-columns: 1fr;
-    height: auto;
-    padding: 16px;
-  }
-
-  .discover-watch-logo-button {
-    display: none;
-  }
-
-  .discover-watch-actions {
-    justify-content: flex-start;
-  }
 }
 
 @media (max-width: 760px) {
   .main,
   .sidebar {
     padding: 12px;
-  }
-
-  body.discovery-detail-mode {
-    padding-bottom: calc(82px + env(safe-area-inset-bottom));
-  }
-
-  body.discovery-detail-mode .discover-watch-shell {
-    min-height: 100svh;
-    padding-bottom: calc(92px + env(safe-area-inset-bottom));
-  }
-
-  body.discovery-detail-mode .discover-watch-nav {
-    display: none !important;
   }
 
   body.discovery-detail-mode .discover-watch-main {
@@ -6072,151 +6052,9 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
     grid-template-columns: 1fr;
   }
 
-  body.discovery-detail-mode .discover-watch-bottom-nav {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 190;
-    min-height: calc(74px + env(safe-area-inset-bottom));
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0;
-    padding: 7px 10px max(7px, env(safe-area-inset-bottom));
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(13, 13, 13, 0.96);
-    box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.34);
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav-btn {
-    min-width: 0;
-    min-height: 58px;
-    display: grid;
-    place-items: center;
-    align-content: center;
-    gap: 4px;
-    padding: 0;
-    border: 0;
-    border-radius: 14px;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.58);
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.1;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav-btn.active {
-    color: #fff;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon {
-    position: relative;
-    width: 28px;
-    height: 27px;
-    display: block;
-    color: currentColor;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.discover::before {
-    content: "";
-    position: absolute;
-    inset: 1px 4px 3px;
-    background: currentColor;
-    clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.watch::before {
-    content: "";
-    position: absolute;
-    inset: 4px 2px 3px;
-    border-radius: 3px;
-    background: currentColor;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.listen::before {
-    content: "";
-    position: absolute;
-    left: 4px;
-    right: 4px;
-    top: 4px;
-    height: 17px;
-    border: 5px solid currentColor;
-    border-bottom: 0;
-    border-radius: 18px 18px 0 0;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.listen::after {
-    content: "";
-    position: absolute;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
-    height: 10px;
-    border-radius: 8px;
-    background: currentColor;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.feed::before,
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.feed::before {
-    content: "";
-    position: absolute;
-    inset: 4px 3px 5px;
-    border: 4px solid currentColor;
-    border-radius: 9px;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.feed::after,
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.feed::after {
-    content: "";
-    position: absolute;
-    left: 7px;
-    bottom: 1px;
-    width: 9px;
-    height: 9px;
-    border-left: 4px solid currentColor;
-    border-bottom: 4px solid currentColor;
-    transform: skewX(-18deg);
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.kids::before {
-    content: "";
-    position: absolute;
-    inset: 5px 3px 2px;
-    transform: skewX(-13deg);
-    border-radius: 3px;
-    background: currentColor;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.library::before,
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.library::after {
-    content: "";
-    position: absolute;
-    left: 5px;
-    right: 5px;
-    height: 6px;
-    border-radius: 2px;
-    background: currentColor;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.library::before {
-    top: 6px;
-  }
-
-  body.discovery-detail-mode .discover-watch-bottom-nav .gateway-nav-icon.library::after {
-    bottom: 6px;
-  }
-
-  body.feed-mode {
-    padding-bottom: calc(82px + env(safe-area-inset-bottom));
-  }
-
   body.feed-mode .feed-shell {
     width: 100%;
     padding: max(24px, calc(12px + env(safe-area-inset-top))) 24px calc(102px + env(safe-area-inset-bottom));
-  }
-
-  body.feed-mode .feed-home-row {
-    margin-bottom: 18px;
   }
 
   body.feed-mode .feed-top {
@@ -6270,109 +6108,6 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
 
   body.feed-mode .feed-post-text {
     font-size: 21px;
-  }
-
-  body.feed-mode .feed-bottom-nav {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 190;
-    min-height: calc(74px + env(safe-area-inset-bottom));
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0;
-    padding: 7px 10px max(7px, env(safe-area-inset-bottom));
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(13, 13, 13, 0.96);
-    box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.34);
-  }
-
-  body.feed-mode .feed-bottom-nav-btn {
-    min-width: 0;
-    min-height: 58px;
-    display: grid;
-    place-items: center;
-    align-content: center;
-    gap: 4px;
-    padding: 0;
-    border: 0;
-    border-radius: 14px;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.58);
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.1;
-  }
-
-  body.feed-mode .feed-bottom-nav-btn.active {
-    color: #fff;
-  }
-
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon {
-    position: relative;
-    width: 28px;
-    height: 27px;
-    display: block;
-    color: currentColor;
-  }
-
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.discover::before {
-    content: "";
-    position: absolute;
-    inset: 1px 4px 3px;
-    background: currentColor;
-    clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
-  }
-
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.watch::before {
-    content: "";
-    position: absolute;
-    inset: 4px 2px 3px;
-    border-radius: 3px;
-    background: currentColor;
-  }
-
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.listen::before {
-    content: "";
-    position: absolute;
-    left: 4px;
-    right: 4px;
-    top: 4px;
-    height: 17px;
-    border: 5px solid currentColor;
-    border-bottom: 0;
-    border-radius: 18px 18px 0 0;
-  }
-
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.listen::after {
-    content: "";
-    position: absolute;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
-    height: 10px;
-    border-radius: 8px;
-    background: currentColor;
-  }
-
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.library::before,
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.library::after {
-    content: "";
-    position: absolute;
-    left: 5px;
-    right: 5px;
-    height: 6px;
-    border-radius: 2px;
-    background: currentColor;
-  }
-
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.library::before {
-    top: 6px;
-  }
-
-  body.feed-mode .feed-bottom-nav .gateway-nav-icon.library::after {
-    bottom: 6px;
   }
 
   .sidebar {
@@ -6515,10 +6250,6 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   .quiz-footer {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-  }
-
-  .ask-guide-top {
-    align-items: flex-start;
   }
 
   .ask-guide-hero {
@@ -6676,11 +6407,6 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
 
   .path-select {
     padding: 10px 0 28px;
-  }
-
-  .path-select-top {
-    margin: -10px 0 12px;
-    padding: 10px 14px 10px;
   }
 
   .path-home-brand {
@@ -7305,10 +7031,6 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   }
 }
 
-#stageDetailView .mobile-bottom-nav {
-  display: none;
-}
-
 #stageDetailView .stage-side-card,
 #stageDetailView .stage-status-row {
   border-radius: 16px;
@@ -7590,39 +7312,6 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
   #stageDetailView .duo-node-piece-list small {
     min-width: 0;
     overflow-wrap: break-word;
-  }
-
-  #stageDetailView .mobile-bottom-nav {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 96;
-    min-height: 84px;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    align-items: center;
-    padding: 10px 12px max(10px, env(safe-area-inset-bottom));
-    border-top: 2px solid #e8e8e8;
-    background: #fff;
-  }
-
-  #stageDetailView .mobile-bottom-nav button {
-    min-width: 0;
-    height: 58px;
-    display: grid;
-    place-items: center;
-    border: 0;
-    border-radius: 16px;
-    background: transparent;
-    color: #ef7a35;
-    font-size: 28px;
-    font-weight: 950;
-  }
-
-  #stageDetailView .mobile-bottom-nav button.active {
-    border: 3px solid #9ed8fb;
-    background: #eaf7ff;
   }
 
   body.quiz-checked .quiz-feedback.show {
@@ -9947,14 +9636,6 @@ body.gateway-mode .courses-row .content-kind {
   padding: clamp(22px, 4vw, 42px) 0 72px;
 }
 
-.account-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: clamp(28px, 5vw, 64px);
-}
-
 .account-card {
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(320px, 0.78fr);
@@ -10059,13 +9740,6 @@ body.gateway-mode .courses-row .content-kind {
   width: min(820px, calc(100% - 32px));
   margin: 0 auto;
   padding: clamp(22px, 4vw, 42px) 0 96px;
-}
-
-.feed-home-row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: clamp(22px, 4vw, 34px);
 }
 
 .feed-top {
@@ -10363,10 +10037,6 @@ body.gateway-mode .courses-row .content-kind {
 
 .feed-liked-faces i:first-child {
   margin-left: 0;
-}
-
-.feed-bottom-nav {
-  display: none;
 }
 
 body.feed-mode {
@@ -10866,9 +10536,6 @@ body.feed-mode .main {
     grid-template-columns: 1fr;
   }
 
-  .account-top {
-    align-items: flex-start;
-  }
 }
 
 @media (max-width: 560px) {
@@ -11041,7 +10708,7 @@ body.feed-mode .main {
     grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
     gap: 0 !important;
     padding: 7px max(12px, env(safe-area-inset-right)) max(7px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)) !important;
-    background: rgba(13, 13, 13, 0.96) !important;
+    background: #0d0d0d !important;
     box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.34) !important;
   }
 
@@ -11440,7 +11107,6 @@ body.gateway-mode.gateway-nav-scrolled .lang-btn.active {
     gap: clamp(30px, 4vw, 52px);
   }
 
-  #askView .ask-guide-top,
   #askView .ask-guide-hero,
   #askView .ask-result-zone {
     width: 100%;
@@ -11568,22 +11234,6 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
     touch-action: pan-y;
   }
 
-  #pathSelectView .path-select-top,
-  #askView .ask-guide-top {
-    margin-top: 0 !important;
-    margin-bottom: 20px !important;
-    padding-top: var(--mobile-safe-top) !important;
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-    background: linear-gradient(180deg, #fff 0%, #fff 84%, rgba(255,255,255,0));
-  }
-
-  #pathSelectView .path-select-top {
-    position: relative !important;
-    top: auto !important;
-    z-index: 1 !important;
-  }
-
   #onboardingView .onboarding-shell {
     padding-top: calc(var(--mobile-safe-top) + 8px) !important;
   }
@@ -11611,87 +11261,1424 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
     padding-top: var(--mobile-safe-top) !important;
   }
 
-  body.discovery-detail-mode .discover-watch-main {
-    margin-top: 0 !important;
+	  body.discovery-detail-mode .discover-watch-main {
+	    margin-top: 0 !important;
+	  }
+	}
+
+/* Shared app shell chrome. All normal app screens use this; focused lesson/onboarding screens opt out. */
+.app-bottom-nav {
+  display: none;
+}
+
+/* The old title bar is retired; shared screens use app-top-chrome/app-bottom-nav. */
+.topbar {
+  display: none !important;
+}
+
+body.app-chrome-hidden .app-top-chrome,
+body.app-chrome-hidden .app-bottom-nav {
+  display: none !important;
+}
+
+body:not(.gateway-mode) .app-top-chrome {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid rgba(9, 10, 10, 0.08);
+  box-shadow: 0 12px 30px rgba(9, 10, 10, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+body:not(.gateway-mode) .app-top-chrome .gateway-logo,
+body:not(.gateway-mode) .app-top-chrome .gateway-nav-btn,
+body:not(.gateway-mode) .app-top-chrome .gateway-nav-btn:hover,
+body:not(.gateway-mode) .app-top-chrome .gateway-nav-btn.active {
+  color: var(--oih-black) !important;
+  text-shadow: none !important;
+}
+
+body:not(.gateway-mode) .app-top-chrome .gateway-language {
+  background: #fff !important;
+  border-color: var(--oih-sand-mid) !important;
+}
+
+body:not(.gateway-mode) .app-top-chrome .lang-btn {
+  color: #8b8b8b !important;
+}
+
+body:not(.gateway-mode) .app-top-chrome .lang-btn.active {
+  color: #fff !important;
+}
+
+body:not(.gateway-mode) #stageDetailView .stage-web-nav {
+  display: none !important;
+}
+
+body:not(.gateway-mode) #stageDetailView .stage-shell {
+  grid-template-columns: minmax(660px, 1fr) minmax(300px, 360px);
+  padding-left: 56px;
+}
+
+@media (max-width: 1180px) {
+  body:not(.gateway-mode) #stageDetailView .stage-shell {
+    grid-template-columns: minmax(520px, 1fr);
+    padding-left: 24px;
   }
 }
-</style>
+
+@media (max-width: 760px) {
+  :root {
+    --app-top-chrome-space: calc(106px + env(safe-area-inset-top));
+    --app-bottom-chrome-space: calc(82px + env(safe-area-inset-bottom));
+  }
+
+  body:not(.app-chrome-hidden) {
+    padding-bottom: var(--app-bottom-chrome-space);
+  }
+
+  body:not(.gateway-mode)::before {
+    display: none !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) .view.active {
+    padding-top: var(--app-top-chrome-space);
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) .feed-shell,
+  body:not(.gateway-mode):not(.app-chrome-hidden) .account-shell,
+  body:not(.gateway-mode):not(.app-chrome-hidden) .path-select,
+  body:not(.gateway-mode):not(.app-chrome-hidden) .ask-guide-shell,
+  body:not(.gateway-mode):not(.app-chrome-hidden) .discover-watch-shell,
+  body:not(.gateway-mode):not(.app-chrome-hidden) #stageDetailView .stage-shell {
+    padding-top: 0 !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #stageDetailView .duo-unit-banner {
+    top: calc(var(--app-top-chrome-space) + 8px) !important;
+  }
+
+  .app-top-chrome {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 180 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: auto !important;
+    min-height: 104px !important;
+    display: grid !important;
+    grid-template-columns: 64px minmax(0, 1fr) 64px !important;
+    grid-template-areas: "account brand search" !important;
+    align-items: center !important;
+    padding: max(38px, calc(10px + env(safe-area-inset-top))) 22px 12px !important;
+    margin: 0 !important;
+  }
+
+  body.gateway-mode .app-top-chrome {
+    background: linear-gradient(180deg, rgba(3, 5, 7, 0.28), rgba(3, 5, 7, 0.06) 72%, rgba(3, 5, 7, 0)) !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .app-top-chrome,
+  body:not(.gateway-mode) .app-top-chrome {
+    background: rgba(13, 13, 13, 0.94) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+  }
+
+  .app-top-chrome .gateway-mobile-action {
+    width: 46px !important;
+    height: 46px !important;
+    display: grid !important;
+    place-items: center !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    color: #fff !important;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.48));
+  }
+
+  .app-top-chrome .gateway-mobile-action svg {
+    width: 31px !important;
+    height: 31px !important;
+    display: block !important;
+    stroke: currentColor !important;
+  }
+
+  .app-top-chrome .gateway-account-shortcut {
+    grid-area: account !important;
+    justify-self: start !important;
+  }
+
+  .app-top-chrome .gateway-search-shortcut {
+    grid-area: search !important;
+    justify-self: end !important;
+  }
+
+  .app-top-chrome .gateway-logo {
+    grid-area: brand !important;
+    justify-self: center !important;
+    justify-content: center !important;
+    width: 70px !important;
+    max-width: 70px !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+    color: #fff !important;
+  }
+
+  .app-top-chrome .gateway-logo span,
+  .app-top-chrome .gateway-header-actions,
+  .app-top-chrome .app-desktop-nav {
+    display: none !important;
+  }
+
+  body.gateway-mode .app-top-chrome .app-desktop-nav,
+  body:not(.gateway-mode) .app-top-chrome .app-desktop-nav {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    display: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .app-top-chrome .gateway-logo-img {
+    width: 52px !important;
+    height: 52px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 999px !important;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .app-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 190;
+    min-height: var(--app-bottom-chrome-space);
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    padding: 7px 10px max(7px, env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0d0d0d;
+    box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.34);
+  }
+
+  .app-bottom-nav button {
+    min-width: 0;
+    min-height: 58px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 4px;
+    padding: 0;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .app-bottom-nav button.active {
+    color: #fff;
+  }
+
+  .app-bottom-nav .gateway-nav-icon {
+    position: relative;
+    width: 28px;
+    height: 27px;
+    display: block;
+    color: currentColor;
+  }
+
+  .app-bottom-nav .gateway-nav-icon.discover::before {
+    content: "";
+    position: absolute;
+    inset: 1px 4px 3px;
+    background: currentColor;
+    clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%);
+  }
+
+  .app-bottom-nav .gateway-nav-icon.watch::before {
+    content: "";
+    position: absolute;
+    inset: 4px 2px 3px;
+    border-radius: 3px;
+    background: currentColor;
+  }
+
+  .app-bottom-nav .gateway-nav-icon.listen::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    top: 4px;
+    height: 17px;
+    border: 5px solid currentColor;
+    border-bottom: 0;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .app-bottom-nav .gateway-nav-icon.listen::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    height: 10px;
+    border-radius: 8px;
+    background: currentColor;
+  }
+
+  .app-bottom-nav .gateway-nav-icon.feed::before {
+    content: "";
+    position: absolute;
+    inset: 4px 3px 5px;
+    border: 4px solid currentColor;
+    border-radius: 9px;
+  }
+
+  .app-bottom-nav .gateway-nav-icon.feed::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    bottom: 1px;
+    width: 9px;
+    height: 9px;
+    border-left: 4px solid currentColor;
+    border-bottom: 4px solid currentColor;
+    transform: skewX(-18deg);
+  }
+
+  .app-bottom-nav .gateway-nav-icon.library::before,
+  .app-bottom-nav .gateway-nav-icon.library::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    height: 6px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+
+  .app-bottom-nav .gateway-nav-icon.library::before {
+    top: 6px;
+  }
+
+  .app-bottom-nav .gateway-nav-icon.library::after {
+    bottom: 6px;
+  }
+}
+
+/* Unified full-width home hero component. This final layer owns the hero sizing, crop, and slide rhythm. */
+body.gateway-mode .gateway-panel {
+  overflow: hidden !important;
+  background: #fff !important;
+}
+
+body.gateway-mode .home-hero {
+  --home-hero-height: clamp(620px, 76svh, 820px);
+  --home-hero-gutter: max(48px, calc((100vw - 1180px) / 2));
+  --home-hero-top: clamp(118px, 14svh, 154px);
+  --home-hero-bottom: clamp(88px, 10svh, 118px);
+  position: relative !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: var(--home-hero-height) !important;
+  min-height: var(--home-hero-height) !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  touch-action: pan-y !important;
+}
+
+body.gateway-mode.dark-gateway-hero-active .home-hero {
+  background: #090a0a !important;
+}
+
+body.gateway-mode .home-hero-slide,
+body.gateway-mode .home-hero-slide.watch-hero,
+body.gateway-mode .home-hero-slide.documentary-hero,
+body.gateway-mode .home-hero-slide.one-basics-hero {
+  box-sizing: border-box !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  display: grid !important;
+  margin: 0 !important;
+  padding: var(--home-hero-top) var(--home-hero-gutter) var(--home-hero-bottom) !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: none !important;
+  transition: opacity 240ms ease !important;
+}
+
+body.gateway-mode .home-hero-slide.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+body.gateway-mode .home-hero-slide .gateway-copy {
+  position: relative !important;
+  z-index: 2 !important;
+  width: min(100%, 560px) !important;
+  max-width: 560px !important;
+  margin: 0 !important;
+}
+
+body.gateway-mode .home-hero-slide .gateway-copy h2 {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  font-size: clamp(46px, 5vw, 78px) !important;
+  line-height: 0.98 !important;
+  letter-spacing: 0 !important;
+}
+
+body.gateway-mode .home-hero-slide .gateway-copy p {
+  max-width: 520px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  font-size: clamp(16px, 1.1vw, 18px) !important;
+  line-height: 1.42 !important;
+}
+
+body.gateway-mode .home-hero-slide .hero-actions {
+  width: min(420px, 100%) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+body.gateway-mode .home-hero-slide .primary-btn,
+body.gateway-mode .home-hero-slide .soft-btn,
+body.gateway-mode .home-hero-slide .ghost-btn {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+  grid-template-columns: minmax(460px, 1.03fr) minmax(420px, 0.97fr) !important;
+  align-items: center !important;
+  gap: clamp(44px, 7vw, 112px) !important;
+  color: var(--oih-black) !important;
+  background: #fff !important;
+}
+
+body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+  position: relative !important;
+  z-index: 1 !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
+}
+
+body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration img {
+  width: min(100%, 720px) !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: min(48svh, 430px) !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
+  justify-self: center !important;
+  text-align: center !important;
+}
+
+body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2,
+body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body.gateway-mode .home-hero-slide.documentary-hero,
+body.gateway-mode .home-hero-slide.one-basics-hero {
+  grid-template-columns: minmax(0, 580px) !important;
+  align-items: end !important;
+  justify-content: start !important;
+  color: #fff !important;
+  background: #090a0a !important;
+}
+
+body.gateway-mode .home-hero-slide.documentary-hero::before,
+body.gateway-mode .home-hero-slide.one-basics-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(4, 6, 8, 0.92) 0%, rgba(4, 6, 8, 0.68) 36%, rgba(4, 6, 8, 0.22) 72%, rgba(4, 6, 8, 0.08) 100%),
+    linear-gradient(0deg, rgba(4, 6, 8, 0.84) 0%, rgba(4, 6, 8, 0.22) 50%, rgba(4, 6, 8, 0.48) 100%);
+}
+
+body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg-picture,
+body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: -2 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  display: block !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+}
+
+body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration picture {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg,
+body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
+  position: static !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  max-height: none !important;
+  display: block !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: saturate(1.05) contrast(1.03) !important;
+}
+
+body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg {
+  object-position: 66% center !important;
+}
+
+body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
+  object-position: 58% center !important;
+}
+
+body.gateway-mode .home-hero-slide.documentary-hero .hero-eyebrow,
+body.gateway-mode .home-hero-slide.one-basics-hero .hero-eyebrow {
+  color: var(--oih-gold) !important;
+}
+
+body.gateway-mode .home-hero-slide.documentary-hero .gateway-copy h2,
+body.gateway-mode .home-hero-slide.documentary-hero .gateway-copy p,
+body.gateway-mode .home-hero-slide.one-basics-hero .gateway-copy h2,
+body.gateway-mode .home-hero-slide.one-basics-hero .gateway-copy p {
+  color: #fff !important;
+  text-shadow: 0 12px 30px rgba(0, 0, 0, 0.46) !important;
+}
+
+body.gateway-mode .home-hero-slide.documentary-hero .gateway-copy p,
+body.gateway-mode .home-hero-slide.one-basics-hero .gateway-copy p {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+body.gateway-mode .home-hero .gateway-hero-controls {
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: clamp(24px, 4svh, 40px) !important;
+  z-index: 12 !important;
+  width: min(240px, calc(100vw - 80px)) !important;
+  transform: translateX(-50%) !important;
+}
+
+@media (max-width: 1040px) {
+  body.gateway-mode .home-hero {
+    --home-hero-height: clamp(590px, 74svh, 720px);
+    --home-hero-gutter: clamp(28px, 6vw, 56px);
+    --home-hero-top: calc(118px + env(safe-area-inset-top));
+    --home-hero-bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-content: start !important;
+    justify-items: center !important;
+    gap: 24px !important;
+    padding-top: calc(132px + env(safe-area-inset-top)) !important;
+    text-align: center !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    width: 100% !important;
+    height: clamp(150px, 24svh, 220px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration img {
+    width: min(100%, 620px) !important;
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
+    width: min(100%, 520px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    font-size: clamp(34px, 7vw, 52px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero,
+  body.gateway-mode .home-hero-slide.one-basics-hero {
+    align-content: end !important;
+    padding-top: calc(112px + env(safe-area-inset-top)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.gateway-mode .home-hero {
+    --home-hero-height: clamp(500px, 66svh, 620px);
+    --home-hero-gutter: max(24px, env(safe-area-inset-left));
+    --home-hero-top: calc(96px + env(safe-area-inset-top));
+    --home-hero-bottom: calc(56px + env(safe-area-inset-bottom));
+  }
+
+  body.gateway-mode .home-hero-slide,
+  body.gateway-mode .home-hero-slide.watch-hero,
+  body.gateway-mode .home-hero-slide.documentary-hero,
+  body.gateway-mode .home-hero-slide.one-basics-hero {
+    grid-template-columns: minmax(0, 1fr) !important;
+    padding-left: var(--home-hero-gutter) !important;
+    padding-right: max(24px, env(safe-area-inset-right)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+    padding-top: calc(116px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(52px + env(safe-area-inset-bottom)) !important;
+    gap: 16px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    height: clamp(108px, 17svh, 150px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
+    width: 100% !important;
+    max-width: 520px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    font-size: clamp(27px, 7.7vw, 35px) !important;
+    line-height: 1.02 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+    font-size: clamp(12.5px, 3.4vw, 14px) !important;
+    line-height: 1.34 !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero,
+  body.gateway-mode .home-hero-slide.one-basics-hero {
+    align-content: end !important;
+    padding-top: calc(104px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg {
+    object-position: 62% top !important;
+  }
+
+  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
+    object-position: 56% top !important;
+  }
+
+  body.gateway-mode .home-hero-slide .gateway-copy {
+    width: min(100%, 350px) !important;
+    max-width: 350px !important;
+  }
+
+  body.gateway-mode .home-hero-slide .gateway-copy h2 {
+    font-size: clamp(39px, 11vw, 52px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide .gateway-copy p {
+    font-size: 15px !important;
+    line-height: 1.38 !important;
+  }
+
+  body.gateway-mode .home-hero-slide .hero-actions {
+    width: 100% !important;
+  }
+
+  body.gateway-mode .gateway-landing.home-hero > .gateway-hero-controls,
+  body.gateway-mode .home-hero .gateway-hero-controls {
+    top: auto !important;
+    bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+    z-index: 20 !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-dot {
+    width: 44px !important;
+    height: 20px !important;
+  }
+}
+
+/* Shared desktop app shell polish: keep the nav full-width and align utility screens to it. */
+body:not(.gateway-mode) .main {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+@media (min-width: 761px) {
+  .app-top-chrome {
+    box-sizing: border-box !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 96px !important;
+    margin: 0 !important;
+    padding: 0 max(44px, calc((100vw - 1320px) / 2 + 36px)) !important;
+    grid-template-columns: minmax(245px, auto) minmax(380px, 1fr) auto !important;
+  }
+
+  body.gateway-mode .app-top-chrome {
+    position: fixed !important;
+    top: 0 !important;
+  }
+
+  body:not(.gateway-mode) .app-top-chrome {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 180 !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+  }
+
+  body:not(.gateway-mode) .account-shell {
+    box-sizing: border-box !important;
+    width: min(1180px, calc(100vw - 96px)) !important;
+    max-width: none !important;
+    padding-top: clamp(42px, 5.4vw, 68px) !important;
+  }
+
+  body:not(.gateway-mode) .account-card {
+    grid-template-columns: minmax(420px, 1.05fr) minmax(360px, 0.95fr) !important;
+    gap: clamp(34px, 6vw, 88px) !important;
+    align-items: start !important;
+  }
+
+  body:not(.gateway-mode) .admin-auth-panel {
+    max-width: 500px !important;
+    justify-self: end !important;
+  }
+}
+
+/* Final mobile cascade. Keep this after component mobile rules so the shared shell,
+   home hero, and streaming shelves have one mobile source of truth. */
+@media (max-width: 760px) {
+  :root {
+    --mobile-safe-top: max(58px, calc(18px + env(safe-area-inset-top)));
+    --app-top-chrome-space: calc(106px + env(safe-area-inset-top));
+    --app-bottom-chrome-space: calc(82px + env(safe-area-inset-bottom));
+    --mobile-pad: 16px;
+  }
+
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  html.dark-app-chrome-active {
+    background: #090a0a !important;
+  }
+
+  body:not(.app-chrome-hidden) {
+    padding-bottom: var(--app-bottom-chrome-space) !important;
+  }
+
+  body.gateway-mode {
+    padding-bottom: var(--app-bottom-chrome-space) !important;
+  }
+
+  body.gateway-mode *,
+  body.gateway-mode *::before,
+  body.gateway-mode *::after {
+    box-sizing: border-box;
+  }
+
+  body.gateway-mode .topbar {
+    display: none !important;
+  }
+
+  body.gateway-mode .app-shell,
+  body.gateway-mode .main,
+  body.gateway-mode #gatewayView,
+  body.gateway-mode .gateway-panel,
+  body.gateway-mode .gateway-discover,
+  body.gateway-mode .discovery-band {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  body.gateway-mode .main {
+    padding: 0 !important;
+  }
+
+  body.gateway-mode .gateway-panel {
+    padding-bottom: var(--app-bottom-chrome-space) !important;
+  }
+
+  body.gateway-mode.dark-gateway-hero-active,
+  body.gateway-mode.dark-gateway-hero-active .app-shell,
+  body.gateway-mode.dark-gateway-hero-active .main,
+  body.gateway-mode.dark-gateway-hero-active #gatewayView,
+  body.gateway-mode.dark-gateway-hero-active .gateway-panel {
+    background: #090a0a !important;
+  }
+
+  body:not(.gateway-mode)::before {
+    display: none !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) .view.active {
+    padding-top: var(--app-top-chrome-space) !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) .feed-shell,
+  body:not(.gateway-mode):not(.app-chrome-hidden) .account-shell,
+  body:not(.gateway-mode):not(.app-chrome-hidden) .path-select,
+  body:not(.gateway-mode):not(.app-chrome-hidden) .ask-guide-shell,
+  body:not(.gateway-mode):not(.app-chrome-hidden) .discover-watch-shell,
+  body:not(.gateway-mode):not(.app-chrome-hidden) #stageDetailView .stage-shell {
+    padding-top: 0 !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #stageDetailView .duo-unit-banner {
+    top: calc(var(--app-top-chrome-space) + 8px) !important;
+  }
+
+  .app-top-chrome {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 180 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 104px !important;
+    display: grid !important;
+    grid-template-columns: 64px minmax(0, 1fr) 64px !important;
+    grid-template-areas: "account brand search" !important;
+    align-items: center !important;
+    padding: max(38px, calc(10px + env(safe-area-inset-top))) 22px 12px !important;
+    margin: 0 !important;
+  }
+
+  body.gateway-mode .app-top-chrome {
+    background: linear-gradient(180deg, rgba(3, 5, 7, 0.28), rgba(3, 5, 7, 0.06) 72%, rgba(3, 5, 7, 0)) !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.gateway-mode:not(.gateway-nav-scrolled) .app-top-chrome {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .app-top-chrome,
+  body:not(.gateway-mode) .app-top-chrome {
+    background: rgba(13, 13, 13, 0.94) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+  }
+
+  .app-top-chrome .gateway-mobile-action,
+  .app-top-chrome .gateway-mobile-action:hover,
+  .app-top-chrome .gateway-mobile-action:focus,
+  .app-top-chrome .gateway-mobile-action:focus-visible,
+  .app-top-chrome .gateway-mobile-action:active,
+  body.gateway-mode:not(.dark-gateway-hero-active):not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action,
+  body.gateway-mode.dark-gateway-hero-active:not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action,
+  body.gateway-mode.gateway-nav-scrolled .app-top-chrome .gateway-mobile-action,
+  body:not(.gateway-mode) .app-top-chrome .gateway-mobile-action {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 48px !important;
+    height: 48px !important;
+    display: grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    outline: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    filter: none !important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+  }
+
+  body.gateway-mode:not(.dark-gateway-hero-active):not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action {
+    color: var(--oih-black) !important;
+  }
+
+  body.gateway-mode.dark-gateway-hero-active:not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action,
+  body.gateway-mode.gateway-nav-scrolled .app-top-chrome .gateway-mobile-action,
+  body:not(.gateway-mode) .app-top-chrome .gateway-mobile-action {
+    color: #fff !important;
+  }
+
+  .app-top-chrome .gateway-mobile-action::before,
+  .app-top-chrome .gateway-mobile-action::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .app-top-chrome .gateway-mobile-action svg {
+    display: block !important;
+    overflow: visible !important;
+    stroke: currentColor !important;
+    filter: drop-shadow(0 3px 9px rgba(0, 0, 0, 0.58)) !important;
+  }
+
+  .app-top-chrome .gateway-account-shortcut {
+    grid-area: account !important;
+    justify-self: start !important;
+  }
+
+  .app-top-chrome .gateway-search-shortcut {
+    grid-area: search !important;
+    justify-self: end !important;
+  }
+
+  .app-top-chrome .gateway-logo {
+    grid-area: brand !important;
+    justify-self: center !important;
+    justify-content: center !important;
+    width: 70px !important;
+    max-width: 70px !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+    color: #fff !important;
+  }
+
+  .app-top-chrome .gateway-logo span,
+  .app-top-chrome .gateway-header-actions,
+  .app-top-chrome .app-desktop-nav {
+    display: none !important;
+  }
+
+  .app-top-chrome .gateway-logo-img {
+    width: 52px !important;
+    height: 52px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 999px !important;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .app-bottom-nav {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 190 !important;
+    min-height: var(--app-bottom-chrome-space) !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    padding: 7px 10px max(7px, env(safe-area-inset-bottom)) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: #0d0d0d !important;
+    box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.34) !important;
+  }
+
+  body.app-chrome-hidden .app-top-chrome,
+  body.app-chrome-hidden .app-bottom-nav {
+    display: none !important;
+  }
+
+  body.gateway-mode .home-hero {
+    --home-hero-height: clamp(500px, 66svh, 620px);
+    --home-hero-gutter: max(24px, env(safe-area-inset-left));
+    --home-hero-top: calc(96px + env(safe-area-inset-top));
+    --home-hero-bottom: calc(56px + env(safe-area-inset-bottom));
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: var(--home-hero-height) !important;
+    min-height: var(--home-hero-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body.gateway-mode .home-hero-slide,
+  body.gateway-mode .home-hero-slide.watch-hero,
+  body.gateway-mode .home-hero-slide.documentary-hero,
+  body.gateway-mode .home-hero-slide.one-basics-hero {
+    grid-template-columns: minmax(0, 1fr) !important;
+    padding-left: var(--home-hero-gutter) !important;
+    padding-right: max(24px, env(safe-area-inset-right)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+    padding-top: calc(116px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(52px + env(safe-area-inset-bottom)) !important;
+    gap: 16px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    height: clamp(108px, 17svh, 150px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
+    width: 100% !important;
+    max-width: 520px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    font-size: clamp(27px, 7.7vw, 35px) !important;
+    line-height: 1.02 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+    font-size: clamp(12.5px, 3.4vw, 14px) !important;
+    line-height: 1.34 !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero,
+  body.gateway-mode .home-hero-slide.one-basics-hero {
+    align-content: end !important;
+    padding-top: calc(104px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg {
+    object-position: 62% top !important;
+  }
+
+  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
+    object-position: 56% top !important;
+  }
+
+  body.gateway-mode .home-hero-slide .gateway-copy {
+    width: min(100%, 350px) !important;
+    max-width: 350px !important;
+  }
+
+  body.gateway-mode .home-hero-slide .gateway-copy h2 {
+    font-size: clamp(39px, 11vw, 52px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide .gateway-copy p {
+    font-size: 15px !important;
+    line-height: 1.38 !important;
+  }
+
+  body.gateway-mode .home-hero-slide .hero-actions {
+    width: 100% !important;
+  }
+
+  body.gateway-mode .gateway-landing.home-hero > .gateway-hero-controls,
+  body.gateway-mode .home-hero .gateway-hero-controls {
+    top: auto !important;
+    bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+    z-index: 20 !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-dot {
+    width: 44px !important;
+    height: 20px !important;
+  }
+
+  body.gateway-mode .gateway-popular-inner {
+    display: block !important;
+    padding: 0 var(--mobile-pad) !important;
+  }
+
+  body.gateway-mode .popular-arrow {
+    display: none !important;
+  }
+
+  body.gateway-mode .popular-rail {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 12px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  body.gateway-mode .popular-rail::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  body.gateway-mode .gateway-discover {
+    padding-top: 8px !important;
+  }
+
+  body.gateway-mode .discovery-band,
+  body.gateway-mode .discovery-band.sand,
+  body.gateway-mode .discovery-band.dark,
+  body.gateway-mode .courses-band {
+    padding: 14px var(--mobile-pad) 4px !important;
+  }
+
+  body.gateway-mode .discovery-band + .discovery-band {
+    padding-top: 10px !important;
+  }
+
+  body.gateway-mode .discovery-section-head,
+  body.gateway-mode .courses-section-head {
+    min-height: 0 !important;
+    margin: 0 0 10px !important;
+    padding: 0 !important;
+  }
+
+  body.gateway-mode .discovery-section-head h2,
+  body.gateway-mode .courses-section-head h2 {
+    max-width: calc(100vw - 32px) !important;
+    font-size: 20px !important;
+    line-height: 1.05 !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  body.gateway-mode .today-discovery {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  body.gateway-mode .today-feature {
+    min-height: 230px !important;
+  }
+
+  body.gateway-mode .discovery-row,
+  body.gateway-mode .series-row,
+  body.gateway-mode .courses-row {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 0 0 8px !important;
+    gap: 18px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-padding-left: 0 !important;
+    scroll-padding-right: 0 !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  body.gateway-mode .discovery-row::-webkit-scrollbar,
+  body.gateway-mode .series-row::-webkit-scrollbar,
+  body.gateway-mode .courses-row::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  body.gateway-mode .discovery-row .discovery-tile,
+  body.gateway-mode .documentary-tile,
+  body.gateway-mode .series-row .discovery-tile,
+  body.gateway-mode .series-tile,
+  body.gateway-mode .courses-row .discovery-tile,
+  body.gateway-mode .courses-row .series-tile {
+    flex: 0 0 min(390px, calc(100vw - 32px)) !important;
+    width: min(390px, calc(100vw - 32px)) !important;
+    min-width: min(390px, calc(100vw - 32px)) !important;
+    max-width: min(390px, calc(100vw - 32px)) !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    scroll-snap-align: start !important;
+  }
+
+  body.gateway-mode .discovery-row .tile-art,
+  body.gateway-mode .documentary-tile .tile-art {
+    min-height: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+}
+
+/* Desktop shell: the nav stays sticky, but the bar only appears after scrolling. */
+@media (min-width: 761px) {
+  body:not(.gateway-mode) .app-top-chrome {
+    position: fixed !important;
+    top: 0 !important;
+    z-index: 180 !important;
+    transition:
+      background 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      backdrop-filter 180ms ease !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) .view.active {
+    padding-top: 96px !important;
+  }
+
+  body:not(.gateway-mode):not(.gateway-nav-scrolled) .app-top-chrome {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body:not(.gateway-mode).gateway-nav-scrolled .app-top-chrome {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-bottom: 1px solid rgba(9, 10, 10, 0.08) !important;
+    box-shadow: 0 12px 30px rgba(9, 10, 10, 0.08) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+  }
+}
+
+/* Desktop journey: one full-width Duolingo-style shell with the path as the primary scroll. */
+@media (min-width: 1024px) {
+  body.journey-mode:not(.gateway-mode) {
+    background: #fff !important;
+    overflow-x: hidden !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) .view.active#stageDetailView {
+    box-sizing: border-box !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding-top: 96px !important;
+    background: #fff !important;
+    overflow-x: hidden !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    background: #fff !important;
+    overflow-x: hidden !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-shell {
+    box-sizing: border-box !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: calc(100vh - 96px) !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) clamp(304px, 23vw, 380px) !important;
+    column-gap: clamp(34px, 5vw, 76px) !important;
+    align-items: start !important;
+    margin: 0 !important;
+    padding: 0 clamp(28px, 4vw, 64px) 92px !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-web-nav {
+    display: none !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-web-main {
+    box-sizing: border-box !important;
+    width: min(760px, 100%) !important;
+    max-width: 760px !important;
+    justify-self: center !important;
+    padding: 0 0 150px !important;
+    min-height: calc(100vh - 96px) !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-section-list.duo-lesson-path {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 760px !important;
+    min-height: 2100px !important;
+    margin: 0 auto !important;
+    padding: 330px 0 180px !important;
+    gap: 42px !important;
+    overflow: visible !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-banner {
+    position: fixed !important;
+    top: 112px !important;
+    left: var(--duo-banner-left, 50%) !important;
+    right: auto !important;
+    width: var(--duo-banner-width, 760px) !important;
+    max-width: 760px !important;
+    z-index: 80 !important;
+    margin: 0 !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-curve {
+    inset: 0 !important;
+    z-index: 1 !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-divider.section-title-divider {
+    margin: 34px 0 42px !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-section-list.duo-lesson-path > .duo-unit-divider.section-title-divider:first-of-type {
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-divider.section-title-divider .duo-path-break {
+    font-size: clamp(40px, 4.5vw, 64px) !important;
+    line-height: 0.96 !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-node {
+    min-height: 118px !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-button {
+    width: 84px !important;
+    height: 76px !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-web-side {
+    display: grid !important;
+    position: fixed !important;
+    top: 112px !important;
+    right: clamp(28px, 4vw, 64px) !important;
+    width: clamp(304px, 23vw, 380px) !important;
+    max-width: 380px !important;
+    max-height: calc(100vh - 136px) !important;
+    align-self: start !important;
+    justify-self: stretch !important;
+    gap: 16px !important;
+    padding: 24px 0 0 !important;
+    overflow-y: auto !important;
+    scrollbar-width: none !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-web-side::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1180px) {
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-shell {
+    grid-template-columns: minmax(0, 1fr) !important;
+    padding-left: clamp(24px, 7vw, 80px) !important;
+    padding-right: clamp(24px, 7vw, 80px) !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-web-side {
+    display: none !important;
+  }
+}
+		</style>
 </head>
 <body class="gateway-mode">
 <div class="app-shell">
   <main class="main">
-    <header class="topbar">
-      <div>
-        <h1 id="viewTitle">Start</h1>
-        <p id="viewSubtitle">A clear first step for your Christian journey.</p>
+	    <header class="topbar">
+	      <div>
+	        <h1 id="viewTitle">Start</h1>
+	        <p id="viewSubtitle">A clear first step for your Christian journey.</p>
       </div>
       <div class="top-actions">
         <span class="pill green" id="schemaPill">Schema loading</span>
-        <span class="pill" id="statePill" data-i18n="top.statePill">No wasted minutes</span>
-      </div>
-    </header>
+	        <span class="pill" id="statePill" data-i18n="top.statePill">No wasted minutes</span>
+	      </div>
+	    </header>
 
-	    <section class="view active" id="gatewayView">
-	      <section class="gateway-panel">
-	        <header class="gateway-header">
-	          <button class="gateway-mobile-action gateway-account-shortcut" type="button" data-gateway-nav="account" aria-label="Account">
-	            <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
-	              <circle cx="16" cy="11" r="5.2"></circle>
-	              <path d="M6.8 26.2c1.7-5 5-7.5 9.2-7.5s7.5 2.5 9.2 7.5"></path>
-	              <circle cx="16" cy="16" r="13"></circle>
-	            </svg>
-	          </button>
-	          <button class="gateway-logo" type="button" data-nav-jump="gatewayView" aria-label="Home">
-	            <picture class="gateway-logo-picture">
-	              <source media="(max-width: 760px)" srcset="assets/oih-logo-2023-orange.png" />
-	              <img class="gateway-logo-img" src="assets/oih-logo-2023-orange.png" alt="One In Him Foundation" />
-	            </picture>
-	            <span>One In Him</span>
-	          </button>
-	          <button class="gateway-mobile-action gateway-search-shortcut" type="button" data-nav-jump="askView" aria-label="Search">
-	            <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-	              <circle cx="14.2" cy="14.2" r="8"></circle>
-	              <path d="M20.2 20.2 27 27"></path>
-	            </svg>
-	          </button>
-	          <nav class="gateway-nav" aria-label="Home navigation">
-	            <button class="gateway-nav-btn active" type="button" data-gateway-nav="discover">
-	              <span class="gateway-nav-icon discover" aria-hidden="true"></span>
-	              <span data-i18n="homeNav.discover">Discover</span>
-	            </button>
-	            <button class="gateway-nav-btn" type="button" data-gateway-nav="watch">
-	              <span class="gateway-nav-icon watch" aria-hidden="true"></span>
-	              <span data-i18n="homeNav.watch">Watch</span>
-	            </button>
-	            <button class="gateway-nav-btn" type="button" data-gateway-nav="listen">
-	              <span class="gateway-nav-icon listen" aria-hidden="true"></span>
-	              <span data-i18n="homeNav.listen">Listen</span>
-	            </button>
-	            <button class="gateway-nav-btn mobile-nav-only" type="button" data-gateway-nav="feed">
-	              <span class="gateway-nav-icon feed" aria-hidden="true"></span>
-	              <span data-i18n="homeNav.feed">Feed</span>
-	            </button>
-	            <button class="gateway-nav-btn mobile-nav-only" type="button" data-gateway-nav="library">
-	              <span class="gateway-nav-icon library" aria-hidden="true"></span>
-	              <span data-i18n="homeNav.library">Library</span>
-	            </button>
-	            <button class="gateway-nav-btn desktop-nav-only" type="button" data-gateway-nav="feed">
-	              <span data-i18n="homeNav.feed">Feed</span>
-	            </button>
-	            <button class="gateway-nav-btn desktop-nav-only" type="button" data-gateway-nav="account">
-	              <span data-i18n="homeNav.account">Account</span>
-	            </button>
-	          </nav>
-	          <div class="gateway-header-actions">
-	            <div class="gateway-language" aria-label="Site language">
-              <button class="lang-btn active" type="button" data-lang="en">English</button>
-              <button class="lang-btn" type="button" data-lang="nl">Nederlands</button>
-            </div>
-          </div>
-        </header>
+	    <header class="gateway-header app-top-chrome">
+	      <button class="gateway-mobile-action gateway-account-shortcut" type="button" data-gateway-nav="account" aria-label="Account">
+	        <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+	          <circle cx="16" cy="11" r="5.2"></circle>
+	          <path d="M6.8 26.2c1.7-5 5-7.5 9.2-7.5s7.5 2.5 9.2 7.5"></path>
+	          <circle cx="16" cy="16" r="13"></circle>
+	        </svg>
+	      </button>
+	      <button class="gateway-logo" type="button" data-nav-jump="gatewayView" aria-label="Home">
+	        <picture class="gateway-logo-picture">
+	          <source media="(max-width: 760px)" srcset="assets/oih-logo-2023-orange.png" />
+	          <img class="gateway-logo-img" src="assets/oih-logo-2023-orange.png" alt="One In Him Foundation" />
+	        </picture>
+	        <span>One In Him</span>
+	      </button>
+	      <button class="gateway-mobile-action gateway-search-shortcut" type="button" data-nav-jump="askView" aria-label="Search">
+	        <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+	          <circle cx="14.2" cy="14.2" r="8"></circle>
+	          <path d="M20.2 20.2 27 27"></path>
+	        </svg>
+	      </button>
+	      <nav class="gateway-nav app-desktop-nav" aria-label="Primary navigation">
+	        <button class="gateway-nav-btn active" type="button" data-gateway-nav="discover">
+	          <span class="gateway-nav-icon discover" aria-hidden="true"></span>
+	          <span data-i18n="homeNav.discover">Discover</span>
+	        </button>
+	        <button class="gateway-nav-btn" type="button" data-gateway-nav="watch">
+	          <span class="gateway-nav-icon watch" aria-hidden="true"></span>
+	          <span data-i18n="homeNav.watch">Watch</span>
+	        </button>
+	        <button class="gateway-nav-btn" type="button" data-gateway-nav="listen">
+	          <span class="gateway-nav-icon listen" aria-hidden="true"></span>
+	          <span data-i18n="homeNav.listen">Listen</span>
+	        </button>
+	        <button class="gateway-nav-btn" type="button" data-gateway-nav="feed">
+	          <span class="gateway-nav-icon feed" aria-hidden="true"></span>
+	          <span data-i18n="homeNav.feed">Feed</span>
+	        </button>
+	        <button class="gateway-nav-btn" type="button" data-gateway-nav="account">
+	          <span data-i18n="homeNav.account">Account</span>
+	        </button>
+	      </nav>
+	      <div class="gateway-header-actions">
+	        <div class="gateway-language" aria-label="Site language">
+	          <button class="lang-btn active" type="button" data-lang="en">English</button>
+	          <button class="lang-btn" type="button" data-lang="nl">Nederlands</button>
+	        </div>
+	      </div>
+	    </header>
 
-        <div class="gateway-landing" aria-label="Featured home slides">
-          <article class="gateway-slide active" data-gateway-hero-slide="0" data-hero-mode="discover">
+		    <section class="view active" id="gatewayView">
+		      <section class="gateway-panel">
+        <div class="gateway-landing home-hero" aria-label="Featured home slides">
+          <article class="gateway-slide home-hero-slide active" data-gateway-hero-slide="0" data-hero-mode="discover">
             <div class="gateway-illustration" aria-hidden="true">
               <img id="gatewayCharacterArt" src="assets/oneinhim-characters-international.png" alt="" />
             </div>
@@ -11705,7 +12692,7 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
             </div>
           </article>
 
-          <article class="gateway-slide documentary-hero" data-gateway-hero-slide="1" data-hero-mode="discover watch">
+          <article class="gateway-slide home-hero-slide documentary-hero" data-gateway-hero-slide="1" data-hero-mode="discover watch">
             <picture class="gateway-hero-bg-picture" aria-hidden="true">
               <source media="(max-width: 760px)" srcset="assets/outoftheshadows-brenda-mobile-hero-v3.jpg" />
               <img class="gateway-hero-bg" src="assets/outoftheshadows-brenda-hero-v2.jpg" alt="" />
@@ -11720,7 +12707,7 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
             </div>
           </article>
 
-          <article class="gateway-slide one-basics-hero" data-gateway-hero-slide="2" data-hero-mode="discover watch">
+          <article class="gateway-slide home-hero-slide one-basics-hero" data-gateway-hero-slide="2" data-hero-mode="discover watch">
             <div class="gateway-illustration" aria-hidden="true">
               <picture>
                 <source media="(max-width: 760px)" srcset="assets/one-basics-1-1-eternal-life-mobile-hero-v2.jpg" />
@@ -12133,16 +13120,6 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
 
 	    <section class="view" id="accountView">
 	      <section class="account-shell">
-	        <header class="account-top">
-	          <button class="path-home-brand" type="button" data-nav-jump="gatewayView" aria-label="Home">
-	            <img src="assets/oneinhim-logo-primary.jpg" alt="" />
-	            <span>One In Him</span>
-	          </button>
-	          <button class="path-home-button" type="button" data-nav-jump="gatewayView">
-	            <span>Home</span>
-	          </button>
-	        </header>
-
 	        <main class="account-card">
 	          <section class="account-copy">
 	            <p class="eyebrow" data-i18n="account.eyebrow">Account</p>
@@ -12180,12 +13157,6 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
 
 	    <section class="view" id="feedView">
 	      <section class="feed-shell">
-	        <div class="feed-home-row">
-	          <button class="path-home-brand" type="button" data-nav-jump="gatewayView" aria-label="Home">
-	            <img src="assets/oneinhim-logo-primary.jpg" alt="" />
-	            <span>One In Him</span>
-	          </button>
-	        </div>
 	        <header class="feed-top">
 	          <div class="feed-heading">
 	            <p class="eyebrow" data-i18n="feed.eyebrow">Community</p>
@@ -12214,29 +13185,6 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
 	        </section>
 
 	        <div class="feed-post-list" id="feedPostList" aria-label="Journey feed"></div>
-
-	        <nav class="feed-bottom-nav" aria-label="Bottom navigation">
-	          <button class="feed-bottom-nav-btn" type="button" data-gateway-nav="discover">
-	            <span class="gateway-nav-icon discover" aria-hidden="true"></span>
-	            <span data-i18n="homeNav.discover">Discover</span>
-	          </button>
-	          <button class="feed-bottom-nav-btn" type="button" data-gateway-nav="watch">
-	            <span class="gateway-nav-icon watch" aria-hidden="true"></span>
-	            <span data-i18n="homeNav.watch">Watch</span>
-	          </button>
-	          <button class="feed-bottom-nav-btn" type="button" data-gateway-nav="listen">
-	            <span class="gateway-nav-icon listen" aria-hidden="true"></span>
-	            <span data-i18n="homeNav.listen">Listen</span>
-	          </button>
-	          <button class="feed-bottom-nav-btn active" type="button" data-gateway-nav="feed">
-	            <span class="gateway-nav-icon feed" aria-hidden="true"></span>
-	            <span data-i18n="homeNav.feed">Feed</span>
-	          </button>
-	          <button class="feed-bottom-nav-btn" type="button" data-gateway-nav="library">
-	            <span class="gateway-nav-icon library" aria-hidden="true"></span>
-	            <span data-i18n="homeNav.library">Library</span>
-	          </button>
-	        </nav>
 	      </section>
 	    </section>
 
@@ -12266,12 +13214,6 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
 
     <section class="view" id="pathSelectView">
       <section class="path-select">
-        <div class="path-select-top">
-          <button class="path-home-brand" type="button" data-nav-jump="gatewayView" aria-label="Home">
-            <img src="assets/oneinhim-logo-primary.jpg" alt="" />
-            <span>One In Him</span>
-          </button>
-        </div>
         <div class="path-select-head">
           <p class="eyebrow" data-i18n="paths.eyebrow">Choose your section</p>
           <h2 data-i18n="paths.title">Choose your starting point</h2>
@@ -12291,39 +13233,6 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
 
     <section class="view" id="stageDetailView">
       <div class="stage-shell">
-        <aside class="stage-web-nav">
-          <button class="stage-web-brand" type="button" data-nav-jump="gatewayView" aria-label="Home">
-            <img src="assets/oneinhim-logo-primary.jpg" alt="" />
-            <span>One In Him</span>
-          </button>
-          <nav class="stage-web-menu" aria-label="Section navigation">
-            <button class="stage-web-link active" type="button" data-nav-jump="pathSelectView">
-              <span class="stage-web-icon">⌂</span>
-              <span>Learn</span>
-            </button>
-            <button class="stage-web-link" type="button" data-nav-jump="stageDetailView">
-              <span class="stage-web-icon">↻</span>
-              <span>Practice</span>
-            </button>
-            <button class="stage-web-link" type="button" data-nav-jump="gatewayView">
-              <span class="stage-web-icon">▶</span>
-              <span>Discover</span>
-            </button>
-            <button class="stage-web-link" type="button" data-nav-jump="stageDetailView">
-              <span class="stage-web-icon">▣</span>
-              <span>Quests</span>
-            </button>
-            <button class="stage-web-link" type="button" data-nav-jump="askView">
-              <span class="stage-web-icon">?</span>
-              <span>Ask</span>
-            </button>
-            <button class="stage-web-link" type="button" data-nav-jump="gatewayView">
-              <span class="stage-web-icon">+</span>
-              <span>Share</span>
-            </button>
-          </nav>
-        </aside>
-
         <main class="stage-web-main">
           <header class="stage-app-header" id="stageAppHeader">
             <button class="close-stage" type="button" data-nav-jump="pathSelectView" aria-label="Back to sections">×</button>
@@ -12377,36 +13286,11 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
             </div>
           </div>
         </aside>
-
-        <nav class="mobile-bottom-nav" aria-label="Mobile journey navigation">
-          <button class="active" type="button" data-nav-jump="stageDetailView" aria-label="Learn">⌂</button>
-          <button type="button" data-nav-jump="stageDetailView" aria-label="Practice">▣</button>
-          <button type="button" data-nav-jump="pathSelectView" aria-label="Sections">♛</button>
-          <button type="button" data-nav-jump="askView" aria-label="Ask">♥</button>
-          <button type="button" data-nav-jump="gatewayView" aria-label="Discover">●</button>
-          <button type="button" data-nav-jump="gatewayView" aria-label="More">…</button>
-        </nav>
       </div>
     </section>
 
     <section class="view" id="discoveryDetailView">
       <div class="discover-watch-shell">
-        <nav class="discover-watch-nav" aria-label="Discovery player navigation">
-          <div class="discover-watch-tabs">
-            <button class="active" type="button" data-nav-jump="gatewayView">Discover</button>
-            <button type="button" data-discover-open="vid_jesus_001">Watch</button>
-            <button type="button" data-discover-open="aud_peace_003">Listen</button>
-            <button type="button" data-discover-open="book_one_basics_1_1_eternal_life">Read</button>
-          </div>
-          <button class="discover-watch-logo-button" type="button" data-nav-jump="gatewayView" aria-label="Home">
-            <img class="discover-watch-logo" src="assets/oneinhim-logo-primary.jpg" alt="One In Him" />
-          </button>
-          <div class="discover-watch-actions">
-            <button type="button" data-nav-jump="gatewayView">Home</button>
-            <button type="button" data-nav-jump="pathSelectView">Journey</button>
-          </div>
-        </nav>
-
         <main class="discover-watch-main">
           <div class="discover-watch-media" id="discoverWatchMedia">
             <button class="discover-watch-play" type="button" id="discoverWatchPlay">▶</button>
@@ -12429,29 +13313,6 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
           <h3 id="discoverRelatedTitle">Recommended next</h3>
           <div class="discover-related-list" id="discoverRelatedList"></div>
         </section>
-
-        <nav class="discover-watch-bottom-nav" aria-label="Bottom navigation">
-          <button class="discover-watch-bottom-nav-btn active" type="button" data-gateway-nav="discover">
-            <span class="gateway-nav-icon discover" aria-hidden="true"></span>
-            <span data-i18n="homeNav.discover">Discover</span>
-          </button>
-          <button class="discover-watch-bottom-nav-btn" type="button" data-gateway-nav="watch">
-            <span class="gateway-nav-icon watch" aria-hidden="true"></span>
-            <span data-i18n="homeNav.watch">Watch</span>
-          </button>
-          <button class="discover-watch-bottom-nav-btn" type="button" data-gateway-nav="listen">
-            <span class="gateway-nav-icon listen" aria-hidden="true"></span>
-            <span data-i18n="homeNav.listen">Listen</span>
-          </button>
-          <button class="discover-watch-bottom-nav-btn" type="button" data-gateway-nav="feed">
-            <span class="gateway-nav-icon feed" aria-hidden="true"></span>
-            <span data-i18n="homeNav.feed">Feed</span>
-          </button>
-          <button class="discover-watch-bottom-nav-btn" type="button" data-gateway-nav="library">
-            <span class="gateway-nav-icon library" aria-hidden="true"></span>
-            <span data-i18n="homeNav.library">Library</span>
-          </button>
-        </nav>
       </div>
     </section>
 
@@ -12685,17 +13546,6 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
 
     <section class="view" id="askView">
       <div class="ask-layout ask-guide-shell">
-        <header class="ask-guide-top">
-          <button class="path-home-brand" type="button" data-nav-jump="gatewayView" aria-label="Home">
-            <img src="assets/oneinhim-logo-primary.jpg" alt="" />
-            <span>One In Him</span>
-          </button>
-          <button class="path-home-button" type="button" data-nav-jump="gatewayView">
-            <span>⌂</span>
-            <span>Home</span>
-          </button>
-        </header>
-
         <section class="ask-guide-hero">
           <p class="eyebrow">Guide me</p>
           <h2>Ask your real question.</h2>
@@ -12731,7 +13581,7 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
       </div>
     </section>
 
-    <section class="view legacy-view" id="libraryView" aria-hidden="true">
+    <section class="view" id="libraryView" aria-hidden="true">
       <div class="library-layout">
         <section class="panel">
           <div class="panel-head">
@@ -12791,9 +13641,9 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
       </div>
     </section>
 
-    <section class="view legacy-view" id="shareView" aria-hidden="true">
-      <div class="share-layout">
-        <section class="panel share-preview">
+	    <section class="view legacy-view" id="shareView" aria-hidden="true">
+	      <div class="share-layout">
+	        <section class="panel share-preview">
           <p class="eyebrow">Share preview</p>
           <div class="share-card-visual">
             <div>
@@ -12823,11 +13673,34 @@ body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kin
               </article>
             </div>
           </section>
-        </aside>
-      </div>
-    </section>
-  </main>
-</div>
+	        </aside>
+	      </div>
+	    </section>
+
+	    <nav class="app-bottom-nav" aria-label="Primary mobile navigation">
+	      <button class="active" type="button" data-gateway-nav="discover">
+	        <span class="gateway-nav-icon discover" aria-hidden="true"></span>
+	        <span data-i18n="homeNav.discover">Discover</span>
+	      </button>
+	      <button type="button" data-gateway-nav="watch">
+	        <span class="gateway-nav-icon watch" aria-hidden="true"></span>
+	        <span data-i18n="homeNav.watch">Watch</span>
+	      </button>
+	      <button type="button" data-gateway-nav="listen">
+	        <span class="gateway-nav-icon listen" aria-hidden="true"></span>
+	        <span data-i18n="homeNav.listen">Listen</span>
+	      </button>
+	      <button type="button" data-gateway-nav="feed">
+	        <span class="gateway-nav-icon feed" aria-hidden="true"></span>
+	        <span data-i18n="homeNav.feed">Feed</span>
+	      </button>
+	      <button type="button" data-gateway-nav="library">
+	        <span class="gateway-nav-icon library" aria-hidden="true"></span>
+	        <span data-i18n="homeNav.library">Library</span>
+	      </button>
+	    </nav>
+	  </main>
+	</div>
 
 <section class="guidebook-overlay" id="guidebookOverlay" aria-hidden="true">
   <div class="guidebook-shell">
@@ -13136,6 +14009,8 @@ const pathOptions = [
 const state = {
   schema: embeddedSchema,
   activeView: "gatewayView",
+  bootComplete: false,
+  userNavigatedDuringBoot: false,
   activeResourceId: "vid_jesus_001",
   activeStageId: "exploreJesus",
   activeModuleIndex: 0,
@@ -13153,6 +14028,7 @@ const state = {
   practicalUse: false,
   selectedSectionIndex: 0,
   selectedPathNode: "",
+  journeyBannerGroups: {},
   pathPreviewStageId: "exploreJesus",
   guidedPathNode: "",
   nodeMediumPreference: {},
@@ -13176,6 +14052,15 @@ const GATEWAY_HERO_TAP_MAX_PX = 12;
 const FEED_POSTS_STORAGE_KEY = "oneinhim.feed.posts.v2";
 const FEED_LIKES_STORAGE_KEY = "oneinhim.feed.likes.v2";
 let gatewayHeroAutoplayTimer = null;
+let journeyContentVersion = 0;
+let stickyStageBannerFrame = 0;
+let duoPathCurveFrame = 0;
+const journeyStructureCache = {
+  rawModules: new Map(),
+  rawGroups: new Map(),
+  packageModules: new Map(),
+  sections: new Map()
+};
 const mobileDocumentTouchScroll = {
   active: false,
   manual: false,
@@ -14169,14 +15054,16 @@ function renderGatewayHeroSlider() {
 function setGatewayChromeColor(isDarkHero) {
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-  const mobileGatewayChrome = window.matchMedia("(max-width: 760px)").matches && document.body.classList.contains("gateway-mode");
-  const useDarkChrome = isDarkHero || mobileGatewayChrome;
+  const mobileAppChrome = window.matchMedia("(max-width: 760px)").matches && !document.body.classList.contains("app-chrome-hidden");
+  const useDarkChrome = isDarkHero || mobileAppChrome;
   if (themeMeta) themeMeta.setAttribute("content", useDarkChrome ? "#090a0a" : "#ffffff");
   if (statusMeta) statusMeta.setAttribute("content", useDarkChrome ? "black-translucent" : "default");
+  document.documentElement.classList.toggle("dark-app-chrome-active", useDarkChrome);
+  document.body.classList.toggle("dark-app-chrome-active", useDarkChrome);
 }
 
 function updateGatewayNavScrollState() {
-  const shouldShowBackground = state.activeView === "gatewayView" && document.body.classList.contains("gateway-mode") && window.scrollY > 18;
+  const shouldShowBackground = !document.body.classList.contains("app-chrome-hidden") && window.scrollY > 18;
   document.body.classList.toggle("gateway-nav-scrolled", shouldShowBackground);
   document.documentElement.classList.toggle("gateway-nav-scrolled", shouldShowBackground);
 }
@@ -14292,11 +15179,20 @@ function wireGatewayHeroSwipe() {
   hero.addEventListener("click", activateGatewayHeroPrimaryAction);
 }
 
-function setGatewayNavActive(target) {
-  document.querySelectorAll("[data-gateway-nav]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.gatewayNav === target);
-  });
-}
+	function setGatewayNavActive(target) {
+	  document.querySelectorAll("[data-gateway-nav]").forEach((button) => {
+	    button.classList.toggle("active", button.dataset.gatewayNav === target);
+	  });
+	}
+
+	function appNavTargetForView(viewId) {
+	  if (viewId === "feedView") return "feed";
+	  if (viewId === "accountView") return "account";
+	  if (viewId === "libraryView") return "library";
+	  if (viewId === "gatewayView") return state.gatewayContentMode === "watch" ? "watch" : "discover";
+	  if (viewId === "discoveryDetailView") return "discover";
+	  return "";
+	}
 
 function setGatewayContentMode(mode = "discover") {
   const nextMode = mode === "watch" ? "watch" : "discover";
@@ -14418,11 +15314,11 @@ async function handleAdminLogout() {
   toast(t("account.logoutSuccess"));
 }
 
-function handleGatewayNav(target) {
-  if (target === "account") {
-    setGatewayNavActive(target);
-    setGatewayContentMode("discover");
-    setView("accountView");
+	function handleGatewayNav(target) {
+	  if (target === "account") {
+	    setGatewayNavActive(target);
+	    setGatewayContentMode("discover");
+	    setView("accountView");
     renderAdminAccount();
     return;
   }
@@ -14431,12 +15327,19 @@ function handleGatewayNav(target) {
     setGatewayContentMode("discover");
     setView("feedView");
     renderFeed();
-    return;
-  }
-  if (target === "kids") {
-    setGatewayNavActive(target);
-    toast(t("gateway.kidsToast"));
-    return;
+	    return;
+	  }
+	  if (target === "library") {
+	    setGatewayNavActive(target);
+	    setGatewayContentMode("discover");
+	    setView("libraryView");
+	    renderLibrary();
+	    return;
+	  }
+	  if (target === "kids") {
+	    setGatewayNavActive(target);
+	    toast(t("gateway.kidsToast"));
+	    return;
   }
   if (target === "watch") {
     setGatewayNavActive(target);
@@ -15265,6 +16168,7 @@ function mergeSharedContentPackages(packages) {
       resources.push(resource);
     }
   });
+  clearJourneyStructureCache();
 }
 
 async function loadContentPackages() {
@@ -15357,22 +16261,27 @@ function resetMobileDocumentTouchScroll() {
   mobileDocumentTouchScroll.manual = false;
 }
 
-function setView(viewId) {
+function setView(viewId, options = {}) {
   closeGuidebook();
-  const deprecatedViews = {
-    homeView: "gatewayView",
-    journeyView: "pathSelectView",
-    libraryView: "gatewayView",
-    speakersView: "gatewayView",
-    shareView: "gatewayView"
+	  const deprecatedViews = {
+	    homeView: "gatewayView",
+	    journeyView: "pathSelectView",
+	    speakersView: "gatewayView",
+	    shareView: "gatewayView"
   };
   const nextViewId = deprecatedViews[viewId] || viewId;
+  if (!state.bootComplete && !options.initial) {
+    state.userNavigatedDuringBoot = true;
+  }
   const previousViewId = state.activeView;
   if (previousViewId && previousViewId !== nextViewId) {
     stopEmbeddedMediaInView(previousViewId);
   }
-  state.activeView = nextViewId;
-  document.body.classList.toggle("gateway-mode", nextViewId === "gatewayView");
+	  state.activeView = nextViewId;
+	  const appChromeHidden = nextViewId === "onboardingView" || nextViewId === "moduleDetailView" || nextViewId === "moduleQuizView";
+	  document.body.classList.toggle("app-chrome-hidden", appChromeHidden);
+	  document.body.classList.toggle("onboarding-mode", nextViewId === "onboardingView");
+	  document.body.classList.toggle("gateway-mode", nextViewId === "gatewayView");
   if (nextViewId === "gatewayView") {
     scheduleGatewayHeroAutoplay();
   } else {
@@ -15388,11 +16297,18 @@ function setView(viewId) {
   document.body.classList.toggle("discovery-detail-mode", nextViewId === "discoveryDetailView");
   document.body.classList.toggle("feed-mode", nextViewId === "feedView");
   document.body.classList.toggle("journey-mode", nextViewId === "stageDetailView");
-  document.body.classList.toggle("learning-mode", nextViewId === "moduleDetailView" || nextViewId === "moduleQuizView");
-  document.body.classList.toggle("section-picker-mode", nextViewId === "moduleQuizView" && Boolean(state.sectionPicker));
+	  document.body.classList.toggle("learning-mode", nextViewId === "moduleDetailView" || nextViewId === "moduleQuizView");
+	  document.body.classList.toggle("section-picker-mode", nextViewId === "moduleQuizView" && Boolean(state.sectionPicker));
+	  const appNavTarget = appNavTargetForView(nextViewId);
+	  setGatewayNavActive(appNavTarget || "");
   if (nextViewId !== "moduleQuizView") document.body.classList.remove("quiz-checked");
-  document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === nextViewId));
+  document.querySelectorAll(".view").forEach((view) => {
+    const isActiveView = view.id === nextViewId;
+    view.classList.toggle("active", isActiveView);
+    view.setAttribute("aria-hidden", isActiveView ? "false" : "true");
+  });
   document.querySelectorAll(".nav-btn").forEach((button) => button.classList.toggle("active", button.dataset.nav === nextViewId));
+  refreshActiveViewMedia(nextViewId);
 	  const [title, subtitle] = currentViewText(nextViewId);
 	  els.viewTitle.textContent = title;
 	  els.viewSubtitle.textContent = subtitle;
@@ -15693,12 +16609,11 @@ function discoveryRelatedItems(item) {
   };
 }
 
-function renderDiscoveryDetail() {
-  const item = activeResource();
-  const target = moduleTargetForResource(item.id);
-  const related = discoveryRelatedItems(item);
+function renderDiscoveryMedia(item, options = {}) {
   const playIcon = item.format.includes("read") && !item.format.includes("watch") ? "“" : item.format.includes("listen") && !item.format.includes("watch") ? "♪" : "▶";
-  const playerUrl = item.format.includes("watch") ? muxPlayerUrl(item) : "";
+  const allowMedia = options.allowMedia ?? state.activeView === "discoveryDetailView";
+  const playerUrl = allowMedia && item.format.includes("watch") ? muxPlayerUrl(item) : "";
+  stopEmbeddedMediaInElement(els.discoverWatchMedia);
   els.discoverWatchMedia.className = `discover-watch-media ${esc(item.visualType)}${playerUrl ? " has-mux" : ""}`;
   if (playerUrl) {
     els.discoverWatchMedia.innerHTML = `
@@ -15715,6 +16630,13 @@ function renderDiscoveryDetail() {
     els.discoverWatchMedia.innerHTML = `<button class="discover-watch-play" type="button" id="discoverWatchPlay">${esc(playIcon)}</button>`;
     els.discoverWatchPlay = document.getElementById("discoverWatchPlay");
   }
+}
+
+function renderDiscoveryDetail() {
+  const item = activeResource();
+  const target = moduleTargetForResource(item.id);
+  const related = discoveryRelatedItems(item);
+  renderDiscoveryMedia(item);
   els.discoverDetailTitle.textContent = item.title;
   els.discoverDetailMeta.textContent = `${labelize(item.contentType)} · ${item.length} · ${item.speaker}`;
   els.discoverDetailSummary.textContent = item.summary;
@@ -15809,10 +16731,25 @@ function stageChoiceModuleId(stage) {
   }[stage.choice] || "";
 }
 
+function clearJourneyStructureCache() {
+  journeyContentVersion += 1;
+  journeyStructureCache.rawModules.clear();
+  journeyStructureCache.rawGroups.clear();
+  journeyStructureCache.packageModules.clear();
+  journeyStructureCache.sections.clear();
+  state.journeyBannerGroups = {};
+}
+
+function journeyCacheKey(stage, suffix = "") {
+  return `${journeyContentVersion}:${stage.choice}${suffix ? `:${suffix}` : ""}`;
+}
+
 function rawPackageModulesForStage(stage) {
+  const cacheKey = journeyCacheKey(stage);
+  if (journeyStructureCache.rawModules.has(cacheKey)) return journeyStructureCache.rawModules.get(cacheKey);
   const moduleId = stageChoiceModuleId(stage);
   if (!moduleId) return [];
-  return resources
+  const modules = resources
     .filter((resource) => resource.seriesId === moduleId && resource.showInJourney !== false)
     .sort((a, b) => {
       const unitDiff = resourceUnitNumber(a, stage) - resourceUnitNumber(b, stage);
@@ -15821,6 +16758,8 @@ function rawPackageModulesForStage(stage) {
       if (lessonDiff) return lessonDiff;
       return (a.episode || 0) - (b.episode || 0);
     });
+  journeyStructureCache.rawModules.set(cacheKey, modules);
+  return modules;
 }
 
 function nodeMediumPreferenceKey(stage, unitNumber) {
@@ -15828,12 +16767,15 @@ function nodeMediumPreferenceKey(stage, unitNumber) {
 }
 
 function rawNodeGroupsForStage(stage) {
+  const cacheKey = journeyCacheKey(stage);
+  if (journeyStructureCache.rawGroups.has(cacheKey)) return journeyStructureCache.rawGroups.get(cacheKey);
   const grouped = new Map();
   rawPackageModulesForStage(stage).forEach((resource) => {
     const unitNumber = resourceUnitNumber(resource, stage);
     if (!grouped.has(unitNumber)) grouped.set(unitNumber, []);
     grouped.get(unitNumber).push(resource);
   });
+  journeyStructureCache.rawGroups.set(cacheKey, grouped);
   return grouped;
 }
 
@@ -15890,12 +16832,23 @@ function modulesForNodePreference(stage, unitNumber, modules = []) {
   return modules.filter((resource) => resourceSupportsMode(resource, preference)).slice(0, 5);
 }
 
+function nodeMediumPreferenceSignature(stage, rawGroups = rawNodeGroupsForStage(stage)) {
+  return Array.from(rawGroups.keys())
+    .sort((a, b) => a - b)
+    .map((unitNumber) => `${unitNumber}:${state.nodeMediumPreference[nodeMediumPreferenceKey(stage, unitNumber)] || "mixed"}`)
+    .join("|");
+}
+
 function packageModulesForStage(stage) {
   const rawGroups = rawNodeGroupsForStage(stage);
   if (!rawGroups.size) return [];
-  return Array.from(rawGroups.entries())
+  const cacheKey = journeyCacheKey(stage, nodeMediumPreferenceSignature(stage, rawGroups));
+  if (journeyStructureCache.packageModules.has(cacheKey)) return journeyStructureCache.packageModules.get(cacheKey);
+  const modules = Array.from(rawGroups.entries())
     .sort(([a], [b]) => a - b)
     .flatMap(([unitNumber, modules]) => modulesForNodePreference(stage, unitNumber, modules));
+  journeyStructureCache.packageModules.set(cacheKey, modules);
+  return modules;
 }
 
 function resourceUnitNumber(resource, stage) {
@@ -15919,7 +16872,9 @@ function resourceLessonOrder(resource) {
 function stageSections(stage) {
   const packaged = packageModulesForStage(stage);
   if (!packaged.length) return parseStageSections(stage);
-  return packaged.map((resource, index) => {
+  const cacheKey = journeyCacheKey(stage, nodeMediumPreferenceSignature(stage));
+  if (journeyStructureCache.sections.has(cacheKey)) return journeyStructureCache.sections.get(cacheKey);
+  const sections = packaged.map((resource, index) => {
     const title = resource.title.replace(/^One Basics\s+/, "");
     const unitNumber = resourceUnitNumber(resource, stage);
     const unitTitle = resourceUnitTitle(resource, stage, unitNumber);
@@ -15938,6 +16893,8 @@ function stageSections(stage) {
       quickCheck: resource.quickCheck
     };
   });
+  journeyStructureCache.sections.set(cacheKey, sections);
+  return sections;
 }
 
 function stageSectionTitles(stage) {
@@ -16482,6 +17439,19 @@ function renderStageDetail() {
     groups: stageSectionGroups(stage),
     currentGroupIndex: 0
   };
+  state.journeyBannerGroups = allStageEntries.reduce((groupsByStage, entry) => {
+    groupsByStage[entry.stage.choice] = entry.groups.map((group, index) => ({
+      title: group.title,
+      color: unitAccentColor(entry.stage, index)
+    }));
+    return groupsByStage;
+  }, {});
+  if (!state.journeyBannerGroups[activeEntry.stage.choice]) {
+    state.journeyBannerGroups[activeEntry.stage.choice] = activeEntry.groups.map((group, index) => ({
+      title: group.title,
+      color: unitAccentColor(activeEntry.stage, index)
+    }));
+  }
   const sections = stageSections(stage);
   const sectionGroups = activeEntry.groups;
   if (state.activeModuleIndex >= sections.length) state.activeModuleIndex = 0;
@@ -16718,6 +17688,22 @@ function updateDuoPathCurve() {
   pathLine.setAttribute("d", d);
 }
 
+function scheduleDuoPathCurveUpdate() {
+  if (duoPathCurveFrame) return;
+  duoPathCurveFrame = window.requestAnimationFrame(() => {
+    duoPathCurveFrame = 0;
+    updateDuoPathCurve();
+  });
+}
+
+function scheduleStickyStageBannerUpdate() {
+  if (stickyStageBannerFrame) return;
+  stickyStageBannerFrame = window.requestAnimationFrame(() => {
+    stickyStageBannerFrame = 0;
+    updateStickyStageBanner();
+  });
+}
+
 function closeSelectedPathNode() {
   if (!state.selectedPathNode) return false;
   state.selectedPathNode = "";
@@ -16754,7 +17740,7 @@ function updateStickyStageBanner() {
   });
   const activeStageChoice = activeMarker.dataset.stageChoice || state.activeStageId;
   const stage = stageForChoice(activeStageChoice);
-  const groups = stageSectionGroups(stage);
+  const groups = state.journeyBannerGroups[stage.choice] || [];
   if (!groups.length) return;
   let activeIndex = Number(activeMarker.dataset.sectionIndex) || 0;
   activeIndex = Math.max(0, Math.min(groups.length - 1, activeIndex));
@@ -16762,7 +17748,7 @@ function updateStickyStageBanner() {
   state.activeStageId = stage.choice;
   const meta = banner.querySelector(".duo-unit-back strong");
   const title = banner.querySelector(".duo-banner-unit-title");
-  banner.style.setProperty("--stage-color", unitAccentColor(stage, activeIndex));
+  banner.style.setProperty("--stage-color", groups[activeIndex]?.color || unitAccentColor(stage, activeIndex));
   if (meta) meta.textContent = t(stage.metaKey).replace(/\s+·\s+.+$/, ` · ${t(stage.titleKey)}`);
   if (title) title.textContent = groups[activeIndex]?.title || t(stage.titleKey);
 }
@@ -16943,24 +17929,93 @@ function closeGuidebook() {
   els.guidebookOverlay.setAttribute("aria-hidden", "true");
 }
 
-function stopEmbeddedMediaInView(viewId) {
-  const view = document.getElementById(viewId);
-  if (!view) return;
-  view.querySelectorAll("iframe.mux-frame").forEach((frame) => {
-    frame.src = "about:blank";
+function stopEmbeddedMediaInElement(root) {
+  if (!root) return;
+  root.querySelectorAll("iframe").forEach((frame) => {
+    try {
+      frame.contentWindow?.postMessage({ type: "pause" }, "*");
+      frame.contentWindow?.postMessage(JSON.stringify({ type: "pause" }), "*");
+    } catch (error) {
+      // Cross-origin players are stopped by clearing their source below.
+    }
+    frame.removeAttribute("srcdoc");
+    frame.setAttribute("src", "about:blank");
   });
-  view.querySelectorAll("video, audio").forEach((media) => {
+  root.querySelectorAll("video, audio").forEach((media) => {
     try {
       media.pause();
       media.currentTime = 0;
     } catch (error) {
-      // Best effort only; embedded players are stopped by clearing their iframe src.
+      // Best effort only; native media controls may reject while unloading.
+    }
+  });
+  root.querySelectorAll("mux-player, mux-video").forEach((player) => {
+    try {
+      if (typeof player.pause === "function") player.pause();
+      player.currentTime = 0;
+    } catch (error) {
+      // Best effort only; custom players vary by browser.
     }
   });
 }
 
+function stopEmbeddedMediaInView(viewId) {
+  stopEmbeddedMediaInElement(document.getElementById(viewId));
+}
+
 function stopModulePlayback() {
   stopEmbeddedMediaInView("moduleDetailView");
+}
+
+function moduleModeOptions() {
+  return {
+    watch: { label: t("module.modeWatch"), icon: "▶", title: t("module.watchTitle"), player: t("module.watchLabel"), body: t("module.watchBody") },
+    listen: { label: t("module.modeListen"), icon: "♪", title: t("module.listenTitle"), player: t("module.listenLabel"), body: t("module.listenBody") },
+    read: { label: t("module.modeRead"), icon: "“", title: t("module.readTitle"), player: t("module.readLabel"), body: t("module.readBody") }
+  };
+}
+
+function currentModulePlayerContext() {
+  const stage = activeStage();
+  const sections = stageSections(stage);
+  if (state.activeModuleIndex >= sections.length) state.activeModuleIndex = 0;
+  const module = sections[state.activeModuleIndex] || sections[0] || {};
+  const resource = moduleResourceFor(stage, state.activeModuleIndex);
+  const isComingSoon = !resource && module.progress === 0;
+  const modes = moduleModeOptions();
+  const preferredMode = preferredModeForResource(resource);
+  const requestedMode = modes[state.moduleMode] ? state.moduleMode : preferredMode;
+  const activeMode = resourceSupportsMode(resource, requestedMode) ? requestedMode : preferredMode;
+  state.moduleMode = activeMode;
+  return {
+    stage,
+    sections,
+    module,
+    resource,
+    isComingSoon,
+    modes,
+    activeMode,
+    mode: modes[activeMode]
+  };
+}
+
+function renderActiveModuleMedia() {
+  const context = currentModulePlayerContext();
+  renderModulePlayer(context.resource, context.activeMode, context.mode, context.isComingSoon, { allowMedia: true });
+}
+
+function refreshActiveViewMedia(viewId) {
+  if (viewId === "moduleDetailView") {
+    renderActiveModuleMedia();
+    return;
+  }
+  if (viewId === "moduleQuizView") {
+    stopModulePlayback();
+    return;
+  }
+  if (viewId === "discoveryDetailView") {
+    renderDiscoveryMedia(activeResource(), { allowMedia: true });
+  }
 }
 
 function muxPlayerUrl(resource) {
@@ -16996,9 +18051,11 @@ function muxClipBounds(resource) {
   };
 }
 
-function renderModulePlayer(resource, activeMode, mode, isComingSoon) {
+function renderModulePlayer(resource, activeMode, mode, isComingSoon, options = {}) {
   if (!els.modulePlayer) return;
-  const playerUrl = activeMode === "watch" && !isComingSoon ? muxPlayerUrl(resource) : "";
+  const allowMedia = options.allowMedia ?? state.activeView === "moduleDetailView";
+  const playerUrl = allowMedia && activeMode === "watch" && !isComingSoon ? muxPlayerUrl(resource) : "";
+  stopEmbeddedMediaInElement(els.modulePlayer);
   els.modulePlayer.classList.toggle("has-mux", Boolean(playerUrl));
   if (playerUrl) {
     els.modulePlayer.innerHTML = `
@@ -17024,22 +18081,8 @@ function renderModulePlayer(resource, activeMode, mode, isComingSoon) {
 
 function renderModuleDetail() {
   document.body.classList.remove("quiz-checked");
-  const stage = activeStage();
-  const sections = stageSections(stage);
-  if (state.activeModuleIndex >= sections.length) state.activeModuleIndex = 0;
-  const module = sections[state.activeModuleIndex] || sections[0];
-  const resource = moduleResourceFor(stage, state.activeModuleIndex);
-  const isComingSoon = !resource && module.progress === 0;
-  const modes = {
-    watch: { label: t("module.modeWatch"), icon: "▶", title: t("module.watchTitle"), player: t("module.watchLabel"), body: t("module.watchBody") },
-    listen: { label: t("module.modeListen"), icon: "♪", title: t("module.listenTitle"), player: t("module.listenLabel"), body: t("module.listenBody") },
-    read: { label: t("module.modeRead"), icon: "“", title: t("module.readTitle"), player: t("module.readLabel"), body: t("module.readBody") }
-  };
-  const preferredMode = preferredModeForResource(resource);
-  const requestedMode = modes[state.moduleMode] ? state.moduleMode : preferredMode;
-  const activeMode = resourceSupportsMode(resource, requestedMode) ? requestedMode : preferredMode;
-  state.moduleMode = activeMode;
-  const mode = modes[activeMode];
+  const context = currentModulePlayerContext();
+  const { stage, sections, module, resource, isComingSoon, modes, activeMode, mode } = context;
   const readParagraphs = Array.isArray(resource && resource.readBody) ? resource.readBody : [];
   const sectionInfo = activeSectionPieceInfo(stage, state.activeModuleIndex);
   const section = sectionInfo.group;
@@ -17177,20 +18220,23 @@ function renderModuleDetail() {
 }
 
 function openSectionPicker(sectionIndex) {
-  const groups = stageSectionGroups(activeStage());
+  const stage = activeStage();
+  const groups = stageSectionGroups(stage);
   const section = groups[sectionIndex];
-  if (!section || !section.modules.length || section.progress === 0) return;
+  if (!section || !section.modules.length) return;
   state.selectedSectionIndex = sectionIndex;
+  state.selectedPathNode = pathNodeKey("content", stage, sectionIndex);
   const firstContent = section.modules[0];
   state.activeModuleIndex = Number(firstContent.moduleIndex) || 0;
-  const firstResource = moduleResourceFor(activeStage(), state.activeModuleIndex);
-  state.moduleMode = nodeModeForResource(activeStage(), section, firstResource);
-  state.sectionPicker = null;
+  const firstResource = moduleResourceFor(stage, state.activeModuleIndex);
+  state.moduleMode = nodeModeForResource(stage, section, firstResource);
+  state.sectionPicker = { ...section, sectionIndex };
   state.sectionReview = null;
+  state.practicalUse = false;
   state.quizChoice = "";
   state.quizChecked = false;
-  renderModuleDetail();
-  setView("moduleDetailView");
+  renderModuleQuiz();
+  setView("moduleQuizView");
   bindDynamicActions();
 }
 
@@ -17265,6 +18311,17 @@ function renderModuleQuiz() {
       const resource = moduleResourceFor(stage, item.moduleIndex);
       return sectionContentFormat(resource);
     }))].slice(0, 3).join(" · ");
+    const lessonPreview = picker.modules.slice(0, 5).map((item, index) => {
+      const resource = moduleResourceFor(stage, item.moduleIndex);
+      const mode = nodeModeForResource(stage, picker, resource);
+      return `
+        <span class="section-picker-lesson">
+          <b>${index + 1}</b>
+          <span>${esc(resource ? resource.title : item.title)}</span>
+          <em>${esc(sectionContentFormat(resource, mode))}</em>
+        </span>
+      `;
+    }).join("");
     els.quizProgressFill.style.setProperty("--stage-color", stage.stageColor);
     els.quizProgressFill.style.setProperty("--progress", `${Math.max(18, Math.min(86, picker.progress || 18))}%`);
     els.quizKicker.textContent = `Unit ${picker.sectionIndex + 1}`;
@@ -17276,6 +18333,7 @@ function renderModuleQuiz() {
         <span>
           <strong>${esc(firstContent ? firstContent.title : picker.title)}</strong>
           <small>${esc(contentCount)} lessons · ${esc(formatList || "Content")}</small>
+          <span class="section-picker-lessons">${lessonPreview}</span>
         </span>
       </div>
     `;
@@ -17821,19 +18879,7 @@ function bindDynamicActions() {
       const section = groups[sectionIndex];
       const guidedTarget = state.guidedPathNode === pathNodeKey("content", stage, sectionIndex);
       if (!section || !section.modules.length || (section.progress === 0 && !guidedTarget)) return;
-      state.selectedSectionIndex = sectionIndex;
-      state.selectedPathNode = pathNodeKey("content", stage, sectionIndex);
-      state.activeModuleIndex = Number(section.modules[0].moduleIndex) || 0;
-      const resource = moduleResourceFor(stage, state.activeModuleIndex);
-      state.moduleMode = nodeModeForResource(stage, section, resource);
-      state.quizChoice = "";
-      state.quizChecked = false;
-      state.sectionReview = null;
-      state.sectionPicker = null;
-      state.practicalUse = false;
-      renderModuleDetail();
-      setView("moduleDetailView");
-      bindDynamicActions();
+      openSectionPicker(sectionIndex);
     };
   });
   document.querySelectorAll("[data-section-practical-start]").forEach((button) => {
@@ -18071,12 +19117,12 @@ function bindDynamicActions() {
 
 function wireStaticActions() {
   window.addEventListener("scroll", () => {
-    updateStickyStageBanner();
+    scheduleStickyStageBannerUpdate();
     updateGatewayNavScrollState();
   }, { passive: true });
   window.addEventListener("resize", () => {
-    updateDuoPathCurve();
-    updateStickyStageBanner();
+    scheduleDuoPathCurveUpdate();
+    scheduleStickyStageBannerUpdate();
     updateGatewayNavScrollState();
   });
   document.addEventListener("touchstart", handleMobileDocumentTouchStart, { passive: true, capture: true });
@@ -18212,7 +19258,30 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  navigator.serviceWorker.register("oneinhim_service_worker.js").catch(() => {
+  const workerRefreshKey = "oneinhim-sw-refresh-v62";
+  let refreshingWorker = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
+    refreshingWorker = true;
+    sessionStorage.setItem(workerRefreshKey, "1");
+    window.location.reload();
+  });
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=62", { updateViaCache: "none" }).then((registration) => {
+    const activateWaitingWorker = () => {
+      if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
+    };
+    activateWaitingWorker();
+    registration.addEventListener("updatefound", () => {
+      const nextWorker = registration.installing;
+      if (!nextWorker) return;
+      nextWorker.addEventListener("statechange", () => {
+        if (nextWorker.state === "installed" && navigator.serviceWorker.controller) {
+          nextWorker.postMessage({ type: "SKIP_WAITING" });
+        }
+      });
+    });
+    registration.update().catch(() => {});
+  }).catch(() => {
     // The app still works in the browser if install support is unavailable.
   });
 }
@@ -18228,7 +19297,10 @@ async function boot() {
 	  renderAsk();
 	  renderOnboarding();
 	  await renderAdminAccount();
-	  setView("gatewayView");
+	  if (!state.userNavigatedDuringBoot) {
+	    setView("gatewayView", { initial: true });
+	  }
+	  state.bootComplete = true;
 	}
 
 boot();

@@ -1,11 +1,7 @@
-const ONEINHIM_CACHE = "oneinhim-app-v42";
+const ONEINHIM_CACHE = "oneinhim-app-v62";
 
 const APP_SHELL = [
-  "./",
-  "./index.html",
-  "./oneinhim_learner_app.html",
   "./oneinhim.webmanifest",
-  "./oneinhim_content_workshop.html",
   "./oneinhim_team_sync_config.js",
   "./oneinhim_content_packages.json",
   "./oneinhim_content_tagging_schema.json",
@@ -29,7 +25,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(ONEINHIM_CACHE)
       .then((cache) => Promise.allSettled(APP_SHELL.map((url) =>
-        fetch(url).then((response) => {
+        fetch(url, { cache: "reload" }).then((response) => {
           if (response.ok) return cache.put(url, response);
           return null;
         }).catch(() => null)
@@ -48,11 +44,28 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
+});
+
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
+  if (request.mode === "navigate" || request.destination === "document") {
+    event.respondWith(
+      fetch(request, { cache: "reload" })
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(ONEINHIM_CACHE).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match("./oneinhim_learner_app.html") || caches.match("./")))
+    );
+    return;
+  }
 
   event.respondWith(
     fetch(request)
