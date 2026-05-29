@@ -11937,8 +11937,8 @@ body.gateway-mode .home-hero .gateway-hero-controls {
   }
 
   body.gateway-mode .home-hero .gateway-hero-dot {
-    width: 44px !important;
-    height: 20px !important;
+    width: 38px !important;
+    height: 18px !important;
   }
 
   body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
@@ -11946,7 +11946,7 @@ body.gateway-mode .home-hero .gateway-hero-controls {
     padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
     align-content: start !important;
     justify-items: center !important;
-    gap: clamp(18px, 3.2svh, 26px) !important;
+    gap: clamp(0px, 1svh, 8px) !important;
   }
 
   body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
@@ -11958,7 +11958,7 @@ body.gateway-mode .home-hero .gateway-hero-controls {
   body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
     width: min(100%, 350px) !important;
     max-width: 350px !important;
-    margin: 0 auto !important;
+    margin: clamp(-32px, -3.5svh, -22px) auto 0 !important;
     text-align: center !important;
   }
 
@@ -12002,7 +12002,7 @@ body.gateway-mode .home-hero .gateway-hero-controls {
 
   body.gateway-mode .gateway-landing.home-hero > .gateway-hero-controls,
   body.gateway-mode .home-hero .gateway-hero-controls {
-    bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
   }
 }
 
@@ -12381,8 +12381,8 @@ body:not(.gateway-mode) .main {
   }
 
   body.gateway-mode .home-hero .gateway-hero-dot {
-    width: 44px !important;
-    height: 20px !important;
+    width: 38px !important;
+    height: 18px !important;
   }
 
   body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
@@ -12390,7 +12390,7 @@ body:not(.gateway-mode) .main {
     padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
     align-content: start !important;
     justify-items: center !important;
-    gap: clamp(18px, 3.2svh, 26px) !important;
+    gap: clamp(0px, 1svh, 8px) !important;
   }
 
   body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
@@ -12402,7 +12402,7 @@ body:not(.gateway-mode) .main {
   body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
     width: min(100%, 350px) !important;
     max-width: 350px !important;
-    margin: 0 auto !important;
+    margin: clamp(-32px, -3.5svh, -22px) auto 0 !important;
     text-align: center !important;
   }
 
@@ -12446,7 +12446,7 @@ body:not(.gateway-mode) .main {
 
   body.gateway-mode .gateway-landing.home-hero > .gateway-hero-controls,
   body.gateway-mode .home-hero .gateway-hero-controls {
-    bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
   }
 
   body.gateway-mode .gateway-popular-inner {
@@ -19386,7 +19386,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v63";
+  const workerRefreshKey = "oneinhim-sw-refresh-v64";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -19394,7 +19394,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=63", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=64", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
