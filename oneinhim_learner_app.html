@@ -12874,6 +12874,32 @@ body:not(.gateway-mode) .main {
 /* Final mobile Journey polish. This block owns the phone Journey path, unit popout,
    section picker, and lesson session sizing after all older mobile rules. */
 @media (max-width: 760px) {
+  body.journey-mode:not(.gateway-mode) {
+    --app-top-chrome-space: calc(96px + env(safe-area-inset-top));
+  }
+
+  body.journey-mode:not(.gateway-mode) .app-top-chrome,
+  body.journey-mode:not(.gateway-mode).gateway-nav-scrolled .app-top-chrome {
+    min-height: 96px !important;
+    padding: max(34px, calc(8px + env(safe-area-inset-top))) 22px 9px !important;
+    background: #fff !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) .app-top-chrome .gateway-mobile-action,
+  body.journey-mode:not(.gateway-mode).gateway-nav-scrolled .app-top-chrome .gateway-mobile-action {
+    color: var(--oih-black) !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) .app-top-chrome .gateway-logo-img {
+    width: 48px !important;
+    height: 48px !important;
+    box-shadow: 0 8px 18px rgba(9, 10, 10, 0.14) !important;
+  }
+
   body.journey-mode:not(.gateway-mode),
   body.journey-mode:not(.gateway-mode) .app-shell,
   body.journey-mode:not(.gateway-mode) .main,
@@ -12910,21 +12936,21 @@ body:not(.gateway-mode) .main {
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-banner {
     position: fixed !important;
-    top: calc(var(--app-top-chrome-space) + 8px) !important;
-    left: max(14px, env(safe-area-inset-left)) !important;
-    right: max(14px, env(safe-area-inset-right)) !important;
+    top: calc(var(--app-top-chrome-space) + 6px) !important;
+    left: max(22px, env(safe-area-inset-left)) !important;
+    right: max(22px, env(safe-area-inset-right)) !important;
     z-index: 92 !important;
     width: auto !important;
     max-width: none !important;
-    min-height: 92px !important;
-    grid-template-columns: minmax(0, 1fr) 58px !important;
-    gap: 10px !important;
+    min-height: 74px !important;
+    grid-template-columns: minmax(0, 1fr) 50px !important;
+    gap: 8px !important;
     align-items: center !important;
-    padding: 13px 12px 15px 16px !important;
-    border-radius: 18px !important;
+    padding: 10px 9px 12px 14px !important;
+    border-radius: 16px !important;
     box-shadow:
-      inset 0 -6px 0 rgba(0, 0, 0, 0.16),
-      0 12px 22px rgba(9, 10, 10, 0.12) !important;
+      inset 0 -5px 0 rgba(0, 0, 0, 0.16),
+      0 8px 16px rgba(9, 10, 10, 0.09) !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-back {
@@ -12939,34 +12965,34 @@ body:not(.gateway-mode) .main {
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-banner strong {
     max-width: 100% !important;
-    font-size: 11px !important;
+    font-size: 10px !important;
     line-height: 1.15 !important;
     letter-spacing: 0.08em !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-banner-unit-title {
     max-width: 100% !important;
-    margin-top: 5px !important;
+    margin-top: 4px !important;
     display: -webkit-box !important;
     overflow: hidden !important;
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
-    font-size: clamp(26px, 7.3vw, 32px) !important;
-    line-height: 0.98 !important;
+    font-size: clamp(23px, 6.5vw, 28px) !important;
+    line-height: 1 !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-guidebook {
-    width: 58px !important;
-    height: 58px !important;
-    min-height: 58px !important;
+    width: 50px !important;
+    height: 50px !important;
+    min-height: 50px !important;
     padding: 0 !important;
     border-width: 0 0 0 3px !important;
-    border-radius: 0 14px 14px 0 !important;
+    border-radius: 0 12px 12px 0 !important;
     font-size: 0 !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-guidebook::before {
-    font-size: 30px !important;
+    font-size: 25px !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .stage-section-list.duo-lesson-path {
@@ -12974,8 +13000,8 @@ body:not(.gateway-mode) .main {
     width: 100vw !important;
     max-width: 100vw !important;
     margin: 0 !important;
-    padding: 134px 0 calc(150px + env(safe-area-inset-bottom)) !important;
-    gap: 34px !important;
+    padding: 112px 0 calc(138px + env(safe-area-inset-bottom)) !important;
+    gap: 30px !important;
     overflow: visible !important;
   }
 
@@ -12985,13 +13011,13 @@ body:not(.gateway-mode) .main {
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-curve path {
-    stroke-width: 8px !important;
+    stroke-width: 7px !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-node {
     width: 100vw !important;
     max-width: 100vw !important;
-    min-height: 104px !important;
+    min-height: 88px !important;
     justify-items: center !important;
   }
 
@@ -13011,27 +13037,27 @@ body:not(.gateway-mode) .main {
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-button {
-    width: 88px !important;
-    height: 78px !important;
-    border-width: 7px !important;
-    font-size: 30px !important;
+    width: 70px !important;
+    height: 62px !important;
+    border-width: 6px !important;
+    font-size: 25px !important;
     box-shadow:
-      inset 0 -7px 0 rgba(0, 0, 0, 0.14),
-      0 0 0 7px rgba(9, 10, 10, 0.055),
-      0 9px 16px rgba(9, 10, 10, 0.12) !important;
+      inset 0 -6px 0 rgba(0, 0, 0, 0.14),
+      0 0 0 6px rgba(9, 10, 10, 0.05),
+      0 7px 13px rgba(9, 10, 10, 0.1) !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-start-tag {
-    margin-bottom: 7px !important;
-    padding: 7px 14px !important;
-    border-radius: 12px !important;
-    font-size: 14px !important;
+    margin-bottom: 6px !important;
+    padding: 6px 12px !important;
+    border-radius: 11px !important;
+    font-size: 12px !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-break {
     max-width: calc(100vw - 48px) !important;
-    margin: 16px auto !important;
-    font-size: 22px !important;
+    margin: 14px auto !important;
+    font-size: 19px !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-divider.section-title-divider {
@@ -15778,7 +15804,8 @@ function setGatewayChromeColor(isDarkHero) {
   const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
   const mobileAppChrome = window.matchMedia("(max-width: 760px)").matches && !document.body.classList.contains("app-chrome-hidden");
   const chromeScrolled = document.body.classList.contains("gateway-nav-scrolled") || window.scrollY > 18;
-  const useDarkChrome = isDarkHero || (mobileAppChrome && chromeScrolled);
+  const forceLightMobileChrome = mobileAppChrome && document.body.classList.contains("journey-mode");
+  const useDarkChrome = !forceLightMobileChrome && (isDarkHero || (mobileAppChrome && chromeScrolled));
   if (themeMeta) themeMeta.setAttribute("content", useDarkChrome ? "#090a0a" : "#ffffff");
   if (statusMeta) statusMeta.setAttribute("content", useDarkChrome ? "black-translucent" : "default");
   document.documentElement.classList.toggle("dark-app-chrome-active", useDarkChrome);
@@ -19998,7 +20025,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v66";
+  const workerRefreshKey = "oneinhim-sw-refresh-v67";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20006,7 +20033,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=66", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=67", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
