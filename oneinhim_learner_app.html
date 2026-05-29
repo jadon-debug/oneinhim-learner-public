@@ -12737,6 +12737,467 @@ body:not(.gateway-mode) .main {
     display: none !important;
   }
 }
+
+/* Final mobile Journey polish. This block owns the phone Journey path, unit popout,
+   section picker, and lesson session sizing after all older mobile rules. */
+@media (max-width: 760px) {
+  body.journey-mode:not(.gateway-mode),
+  body.journey-mode:not(.gateway-mode) .app-shell,
+  body.journey-mode:not(.gateway-mode) .main,
+  body.journey-mode:not(.gateway-mode) #stageDetailView {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    overflow-x: hidden !important;
+    background: #fff !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) .view.active#stageDetailView {
+    padding-top: var(--app-top-chrome-space) !important;
+    padding-bottom: 0 !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-shell,
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-web-main {
+    box-sizing: border-box !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 0 calc(112px + env(safe-area-inset-bottom)) !important;
+    overflow: visible !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-web-nav,
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-web-side,
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-app-header,
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-summary-card,
+  body.journey-mode:not(.gateway-mode) #stageDetailView .journey-callout {
+    display: none !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-banner {
+    position: fixed !important;
+    top: calc(var(--app-top-chrome-space) + 8px) !important;
+    left: max(14px, env(safe-area-inset-left)) !important;
+    right: max(14px, env(safe-area-inset-right)) !important;
+    z-index: 92 !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 92px !important;
+    grid-template-columns: minmax(0, 1fr) 58px !important;
+    gap: 10px !important;
+    align-items: center !important;
+    padding: 13px 12px 15px 16px !important;
+    border-radius: 18px !important;
+    box-shadow:
+      inset 0 -6px 0 rgba(0, 0, 0, 0.16),
+      0 12px 22px rgba(9, 10, 10, 0.12) !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-back {
+    min-width: 0 !important;
+    display: block !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-back::before,
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-banner-next-step {
+    display: none !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-banner strong {
+    max-width: 100% !important;
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-banner-unit-title {
+    max-width: 100% !important;
+    margin-top: 5px !important;
+    display: -webkit-box !important;
+    overflow: hidden !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    font-size: clamp(26px, 7.3vw, 32px) !important;
+    line-height: 0.98 !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-guidebook {
+    width: 58px !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    padding: 0 !important;
+    border-width: 0 0 0 3px !important;
+    border-radius: 0 14px 14px 0 !important;
+    font-size: 0 !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-guidebook::before {
+    font-size: 30px !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .stage-section-list.duo-lesson-path {
+    box-sizing: border-box !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 134px 0 calc(150px + env(safe-area-inset-bottom)) !important;
+    gap: 34px !important;
+    overflow: visible !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-curve {
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-curve path {
+    stroke-width: 8px !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-node {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-height: 104px !important;
+    justify-items: center !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-node:nth-child(odd),
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-node:nth-child(even) {
+    transform: translateX(var(--mobile-node-x, 0)) !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-node.selected:nth-child(odd),
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-node.selected:nth-child(even) {
+    transform: none !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-anchor {
+    width: max-content !important;
+    max-width: 100vw !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-button {
+    width: 88px !important;
+    height: 78px !important;
+    border-width: 7px !important;
+    font-size: 30px !important;
+    box-shadow:
+      inset 0 -7px 0 rgba(0, 0, 0, 0.14),
+      0 0 0 7px rgba(9, 10, 10, 0.055),
+      0 9px 16px rgba(9, 10, 10, 0.12) !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-start-tag {
+    margin-bottom: 7px !important;
+    padding: 7px 14px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-break {
+    max-width: calc(100vw - 48px) !important;
+    margin: 16px auto !important;
+    font-size: 22px !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-divider.section-title-divider {
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout {
+    position: fixed !important;
+    top: auto !important;
+    left: max(14px, env(safe-area-inset-left)) !important;
+    right: max(14px, env(safe-area-inset-right)) !important;
+    bottom: calc(var(--app-bottom-chrome-space) + 10px) !important;
+    z-index: 112 !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: min(52svh, 410px) !important;
+    margin: 0 !important;
+    padding: 17px !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    border-radius: 18px !important;
+    transform: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout h3 {
+    font-size: clamp(25px, 7vw, 32px) !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout p {
+    margin: 8px 0 13px !important;
+    font-size: 15px !important;
+    line-height: 1.32 !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-piece-list {
+    margin-bottom: 13px !important;
+    padding: 9px !important;
+  }
+
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout .primary-btn,
+  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout .soft-btn {
+    min-height: 48px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView,
+  body.section-picker-mode #moduleQuizView .module-quiz-shell {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    background: #fff !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .module-quiz-shell {
+    min-height: 100svh !important;
+    padding: max(52px, calc(18px + env(safe-area-inset-top))) 18px calc(104px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-top {
+    grid-template-columns: 46px minmax(0, 1fr) auto !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-close {
+    width: 46px !important;
+    height: 46px !important;
+    font-size: 36px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-progress {
+    height: 14px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-life {
+    min-width: 54px !important;
+    justify-content: end !important;
+    font-size: 18px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-main {
+    width: 100% !important;
+    margin: 28px auto 0 !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-kicker {
+    margin-bottom: 8px !important;
+    font-size: 11px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-main h2 {
+    font-size: clamp(34px, 10vw, 42px) !important;
+    line-height: 0.98 !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-options {
+    margin-top: 22px !important;
+    gap: 0 !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-option {
+    position: relative !important;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    min-height: 0 !important;
+    padding: 18px !important;
+    border-radius: 18px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-option-symbol {
+    position: absolute !important;
+    top: 18px !important;
+    left: 18px !important;
+    width: 58px !important;
+    min-height: 58px !important;
+    font-size: 26px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-option strong {
+    min-height: 58px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 72px !important;
+    font-size: clamp(23px, 6.3vw, 30px) !important;
+    line-height: 1.04 !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-option small {
+    width: auto !important;
+    max-width: calc(100% - 72px) !important;
+    margin: 7px 0 0 72px !important;
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+    white-space: normal !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .section-picker-lessons {
+    gap: 8px !important;
+    margin-top: 16px !important;
+    padding: 11px !important;
+    border-radius: 14px !important;
+    background: #faf8f3 !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .section-picker-lesson {
+    grid-template-columns: 26px minmax(0, 1fr) !important;
+    gap: 9px !important;
+    font-size: 13px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .section-picker-lesson b {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .section-picker-lesson em {
+    display: none !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-footer {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 14px 18px max(14px, env(safe-area-inset-bottom)) !important;
+  }
+
+  body.section-picker-mode #moduleQuizView .quiz-footer .primary-btn,
+  body.section-picker-mode #moduleQuizView .quiz-footer .soft-btn {
+    min-width: 0 !important;
+    min-height: 52px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session,
+  body.learning-mode #moduleDetailView.duo-session .module-shell {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    background: #fff !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-shell {
+    min-height: 100svh !important;
+    padding: max(52px, calc(18px + env(safe-area-inset-top))) 20px calc(112px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .stage-app-header {
+    width: 100% !important;
+    min-height: 50px !important;
+    grid-template-columns: 50px minmax(0, 1fr) 50px !important;
+    gap: 10px !important;
+    margin: 0 0 34px !important;
+    padding: 0 !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .close-stage,
+  body.learning-mode #moduleDetailView.duo-session .home-stage {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-session-bar {
+    width: min(156px, 42vw) !important;
+    margin: -78px auto 42px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-session-progress {
+    height: 12px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-session-points {
+    display: none !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-hero,
+  body.learning-mode #moduleDetailView.duo-session .module-content-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-hero {
+    margin-top: 0 !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-copy h2 {
+    font-size: clamp(30px, 8.4vw, 38px) !important;
+    line-height: 1.08 !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-format-switch {
+    margin-top: 14px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-format-button {
+    min-height: 42px !important;
+    padding: 0 14px !important;
+    border-radius: 14px !important;
+    font-size: 13px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-hero.watch-session .module-player,
+  body.learning-mode #moduleDetailView.duo-session .module-hero.listen-session .module-player,
+  body.learning-mode #moduleDetailView.duo-session .module-player.has-mux {
+    width: 100% !important;
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9 !important;
+    margin-top: 18px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-player .mux-frame {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-content-grid {
+    margin-top: 20px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .duo-reading-card .lesson-card-kicker {
+    margin-bottom: 9px !important;
+    font-size: 12px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .duo-reading-card h3 {
+    margin-bottom: 14px !important;
+    font-size: clamp(27px, 7.4vw, 34px) !important;
+    line-height: 1.08 !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .duo-reading-scroll {
+    gap: 14px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .duo-reading-scroll p {
+    font-size: clamp(17px, 4.45vw, 18.5px) !important;
+    line-height: 1.5 !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .duo-scripture-row {
+    padding-bottom: 18px !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-next-row {
+    padding: 14px 20px max(14px, env(safe-area-inset-bottom)) !important;
+  }
+
+  body.learning-mode #moduleDetailView.duo-session .module-next-row .primary-btn,
+  body.learning-mode #moduleDetailView.duo-session .module-next-row .soft-btn {
+    min-width: 0 !important;
+    min-height: 52px !important;
+  }
+}
 		</style>
 </head>
 <body class="gateway-mode">
@@ -17755,7 +18216,7 @@ function renderStageDetail() {
       }
       const isSelected = selectedNode && selectedNode.key === node.key;
       const nodeOffset = getNodeOffset(node);
-      const mobileNodeOffset = Math.max(-98, Math.min(98, nodeOffset * 0.58));
+      const mobileNodeOffset = Math.max(-78, Math.min(78, nodeOffset * 0.5));
       const isPathSpine = node.kind === "content" || node.kind === "chest" || node.kind === "practice" || node.kind === "review";
       return `
         <article class="duo-path-node ${node.kind} ${isSelected ? "selected" : ""}" data-stage-choice="${esc(node.stageChoice)}" data-section-index="${node.groupIndex}" data-section-title="${esc(node.title)}" style="--stage-color: ${esc(node.color || node.stage.stageColor)}; --section-color: ${esc(node.stage.stageColor)}; --section-text: ${esc(readableTextColor(node.stage.stageColor))}; --node-x: ${nodeOffset}px; --mobile-node-x: ${mobileNodeOffset}px;">
@@ -17861,7 +18322,8 @@ function updateStickyStageBanner() {
   const unitMarkers = [...els.stageSectionList.querySelectorAll(".duo-path-node.content[data-section-index], .duo-unit-divider[data-section-index]")];
   if (!unitMarkers.length) return;
   const bannerRect = banner.getBoundingClientRect();
-  const threshold = bannerRect.bottom + 360;
+  const compactMobileJourney = window.matchMedia("(max-width: 760px)").matches;
+  const threshold = bannerRect.bottom + (compactMobileJourney ? 150 : 360);
   let activeMarker = unitMarkers[0];
   unitMarkers.forEach((node) => {
     if (node.getBoundingClientRect().top <= threshold) activeMarker = node;
@@ -17890,8 +18352,10 @@ function scrollActiveJourneySectionIntoView(stageChoiceOverride = "", sectionInd
     || els.stageSectionList.querySelector(`.duo-unit-divider[data-stage-choice="${stageChoice}"][data-section-index="${sectionIndex}"]`);
   if (!target) return;
   const banner = els.stageSectionList.querySelector(".duo-unit-banner");
-  const bannerHeight = banner ? banner.getBoundingClientRect().height : 0;
-  const targetTop = window.scrollY + target.getBoundingClientRect().top - bannerHeight - 210;
+  const bannerRect = banner ? banner.getBoundingClientRect() : { bottom: 0, height: 0 };
+  const compactMobileJourney = window.matchMedia("(max-width: 760px)").matches;
+  const targetOffset = compactMobileJourney ? bannerRect.bottom + 44 : bannerRect.height + 210;
+  const targetTop = window.scrollY + target.getBoundingClientRect().top - targetOffset;
   window.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
   state.activeStageId = rawStageChoice;
   state.selectedSectionIndex = sectionIndex;
@@ -18435,6 +18899,7 @@ function renderModuleQuiz() {
     const picker = state.sectionPicker;
     const firstContent = picker.modules[0];
     const contentCount = picker.modules.length;
+    const contentCountLabel = `${contentCount} ${contentCount === 1 ? "lesson" : "lessons"}`;
     const formatList = [...new Set(picker.modules.map((item) => {
       const resource = moduleResourceFor(stage, item.moduleIndex);
       return sectionContentFormat(resource);
@@ -18452,7 +18917,7 @@ function renderModuleQuiz() {
     }).join("");
     els.quizProgressFill.style.setProperty("--stage-color", stage.stageColor);
     els.quizProgressFill.style.setProperty("--progress", `${Math.max(18, Math.min(86, picker.progress || 18))}%`);
-    els.quizKicker.textContent = `Unit ${picker.sectionIndex + 1}`;
+    els.quizKicker.textContent = `Unit ${picker.sectionIndex + 1} · ${t(stage.titleKey)}`;
     els.quizKicker.style.setProperty("--stage-color", stage.stageColor);
     els.quizQuestion.textContent = picker.title;
     els.quizOptions.innerHTML = `
@@ -18460,7 +18925,7 @@ function renderModuleQuiz() {
         <span class="quiz-option-symbol">${picker.sectionIndex + 1}</span>
         <span>
           <strong>${esc(firstContent ? firstContent.title : picker.title)}</strong>
-          <small>${esc(contentCount)} lessons · ${esc(formatList || "Content")}</small>
+          <small>${esc(contentCountLabel)} · ${esc(formatList || "Content")}</small>
           <span class="section-picker-lessons">${lessonPreview}</span>
         </span>
       </div>
@@ -19386,7 +19851,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v64";
+  const workerRefreshKey = "oneinhim-sw-refresh-v65";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -19394,7 +19859,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=64", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=65", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
