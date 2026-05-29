@@ -855,6 +855,10 @@ body.learning-mode .view.active {
   justify-content: center;
 }
 
+.path-map-mobile-preview {
+  display: none;
+}
+
 .path-choice {
   min-height: 300px;
   display: grid;
@@ -11384,10 +11388,18 @@ body:not(.gateway-mode) #stageDetailView .stage-shell {
   }
 
   body.gateway-mode.gateway-nav-scrolled .app-top-chrome,
-  body:not(.gateway-mode) .app-top-chrome {
+  body:not(.gateway-mode).gateway-nav-scrolled .app-top-chrome {
     background: rgba(13, 13, 13, 0.94) !important;
     border-color: rgba(255, 255, 255, 0.1) !important;
     box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+  }
+
+  body:not(.gateway-mode):not(.gateway-nav-scrolled) .app-top-chrome {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .app-top-chrome .gateway-mobile-action {
@@ -12218,8 +12230,12 @@ body:not(.gateway-mode) .main {
 
   body.gateway-mode.dark-gateway-hero-active:not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action,
   body.gateway-mode.gateway-nav-scrolled .app-top-chrome .gateway-mobile-action,
-  body:not(.gateway-mode) .app-top-chrome .gateway-mobile-action {
+  body:not(.gateway-mode).gateway-nav-scrolled .app-top-chrome .gateway-mobile-action {
     color: #fff !important;
+  }
+
+  body:not(.gateway-mode):not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action {
+    color: var(--oih-black) !important;
   }
 
   .app-top-chrome .gateway-mobile-action::before,
@@ -12290,6 +12306,123 @@ body:not(.gateway-mode) .main {
   body.app-chrome-hidden .app-top-chrome,
   body.app-chrome-hidden .app-bottom-nav {
     display: none !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView {
+    background: #fff !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-select {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding: 0 24px calc(96px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-select-head {
+    max-width: none !important;
+    margin: 0 0 16px !important;
+    text-align: left !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-select-head h2 {
+    font-size: clamp(40px, 11.4vw, 52px) !important;
+    line-height: 0.98 !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-select-head p {
+    max-width: 340px !important;
+    margin: 10px 0 0 !important;
+    font-size: 14px !important;
+    line-height: 1.34 !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-card-grid {
+    display: block !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-card {
+    gap: 6px !important;
+    padding: 8px !important;
+    border-radius: 14px !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-card::before {
+    left: 34px !important;
+    top: 34px !important;
+    bottom: 34px !important;
+    width: 6px !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-node {
+    min-height: 54px !important;
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    padding: 7px 8px !important;
+    border-radius: 12px !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-index {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 13px !important;
+    font-size: 22px !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-label strong {
+    font-size: clamp(23px, 7.2vw, 31px) !important;
+    line-height: 0.94 !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-label span,
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-progress,
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-preview-card {
+    display: none !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-mobile-preview {
+    position: relative !important;
+    z-index: 2 !important;
+    display: grid !important;
+    gap: 9px !important;
+    margin: -2px 4px 8px 62px !important;
+    padding: 11px 12px 12px !important;
+    border: 2px solid color-mix(in srgb, var(--stage-color, var(--oih-orange)) 24%, #efece4) !important;
+    border-radius: 14px !important;
+    background: #fff !important;
+    box-shadow: inset 0 -3px 0 rgba(9, 10, 10, 0.06) !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-mobile-preview p {
+    margin: 0 !important;
+    color: var(--muted) !important;
+    font-size: 13px !important;
+    font-weight: 750 !important;
+    line-height: 1.34 !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-mobile-preview .path-preview-topics {
+    gap: 6px !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-mobile-preview .path-preview-topic {
+    min-height: 24px !important;
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-mobile-preview .path-preview-topic:nth-child(n+4),
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-mobile-units {
+    display: none !important;
+  }
+
+  body:not(.gateway-mode):not(.app-chrome-hidden) #pathSelectView .path-map-mobile-preview .primary-btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+    font-size: 13px !important;
   }
 
   body.gateway-mode .home-hero {
@@ -15644,7 +15777,8 @@ function setGatewayChromeColor(isDarkHero) {
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
   const mobileAppChrome = window.matchMedia("(max-width: 760px)").matches && !document.body.classList.contains("app-chrome-hidden");
-  const useDarkChrome = isDarkHero || mobileAppChrome;
+  const chromeScrolled = document.body.classList.contains("gateway-nav-scrolled") || window.scrollY > 18;
+  const useDarkChrome = isDarkHero || (mobileAppChrome && chromeScrolled);
   if (themeMeta) themeMeta.setAttribute("content", useDarkChrome ? "#090a0a" : "#ffffff");
   if (statusMeta) statusMeta.setAttribute("content", useDarkChrome ? "black-translucent" : "default");
   document.documentElement.classList.toggle("dark-app-chrome-active", useDarkChrome);
@@ -15655,6 +15789,7 @@ function updateGatewayNavScrollState() {
   const shouldShowBackground = !document.body.classList.contains("app-chrome-hidden") && window.scrollY > 18;
   document.body.classList.toggle("gateway-nav-scrolled", shouldShowBackground);
   document.documentElement.classList.toggle("gateway-nav-scrolled", shouldShowBackground);
+  setGatewayChromeColor(document.body.classList.contains("dark-gateway-hero-active"));
 }
 
 function setGatewayHero(index, options = {}) {
@@ -17265,6 +17400,8 @@ function renderPathSelect() {
       ${pathOptions.map((option) => {
         const isActive = option.choice === activeOption.choice;
         const stageText = option.color === "stage-start" ? "var(--oih-black)" : "#fff";
+        const mobilePreviewTopics = t(option.topicsKey).split("|").filter(Boolean);
+        const mobilePreviewUnits = stageSectionGroups(option).length || parseStageSections(option).length;
         return `
           <button
             class="path-map-node ${esc(option.color)}${isActive ? " active" : ""}"
@@ -17280,6 +17417,16 @@ function renderPathSelect() {
             </span>
             <span class="path-map-progress">${esc(option.progress ? `${option.progress}%` : "New")}</span>
           </button>
+          ${isActive ? `
+            <div class="path-map-mobile-preview" style="--stage-color: ${esc(option.stageColor)}; --stage-text: ${stageText};">
+              <p>${esc(t(option.copyKey))}</p>
+              <div class="path-preview-topics">
+                ${mobilePreviewTopics.map((topic) => `<span class="path-preview-topic">${esc(topic)}</span>`).join("")}
+              </div>
+              <p class="path-map-mobile-units">${esc(`${mobilePreviewUnits} unit${mobilePreviewUnits === 1 ? "" : "s"} ready to explore.`)}</p>
+              <button class="primary-btn" type="button" data-path-section-start="${esc(option.choice)}">Begin section</button>
+            </div>
+          ` : ""}
         `;
       }).join("")}
     </div>
@@ -19851,7 +19998,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v65";
+  const workerRefreshKey = "oneinhim-sw-refresh-v66";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -19859,7 +20006,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=65", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=66", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
