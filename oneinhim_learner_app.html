@@ -11856,7 +11856,7 @@ body.gateway-mode .home-hero .gateway-hero-controls {
 
 @media (max-width: 760px) {
   body.gateway-mode .home-hero {
-    --home-hero-height: clamp(500px, 66svh, 620px);
+    --home-hero-height: min(660px, calc(100svh - var(--app-bottom-chrome-space) - 18px));
     --home-hero-gutter: max(24px, env(safe-area-inset-left));
     --home-hero-top: calc(96px + env(safe-area-inset-top));
     --home-hero-bottom: calc(56px + env(safe-area-inset-bottom));
@@ -11939,6 +11939,70 @@ body.gateway-mode .home-hero .gateway-hero-controls {
   body.gateway-mode .home-hero .gateway-hero-dot {
     width: 44px !important;
     height: 20px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+    padding-top: calc(112px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
+    align-content: start !important;
+    justify-items: center !important;
+    gap: clamp(18px, 3.2svh, 26px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    width: 100% !important;
+    height: clamp(205px, 27svh, 245px) !important;
+    margin: 0 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
+    width: min(100%, 350px) !important;
+    max-width: 350px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    font-size: clamp(31px, 8.4vw, 36px) !important;
+    line-height: 1.02 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+    max-width: 342px !important;
+    margin-top: 13px !important;
+    font-size: clamp(15px, 4vw, 16px) !important;
+    line-height: 1.3 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .hero-actions {
+    width: 100% !important;
+    display: grid !important;
+    gap: 16px !important;
+    margin-top: 22px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .primary-btn {
+    min-height: 58px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .soft-btn {
+    width: auto !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--oih-orange) !important;
+    font-size: clamp(15px, 4vw, 17px) !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+  }
+
+  body.gateway-mode .gateway-landing.home-hero > .gateway-hero-controls,
+  body.gateway-mode .home-hero .gateway-hero-controls {
+    bottom: calc(8px + env(safe-area-inset-bottom)) !important;
   }
 }
 
@@ -12229,7 +12293,7 @@ body:not(.gateway-mode) .main {
   }
 
   body.gateway-mode .home-hero {
-    --home-hero-height: clamp(500px, 66svh, 620px);
+    --home-hero-height: min(660px, calc(100svh - var(--app-bottom-chrome-space) - 18px));
     --home-hero-gutter: max(24px, env(safe-area-inset-left));
     --home-hero-top: calc(96px + env(safe-area-inset-top));
     --home-hero-bottom: calc(56px + env(safe-area-inset-bottom));
@@ -12319,6 +12383,70 @@ body:not(.gateway-mode) .main {
   body.gateway-mode .home-hero .gateway-hero-dot {
     width: 44px !important;
     height: 20px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+    padding-top: calc(112px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(116px + env(safe-area-inset-bottom)) !important;
+    align-content: start !important;
+    justify-items: center !important;
+    gap: clamp(18px, 3.2svh, 26px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    width: 100% !important;
+    height: clamp(205px, 27svh, 245px) !important;
+    margin: 0 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
+    width: min(100%, 350px) !important;
+    max-width: 350px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    font-size: clamp(31px, 8.4vw, 36px) !important;
+    line-height: 1.02 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+    max-width: 342px !important;
+    margin-top: 13px !important;
+    font-size: clamp(15px, 4vw, 16px) !important;
+    line-height: 1.3 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .hero-actions {
+    width: 100% !important;
+    display: grid !important;
+    gap: 16px !important;
+    margin-top: 22px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .primary-btn {
+    min-height: 58px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .soft-btn {
+    width: auto !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--oih-orange) !important;
+    font-size: clamp(15px, 4vw, 17px) !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+  }
+
+  body.gateway-mode .gateway-landing.home-hero > .gateway-hero-controls,
+  body.gateway-mode .home-hero .gateway-hero-controls {
+    bottom: calc(8px + env(safe-area-inset-bottom)) !important;
   }
 
   body.gateway-mode .gateway-popular-inner {
@@ -12687,7 +12815,7 @@ body:not(.gateway-mode) .main {
               <p data-i18n="gateway.copy">Find a clear next step through short teachings, prayer, Scripture, trusted voices, and guided milestones.</p>
               <div class="hero-actions">
                 <button class="primary-btn" id="gatewayStart" data-i18n="gateway.start">Get started</button>
-                <button class="soft-btn" data-nav-jump="pathSelectView" data-i18n="gateway.browse">Continue my discipleship journey</button>
+                <button class="soft-btn" data-nav-jump="pathSelectView" data-i18n="gateway.browse">Continue journey</button>
               </div>
             </div>
           </article>
@@ -14145,7 +14273,7 @@ const i18n = {
     "gateway.headline": "Want to grow in your Christian journey?",
     "gateway.copy": "Find a clear next step through short teachings, prayer, Scripture, trusted voices, and guided milestones.",
     "gateway.start": "Get started",
-    "gateway.browse": "Continue my discipleship journey",
+    "gateway.browse": "Continue journey",
     "gateway.watchEyebrow": "New to the ONEapp",
     "gateway.watchHeadline": "Out of the Shadows",
     "gateway.watchCopy": "A powerful documentary story of hope, healing, and stepping into the light.",
@@ -14486,7 +14614,7 @@ const i18n = {
     "gateway.headline": "Wil je groeien in je christelijke reis?",
     "gateway.copy": "Vind een duidelijke volgende stap met korte teachings, gebed, de Bijbel, vertrouwde stemmen en begeleide mijlpalen.",
     "gateway.start": "Begin hier",
-    "gateway.browse": "Ga verder met mijn discipelschapsreis",
+    "gateway.browse": "Ga verder",
     "gateway.watchEyebrow": "Nieuw in de ONEapp",
     "gateway.watchHeadline": "Out of the Shadows",
     "gateway.watchCopy": "Een krachtige documentaire over hoop, herstel en leven in het licht.",
@@ -19258,7 +19386,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v62";
+  const workerRefreshKey = "oneinhim-sw-refresh-v63";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -19266,7 +19394,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=62", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=63", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
