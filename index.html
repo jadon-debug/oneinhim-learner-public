@@ -16258,7 +16258,7 @@ function onboardingStageChoices() {
 function renderOnboarding() {
   if (!els.onboardingContent) return;
   const step = state.onboardingStep;
-  const progress = [22, 50, 78, 100][step] || 22;
+  const progress = step === 0 ? 100 : ([22, 50, 78, 100][step] || 100);
   const prompts = [t("onboarding.promptStage"), t("onboarding.promptMethod"), t("onboarding.promptAchieve"), t("onboarding.promptHabit")];
   els.onboardingProgress.style.setProperty("--progress", `${progress}%`);
   els.onboardingPrompt.textContent = prompts[step] || prompts[0];
@@ -16312,21 +16312,21 @@ function renderOnboarding() {
 }
 
 function finishOnboarding() {
-  state.activeStageId = state.onboardingStage || "exploreJesus";
-  state.pathPreviewStageId = state.activeStageId;
+  const stage = stageForChoice(state.onboardingStage || "exploreJesus");
+  state.activeStageId = stage.choice;
+  state.pathPreviewStageId = stage.choice;
+  state.selectedSectionIndex = 0;
   state.selectedPathNode = "";
-  if (state.onboardingStartMode === "ask") {
-    setView("askView");
-    return;
-  }
-  if (state.onboardingStartMode === "scratch") {
-    state.activeModuleIndex = 0;
-    renderStageDetail();
-    setView("stageDetailView");
-    bindDynamicActions();
-    return;
-  }
-  setView("pathSelectView");
+  state.guidedPathNode = "";
+  state.sectionPicker = null;
+  state.sectionReview = null;
+  state.practicalUse = false;
+  state.quizChoice = "";
+  state.quizChecked = false;
+  state.activeModuleIndex = 0;
+  renderStageDetail();
+  setView("stageDetailView");
+  bindDynamicActions();
 }
 
 async function loadSchema() {
@@ -19960,13 +19960,7 @@ function wireStaticActions() {
   });
   els.onboardingSkip.addEventListener("click", () => setView("pathSelectView"));
   els.onboardingContinue.addEventListener("click", () => {
-    if (state.onboardingStep >= 3) {
-      finishOnboarding();
-      return;
-    }
-    state.onboardingStep += 1;
-    renderOnboarding();
-    bindDynamicActions();
+    finishOnboarding();
   });
   if (els.guidebookBack) {
     els.guidebookBack.addEventListener("click", closeGuidebook);
@@ -20025,7 +20019,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v67";
+  const workerRefreshKey = "oneinhim-sw-refresh-v68";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20033,7 +20027,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=67", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=68", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
