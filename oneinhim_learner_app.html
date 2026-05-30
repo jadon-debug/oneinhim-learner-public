@@ -18996,13 +18996,13 @@ function openSectionPicker(sectionIndex) {
   state.activeModuleIndex = Number(firstContent.moduleIndex) || 0;
   const firstResource = moduleResourceFor(stage, state.activeModuleIndex);
   state.moduleMode = nodeModeForResource(stage, section, firstResource);
-  state.sectionPicker = { ...section, sectionIndex };
+  state.sectionPicker = null;
   state.sectionReview = null;
   state.practicalUse = false;
   state.quizChoice = "";
   state.quizChecked = false;
-  renderModuleQuiz();
-  setView("moduleQuizView");
+  renderModuleDetail();
+  setView("moduleDetailView");
   bindDynamicActions();
 }
 
@@ -20019,7 +20019,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v68";
+  const workerRefreshKey = "oneinhim-sw-refresh-v69";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20027,7 +20027,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=68", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=69", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
