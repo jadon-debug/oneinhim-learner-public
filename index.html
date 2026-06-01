@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
 <style>
 :root {
   --oih-orange: #ee7326;
@@ -4876,6 +4877,15 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   display: block;
   border: 0;
   border-radius: inherit;
+}
+
+.discover-watch-media mux-player.mux-frame {
+  overflow: hidden;
+  aspect-ratio: auto;
+  --media-object-fit: cover;
+  --media-object-position: center;
+  --controls-backdrop-color: rgba(9, 10, 10, 0.36);
+  --media-background-color: #090a0a;
 }
 
 .discover-watch-play {
@@ -12815,7 +12825,7 @@ body:not(.gateway-mode) .main {
     max-height: min(calc(100vh - 270px), 900px) !important;
   }
 
-  body.discovery-detail-mode:not(.app-chrome-hidden) .discover-watch-media.has-mux .mux-frame {
+  body.discovery-detail-mode:not(.app-chrome-hidden) .discover-watch-media.has-mux iframe.mux-frame {
     position: absolute !important;
     left: 50% !important;
     bottom: 0 !important;
@@ -12824,6 +12834,17 @@ body:not(.gateway-mode) .main {
     max-width: none !important;
     max-height: none !important;
     transform: translateX(-50%) !important;
+  }
+
+  body.discovery-detail-mode:not(.app-chrome-hidden) .discover-watch-media.has-mux mux-player.mux-frame {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    transform: none !important;
   }
 
   body.discovery-detail-mode:not(.app-chrome-hidden) .discover-watch-meta,
@@ -17544,10 +17565,14 @@ function discoveryRelatedItems(item) {
 function renderDiscoveryMedia(item, options = {}) {
   const playIcon = item.format.includes("read") && !item.format.includes("watch") ? "“" : item.format.includes("listen") && !item.format.includes("watch") ? "♪" : "▶";
   const allowMedia = options.allowMedia ?? state.activeView === "discoveryDetailView";
-  const playerUrl = allowMedia && item.format.includes("watch") ? muxPlayerUrl(item) : "";
+  const playerMarkup = allowMedia && item.format.includes("watch") ? muxPlayerElementHtml(item) : "";
+  const playerUrl = !playerMarkup && allowMedia && item.format.includes("watch") ? muxPlayerUrl(item) : "";
   stopEmbeddedMediaInElement(els.discoverWatchMedia);
-  els.discoverWatchMedia.className = `discover-watch-media ${esc(item.visualType)}${playerUrl ? " has-mux" : ""}`;
-  if (playerUrl) {
+  els.discoverWatchMedia.className = `discover-watch-media ${esc(item.visualType)}${playerMarkup || playerUrl ? " has-mux" : ""}`;
+  if (playerMarkup) {
+    els.discoverWatchMedia.innerHTML = playerMarkup;
+    els.discoverWatchPlay = null;
+  } else if (playerUrl) {
     els.discoverWatchMedia.innerHTML = `
       <iframe
         class="mux-frame"
@@ -18998,6 +19023,31 @@ function muxClipBounds(resource) {
   };
 }
 
+function muxPlayerElementHtml(resource) {
+  const playbackId = resourceMuxPlaybackId(resource);
+  if (!playbackId) return "";
+  const videoTitle = resource?.title || "One In Him video";
+  const attrs = [
+    `class="mux-frame"`,
+    `playback-id="${esc(playbackId)}"`,
+    `stream-type="on-demand"`,
+    `accent-color="#ee7326"`,
+    `video-title="${esc(videoTitle)}"`,
+    `metadata-video-title="${esc(videoTitle)}"`,
+    `playsinline`,
+    `no-tooltips`
+  ];
+  const bounds = muxClipBounds(resource);
+  if (bounds) {
+    attrs.push(`asset-start-time="${esc(String(bounds.start))}"`);
+    attrs.push(`asset-end-time="${esc(String(bounds.end))}"`);
+    attrs.push(`start-time="0"`);
+    attrs.push(`thumbnail-time="${esc(String(bounds.start))}"`);
+    attrs.push(`default-duration="${esc(String(bounds.duration))}"`);
+  }
+  return `<mux-player ${attrs.join(" ")}></mux-player>`;
+}
+
 function renderModulePlayer(resource, activeMode, mode, isComingSoon, options = {}) {
   if (!els.modulePlayer) return;
   const allowMedia = options.allowMedia ?? state.activeView === "moduleDetailView";
@@ -20204,7 +20254,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v73";
+  const workerRefreshKey = "oneinhim-sw-refresh-v74";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20212,7 +20262,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=73", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=74", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
