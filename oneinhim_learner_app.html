@@ -14132,7 +14132,7 @@ body:not(.gateway-mode) .main {
       <div class="stage-shell">
         <main class="stage-web-main">
           <header class="stage-app-header" id="stageAppHeader">
-            <button class="close-stage" type="button" data-nav-jump="pathSelectView" aria-label="Back to sections">×</button>
+            <button class="close-stage" type="button" data-nav-jump="gatewayView" aria-label="Back home">×</button>
             <div>
               <p class="eyebrow" id="stageDetailEyebrow">Section 1</p>
               <h2 id="stageDetailHeader">Stage</h2>
@@ -17168,7 +17168,8 @@ function setView(viewId, options = {}) {
   closeGuidebook();
 	  const deprecatedViews = {
 	    homeView: "gatewayView",
-	    journeyView: "pathSelectView",
+	    journeyView: "stageDetailView",
+	    pathSelectView: "stageDetailView",
 	    speakersView: "gatewayView",
 	    shareView: "gatewayView"
   };
@@ -17414,6 +17415,34 @@ function openJourneySectionStart(stageChoice) {
   renderStageDetail();
   setView("stageDetailView");
   bindDynamicActions();
+}
+
+function openJourneyPath(stageChoice = state.activeStageId) {
+  const stage = stageForChoice(stageChoice || state.pathPreviewStageId || state.activeStageId);
+  const groups = stageSectionGroups(stage);
+  const maxSectionIndex = Math.max(groups.length - 1, 0);
+  const sectionIndex = Number.isFinite(state.selectedSectionIndex)
+    ? Math.max(0, Math.min(maxSectionIndex, state.selectedSectionIndex))
+    : currentSectionGroupIndex(groups);
+  state.activeStageId = stage.choice;
+  state.pathPreviewStageId = stage.choice;
+  state.selectedSectionIndex = sectionIndex;
+  if (!state.selectedPathNode || !state.selectedPathNode.includes(`:${stage.choice}:`)) {
+    state.selectedPathNode = pathNodeKey("content", stage, sectionIndex);
+  }
+  state.guidedPathNode = "";
+  state.sectionPicker = null;
+  state.sectionReview = null;
+  state.practicalUse = false;
+  state.quizChoice = "";
+  state.quizChecked = false;
+  renderStageDetail();
+  setView("stageDetailView");
+  bindDynamicActions();
+}
+
+function openDefaultJourneyPath() {
+  openJourneyPath(state.pathPreviewStageId || state.activeStageId || "exploreJesus");
 }
 
 function handlePopularStart(choice) {
@@ -19541,7 +19570,7 @@ function questionJourneyAttr(question) {
   if (text.includes("anxiety") || text.includes("heavy") || text.includes("peace")) return `data-gateway-choice="care"`;
   if (text.includes("pray")) return `data-gateway-choice="prayer"`;
   if (text.includes("bible") || text.includes("scripture")) return `data-gateway-choice="bible"`;
-  return `data-nav-jump="pathSelectView"`;
+  return `data-gateway-choice="exploreJesus"`;
 }
 
 function answerTitle(question) {
@@ -19666,6 +19695,10 @@ function bindDynamicActions() {
   document.querySelectorAll("[data-nav-jump]").forEach((button) => {
     button.onclick = () => {
       let targetView = button.dataset.navJump;
+      if (targetView === "pathSelectView") {
+        openDefaultJourneyPath();
+        return;
+      }
       if (state.sectionPicker && (targetView === "moduleDetailView" || targetView === "stageDetailView")) {
         state.sectionPicker = null;
         targetView = "stageDetailView";
@@ -20110,7 +20143,7 @@ function wireStaticActions() {
     renderOnboarding();
     bindDynamicActions();
   });
-  els.onboardingSkip.addEventListener("click", () => setView("pathSelectView"));
+  els.onboardingSkip.addEventListener("click", () => openDefaultJourneyPath());
   els.onboardingContinue.addEventListener("click", () => {
     finishOnboarding();
   });
@@ -20171,7 +20204,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v72";
+  const workerRefreshKey = "oneinhim-sw-refresh-v73";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20179,7 +20212,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=72", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=73", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
