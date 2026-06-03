@@ -3719,18 +3719,32 @@ body.learning-mode .view.active {
 }
 
 .gateway-slide {
-  position: relative;
+  position: absolute;
+  inset: 0;
   isolation: isolate;
   min-height: 548px;
-  display: none;
+  display: grid;
   grid-template-columns: minmax(510px, 1.06fr) minmax(360px, 0.84fr);
   gap: clamp(34px, 5vw, 74px);
   align-items: center;
   padding: 34px 0 72px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity;
 }
 
 .gateway-slide.active {
-  display: grid;
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gateway-slide {
+    transition: none;
+  }
 }
 
 .gateway-illustration {
@@ -4335,7 +4349,7 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   scroll-padding-inline: 2px;
-  scroll-snap-type: inline mandatory;
+  scroll-snap-type: inline proximity;
   padding: 2px 2px 12px;
   scrollbar-width: none;
 }
@@ -7580,7 +7594,7 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-inline: contain;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     scroll-padding-inline: 16px;
     padding: 4px 16px 18px;
     -webkit-overflow-scrolling: touch;
@@ -7754,7 +7768,7 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
     padding: 4px var(--phone-page-pad) 18px !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    scroll-snap-type: x mandatory !important;
+    scroll-snap-type: x proximity !important;
     scroll-padding-inline: var(--phone-page-pad) !important;
     -webkit-overflow-scrolling: touch !important;
     scrollbar-width: none;
@@ -8113,7 +8127,7 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
     overflow-x: auto !important;
     overflow-y: hidden !important;
     -webkit-overflow-scrolling: touch !important;
-    scroll-snap-type: x mandatory !important;
+    scroll-snap-type: x proximity !important;
   }
 
   body.gateway-mode .discovery-tile,
@@ -8446,7 +8460,7 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
     gap: 14px !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    scroll-snap-type: x mandatory !important;
+    scroll-snap-type: x proximity !important;
     -webkit-overflow-scrolling: touch !important;
     scrollbar-width: none !important;
   }
@@ -8548,7 +8562,7 @@ body.quiz-checked #moduleQuizView .quiz-reflection {
     overflow-x: auto !important;
     overflow-y: hidden !important;
     -webkit-overflow-scrolling: touch !important;
-    scroll-snap-type: x mandatory !important;
+    scroll-snap-type: x proximity !important;
   }
 
   body.gateway-mode .discovery-tile,
@@ -9010,7 +9024,7 @@ body.gateway-mode .courses-row {
   align-items: start;
   overflow-x: auto !important;
   overflow-y: hidden !important;
-  scroll-snap-type: x mandatory !important;
+  scroll-snap-type: x proximity !important;
   padding: 2px 2px 18px;
 }
 
@@ -11666,7 +11680,9 @@ body.gateway-mode .home-hero-slide.one-basics-hero {
   visibility: hidden !important;
   pointer-events: none !important;
   transform: none !important;
-  transition: opacity 240ms ease !important;
+  transition: opacity 300ms cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+  will-change: opacity !important;
+  backface-visibility: hidden !important;
 }
 
 body.gateway-mode .home-hero-slide.active {
@@ -12685,7 +12701,7 @@ body:not(.gateway-mode) .main {
     overflow-y: hidden !important;
     scroll-padding-left: 0 !important;
     scroll-padding-right: 0 !important;
-    scroll-snap-type: x mandatory !important;
+    scroll-snap-type: x proximity !important;
     -webkit-overflow-scrolling: touch !important;
     scrollbar-width: none !important;
   }
@@ -12751,6 +12767,27 @@ body:not(.gateway-mode) .main {
 
   body.discovery-detail-mode:not(.gateway-mode):not(.app-chrome-hidden) .discover-watch-details {
     margin-top: 14px !important;
+  }
+
+  body.gateway-mode .popular-rail,
+  body.gateway-mode .discovery-row,
+  body.gateway-mode .series-row,
+  body.gateway-mode .courses-row {
+    overscroll-behavior-inline: contain !important;
+    scroll-snap-type: x proximity !important;
+    scroll-behavior: smooth !important;
+    touch-action: pan-x pan-y !important;
+  }
+
+  body.gateway-mode .popular-start,
+  body.gateway-mode .discovery-row .discovery-tile,
+  body.gateway-mode .documentary-tile,
+  body.gateway-mode .series-row .discovery-tile,
+  body.gateway-mode .series-tile,
+  body.gateway-mode .courses-row .discovery-tile,
+  body.gateway-mode .courses-row .series-tile {
+    scroll-snap-align: start !important;
+    scroll-snap-stop: normal !important;
   }
 }
 
@@ -15001,8 +15038,8 @@ const state = {
 };
 
 const GATEWAY_HERO_AUTOPLAY_MS = 9000;
-const GATEWAY_HERO_SWIPE_MIN_PX = 48;
-const GATEWAY_HERO_SWIPE_AXIS_RATIO = 1.25;
+const GATEWAY_HERO_SWIPE_MIN_PX = 34;
+const GATEWAY_HERO_SWIPE_AXIS_RATIO = 1.12;
 const GATEWAY_HERO_TAP_MAX_PX = 12;
 const FEED_POSTS_STORAGE_KEY = "oneinhim.feed.posts.v2";
 const FEED_LIKES_STORAGE_KEY = "oneinhim.feed.likes.v2";
@@ -15987,6 +16024,7 @@ function renderGatewayHeroSlider() {
     const isActive = index === activeIndex && gatewayHeroSlideAllowed(slide);
     slide.classList.toggle("active", isActive);
     slide.setAttribute("aria-hidden", isActive ? "false" : "true");
+    slide.toggleAttribute("inert", !isActive);
   });
   const activeSlide = slides[activeIndex];
   const isDocumentaryHero = activeSlide?.classList.contains("documentary-hero");
@@ -17162,15 +17200,7 @@ async function loadContentPackages() {
 }
 
 function primeMobileDocumentScroll(viewId) {
-  if (!window.matchMedia("(max-width: 760px)").matches || viewId === "gatewayView") return;
-  window.requestAnimationFrame(() => {
-    const scroller = document.scrollingElement || document.documentElement;
-    if (!scroller || scroller.scrollHeight <= window.innerHeight + 1) return;
-    scroller.scrollTop = 1;
-    window.requestAnimationFrame(() => {
-      if (scroller.scrollTop <= 1) scroller.scrollTop = 0;
-    });
-  });
+  resetMobileDocumentTouchScroll();
 }
 
 function mobileDocumentScrollTargetAllowed(target) {
@@ -20161,10 +20191,6 @@ function wireStaticActions() {
     scheduleStickyStageBannerUpdate();
     updateGatewayNavScrollState();
   });
-  document.addEventListener("touchstart", handleMobileDocumentTouchStart, { passive: true, capture: true });
-  document.addEventListener("touchmove", handleMobileDocumentTouchMove, { passive: false, capture: true });
-  document.addEventListener("touchend", resetMobileDocumentTouchScroll, { passive: true, capture: true });
-  document.addEventListener("touchcancel", resetMobileDocumentTouchScroll, { passive: true, capture: true });
   document.addEventListener("click", handleJourneyOutsideClick);
   document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
   document.querySelectorAll(".nav-btn").forEach((button) => {
@@ -20288,7 +20314,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v75";
+  const workerRefreshKey = "oneinhim-sw-refresh-v77";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20296,7 +20322,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=75", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=77", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
