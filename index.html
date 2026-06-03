@@ -15047,6 +15047,10 @@ let gatewayHeroAutoplayTimer = null;
 let journeyContentVersion = 0;
 let stickyStageBannerFrame = 0;
 let duoPathCurveFrame = 0;
+let gatewayNavScrollFrame = 0;
+let journeyBannerMarkers = [];
+let journeyBannerLayoutKey = "";
+let journeyBannerActiveKey = "";
 const journeyStructureCache = {
   rawModules: new Map(),
   rawGroups: new Map(),
@@ -16047,7 +16051,7 @@ function renderGatewayHeroSlider() {
 function setGatewayChromeColor(isDarkHero) {
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const statusMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-  const mobileAppChrome = window.matchMedia("(max-width: 760px)").matches && !document.body.classList.contains("app-chrome-hidden");
+  const mobileAppChrome = window.innerWidth <= 760 && !document.body.classList.contains("app-chrome-hidden");
   const chromeScrolled = document.body.classList.contains("gateway-nav-scrolled") || window.scrollY > 18;
   const forceLightMobileChrome = mobileAppChrome && document.body.classList.contains("journey-mode");
   const useDarkChrome = !forceLightMobileChrome && (isDarkHero || (mobileAppChrome && chromeScrolled));
@@ -18635,8 +18639,8 @@ function renderStageDetail() {
     if (node.kind === "review") return 150 * flip;
     return 0;
   };
-  els.stageSectionList.className = "stage-section-list duo-lesson-path";
-  els.stageSectionList.innerHTML = `
+	  els.stageSectionList.className = "stage-section-list duo-lesson-path";
+	  els.stageSectionList.innerHTML = `
     <div class="duo-unit-banner" style="--stage-color: ${esc(unitAccentColor(stage, selectedGroupIndex))}">
       <button class="duo-unit-back" type="button" data-nav-jump="pathSelectView" aria-label="Back to sections">
         <span>
@@ -18671,13 +18675,14 @@ function renderStageDetail() {
           </div>
         </article>
       `;
-    }).join("")}
-  `;
-  window.requestAnimationFrame(() => {
-    updateDuoPathCurve();
-    updateStickyStageBanner();
-  });
-}
+	    }).join("")}
+	  `;
+	  resetJourneyBannerCache();
+	  window.requestAnimationFrame(() => {
+	    updateDuoPathCurve();
+	    updateStickyStageBanner();
+	  });
+	}
 
 function updateDuoPathCurve() {
   if (!els.stageSectionList || !els.stageSectionList.classList.contains("duo-lesson-path")) return;
@@ -18737,6 +18742,20 @@ function scheduleStickyStageBannerUpdate() {
   });
 }
 
+function scheduleGatewayNavScrollState() {
+  if (gatewayNavScrollFrame) return;
+  gatewayNavScrollFrame = window.requestAnimationFrame(() => {
+    gatewayNavScrollFrame = 0;
+    updateGatewayNavScrollState();
+  });
+}
+
+function resetJourneyBannerCache() {
+  journeyBannerMarkers = [];
+  journeyBannerLayoutKey = "";
+  journeyBannerActiveKey = "";
+}
+
 function closeSelectedPathNode() {
   if (!state.selectedPathNode) return false;
   state.selectedPathNode = "";
@@ -18757,27 +18776,42 @@ function updateStickyStageBanner() {
   if (state.activeView !== "stageDetailView" || !els.stageSectionList) return;
   const banner = els.stageSectionList.querySelector(".duo-unit-banner");
   if (!banner) return;
-  const stageMain = document.querySelector("#stageDetailView .stage-web-main");
+  const wideJourney = window.innerWidth >= 1024;
+  const stageMain = wideJourney ? document.querySelector("#stageDetailView .stage-web-main") : null;
   if (stageMain) {
     const mainRect = stageMain.getBoundingClientRect();
-    banner.style.setProperty("--duo-banner-left", `${mainRect.left}px`);
-    banner.style.setProperty("--duo-banner-width", `${mainRect.width}px`);
+    const layoutKey = `${Math.round(mainRect.left)}:${Math.round(mainRect.width)}`;
+    if (layoutKey !== journeyBannerLayoutKey) {
+      journeyBannerLayoutKey = layoutKey;
+      banner.style.setProperty("--duo-banner-left", `${mainRect.left}px`);
+      banner.style.setProperty("--duo-banner-width", `${mainRect.width}px`);
+    }
   }
-  const unitMarkers = [...els.stageSectionList.querySelectorAll(".duo-path-node.content[data-section-index], .duo-unit-divider[data-section-index]")];
-  if (!unitMarkers.length) return;
+  if (!journeyBannerMarkers.length) {
+    journeyBannerMarkers = [...els.stageSectionList.querySelectorAll(".duo-path-node.content[data-section-index], .duo-unit-divider[data-section-index]")]
+      .map((node) => ({
+        stageChoice: node.dataset.stageChoice || state.activeStageId,
+        sectionIndex: Number(node.dataset.sectionIndex) || 0,
+        top: window.scrollY + node.getBoundingClientRect().top
+      }));
+  }
+  if (!journeyBannerMarkers.length) return;
   const bannerRect = banner.getBoundingClientRect();
-  const compactMobileJourney = window.matchMedia("(max-width: 760px)").matches;
-  const threshold = bannerRect.bottom + (compactMobileJourney ? 150 : 360);
-  let activeMarker = unitMarkers[0];
-  unitMarkers.forEach((node) => {
-    if (node.getBoundingClientRect().top <= threshold) activeMarker = node;
+  const compactMobileJourney = window.innerWidth <= 760;
+  const threshold = window.scrollY + bannerRect.bottom + (compactMobileJourney ? 150 : 360);
+  let activeMarker = journeyBannerMarkers[0];
+  journeyBannerMarkers.forEach((marker) => {
+    if (marker.top <= threshold) activeMarker = marker;
   });
-  const activeStageChoice = activeMarker.dataset.stageChoice || state.activeStageId;
+  const activeStageChoice = activeMarker.stageChoice || state.activeStageId;
   const stage = stageForChoice(activeStageChoice);
   const groups = state.journeyBannerGroups[stage.choice] || [];
   if (!groups.length) return;
-  let activeIndex = Number(activeMarker.dataset.sectionIndex) || 0;
+  let activeIndex = Number(activeMarker.sectionIndex) || 0;
   activeIndex = Math.max(0, Math.min(groups.length - 1, activeIndex));
+  const nextActiveKey = `${stage.choice}:${activeIndex}`;
+  if (nextActiveKey === journeyBannerActiveKey) return;
+  journeyBannerActiveKey = nextActiveKey;
   state.selectedSectionIndex = activeIndex;
   state.activeStageId = stage.choice;
   const meta = banner.querySelector(".duo-unit-back strong");
@@ -20182,15 +20216,16 @@ function bindDynamicActions() {
 }
 
 function wireStaticActions() {
-  window.addEventListener("scroll", () => {
-    scheduleStickyStageBannerUpdate();
-    updateGatewayNavScrollState();
-  }, { passive: true });
-  window.addEventListener("resize", () => {
-    scheduleDuoPathCurveUpdate();
-    scheduleStickyStageBannerUpdate();
-    updateGatewayNavScrollState();
-  });
+	window.addEventListener("scroll", () => {
+	  scheduleStickyStageBannerUpdate();
+	  scheduleGatewayNavScrollState();
+	}, { passive: true });
+	window.addEventListener("resize", () => {
+	  resetJourneyBannerCache();
+	  scheduleDuoPathCurveUpdate();
+	  scheduleStickyStageBannerUpdate();
+	  updateGatewayNavScrollState();
+	});
   document.addEventListener("click", handleJourneyOutsideClick);
   document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
   document.querySelectorAll(".nav-btn").forEach((button) => {
@@ -20314,7 +20349,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v77";
+  const workerRefreshKey = "oneinhim-sw-refresh-v78";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20322,7 +20357,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=77", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=78", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
