@@ -14262,10 +14262,12 @@ body:not(.gateway-mode) .main {
 	        </picture>
 	        <span>One In Him</span>
 	      </button>
-	      <button class="gateway-mobile-action gateway-search-shortcut" type="button" data-nav-jump="askView" aria-label="Search">
-	        <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-	          <circle cx="14.2" cy="14.2" r="8"></circle>
-	          <path d="M20.2 20.2 27 27"></path>
+	      <button class="gateway-mobile-action gateway-search-shortcut" type="button" data-nav-jump="pathSelectView" aria-label="Journey">
+	        <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+	          <path d="M8 24c4.4 0 3.8-7.9 8-8s3.8-8 8-8"></path>
+	          <circle cx="8" cy="24" r="3.2" fill="currentColor" stroke="none"></circle>
+	          <circle cx="16" cy="16" r="3.2" fill="currentColor" stroke="none"></circle>
+	          <circle cx="24" cy="8" r="3.2" fill="currentColor" stroke="none"></circle>
 	        </svg>
 	      </button>
 	      <nav class="gateway-nav app-desktop-nav" aria-label="Primary navigation">
@@ -21246,7 +21248,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v86";
+  const workerRefreshKey = "oneinhim-sw-refresh-v87";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21254,7 +21256,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=86", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=87", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
