@@ -5803,6 +5803,99 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   padding: 11px;
 }
 
+.library-layout.library-partner-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: min(720px, calc(100vh - 90px));
+  place-items: center;
+  padding: clamp(34px, 8vw, 82px) 18px;
+  background: var(--oih-black);
+  color: #fff;
+}
+
+.library-partner-panel {
+  width: min(640px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.library-partner-mark {
+  width: 86px;
+  height: 86px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 72% 24%, rgba(246, 202, 53, 0.9), transparent 10px),
+    linear-gradient(145deg, var(--oih-orange), #2074a9);
+  color: #fff;
+  box-shadow: inset 0 -7px 0 rgba(0, 0, 0, 0.18), 0 18px 44px rgba(0, 0, 0, 0.28);
+}
+
+.library-partner-mark svg {
+  width: 50px;
+  height: 50px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.library-partner-panel .eyebrow {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.library-partner-panel h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(34px, 6vw, 58px);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.library-partner-panel p {
+  width: min(560px, 100%);
+  margin: 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: clamp(16px, 2.3vw, 21px);
+  line-height: 1.5;
+}
+
+.library-partner-panel .primary-btn {
+  width: min(520px, 100%);
+  min-height: 62px;
+  margin-top: 8px;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.library-partner-signin {
+  min-height: 42px;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.library-partner-signin strong {
+  color: var(--oih-orange);
+}
+
+.library-partner-note {
+  max-width: 520px;
+  color: rgba(255, 255, 255, 0.46) !important;
+  font-size: 13px !important;
+}
+
+.library-data-cache {
+  display: none;
+}
+
 .ask-box {
   padding: 14px;
 }
@@ -11883,6 +11976,63 @@ body:not(.gateway-mode) #stageDetailView .stage-shell {
   }
 }
 
+@media (max-width: 760px) {
+  body.gateway-mode .gateway-nav-icon::before,
+  body.gateway-mode .gateway-nav-icon::after,
+  .app-bottom-nav .gateway-nav-icon::before,
+  .app-bottom-nav .gateway-nav-icon::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  body.gateway-mode .gateway-nav-icon svg,
+  .app-bottom-nav .gateway-nav-icon svg {
+    width: 31px;
+    height: 31px;
+    display: block;
+  }
+
+  body.gateway-mode .gateway-nav-icon .nav-icon-stroke,
+  .app-bottom-nav .gateway-nav-icon .nav-icon-stroke {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.45;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  body.gateway-mode .gateway-nav-icon .nav-icon-fill,
+  .app-bottom-nav .gateway-nav-icon .nav-icon-fill {
+    fill: currentColor;
+    stroke: none;
+  }
+}
+
+body.library-mode,
+body.library-mode .app-shell,
+body.library-mode .main,
+body.library-mode #libraryView {
+  background: var(--oih-black) !important;
+}
+
+body.library-mode:not(.gateway-mode) .app-top-chrome {
+  background: rgba(13, 13, 13, 0.94) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+}
+
+body.library-mode:not(.gateway-mode) .app-top-chrome .gateway-logo,
+body.library-mode:not(.gateway-mode) .app-top-chrome .gateway-nav-btn,
+body.library-mode:not(.gateway-mode) .app-top-chrome .gateway-nav-btn:hover,
+body.library-mode:not(.gateway-mode) .app-top-chrome .gateway-nav-btn.active {
+  color: #fff !important;
+}
+
+body.library-mode:not(.gateway-mode) .app-top-chrome .gateway-language {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
 /* Unified full-width home hero component. This final layer owns the hero sizing, crop, and slide rhythm. */
 body.gateway-mode .gateway-panel {
   overflow: hidden !important;
@@ -13970,6 +14120,25 @@ body:not(.gateway-mode) .main {
 	    min-height: 56px !important;
 	  }
 	}
+
+@media (max-width: 760px) {
+  body.library-mode:not(.gateway-mode) .app-top-chrome,
+  body.library-mode:not(.gateway-mode):not(.gateway-nav-scrolled) .app-top-chrome {
+    background: rgba(13, 13, 13, 0.94) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+  }
+
+  body.library-mode:not(.gateway-mode) .app-top-chrome .gateway-mobile-action,
+  body.library-mode:not(.gateway-mode):not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action,
+  body.library-mode:not(.gateway-mode).gateway-nav-scrolled .app-top-chrome .gateway-mobile-action {
+    color: #fff !important;
+  }
+
+  body.library-mode:not(.gateway-mode) .app-top-chrome .gateway-mobile-action svg {
+    stroke: currentColor !important;
+  }
+}
 			</style>
 </head>
 <body class="gateway-mode">
@@ -14009,19 +14178,42 @@ body:not(.gateway-mode) .main {
 	      </button>
 	      <nav class="gateway-nav app-desktop-nav" aria-label="Primary navigation">
 	        <button class="gateway-nav-btn active" type="button" data-gateway-nav="discover">
-	          <span class="gateway-nav-icon discover" aria-hidden="true"></span>
+	          <span class="gateway-nav-icon discover" aria-hidden="true">
+	            <svg viewBox="0 0 32 32">
+	              <circle class="nav-icon-stroke" cx="16" cy="16" r="10.5"></circle>
+	              <path class="nav-icon-fill" d="M20.8 9.8 17.6 18.1 9.4 22.2 13.5 13.8Z"></path>
+	            </svg>
+	          </span>
 	          <span data-i18n="homeNav.discover">Discover</span>
 	        </button>
 	        <button class="gateway-nav-btn" type="button" data-gateway-nav="watch">
-	          <span class="gateway-nav-icon watch" aria-hidden="true"></span>
+	          <span class="gateway-nav-icon watch" aria-hidden="true">
+	            <svg viewBox="0 0 32 32">
+	              <rect class="nav-icon-stroke" x="5" y="8" width="22" height="16" rx="3.6"></rect>
+	              <path class="nav-icon-fill" d="M14 12.4v7.2L20.2 16Z"></path>
+	            </svg>
+	          </span>
 	          <span data-i18n="homeNav.watch">Watch</span>
 	        </button>
 	        <button class="gateway-nav-btn" type="button" data-gateway-nav="listen">
-	          <span class="gateway-nav-icon listen" aria-hidden="true"></span>
+	          <span class="gateway-nav-icon listen" aria-hidden="true">
+	            <svg viewBox="0 0 32 32">
+	              <path class="nav-icon-stroke" d="M7 18v-2.4C7 10.4 11 6.5 16 6.5s9 3.9 9 9.1V18"></path>
+	              <rect class="nav-icon-stroke" x="4.8" y="17" width="6" height="8.5" rx="2.2"></rect>
+	              <rect class="nav-icon-stroke" x="21.2" y="17" width="6" height="8.5" rx="2.2"></rect>
+	              <path class="nav-icon-stroke" d="M14 24.5h2.7c2.3 0 4-1.2 4.7-3.1"></path>
+	            </svg>
+	          </span>
 	          <span data-i18n="homeNav.listen">Listen</span>
 	        </button>
 	        <button class="gateway-nav-btn" type="button" data-gateway-nav="feed">
-	          <span class="gateway-nav-icon feed" aria-hidden="true"></span>
+	          <span class="gateway-nav-icon feed" aria-hidden="true">
+	            <svg viewBox="0 0 32 32">
+	              <path class="nav-icon-stroke" d="M7.8 8.2h16.4c1.8 0 3.3 1.5 3.3 3.3v7.1c0 1.8-1.5 3.3-3.3 3.3h-6.1L12 26v-4.1H7.8c-1.8 0-3.3-1.5-3.3-3.3v-7.1c0-1.8 1.5-3.3 3.3-3.3Z"></path>
+	              <path class="nav-icon-stroke" d="M10 13h12"></path>
+	              <path class="nav-icon-stroke" d="M10 17h8"></path>
+	            </svg>
+	          </span>
 	          <span data-i18n="homeNav.feed">Feed</span>
 	        </button>
 	        <button class="gateway-nav-btn" type="button" data-gateway-nav="account">
@@ -15016,32 +15208,31 @@ body:not(.gateway-mode) .main {
     </section>
 
     <section class="view" id="libraryView" aria-hidden="true">
-      <div class="library-layout">
-        <section class="panel">
-          <div class="panel-head">
-            <h2 class="panel-title">Media library</h2>
-            <p class="panel-copy">Topics, speakers, sections, formats, and short moments.</p>
+      <div class="library-layout library-partner-layout">
+        <section class="library-partner-panel" aria-labelledby="libraryPartnerTitle">
+          <div class="library-partner-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48">
+              <path d="M10 39V12.5c0-1.4 1.1-2.5 2.5-2.5H22c2.2 0 4 1.8 4 4v27c0-2.2-1.8-4-4-4H10Z"></path>
+              <path d="M26 41V14c0-2.2 1.8-4 4-4h5.5c1.4 0 2.5 1.1 2.5 2.5V23"></path>
+              <path d="M33 31h10"></path>
+              <path d="M38 26v10"></path>
+            </svg>
           </div>
-          <div class="filter-bar">
-            <input class="search-input" id="librarySearch" type="search" placeholder="Search Jesus, prayer, anxiety, speaker" />
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="video">Video</button>
-            <button class="filter-btn" data-filter="audio">Audio</button>
-            <button class="filter-btn" data-filter="read">Read</button>
-            <button class="filter-btn" data-filter="explore">Explore</button>
-          </div>
-          <div class="resource-grid" id="libraryGrid"></div>
+          <p class="eyebrow" data-i18n="library.eyebrow">Library</p>
+          <h2 id="libraryPartnerTitle" data-i18n="library.partnerTitle">Become a partner for full access</h2>
+          <p data-i18n="library.partnerCopy">Partners and supporters help keep One In Him resources free for people starting their journey. Partner access opens the growing library of teachings, audio, and study guides.</p>
+          <button class="primary-btn" type="button" data-action="partner-access" data-i18n="library.partnerButton">Become a partner</button>
+          <button class="library-partner-signin" type="button" data-gateway-nav="account">
+            <span data-i18n="library.alreadyPartner">Already a partner?</span>
+            <strong data-i18n="library.signIn">Sign in</strong>
+          </button>
+          <p class="library-partner-note" data-i18n="library.partnerNote">One In Him is a charity. This is support, not buying a product; the core journey remains free.</p>
         </section>
-
-        <aside class="side-stack">
-          <section class="panel">
-            <div class="panel-head">
-              <h2 class="panel-title">Topics</h2>
-              <p class="panel-copy">Common paths into the library.</p>
-            </div>
-            <div class="moment-list" id="topicList"></div>
-          </section>
-        </aside>
+        <div class="library-data-cache" hidden aria-hidden="true">
+          <input class="search-input" id="librarySearch" type="search" placeholder="Search Jesus, prayer, anxiety, speaker" />
+          <div class="resource-grid" id="libraryGrid"></div>
+          <div class="moment-list" id="topicList"></div>
+        </div>
       </div>
     </section>
 
@@ -15113,23 +15304,53 @@ body:not(.gateway-mode) .main {
 
 	    <nav class="app-bottom-nav" aria-label="Primary mobile navigation">
 	      <button class="active" type="button" data-gateway-nav="discover">
-	        <span class="gateway-nav-icon discover" aria-hidden="true"></span>
+	        <span class="gateway-nav-icon discover" aria-hidden="true">
+	          <svg viewBox="0 0 32 32">
+	            <circle class="nav-icon-stroke" cx="16" cy="16" r="10.5"></circle>
+	            <path class="nav-icon-fill" d="M20.8 9.8 17.6 18.1 9.4 22.2 13.5 13.8Z"></path>
+	          </svg>
+	        </span>
 	        <span data-i18n="homeNav.discover">Discover</span>
 	      </button>
 	      <button type="button" data-gateway-nav="watch">
-	        <span class="gateway-nav-icon watch" aria-hidden="true"></span>
+	        <span class="gateway-nav-icon watch" aria-hidden="true">
+	          <svg viewBox="0 0 32 32">
+	            <rect class="nav-icon-stroke" x="5" y="8" width="22" height="16" rx="3.6"></rect>
+	            <path class="nav-icon-fill" d="M14 12.4v7.2L20.2 16Z"></path>
+	          </svg>
+	        </span>
 	        <span data-i18n="homeNav.watch">Watch</span>
 	      </button>
 	      <button type="button" data-gateway-nav="listen">
-	        <span class="gateway-nav-icon listen" aria-hidden="true"></span>
+	        <span class="gateway-nav-icon listen" aria-hidden="true">
+	          <svg viewBox="0 0 32 32">
+	            <path class="nav-icon-stroke" d="M7 18v-2.4C7 10.4 11 6.5 16 6.5s9 3.9 9 9.1V18"></path>
+	            <rect class="nav-icon-stroke" x="4.8" y="17" width="6" height="8.5" rx="2.2"></rect>
+	            <rect class="nav-icon-stroke" x="21.2" y="17" width="6" height="8.5" rx="2.2"></rect>
+	            <path class="nav-icon-stroke" d="M14 24.5h2.7c2.3 0 4-1.2 4.7-3.1"></path>
+	          </svg>
+	        </span>
 	        <span data-i18n="homeNav.listen">Listen</span>
 	      </button>
 	      <button type="button" data-gateway-nav="feed">
-	        <span class="gateway-nav-icon feed" aria-hidden="true"></span>
+	        <span class="gateway-nav-icon feed" aria-hidden="true">
+	          <svg viewBox="0 0 32 32">
+	            <path class="nav-icon-stroke" d="M7.8 8.2h16.4c1.8 0 3.3 1.5 3.3 3.3v7.1c0 1.8-1.5 3.3-3.3 3.3h-6.1L12 26v-4.1H7.8c-1.8 0-3.3-1.5-3.3-3.3v-7.1c0-1.8 1.5-3.3 3.3-3.3Z"></path>
+	            <path class="nav-icon-stroke" d="M10 13h12"></path>
+	            <path class="nav-icon-stroke" d="M10 17h8"></path>
+	          </svg>
+	        </span>
 	        <span data-i18n="homeNav.feed">Feed</span>
 	      </button>
 	      <button type="button" data-gateway-nav="library">
-	        <span class="gateway-nav-icon library" aria-hidden="true"></span>
+	        <span class="gateway-nav-icon library" aria-hidden="true">
+	          <svg viewBox="0 0 32 32">
+	            <path class="nav-icon-stroke" d="M6 7.5h8.5c1.4 0 2.5 1.1 2.5 2.5v17c0-1.4-1.1-2.5-2.5-2.5H6Z"></path>
+	            <path class="nav-icon-stroke" d="M17 10c0-1.4 1.1-2.5 2.5-2.5H28v17h-8.5c-1.4 0-2.5 1.1-2.5 2.5Z"></path>
+	            <path class="nav-icon-stroke" d="M10 12h4"></path>
+	            <path class="nav-icon-stroke" d="M21 12h4"></path>
+	          </svg>
+	        </span>
 	        <span data-i18n="homeNav.library">Library</span>
 	      </button>
 	    </nav>
@@ -15622,7 +15843,7 @@ const viewText = {
     homeView: ["Discover", "High-value starts you can taste straight away."],
     journeyView: ["Journey", "Milestones, short lessons, and simple practices."],
     askView: ["Ask", "A real question, a helpful answer, and a next step."],
-    libraryView: ["Library", "Topics, speakers, sections, formats, and short moments."],
+    libraryView: ["Library", "Partner access to the growing media library."],
     speakersView: ["Speakers", "Follow trusted voices and explore their teachings."],
     shareView: ["Share", "Something useful for someone you care about."]
   },
@@ -15639,7 +15860,7 @@ const viewText = {
     homeView: ["Ontdek", "Waardevolle starts die je meteen kunt proeven."],
     journeyView: ["Reis", "Mijlpalen, korte lessen en eenvoudige oefeningen."],
     askView: ["Vraag", "Een echte vraag, een helpend antwoord en een volgende stap."],
-    libraryView: ["Bibliotheek", "Thema's, sprekers, secties, vormen en korte momenten."],
+    libraryView: ["Bibliotheek", "Partner toegang tot de groeiende mediabibliotheek."],
     speakersView: ["Sprekers", "Volg vertrouwde stemmen en ontdek hun onderwijs."],
     shareView: ["Delen", "Iets waardevols voor iemand om wie je geeft."]
   }
@@ -15664,6 +15885,14 @@ const i18n = {
 	    "homeNav.kids": "Kids",
 	    "homeNav.library": "Library",
 	    "homeNav.account": "Account",
+    "library.eyebrow": "Library",
+    "library.partnerTitle": "Become a partner for full access",
+    "library.partnerCopy": "Partners and supporters help keep One In Him resources free for people starting their journey. Partner access opens the growing library of teachings, audio, and study guides.",
+    "library.partnerButton": "Become a partner",
+    "library.alreadyPartner": "Already a partner?",
+    "library.signIn": "Sign in",
+    "library.partnerNote": "One In Him is a charity. This is support, not buying a product; the core journey remains free.",
+    "library.partnerToast": "Partner access flow is ready to connect.",
     "gateway.headline": "Want to grow in your Christian journey?",
     "gateway.copy": "Find a clear next step through short teachings, prayer, Scripture, trusted voices, and guided milestones.",
     "gateway.start": "Get started",
@@ -16013,6 +16242,14 @@ const i18n = {
 	    "homeNav.kids": "Kids",
 	    "homeNav.library": "Bibliotheek",
 	    "homeNav.account": "Account",
+    "library.eyebrow": "Bibliotheek",
+    "library.partnerTitle": "Word partner voor volledige toegang",
+    "library.partnerCopy": "Partners en supporters helpen One In Him bronnen gratis beschikbaar te houden voor mensen die hun reis beginnen. Partnertoegang opent de groeiende bibliotheek met teachings, audio en studiegidsen.",
+    "library.partnerButton": "Word partner",
+    "library.alreadyPartner": "Al partner?",
+    "library.signIn": "Log in",
+    "library.partnerNote": "One In Him is een goed doel. Dit is support, geen productverkoop; de kernreis blijft gratis.",
+    "library.partnerToast": "Partnerflow is klaar om te koppelen.",
     "gateway.headline": "Wil je groeien in je christelijke reis?",
     "gateway.copy": "Vind een duidelijke volgende stap met korte teachings, gebed, de Bijbel, vertrouwde stemmen en begeleide mijlpalen.",
     "gateway.start": "Begin hier",
@@ -16596,7 +16833,8 @@ function setGatewayChromeColor(isDarkHero) {
   const mobileAppChrome = window.innerWidth <= 760 && !document.body.classList.contains("app-chrome-hidden");
   const chromeScrolled = document.body.classList.contains("gateway-nav-scrolled") || window.scrollY > 18;
   const forceLightMobileChrome = mobileAppChrome && document.body.classList.contains("journey-mode");
-  const useDarkChrome = !forceLightMobileChrome && (isDarkHero || (mobileAppChrome && chromeScrolled));
+  const forceDarkMobileChrome = mobileAppChrome && document.body.classList.contains("library-mode");
+  const useDarkChrome = !forceLightMobileChrome && (forceDarkMobileChrome || isDarkHero || (mobileAppChrome && chromeScrolled));
   if (themeMeta) themeMeta.setAttribute("content", useDarkChrome ? "#090a0a" : "#ffffff");
   if (statusMeta) statusMeta.setAttribute("content", useDarkChrome ? "black-translucent" : "default");
   document.documentElement.classList.toggle("dark-app-chrome-active", useDarkChrome);
@@ -17841,6 +18079,7 @@ function setView(viewId, options = {}) {
   }
   document.body.classList.toggle("discovery-detail-mode", nextViewId === "discoveryDetailView");
   document.body.classList.toggle("feed-mode", nextViewId === "feedView");
+  document.body.classList.toggle("library-mode", nextViewId === "libraryView");
   document.body.classList.toggle("journey-mode", nextViewId === "stageDetailView");
 	  document.body.classList.toggle("learning-mode", nextViewId === "moduleDetailView" || nextViewId === "moduleQuizView");
 	  document.body.classList.toggle("section-picker-mode", nextViewId === "moduleQuizView" && Boolean(state.sectionPicker));
@@ -20873,6 +21112,9 @@ function wireStaticActions() {
     event.stopPropagation();
     openQuestionGuide(els.gatewayQuestion.value, els.gatewayQuestion);
   });
+  document.querySelectorAll("[data-action='partner-access']").forEach((button) => {
+    button.addEventListener("click", () => toast(t("library.partnerToast")));
+  });
   document.querySelector("[data-action='play-daily']").addEventListener("click", () => setDiscoveryResource(activeResource().id));
   document.getElementById("askButton").addEventListener("click", (event) => {
     event.stopPropagation();
@@ -20912,7 +21154,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v84";
+  const workerRefreshKey = "oneinhim-sw-refresh-v85";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20920,7 +21162,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=84", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=85", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
