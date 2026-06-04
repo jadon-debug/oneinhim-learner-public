@@ -4343,6 +4343,189 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   font-size: 22px;
 }
 
+.weekly-media-shelf {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-padding-inline: 2px;
+  scroll-snap-type: inline proximity;
+  padding: 2px 2px 14px;
+  scrollbar-width: none;
+}
+
+.weekly-media-shelf::-webkit-scrollbar {
+  display: none;
+}
+
+.weekly-card-stack {
+  flex: 0 0 clamp(320px, 25vw, 390px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  scroll-snap-align: start;
+}
+
+.weekly-media-card {
+  position: relative;
+  flex: 0 0 clamp(190px, 17vw, 250px);
+  height: clamp(224px, 23vw, 306px);
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: #1e1e1e;
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  scroll-snap-align: start;
+  box-shadow: none;
+  appearance: none;
+}
+
+.weekly-media-card:hover {
+  transform: translateY(-2px);
+}
+
+.weekly-media-card.is-hero {
+  flex-basis: clamp(320px, 34vw, 500px);
+}
+
+.weekly-media-card.is-wide {
+  flex-basis: clamp(300px, 30vw, 450px);
+}
+
+.weekly-card-stack .weekly-media-card {
+  width: 100%;
+  height: auto;
+  min-height: clamp(105px, 11vw, 146px);
+}
+
+.weekly-media-card > img,
+.weekly-cover-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.weekly-media-card > img {
+  object-fit: cover;
+}
+
+.weekly-media-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.12), transparent 42%),
+    linear-gradient(0deg, rgba(0,0,0,0.62), transparent 58%);
+  pointer-events: none;
+}
+
+.weekly-cover-art {
+  padding: 16px;
+  display: grid;
+  align-content: space-between;
+  gap: 10px;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255,255,255,0.34), transparent 24%),
+    linear-gradient(135deg, var(--tile-color, var(--oih-orange)), var(--tile-color-2, var(--oih-olive-deep)));
+}
+
+.weekly-cover-art::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.weekly-cover-kicker,
+.weekly-card-lock {
+  position: relative;
+  z-index: 1;
+}
+
+.weekly-cover-kicker {
+  justify-self: start;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.88);
+  color: var(--tile-color, var(--oih-orange));
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.weekly-cover-art strong {
+  position: relative;
+  z-index: 1;
+  max-width: 9.5em;
+  font-family: Oswald, Montserrat, sans-serif;
+  font-size: clamp(22px, 2.4vw, 38px);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.weekly-card-stack .weekly-cover-art {
+  padding: 12px;
+}
+
+.weekly-card-stack .weekly-cover-art strong {
+  font-size: clamp(16px, 1.45vw, 23px);
+  line-height: 1;
+}
+
+.weekly-card-title {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  z-index: 1;
+  display: grid;
+  gap: 6px;
+}
+
+.weekly-card-title small {
+  color: rgba(255,255,255,0.78);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.weekly-card-title strong {
+  color: #fff;
+  font-size: clamp(17px, 1.45vw, 24px);
+  font-weight: 950;
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.weekly-card-lock {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.48);
+  color: rgba(255,255,255,0.78);
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .discovery-row {
   display: flex;
   gap: 14px;
@@ -13881,47 +14064,69 @@ body:not(.gateway-mode) .main {
             <div class="discovery-section-head">
               <div>
                 <p class="eyebrow" data-i18n="homeDiscover.eyebrow">Discover</p>
-                <h2 data-i18n="homeDiscover.todayTitle">Something worth your next few minutes</h2>
-                <p data-i18n="homeDiscover.todayCopy">Start with one high-value piece now, or browse by the same sections used in the journey.</p>
+                <h2 data-i18n="homeDiscover.todayTitle">Start This Week</h2>
+                <p data-i18n="homeDiscover.todayCopy">A quick shelf of real videos, study-guide lessons, and guided next steps.</p>
               </div>
-              <button class="soft-btn" type="button" data-nav-jump="pathSelectView" data-i18n="homeDiscover.journeyButton">Start the guided journey</button>
             </div>
-            <div class="today-discovery">
-              <button class="today-feature stage-1" type="button" data-discover-open="vid_jesus_001" data-content-kind="video">
-                <span class="stage-chip" data-i18n="homeDiscover.stageOne">Section 1 · Explore Jesus</span>
-                <h3 data-i18n="homeDiscover.featureTitle">Why Jesus Came Near</h3>
-                <p data-i18n="homeDiscover.featureCopy">A clear, short invitation for anyone curious, unsure, or starting again.</p>
-                <span class="tile-meta">
-                  <span class="content-chip" data-i18n="discover.video">Video</span>
-                  <span class="content-chip">90 sec</span>
+            <div class="weekly-media-shelf" aria-label="Start this week">
+              <button class="weekly-media-card is-hero stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video">
+                <img src="assets/one-basics-1-1-eternal-life-course-cover.png" alt="" loading="lazy" />
+                <span class="weekly-card-title">
+                  <small data-i18n="homeDiscover.fullVideo">Full video</small>
+                  <strong data-i18n="homeDiscover.oneBasics11VideoTitle">1.1 Eternal Life</strong>
                 </span>
               </button>
-              <div class="discovery-mini-stack" aria-label="Quick discovery starts" data-home-mode="discover">
-                <button class="discovery-mini stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life">
-                  <span class="mini-thumb">1</span>
-                  <span>
+              <div class="weekly-card-stack" aria-label="Quick starts" data-home-mode="discover">
+                <button class="weekly-media-card stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life" data-content-kind="text">
+                  <span class="weekly-cover-art">
+                    <span class="weekly-cover-kicker" data-i18n="discover.read">Read</span>
                     <strong data-i18n="homeDiscover.miniBasicsTitle">One Basics: Eternal Life</strong>
-                    <span data-i18n="homeDiscover.miniBasicsCopy">Section 2 foundation · 12 min read</span>
                   </span>
-                  <span class="mini-arrow">›</span>
                 </button>
-                <button class="discovery-mini stage-3" type="button" data-discover-open="aud_peace_003">
-                  <span class="mini-thumb">P</span>
-                  <span>
+                <button class="weekly-media-card stage-2" type="button" data-discover-open="lesson_bible_004" data-content-kind="text">
+                  <span class="weekly-cover-art">
+                    <span class="weekly-cover-kicker" data-i18n="discover.lesson">Lesson</span>
+                    <strong data-i18n="homeDiscover.miniBibleTitle">How to read the Bible</strong>
+                  </span>
+                </button>
+                <button class="weekly-media-card stage-3" type="button" data-discover-open="aud_peace_003" data-content-kind="text">
+                  <span class="weekly-cover-art">
+                    <span class="weekly-cover-kicker" data-i18n="discover.read">Read</span>
                     <strong data-i18n="homeDiscover.miniPeaceTitle">Peace when life feels heavy</strong>
-                    <span data-i18n="homeDiscover.miniPeaceCopy">Section 3 formation · 4 min read</span>
                   </span>
-                  <span class="mini-arrow">›</span>
                 </button>
-                <button class="discovery-mini stage-5" type="button" data-gateway-choice="leadership">
-                  <span class="mini-thumb">L</span>
-                  <span>
-                    <strong data-i18n="homeDiscover.miniLeadTitle">Christian leadership</strong>
-                    <span data-i18n="homeDiscover.miniLeadCopy">Section 5 training path</span>
+                <button class="weekly-media-card stage-3" type="button" data-gateway-choice="community" data-content-kind="path">
+                  <span class="weekly-cover-art">
+                    <span class="weekly-cover-kicker" data-i18n="homeDiscover.path">Path</span>
+                    <strong data-i18n="homeDiscover.communityTitle">Find Christian community</strong>
                   </span>
-                  <span class="mini-arrow">›</span>
                 </button>
               </div>
+              <button class="weekly-media-card is-wide stage-1" type="button" data-discover-open="mux_out_of_shadows_documentary" data-content-kind="video">
+                <img src="assets/outoftheshadows-brenda-hero.png" alt="" loading="lazy" />
+                <span class="weekly-card-title">
+                  <small data-i18n="homeDiscover.documentaryLabel">Documentary</small>
+                  <strong data-i18n="homeDiscover.brendaDocTitle">Out of the Shadows</strong>
+                </span>
+              </button>
+              <button class="weekly-media-card stage-1" type="button" data-discover-open="vid_jesus_001" data-content-kind="video">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker" data-i18n="discover.video">Video</span>
+                  <strong data-i18n="homeDiscover.featureTitle">Why Jesus Came Near</strong>
+                </span>
+              </button>
+              <button class="weekly-media-card stage-4" type="button" data-gateway-choice="shareFaith" data-content-kind="path">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker" data-i18n="homeDiscover.course">Course</span>
+                  <strong data-i18n="homeDiscover.shareTitle">Share your faith naturally</strong>
+                </span>
+              </button>
+              <button class="weekly-media-card stage-5" type="button" data-gateway-choice="pastor" data-content-kind="path">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker" data-i18n="homeDiscover.training">Training</span>
+                  <strong data-i18n="homeDiscover.pastorTitle">Explore pastoral calling</strong>
+                </span>
+              </button>
             </div>
           </section>
 
@@ -15459,8 +15664,8 @@ const i18n = {
     "discover.peaceCopy": "A short encouragement for pressure and anxiety.",
     "discover.care": "Care",
     "homeDiscover.eyebrow": "Discover",
-    "homeDiscover.todayTitle": "Something worth your next few minutes",
-    "homeDiscover.todayCopy": "Start with one high-value lesson now, or browse by the same sections used in the journey.",
+    "homeDiscover.todayTitle": "Start This Week",
+    "homeDiscover.todayCopy": "A quick shelf of real videos, study-guide lessons, and guided next steps.",
     "homeDiscover.journeyButton": "Start the guided journey",
     "homeDiscover.stageOne": "Section 1 · Explore Jesus",
     "homeDiscover.stageOneShort": "Section 1",
@@ -15800,8 +16005,8 @@ const i18n = {
     "discover.peaceCopy": "Een korte bemoediging voor druk en angst.",
     "discover.care": "Zorg",
     "homeDiscover.eyebrow": "Ontdek",
-    "homeDiscover.todayTitle": "Iets waardevols voor je volgende paar minuten",
-    "homeDiscover.todayCopy": "Begin met een sterk stuk content, of ontdek via dezelfde secties als de reis.",
+    "homeDiscover.todayTitle": "Begin deze week",
+    "homeDiscover.todayCopy": "Een snelle rij met echte video's, studiegidslessen en begeleide volgende stappen.",
     "homeDiscover.journeyButton": "Start de begeleide reis",
     "homeDiscover.stageOne": "Sectie 1 · Jezus ontdekken",
     "homeDiscover.stageOneShort": "Sectie 1",
@@ -20482,7 +20687,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v80";
+  const workerRefreshKey = "oneinhim-sw-refresh-v81";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -20490,7 +20695,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=80", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=81", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
