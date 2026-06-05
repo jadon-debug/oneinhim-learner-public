@@ -4595,6 +4595,75 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   font-weight: 900;
 }
 
+.weekly-media-card,
+.discovery-tile,
+.discover-card,
+.voice-button,
+.tile-art,
+.resource-card,
+.resource-art {
+  position: relative;
+}
+
+.content-lock-badge {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 8;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(139, 135, 126, 0.92);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(9, 10, 10, 0.26);
+  pointer-events: none;
+}
+
+.content-lock-badge::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 12px;
+  height: 11px;
+  border: 3px solid currentColor;
+  border-bottom: 0;
+  border-radius: 9px 9px 0 0;
+  transform: translateX(-50%);
+}
+
+.content-lock-badge::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 17px;
+  width: 17px;
+  height: 14px;
+  border-radius: 3px;
+  background: currentColor;
+  transform: translateX(-50%);
+}
+
+.weekly-media-card.is-content-locked > img,
+.discovery-tile.is-content-locked .tile-art > img,
+.discover-card.is-content-locked img {
+  filter: saturate(0.92) brightness(0.88);
+}
+
+.weekly-card-stack .content-lock-badge {
+  right: 8px;
+  bottom: 8px;
+  width: 30px;
+  height: 30px;
+}
+
+.resource-art .content-lock-badge {
+  right: 12px;
+  bottom: 12px;
+}
+
 .discovery-row {
   display: flex;
   gap: 14px;
@@ -18080,6 +18149,33 @@ function resourceIsUnlocked(resource) {
   return false;
 }
 
+function contentLockBadgeMarkup() {
+  return `<span class="content-lock-badge" aria-hidden="true"></span>`;
+}
+
+function lockBadgeTargetForCard(card) {
+  return card.querySelector(".tile-art, .weekly-cover-art, .resource-art") || card;
+}
+
+function setContentCardLockedState(card, locked) {
+  const target = lockBadgeTargetForCard(card);
+  const existingBadge = target.querySelector(":scope > .content-lock-badge");
+  card.classList.toggle("is-content-locked", locked);
+  card.toggleAttribute("data-content-locked", locked);
+  if (locked && !existingBadge) {
+    target.insertAdjacentHTML("beforeend", contentLockBadgeMarkup());
+  } else if (!locked && existingBadge) {
+    existingBadge.remove();
+  }
+}
+
+function refreshContentLockBadges(root = document) {
+  root.querySelectorAll(".weekly-media-card[data-discover-open], .discovery-tile[data-discover-open], .discover-card[data-discover-open], .voice-button[data-discover-open]").forEach((card) => {
+    const resource = resources.find((item) => item.id === card.dataset.discoverOpen);
+    setContentCardLockedState(card, Boolean(resource && !resourceIsUnlocked(resource)));
+  });
+}
+
 function accessLabelForResource(resource) {
   const level = resourceAccessLevel(resource);
   if (level === "free") return "Free";
@@ -21134,7 +21230,7 @@ function resourceCard(resource) {
     : `<button class="primary-btn" type="button" data-action="partner-access">Partner access</button>`;
   return `
     <article class="resource-card ${unlocked ? "" : "locked"}" data-access-level="${esc(displayLevel)}">
-      <div class="resource-art ${esc(resource.visualType)}"></div>
+      <div class="resource-art ${esc(resource.visualType)}">${unlocked ? "" : contentLockBadgeMarkup()}</div>
       <div class="resource-body">
         <strong>${esc(resource.title)}</strong>
         <span>${esc(resource.summary)}</span>
@@ -21195,6 +21291,7 @@ function renderAll() {
 }
 
 function bindDynamicActions() {
+  refreshContentLockBadges();
   document.querySelectorAll("[data-open]").forEach((button) => {
     button.onclick = () => setActiveResource(button.dataset.open);
   });
@@ -21787,7 +21884,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v95";
+  const workerRefreshKey = "oneinhim-sw-refresh-v96";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21795,7 +21892,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=95", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=96", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
@@ -21827,6 +21924,8 @@ async function boot() {
 	  renderAsk();
 	  renderOnboarding();
 	  await renderAdminAccount();
+	  renderLibrary();
+	  bindDynamicActions();
 	  if (!state.userNavigatedDuringBoot) {
 	    setView("gatewayView", { initial: true });
 	  }
