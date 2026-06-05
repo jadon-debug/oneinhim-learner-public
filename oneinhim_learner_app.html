@@ -13554,6 +13554,28 @@ body:not(.gateway-mode) .main {
   }
 }
 
+/* First home hero headline balance. The English title has a long phrase that
+   should read as two intentional lines on larger screens, not a stranded word. */
+@media (min-width: 761px) {
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy {
+    width: min(100%, 760px) !important;
+    max-width: 760px !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    max-width: 760px !important;
+    font-size: clamp(52px, 4.2vw, 62px) !important;
+    line-height: 0.96 !important;
+    white-space: pre-line !important;
+    overflow-wrap: normal !important;
+    text-wrap: balance;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+    max-width: 680px !important;
+  }
+}
+
 /* Desktop journey: one full-width Duolingo-style shell with the path as the primary scroll. */
 @media (min-width: 1024px) {
   body.journey-mode:not(.gateway-mode) {
@@ -14533,7 +14555,7 @@ body:not(.gateway-mode) .main {
               <img id="gatewayCharacterArt" src="assets/oneinhim-characters-international.png" alt="" />
             </div>
             <div class="gateway-copy">
-              <h2 data-i18n="gateway.headline">Want to grow in your Christian journey?</h2>
+              <h2 data-i18n="gateway.headline">Want to grow in your&#10;Christian journey?</h2>
               <p data-i18n="gateway.copy">Find a clear next step through short teachings, prayer, Scripture, trusted voices, and guided milestones.</p>
               <div class="hero-actions">
                 <button class="primary-btn" id="gatewayStart" data-i18n="gateway.start">Get started</button>
@@ -16201,7 +16223,7 @@ const i18n = {
     "library.signIn": "Sign in",
     "library.partnerNote": "One In Him is a charity. This is support, not buying a product; the core journey remains free.",
     "library.partnerToast": "Partner access flow is ready to connect.",
-    "gateway.headline": "Want to grow in your Christian journey?",
+    "gateway.headline": "Want to grow in your\nChristian journey?",
     "gateway.copy": "Find a clear next step through short teachings, prayer, Scripture, trusted voices, and guided milestones.",
     "gateway.start": "Get started",
     "gateway.browse": "Continue journey",
@@ -21765,7 +21787,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v94";
+  const workerRefreshKey = "oneinhim-sw-refresh-v95";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21773,7 +21795,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=94", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=95", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
