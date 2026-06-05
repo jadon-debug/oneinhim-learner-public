@@ -12687,8 +12687,10 @@ body.gateway-mode .home-hero::after {
 
 body.gateway-mode .home-hero::before {
   top: 0;
-  height: clamp(82px, 12svh, 140px);
-  background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.82) 28%, rgba(255, 255, 255, 0) 100%);
+  height: clamp(116px, 15svh, 180px);
+  background:
+    linear-gradient(180deg, rgba(17, 17, 17, 0.09) 0%, rgba(244, 242, 237, 0.48) 24%, rgba(255, 255, 255, 0.74) 52%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.86) 34%, rgba(255, 255, 255, 0) 100%);
 }
 
 body.gateway-mode .home-hero::after {
@@ -12698,7 +12700,7 @@ body.gateway-mode .home-hero::after {
 }
 
 body.gateway-mode.dark-gateway-hero-active .home-hero::before {
-  background: linear-gradient(180deg, #090a0a 0%, rgba(9, 10, 10, 0.72) 30%, rgba(9, 10, 10, 0) 100%);
+  background: linear-gradient(180deg, #111111 0%, rgba(17, 17, 17, 0.78) 32%, rgba(17, 17, 17, 0) 100%);
 }
 
 body.gateway-mode.dark-gateway-hero-active .home-hero::after {
@@ -22003,7 +22005,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v100";
+  const workerRefreshKey = "oneinhim-sw-refresh-v101";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22011,7 +22013,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=100", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=101", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
