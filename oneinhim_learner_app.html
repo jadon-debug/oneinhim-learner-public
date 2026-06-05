@@ -14583,39 +14583,6 @@ body:not(.gateway-mode) .main {
           </div>
         </div>
 
-        <div class="gateway-popular" aria-label="Popular starting points" data-home-mode="discover">
-          <div class="gateway-popular-inner">
-            <button class="popular-arrow" type="button" data-popular-scroll="-1" aria-label="Previous popular options">‹</button>
-            <div class="popular-rail" id="popularRail">
-              <button class="popular-start" type="button" data-popular-start="bible">
-                <span class="popular-icon">?</span>
-                <span data-i18n="popular.bible">How should I read my Bible?</span>
-              </button>
-              <button class="popular-start" type="button" data-popular-start="newChristian">
-                <span class="popular-icon olive">1</span>
-                <span data-i18n="popular.newChristian">A new Christian</span>
-              </button>
-              <button class="popular-start" type="button" data-popular-start="jesus">
-                <span class="popular-icon gold">J</span>
-                <span data-i18n="popular.jesus">Who is Jesus?</span>
-              </button>
-              <button class="popular-start" type="button" data-popular-start="prayer">
-                <span class="popular-icon">P</span>
-                <span data-i18n="popular.prayer">Learn to pray</span>
-              </button>
-              <button class="popular-start" type="button" data-popular-start="farFromGod">
-                <span class="popular-icon red">H</span>
-                <span data-i18n="popular.farFromGod">I feel far from God</span>
-              </button>
-              <button class="popular-start" type="button" data-popular-start="speakers">
-                <span class="popular-icon olive">S</span>
-                <span data-i18n="popular.speakers">Popular speakers</span>
-              </button>
-            </div>
-            <button class="popular-arrow" type="button" data-popular-scroll="1" aria-label="Next popular options">›</button>
-          </div>
-        </div>
-
         <main class="gateway-discover home-anchor" data-home-section="discover" aria-label="Discovery">
           <section class="discovery-band dark home-anchor" data-home-section="watch" data-home-mode="discover watch">
             <div class="discovery-section-head">
@@ -14693,6 +14660,39 @@ body:not(.gateway-mode) .main {
               </button>
             </div>
           </section>
+
+          <div class="gateway-popular" aria-label="Popular starting points" data-home-mode="discover">
+            <div class="gateway-popular-inner">
+              <button class="popular-arrow" type="button" data-popular-scroll="-1" aria-label="Previous popular options">‹</button>
+              <div class="popular-rail" id="popularRail">
+                <button class="popular-start" type="button" data-popular-start="bible">
+                  <span class="popular-icon">?</span>
+                  <span data-i18n="popular.bible">How should I read my Bible?</span>
+                </button>
+                <button class="popular-start" type="button" data-popular-start="newChristian">
+                  <span class="popular-icon olive">1</span>
+                  <span data-i18n="popular.newChristian">A new Christian</span>
+                </button>
+                <button class="popular-start" type="button" data-popular-start="jesus">
+                  <span class="popular-icon gold">J</span>
+                  <span data-i18n="popular.jesus">Who is Jesus?</span>
+                </button>
+                <button class="popular-start" type="button" data-popular-start="prayer">
+                  <span class="popular-icon">P</span>
+                  <span data-i18n="popular.prayer">Learn to pray</span>
+                </button>
+                <button class="popular-start" type="button" data-popular-start="farFromGod">
+                  <span class="popular-icon red">H</span>
+                  <span data-i18n="popular.farFromGod">I feel far from God</span>
+                </button>
+                <button class="popular-start" type="button" data-popular-start="speakers">
+                  <span class="popular-icon olive">S</span>
+                  <span data-i18n="popular.speakers">Popular speakers</span>
+                </button>
+              </div>
+              <button class="popular-arrow" type="button" data-popular-scroll="1" aria-label="Next popular options">›</button>
+            </div>
+          </div>
 
           <section class="discovery-band sand events-band" data-home-mode="discover watch">
             <div class="discovery-section-head">
@@ -21765,7 +21765,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v93";
+  const workerRefreshKey = "oneinhim-sw-refresh-v94";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21773,7 +21773,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=93", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=94", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
