@@ -14981,10 +14981,10 @@ body:not(.gateway-mode) .main {
                   <strong data-i18n="popular.farFromGod">I feel far from God</strong>
                 </span>
               </button>
-              <button class="weekly-media-card stage-5" type="button" data-popular-start="speakers" data-content-kind="path">
+              <button class="weekly-media-card stage-5" type="button" data-popular-start="leadership" data-content-kind="path">
                 <span class="weekly-cover-art">
-                  <span class="weekly-cover-kicker">S</span>
-                  <strong data-i18n="popular.speakers">Popular speakers</strong>
+                  <span class="weekly-cover-kicker">+</span>
+                  <strong data-i18n="popular.leadership">Disciple others</strong>
                 </span>
               </button>
             </div>
@@ -15712,7 +15712,7 @@ body:not(.gateway-mode) .main {
               <div class="tag-row" id="homeHeroTags"></div>
               <div class="hero-actions">
                 <button class="primary-btn" data-action="play-daily">Start now</button>
-                <button class="soft-btn" data-nav-jump="askView">Ask a question</button>
+                <button class="soft-btn" data-nav-jump="pathSelectView">See journey options</button>
                 <button class="ghost-btn" data-nav-jump="pathSelectView">Continue my discipleship journey</button>
               </div>
             </div>
@@ -16644,7 +16644,7 @@ const i18n = {
     "popular.jesus": "Who is Jesus?",
     "popular.prayer": "Learn to pray",
     "popular.farFromGod": "I feel far from God",
-    "popular.speakers": "Popular speakers",
+    "popular.leadership": "Disciple others",
     "paths.eyebrow": "Choose your section",
     "paths.title": "Choose your starting point",
     "paths.copy": "Tap a section to preview it, then begin at the first node.",
@@ -17007,7 +17007,7 @@ const i18n = {
     "popular.jesus": "Wie is Jezus?",
     "popular.prayer": "Leren bidden",
     "popular.farFromGod": "Ik voel mij ver van God",
-    "popular.speakers": "Populaire sprekers",
+    "popular.leadership": "Discipel anderen",
     "paths.eyebrow": "Kies je sectie",
     "paths.title": "Kies je startpunt",
     "paths.copy": "Tik op een sectie voor een preview en begin daarna bij de eerste stap.",
@@ -19025,8 +19025,34 @@ const sourceBackedQuickStarts = {
   bible: "book_one_basics_1_14_effective_bible_reading",
   newChristian: "book_one_basics_1_1_eternal_life",
   jesus: "book_one_basics_1_1_eternal_life",
-  prayer: "book_one_basics_1_16_praying_to_god"
+  prayer: "book_one_basics_1_16_praying_to_god",
+  farFromGod: "book_one_basics_1_1_eternal_life",
+  leadership: "book_one_basics_2_32_partnership"
 };
+
+function openJourneyLessonResource(resourceId, question = "", message = t("toast.quickStart")) {
+  const target = moduleTargetForResource(resourceId);
+  const stage = stageForChoice(target.stageId);
+  const sectionInfo = activeSectionInfo(stage, target.moduleIndex);
+  state.activeResourceId = resourceId;
+  state.activeStageId = target.stageId;
+  state.pathPreviewStageId = target.stageId;
+  state.selectedSectionIndex = sectionInfo.groupIndex;
+  state.selectedPathNode = pathNodeKey("content", stage, sectionInfo.groupIndex);
+  state.guidedPathNode = "";
+  state.sectionPicker = null;
+  state.sectionReview = null;
+  state.practicalUse = false;
+  state.activeModuleIndex = target.moduleIndex;
+  state.moduleMode = target.mode;
+  state.quizChoice = "";
+  state.quizChecked = false;
+  state.lastQuestion = question || state.lastQuestion;
+  if (els.askInput) els.askInput.value = state.lastQuestion;
+  renderAll();
+  toast(message);
+  setView("moduleDetailView");
+}
 
 function handleGatewayChoice(choice) {
   const choices = {
@@ -19052,7 +19078,7 @@ function handleGatewayChoice(choice) {
     care: {
       resourceId: "aud_peace_003",
       question: t("choice.care.question"),
-      view: "askView",
+      view: "moduleDetailView",
       message: t("toast.choiceCare")
     },
     exploreJesus: {
@@ -19217,59 +19243,31 @@ function handlePopularStart(choice) {
   const starts = {
     bible: {
       resourceId: sourceBackedQuickStarts.bible,
-      question: t("quick.bible.question"),
-      view: "moduleDetailView"
+      question: t("quick.bible.question")
     },
     newChristian: {
       resourceId: sourceBackedQuickStarts.newChristian,
-      question: t("quick.newChristian.question"),
-      view: "moduleDetailView",
-      stageId: "startFollowing"
+      question: t("quick.newChristian.question")
     },
     jesus: {
       resourceId: sourceBackedQuickStarts.jesus,
-      question: t("quick.jesus.question"),
-      view: "moduleDetailView"
+      question: t("quick.jesus.question")
     },
     prayer: {
       resourceId: sourceBackedQuickStarts.prayer,
-      question: t("quick.prayer.question"),
-      view: "moduleDetailView"
+      question: t("quick.prayer.question")
     },
     farFromGod: {
-      resourceId: "vid_jesus_001",
-      question: t("quick.farFromGod.question"),
-      view: "askView"
+      resourceId: sourceBackedQuickStarts.farFromGod,
+      question: t("quick.farFromGod.question")
     },
-    speakers: {
-      resourceId: state.activeResourceId,
-      question: state.lastQuestion,
-      view: "gatewayView"
+    leadership: {
+      resourceId: sourceBackedQuickStarts.leadership,
+      question: t("choice.leadership.question")
     }
   };
   const selected = starts[choice] || starts.newChristian;
-  if (selected.stageId) state.activeStageId = selected.stageId;
-  state.pathPreviewStageId = state.activeStageId;
-  state.selectedSectionIndex = 0;
-  state.selectedPathNode = "";
-  state.guidedPathNode = "";
-  state.practicalUse = false;
-  state.activeResourceId = selected.resourceId;
-  if (selected.view === "moduleDetailView") {
-    const target = moduleTargetForResource(selected.resourceId);
-    state.activeStageId = target.stageId;
-    state.pathPreviewStageId = state.activeStageId;
-    state.activeModuleIndex = target.moduleIndex;
-    state.moduleMode = target.mode;
-    state.quizChoice = "";
-    state.quizChecked = false;
-    state.practicalUse = false;
-  }
-  state.lastQuestion = selected.question;
-  els.askInput.value = selected.question;
-  renderAll();
-  toast(t("toast.quickStart"));
-  setView(selected.view);
+  openJourneyLessonResource(selected.resourceId, selected.question, t("toast.quickStart"));
 }
 
 function renderHome() {
@@ -22220,7 +22218,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v105";
+  const workerRefreshKey = "oneinhim-sw-refresh-v106";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
