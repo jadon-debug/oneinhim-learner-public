@@ -14810,38 +14810,52 @@ body:not(.gateway-mode) .main {
             </div>
           </section>
 
-          <div class="gateway-popular" aria-label="Popular starting points" data-home-mode="discover">
-            <div class="gateway-popular-inner">
-              <button class="popular-arrow" type="button" data-popular-scroll="-1" aria-label="Previous popular options">‹</button>
-              <div class="popular-rail" id="popularRail">
-                <button class="popular-start" type="button" data-popular-start="bible">
-                  <span class="popular-icon">?</span>
-                  <span data-i18n="popular.bible">How should I read my Bible?</span>
-                </button>
-                <button class="popular-start" type="button" data-popular-start="newChristian">
-                  <span class="popular-icon olive">1</span>
-                  <span data-i18n="popular.newChristian">A new Christian</span>
-                </button>
-                <button class="popular-start" type="button" data-popular-start="jesus">
-                  <span class="popular-icon gold">J</span>
-                  <span data-i18n="popular.jesus">Who is Jesus?</span>
-                </button>
-                <button class="popular-start" type="button" data-popular-start="prayer">
-                  <span class="popular-icon">P</span>
-                  <span data-i18n="popular.prayer">Learn to pray</span>
-                </button>
-                <button class="popular-start" type="button" data-popular-start="farFromGod">
-                  <span class="popular-icon red">H</span>
-                  <span data-i18n="popular.farFromGod">I feel far from God</span>
-                </button>
-                <button class="popular-start" type="button" data-popular-start="speakers">
-                  <span class="popular-icon olive">S</span>
-                  <span data-i18n="popular.speakers">Popular speakers</span>
-                </button>
+          <section class="discovery-band dark quick-starts-band" data-home-mode="discover">
+            <div class="discovery-section-head">
+              <div>
+                <p class="eyebrow" data-i18n="homeDiscover.quickStartsEyebrow">Questions</p>
+                <h2 data-i18n="homeDiscover.quickStartsTitle">Helpful starting points</h2>
               </div>
-              <button class="popular-arrow" type="button" data-popular-scroll="1" aria-label="Next popular options">›</button>
             </div>
-          </div>
+            <div class="weekly-media-shelf" id="popularRail" aria-label="Popular starting points">
+              <button class="weekly-media-card stage-2" type="button" data-popular-start="bible" data-content-kind="path">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker">?</span>
+                  <strong data-i18n="popular.bible">How should I read my Bible?</strong>
+                </span>
+              </button>
+              <button class="weekly-media-card stage-3" type="button" data-popular-start="newChristian" data-content-kind="path">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker">1</span>
+                  <strong data-i18n="popular.newChristian">A new Christian</strong>
+                </span>
+              </button>
+              <button class="weekly-media-card stage-2" type="button" data-popular-start="jesus" data-content-kind="path">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker">J</span>
+                  <strong data-i18n="popular.jesus">Who is Jesus?</strong>
+                </span>
+              </button>
+              <button class="weekly-media-card stage-1" type="button" data-popular-start="prayer" data-content-kind="path">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker">P</span>
+                  <strong data-i18n="popular.prayer">Learn to pray</strong>
+                </span>
+              </button>
+              <button class="weekly-media-card stage-4" type="button" data-popular-start="farFromGod" data-content-kind="path">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker">H</span>
+                  <strong data-i18n="popular.farFromGod">I feel far from God</strong>
+                </span>
+              </button>
+              <button class="weekly-media-card stage-5" type="button" data-popular-start="speakers" data-content-kind="path">
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker">S</span>
+                  <strong data-i18n="popular.speakers">Popular speakers</strong>
+                </span>
+              </button>
+            </div>
+          </section>
 
           <section class="discovery-band sand events-band" data-home-mode="discover watch">
             <div class="discovery-section-head">
@@ -16546,6 +16560,8 @@ const i18n = {
     "homeDiscover.eyebrow": "Discover",
     "homeDiscover.todayTitle": "Start This Week",
     "homeDiscover.todayCopy": "A quick shelf of real videos, study-guide lessons, and guided next steps.",
+    "homeDiscover.quickStartsEyebrow": "Questions",
+    "homeDiscover.quickStartsTitle": "Helpful starting points",
     "homeDiscover.journeyButton": "Start the guided journey",
     "homeDiscover.stageOne": "Section 1 · Explore Jesus",
     "homeDiscover.stageOneShort": "Section 1",
@@ -16903,6 +16919,8 @@ const i18n = {
     "homeDiscover.eyebrow": "Ontdek",
     "homeDiscover.todayTitle": "Begin deze week",
     "homeDiscover.todayCopy": "Een snelle rij met echte video's, studiegidslessen en begeleide volgende stappen.",
+    "homeDiscover.quickStartsEyebrow": "Vragen",
+    "homeDiscover.quickStartsTitle": "Handige startpunten",
     "homeDiscover.journeyButton": "Start de begeleide reis",
     "homeDiscover.stageOne": "Sectie 1 · Jezus ontdekken",
     "homeDiscover.stageOneShort": "Sectie 1",
@@ -21909,7 +21927,7 @@ function wireStaticActions() {
   document.querySelectorAll("[data-popular-scroll]").forEach((button) => {
     button.addEventListener("click", () => {
       const direction = Number(button.dataset.popularScroll) || 1;
-      els.popularRail.scrollBy({ left: direction * 260, behavior: "smooth" });
+      if (els.popularRail) els.popularRail.scrollBy({ left: direction * 260, behavior: "smooth" });
     });
   });
   document.getElementById("gatewayStart").addEventListener("click", () => {
@@ -22005,7 +22023,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v101";
+  const workerRefreshKey = "oneinhim-sw-refresh-v102";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22013,7 +22031,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=101", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=102", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
