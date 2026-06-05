@@ -12737,6 +12737,90 @@ body.gateway-mode .home-hero .gateway-hero-controls {
   z-index: 18 !important;
 }
 
+/* Discover density pass: quick starts should behave like compact chips, not poster cards. */
+body.gateway-mode .gateway-discover {
+  padding-top: 0 !important;
+}
+
+body.gateway-mode .gateway-discover > .discovery-band:first-child {
+  padding-top: clamp(10px, 1.3vw, 18px) !important;
+}
+
+body.gateway-mode .quick-starts-band {
+  padding-top: clamp(10px, 1.2vw, 16px) !important;
+  padding-bottom: clamp(8px, 1vw, 12px) !important;
+}
+
+body.gateway-mode .quick-starts-band .discovery-section-head {
+  min-height: 0 !important;
+  margin-bottom: 8px !important;
+}
+
+body.gateway-mode .quick-starts-band .discovery-section-head h2 {
+  font-size: clamp(16px, 1.2vw, 21px) !important;
+  line-height: 1.1 !important;
+}
+
+body.gateway-mode .quick-starts-band #popularRail {
+  gap: 10px !important;
+  align-items: center !important;
+  padding: 0 2px 3px !important;
+}
+
+body.gateway-mode .quick-starts-band #popularRail .weekly-media-card {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: none !important;
+}
+
+body.gateway-mode .quick-starts-band #popularRail .weekly-media-card::after,
+body.gateway-mode .quick-starts-band #popularRail .weekly-cover-art::before {
+  display: none !important;
+}
+
+body.gateway-mode .quick-starts-band #popularRail .weekly-cover-art {
+  position: relative !important;
+  inset: auto !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  padding: 8px 13px 8px 9px !important;
+  border-radius: inherit !important;
+  background: color-mix(in srgb, var(--tile-color, var(--oih-orange)) 20%, rgba(255, 255, 255, 0.07)) !important;
+}
+
+body.gateway-mode .quick-starts-band #popularRail .weekly-cover-kicker {
+  flex: 0 0 auto !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
+
+body.gateway-mode .quick-starts-band #popularRail .weekly-cover-art strong {
+  max-width: none !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+  font-family: Montserrat, sans-serif !important;
+  font-size: clamp(13px, 1vw, 16px) !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  text-transform: uppercase !important;
+}
+
 @media (min-width: 1041px) {
   body.gateway-mode .gateway-header.app-top-chrome,
   body.gateway-mode .app-top-chrome {
@@ -22113,7 +22197,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v103";
+  const workerRefreshKey = "oneinhim-sw-refresh-v104";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22121,7 +22205,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=103", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=104", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };

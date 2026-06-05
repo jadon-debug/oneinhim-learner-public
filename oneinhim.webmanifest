@@ -2,7 +2,7 @@
   "name": "One In Him",
   "short_name": "ONEapp",
   "description": "Discipleship journeys, videos, reading, and guided next steps from One In Him.",
-  "start_url": "./oneinhim_learner_app.html?v=103",
+  "start_url": "./oneinhim_learner_app.html?v=104",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
