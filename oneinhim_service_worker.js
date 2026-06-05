@@ -1,4 +1,4 @@
-const ONEINHIM_CACHE = "oneinhim-app-v102";
+const ONEINHIM_CACHE = "oneinhim-app-v103";
 
 const APP_SHELL = [
   "./oneinhim.webmanifest",
@@ -19,6 +19,7 @@ const APP_SHELL = [
   "./assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
   "./assets/one-basics-1-1-eternal-life-course-cover.png",
   "./assets/one-gospel-podcast-cover.png",
+  "./assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg",
   "./assets/oneevent-ps-duane-friday-cover.png"
 ];
 

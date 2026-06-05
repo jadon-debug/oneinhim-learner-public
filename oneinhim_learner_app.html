@@ -5219,6 +5219,7 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
 }
 
 .discover-watch-media {
+  position: relative;
   min-height: 0;
   aspect-ratio: 16 / 9;
   display: grid;
@@ -5234,6 +5235,31 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
 
 .discover-watch-media.has-mux {
   background: #090a0a;
+}
+
+.discover-watch-media.has-cover-art {
+  background: #090a0a;
+}
+
+.discover-watch-cover-art {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.discover-watch-placeholder-badge {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(9, 10, 10, 0.72);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
 .discover-watch-media .mux-frame {
@@ -15152,6 +15178,25 @@ body:not(.gateway-mode) .main {
             </div>
           </section>
 
+          <section class="discovery-band dark classics-audio-band home-anchor" id="classicsAudioShelf" data-home-mode="discover listen">
+            <div class="discovery-section-head">
+              <div>
+                <p class="eyebrow" data-i18n="homeDiscover.classicsEyebrow">Audio</p>
+                <h2 data-i18n="homeDiscover.classicsTitle">Classics</h2>
+                <p data-i18n="homeDiscover.classicsCopy">Classic audiobooks prepared for future listening.</p>
+              </div>
+            </div>
+            <div class="weekly-media-shelf" aria-label="Classics audiobooks">
+              <button class="weekly-media-card is-square classics-audiobook-card" type="button" data-discover-open="aud_death_ivan_ilyich_classics" data-content-kind="audio">
+                <img src="assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg" alt="" loading="lazy" />
+                <span class="weekly-card-title">
+                  <small data-i18n="homeDiscover.audiobookPlaceholder">Audiobook placeholder</small>
+                  <strong>The Death of Ivan Ilyich</strong>
+                </span>
+              </button>
+            </div>
+          </section>
+
           <section class="discovery-band sand" data-home-mode="discover">
             <div class="discovery-section-head">
               <div>
@@ -15957,6 +16002,35 @@ const resources = [
     ]
   },
   {
+    id: "aud_death_ivan_ilyich_classics",
+    visualType: "audio",
+    contentType: "audiobook",
+    title: "The Death of Ivan Ilyich",
+    speaker: "Leo Tolstoy",
+    speakerId: "author_leo_tolstoy",
+    language: "en",
+    primaryMedium: "listen",
+    format: ["listen"],
+    length: "Audiobook placeholder",
+    seconds: 0,
+    summary: "A planned classic audiobook placeholder for the Classics shelf.",
+    topic: "Classics",
+    stage: "formation",
+    questions: ["How can classic literature help me reflect on life, death, and meaning?"],
+    tone: ["reflective", "classic"],
+    nextStep: "Audiobook coming soon",
+    nextTarget: "aud_death_ivan_ilyich_classics",
+    seriesId: "classics_audiobooks",
+    episode: 1,
+    showInJourney: false,
+    shareLine: "A classic audiobook placeholder for future listening.",
+    sourceLabel: "Classics",
+    posterUrl: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg",
+    transcript: [
+      "Audiobook placeholder. The audio source will be added when it is ready."
+    ]
+  },
+  {
     id: "lesson_bible_004",
     visualType: "video",
     contentType: "lesson",
@@ -16617,6 +16691,10 @@ const i18n = {
     "homeDiscover.oneBasicsCopy": "A prepared first lesson from the One Basics study guide.",
     "homeDiscover.podcastTitle": "From Darkness to Sonship",
     "homeDiscover.podcastCopy": "One Gospel podcast with Johan Toet on moving from darkness into sonship in Christ.",
+    "homeDiscover.classicsEyebrow": "Audio",
+    "homeDiscover.classicsTitle": "Classics",
+    "homeDiscover.classicsCopy": "Classic audiobooks prepared for future listening.",
+    "homeDiscover.audiobookPlaceholder": "Audiobook placeholder",
     "homeDiscover.shareTitle": "Share your faith naturally",
     "homeDiscover.shareCopy": "A practical pathway for honest conversations about Jesus.",
     "homeDiscover.pastorTitle": "Explore pastoral calling",
@@ -16976,6 +17054,10 @@ const i18n = {
     "homeDiscover.oneBasicsCopy": "Een voorbereide eerste les uit de One Basics studiegids.",
     "homeDiscover.podcastTitle": "Van duisternis naar zoonschap",
     "homeDiscover.podcastCopy": "One Gospel-podcast met Johan Toet over van duisternis naar zoonschap in Christus.",
+    "homeDiscover.classicsEyebrow": "Audio",
+    "homeDiscover.classicsTitle": "Klassiekers",
+    "homeDiscover.classicsCopy": "Klassieke audioboeken die voorbereid worden voor later luisteren.",
+    "homeDiscover.audiobookPlaceholder": "Audioboek placeholder",
     "homeDiscover.shareTitle": "Deel je geloof natuurlijk",
     "homeDiscover.shareCopy": "Een praktisch pad voor eerlijke gesprekken over Jezus.",
     "homeDiscover.pastorTitle": "Verken pastorale roeping",
@@ -19140,6 +19222,14 @@ function renderDiscoveryMedia(item, options = {}) {
         allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
         allowfullscreen
       ></iframe>
+    `;
+    els.discoverWatchPlay = null;
+  } else if (item.posterUrl || item.thumbnailUrl) {
+    const coverUrl = item.posterUrl || item.thumbnailUrl;
+    els.discoverWatchMedia.classList.add("has-cover-art");
+    els.discoverWatchMedia.innerHTML = `
+      <img class="discover-watch-cover-art" src="${esc(coverUrl)}" alt="" />
+      <span class="discover-watch-placeholder-badge">${esc(t("homeDiscover.comingSoon"))}</span>
     `;
     els.discoverWatchPlay = null;
   } else {
@@ -22023,7 +22113,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v102";
+  const workerRefreshKey = "oneinhim-sw-refresh-v103";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22031,7 +22121,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=102", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=103", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
