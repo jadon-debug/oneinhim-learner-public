@@ -12674,6 +12674,98 @@ body.gateway-mode .home-hero .gateway-hero-controls {
   }
 }
 
+/* Home hero cinematic blend: soften the hero edges and expose the first shelf sooner on desktop. */
+body.gateway-mode .home-hero::before,
+body.gateway-mode .home-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+body.gateway-mode .home-hero::before {
+  top: 0;
+  height: clamp(82px, 12svh, 140px);
+  background: linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0.82) 28%, rgba(255, 255, 255, 0) 100%);
+}
+
+body.gateway-mode .home-hero::after {
+  bottom: -1px;
+  height: clamp(110px, 17svh, 190px);
+  background: linear-gradient(0deg, #fff 0%, rgba(255, 255, 255, 0.82) 26%, rgba(255, 255, 255, 0) 100%);
+}
+
+body.gateway-mode.dark-gateway-hero-active .home-hero::before {
+  background: linear-gradient(180deg, #090a0a 0%, rgba(9, 10, 10, 0.72) 30%, rgba(9, 10, 10, 0) 100%);
+}
+
+body.gateway-mode.dark-gateway-hero-active .home-hero::after {
+  background: linear-gradient(0deg, #090a0a 0%, rgba(9, 10, 10, 0.84) 24%, rgba(9, 10, 10, 0) 100%);
+}
+
+body.gateway-mode .home-hero .gateway-hero-controls {
+  z-index: 18 !important;
+}
+
+@media (min-width: 1041px) {
+  body.gateway-mode .gateway-header.app-top-chrome,
+  body.gateway-mode .app-top-chrome {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 max(48px, calc((100vw - 1340px) / 2)) !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .gateway-header.app-top-chrome,
+  body.gateway-mode.gateway-nav-scrolled .app-top-chrome {
+    background: rgba(9, 10, 10, 0.94) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 14px 36px rgba(9, 10, 10, 0.18) !important;
+  }
+
+  body.gateway-mode .app-top-chrome .gateway-logo-img {
+    width: 48px !important;
+    height: 56px !important;
+  }
+
+  body.gateway-mode .app-top-chrome .gateway-logo {
+    gap: 10px !important;
+    font-size: 24px !important;
+  }
+
+  body.gateway-mode .app-top-chrome .gateway-nav-btn {
+    min-height: 34px !important;
+    font-size: 13px !important;
+  }
+
+  body.gateway-mode .home-hero {
+    --home-hero-height: clamp(560px, 67svh, 700px);
+    --home-hero-top: clamp(92px, 10svh, 122px);
+    --home-hero-bottom: clamp(74px, 8svh, 96px);
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero,
+  body.gateway-mode .home-hero-slide.one-basics-hero {
+    padding-top: var(--home-hero-top) !important;
+    padding-bottom: var(--home-hero-bottom) !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-controls {
+    bottom: clamp(18px, 3svh, 30px) !important;
+  }
+}
+
 /* Shared desktop app shell polish: keep the nav full-width and align utility screens to it. */
 body:not(.gateway-mode) .main {
   width: 100vw !important;
@@ -21911,7 +22003,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v98";
+  const workerRefreshKey = "oneinhim-sw-refresh-v99";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21919,7 +22011,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=98", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=99", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
