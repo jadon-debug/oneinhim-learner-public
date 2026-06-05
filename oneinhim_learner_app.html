@@ -5813,12 +5813,26 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   color: #fff;
 }
 
+.library-layout.library-access-layout {
+  grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+  min-height: min(820px, calc(100vh - 90px));
+  align-items: start;
+  padding: clamp(34px, 6vw, 72px) clamp(18px, 4vw, 46px);
+  background: var(--oih-black);
+  color: #fff;
+}
+
 .library-partner-panel {
   width: min(640px, 100%);
   display: grid;
   justify-items: center;
   gap: 18px;
   text-align: center;
+}
+
+.library-access-hero {
+  position: sticky;
+  top: 118px;
 }
 
 .library-partner-mark {
@@ -5890,6 +5904,140 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   max-width: 520px;
   color: rgba(255, 255, 255, 0.46) !important;
   font-size: 13px !important;
+}
+
+.seed-wallet {
+  width: min(420px, 100%);
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 14px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.seed-wallet span {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.seed-wallet strong {
+  color: #f6ca35;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.seed-wallet small {
+  grid-column: 1 / -1;
+  max-width: 28em;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.library-bonus-section {
+  min-width: 0;
+  display: grid;
+  gap: 18px;
+}
+
+.library-bonus-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  align-items: end;
+  gap: 18px;
+}
+
+.library-bonus-head h3 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1;
+}
+
+.library-bonus-head p {
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.5;
+}
+
+.library-bonus-head .search-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.library-bonus-head .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.access-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.access-pill.free {
+  background: rgba(88, 204, 2, 0.16);
+  color: #b8f28f;
+}
+
+.access-pill.seed_unlock {
+  background: rgba(246, 202, 53, 0.18);
+  color: #f6ca35;
+}
+
+.access-pill.partner_access {
+  background: rgba(238, 115, 38, 0.2);
+  color: #ff9d5b;
+}
+
+.resource-card.locked .resource-art,
+.resource-card.locked .resource-body > strong,
+.resource-card.locked .resource-body > span {
+  opacity: 0.62;
+}
+
+.resource-card .access-copy {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+body.library-mode .resource-card {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+body.library-mode .resource-card strong {
+  color: #fff;
+}
+
+body.library-mode .resource-card span {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+body.library-mode .resource-card .soft-btn {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+body.library-mode .library-topic-list {
+  display: none;
 }
 
 .library-data-cache {
@@ -14166,6 +14314,31 @@ body:not(.gateway-mode) .main {
     place-items: center !important;
   }
 
+  body.library-mode .library-layout.library-access-layout {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    min-height: calc(100svh - var(--app-top-chrome-space) - var(--app-bottom-chrome-space)) !important;
+    padding: 18px 22px calc(28px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.library-mode .library-access-hero {
+    position: static !important;
+  }
+
+  body.library-mode .library-bonus-head {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  body.library-mode .library-bonus-head h3 {
+    font-size: clamp(28px, 8vw, 38px) !important;
+  }
+
+  body.library-mode .resource-grid {
+    grid-template-columns: 1fr !important;
+    padding: 0 !important;
+  }
+
   body.library-mode .library-partner-panel {
     width: min(100%, 540px);
     gap: clamp(18px, 2.7svh, 27px);
@@ -14225,6 +14398,10 @@ body:not(.gateway-mode) .main {
   body.library-mode .library-layout.library-partner-layout {
     padding-top: 14px !important;
     padding-bottom: 18px !important;
+  }
+
+  body.library-mode .library-layout.library-access-layout {
+    padding-top: 12px !important;
   }
 
   body.library-mode .library-partner-panel {
@@ -15319,8 +15496,8 @@ body:not(.gateway-mode) .main {
     </section>
 
     <section class="view" id="libraryView" aria-hidden="true">
-      <div class="library-layout library-partner-layout">
-        <section class="library-partner-panel" aria-labelledby="libraryPartnerTitle">
+      <div class="library-layout library-access-layout">
+        <section class="library-partner-panel library-access-hero" aria-labelledby="libraryPartnerTitle">
           <div class="library-partner-mark" aria-hidden="true">
             <svg viewBox="0 0 48 48">
               <path d="M10 39V12.5c0-1.4 1.1-2.5 2.5-2.5H22c2.2 0 4 1.8 4 4v27c0-2.2-1.8-4-4-4H10Z"></path>
@@ -15332,6 +15509,11 @@ body:not(.gateway-mode) .main {
           <p class="eyebrow" data-i18n="library.eyebrow">Library</p>
           <h2 id="libraryPartnerTitle" data-i18n="library.partnerTitle">Become a partner for full access</h2>
           <p data-i18n="library.partnerCopy">Partners and supporters help keep One In Him resources free for people starting their journey. Partner access opens the growing library of teachings, audio, and study guides.</p>
+          <div class="seed-wallet" aria-live="polite">
+            <span>Seeds</span>
+            <strong id="seedBalance">0</strong>
+            <small id="librarySeedProgress">Share a useful teaching to earn Seeds and unlock bonus Library content.</small>
+          </div>
           <button class="primary-btn" type="button" data-action="partner-access" data-i18n="library.partnerButton">Become a partner</button>
           <button class="library-partner-signin" type="button" data-gateway-nav="account">
             <span data-i18n="library.alreadyPartner">Already a partner?</span>
@@ -15339,11 +15521,18 @@ body:not(.gateway-mode) .main {
           </button>
           <p class="library-partner-note" data-i18n="library.partnerNote">One In Him is a charity. This is support, not buying a product; the core journey remains free.</p>
         </section>
-        <div class="library-data-cache" hidden aria-hidden="true">
-          <input class="search-input" id="librarySearch" type="search" placeholder="Search Jesus, prayer, anxiety, speaker" />
+        <section class="library-bonus-section" aria-label="Library resources">
+          <div class="library-bonus-head">
+            <div>
+              <p class="eyebrow">Bonus Library</p>
+              <h3>Unlock extra teachings with Seeds</h3>
+              <p id="libraryAccessSummary">Core Journey stays free. Bonus Library content can be unlocked with Seeds, or opened directly by partners, supporters, and approved staff.</p>
+            </div>
+            <input class="search-input" id="librarySearch" type="search" placeholder="Search Jesus, prayer, anxiety, speaker" />
+          </div>
           <div class="resource-grid" id="libraryGrid"></div>
-          <div class="moment-list" id="topicList"></div>
-        </div>
+          <div class="moment-list library-topic-list" id="topicList"></div>
+        </section>
       </div>
     </section>
 
@@ -15596,6 +15785,7 @@ const resources = [
     episode: 4,
     showInJourney: false,
     journeyResourceId: "book_one_basics_1_2_saved_by_grace",
+    access: { level: "seed_unlock", seedCost: 10 },
     shareLine: "This helped me think about moving from darkness into sonship through Jesus.",
     sourceLabel: "One Gospel podcast",
     posterUrl: "assets/one-gospel-podcast-cover.png",
@@ -15660,6 +15850,7 @@ const resources = [
     seriesId: "documentaries",
     episode: 1,
     showInJourney: false,
+    access: { level: "partner_access" },
     shareLine: "Brenda's story is a powerful reminder that hope can break through.",
     videoHost: {
       provider: "mux",
@@ -15696,6 +15887,7 @@ const resources = [
     seriesId: "oneevent_days_2026",
     episode: 1,
     showInJourney: false,
+    access: { level: "seed_unlock", seedCost: 15 },
     shareLine: "This teaching from ONEEVENT Days is worth watching.",
     sourceLabel: "ONEEVENT Days",
     posterUrl: "assets/oneevent-ps-duane-friday-cover.png",
@@ -15892,7 +16084,11 @@ const state = {
   completedPieces: new Set(),
   completedPracticals: new Set(),
   completedReviews: new Set(),
-  saved: new Set()
+  saved: new Set(),
+  seeds: 0,
+  sharedForSeeds: new Set(),
+  seedUnlocked: new Set(),
+  partnerAccess: false
 };
 
 const GATEWAY_HERO_AUTOPLAY_MS = 9000;
@@ -15901,6 +16097,12 @@ const GATEWAY_HERO_SWIPE_AXIS_RATIO = 1.12;
 const GATEWAY_HERO_TAP_MAX_PX = 12;
 const FEED_POSTS_STORAGE_KEY = "oneinhim.feed.posts.v2";
 const FEED_LIKES_STORAGE_KEY = "oneinhim.feed.likes.v2";
+const LIBRARY_SEEDS_STORAGE_KEY = "oneinhim.library.seeds.v1";
+const LIBRARY_SEED_SHARES_STORAGE_KEY = "oneinhim.library.seedShares.v1";
+const LIBRARY_SEED_UNLOCKS_STORAGE_KEY = "oneinhim.library.seedUnlocks.v1";
+const LIBRARY_PARTNER_ACCESS_STORAGE_KEY = "oneinhim.library.partnerAccess.v1";
+const SEEDS_PER_SHARE = 5;
+const DEFAULT_SEED_UNLOCK_COST = 10;
 let gatewayHeroAutoplayTimer = null;
 let journeyContentVersion = 0;
 let stickyStageBannerFrame = 0;
@@ -16791,6 +16993,9 @@ const els = {
   askInput: document.getElementById("askInput"),
   answerCard: document.getElementById("answerCard"),
   askRecommendations: document.getElementById("askRecommendations"),
+  seedBalance: document.getElementById("seedBalance"),
+  libraryAccessSummary: document.getElementById("libraryAccessSummary"),
+  librarySeedProgress: document.getElementById("librarySeedProgress"),
   librarySearch: document.getElementById("librarySearch"),
   libraryGrid: document.getElementById("libraryGrid"),
   topicList: document.getElementById("topicList"),
@@ -17153,18 +17358,20 @@ async function renderAdminAccount() {
   if (els.adminWorkshopLink) {
     els.adminWorkshopLink.href = "oneinhim_content_workshop.html";
   }
-  if (els.adminSessionLabel) {
-    if (session) {
-      const signedInDate = session.signedInAt ? new Date(session.signedInAt) : null;
-      const dateText = signedInDate && !Number.isNaN(signedInDate.getTime())
-        ? signedInDate.toLocaleString()
-        : "";
-      els.adminSessionLabel.textContent = `${session.email || "Admin"}${session.role ? ` · ${labelize(session.role)}` : ""}${dateText ? ` · ${dateText}` : ""}`;
-    } else if (adminAuthState.notApproved) {
-      els.adminSessionLabel.textContent = t("account.notApproved");
-    }
-  }
-}
+	  if (els.adminSessionLabel) {
+	    if (session) {
+	      const signedInDate = session.signedInAt ? new Date(session.signedInAt) : null;
+	      const dateText = signedInDate && !Number.isNaN(signedInDate.getTime())
+	        ? signedInDate.toLocaleString()
+	        : "";
+	      els.adminSessionLabel.textContent = `${session.email || "Admin"}${session.role ? ` · ${labelize(session.role)}` : ""}${dateText ? ` · ${dateText}` : ""}`;
+	    } else if (adminAuthState.notApproved) {
+	      els.adminSessionLabel.textContent = t("account.notApproved");
+	    }
+	  }
+	  renderLibrary();
+	  bindDynamicActions();
+	}
 
 async function handleAdminLogin() {
   if (!els.adminEmail || !els.adminPassword) return;
@@ -17758,6 +17965,11 @@ function packageToResource(contentPackage) {
     showInJourney: placement.showInJourney !== false,
     discoverShelf: placement.discoverShelf || "",
     discoverCardLabel: placement.discoverCardLabel || "",
+    access: {
+      level: normalizedAccessLevel(contentPackage.access?.level || placement.accessLevel || contentPackage.admin?.accessLevel),
+      seedCost: Math.max(1, Number(contentPackage.access?.seedCost || placement.seedCost || DEFAULT_SEED_UNLOCK_COST) || DEFAULT_SEED_UNLOCK_COST),
+      note: contentPackage.access?.note || ""
+    },
     shareLine: contentPackage.sharing?.shareText || "",
     sourceLabel: placement.discoverShelf || "Prepared package",
     unitNumber,
@@ -17787,6 +17999,146 @@ function readLocalJson(key, fallback) {
     return stored ? JSON.parse(stored) : fallback;
   } catch (error) {
     return fallback;
+  }
+}
+
+function writeLocalJson(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function normalizedAccessLevel(value) {
+  return ["free", "seed_unlock", "partner_access"].includes(value) ? value : "free";
+}
+
+function libraryAccessKey(resource) {
+  return resource?.id || resource?.packageId || "";
+}
+
+function loadLibraryAccessState() {
+  state.seeds = Math.max(0, Number(readLocalJson(LIBRARY_SEEDS_STORAGE_KEY, 0)) || 0);
+  state.sharedForSeeds = new Set(readLocalJson(LIBRARY_SEED_SHARES_STORAGE_KEY, []));
+  state.seedUnlocked = new Set(readLocalJson(LIBRARY_SEED_UNLOCKS_STORAGE_KEY, []));
+  state.partnerAccess = Boolean(readLocalJson(LIBRARY_PARTNER_ACCESS_STORAGE_KEY, false));
+}
+
+function saveLibraryAccessState() {
+  writeLocalJson(LIBRARY_SEEDS_STORAGE_KEY, state.seeds);
+  writeLocalJson(LIBRARY_SEED_SHARES_STORAGE_KEY, Array.from(state.sharedForSeeds));
+  writeLocalJson(LIBRARY_SEED_UNLOCKS_STORAGE_KEY, Array.from(state.seedUnlocked));
+  writeLocalJson(LIBRARY_PARTNER_ACCESS_STORAGE_KEY, state.partnerAccess);
+}
+
+function userHasFullLibraryAccess() {
+  return Boolean(state.partnerAccess || adminAuthState.profile?.active || adminAuthState.profile);
+}
+
+function resourceAccessLevel(resource) {
+  const configured = normalizedAccessLevel(resource?.access?.level || resource?.accessLevel);
+  if (configured === "free") return "free";
+  if (resource?.showInJourney && resource?.access?.lockJourney !== true) return "free";
+  return configured;
+}
+
+function resourceSeedCost(resource) {
+  return Math.max(1, Number(resource?.access?.seedCost || resource?.seedCost || DEFAULT_SEED_UNLOCK_COST) || DEFAULT_SEED_UNLOCK_COST);
+}
+
+function resourceIsUnlocked(resource) {
+  const level = resourceAccessLevel(resource);
+  if (level === "free") return true;
+  if (userHasFullLibraryAccess()) return true;
+  if (level === "seed_unlock") return state.seedUnlocked.has(libraryAccessKey(resource));
+  return false;
+}
+
+function accessLabelForResource(resource) {
+  const level = resourceAccessLevel(resource);
+  if (level === "free") return "Free";
+  if (userHasFullLibraryAccess()) return "Full access";
+  if (level === "seed_unlock") {
+    return state.seedUnlocked.has(libraryAccessKey(resource)) ? "Unlocked" : `${resourceSeedCost(resource)} Seeds`;
+  }
+  return "Partner access";
+}
+
+function accessCopyForResource(resource) {
+  const level = resourceAccessLevel(resource);
+  if (level === "free") return "Included in the free core experience.";
+  if (userHasFullLibraryAccess()) return "Opened through partner, supporter, or staff access.";
+  if (level === "seed_unlock") {
+    const cost = resourceSeedCost(resource);
+    const needed = Math.max(0, cost - state.seeds);
+    if (state.seedUnlocked.has(libraryAccessKey(resource))) return "Unlocked with Seeds.";
+    return needed ? `Share useful teaching to earn ${needed} more Seed${needed === 1 ? "" : "s"}.` : `Ready to unlock for ${cost} Seeds.`;
+  }
+  return "Partners, supporters, and approved staff can open the full Library directly.";
+}
+
+function earnSeedsForShare(resource) {
+  const key = libraryAccessKey(resource);
+  if (!key || state.sharedForSeeds.has(key)) return 0;
+  state.sharedForSeeds.add(key);
+  state.seeds += SEEDS_PER_SHARE;
+  saveLibraryAccessState();
+  return SEEDS_PER_SHARE;
+}
+
+function unlockSeedResource(resource) {
+  const key = libraryAccessKey(resource);
+  if (!key || resourceAccessLevel(resource) !== "seed_unlock") return false;
+  if (resourceIsUnlocked(resource)) return true;
+  const cost = resourceSeedCost(resource);
+  if (state.seeds < cost) return false;
+	  state.seeds -= cost;
+	  state.seedUnlocked.add(key);
+	  saveLibraryAccessState();
+	  renderLibrary();
+	  bindDynamicActions();
+	  return true;
+	}
+
+function activatePrototypePartnerAccess() {
+	  state.partnerAccess = true;
+	  saveLibraryAccessState();
+	  renderLibrary();
+	  bindDynamicActions();
+	  toast("Full Library access active for this prototype.");
+	}
+
+function handleLockedResource(resource) {
+  if (!resource) return;
+  state.libraryFilter = "all";
+  renderLibrary();
+  setView("libraryView");
+  const level = resourceAccessLevel(resource);
+  if (level === "seed_unlock") {
+    toast(`${resource.title} needs ${resourceSeedCost(resource)} Seeds.`);
+    return;
+  }
+  toast("This is partner Library content.");
+}
+
+async function shareResource(resource) {
+  if (!resource) return;
+  const shareText = resource.shareLine || resource.summary || `I found this helpful: ${resource.title}`;
+  const shareUrl = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(resource.id)}`;
+  const earned = earnSeedsForShare(resource);
+  renderLibrary();
+  bindDynamicActions();
+  toast(earned ? `Shared. +${earned} Seeds.` : "Shared already. Seeds kept.");
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: resource.title, text: shareText, url: shareUrl });
+    } else if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+    }
+  } catch (error) {
+    // Sharing can be cancelled by the user; earning Seeds still reflects the intentional share action in this prototype.
   }
 }
 
@@ -18238,6 +18590,12 @@ function setActiveResource(id, view = "moduleDetailView") {
 }
 
 function setDiscoveryResource(id) {
+  const resource = resources.find((item) => item.id === id);
+  if (resource && !resourceIsUnlocked(resource)) {
+    handleLockedResource(resource);
+    bindDynamicActions();
+    return;
+  }
   state.activeResourceId = id;
   renderDiscoveryDetail();
   setView("discoveryDetailView");
@@ -20669,6 +21027,20 @@ function whyRecommended(resource, question) {
 
 function renderLibrary() {
   const query = els.librarySearch.value.trim().toLowerCase();
+  const fullAccess = userHasFullLibraryAccess();
+  if (els.seedBalance) els.seedBalance.textContent = String(state.seeds);
+  if (els.librarySeedProgress) {
+    els.librarySeedProgress.textContent = fullAccess
+      ? "Full Library access is active for this device or signed-in staff account."
+      : `Share a useful teaching to earn ${SEEDS_PER_SHARE} Seeds. Seeds unlock bonus content; the core Journey stays free.`;
+  }
+  if (els.libraryAccessSummary) {
+    const seedLockedCount = resources.filter((item) => resourceAccessLevel(item) === "seed_unlock" && !resourceIsUnlocked(item)).length;
+    const partnerCount = resources.filter((item) => resourceAccessLevel(item) === "partner_access" && !resourceIsUnlocked(item)).length;
+    els.libraryAccessSummary.textContent = fullAccess
+      ? "Partner/supporter or staff access is active, so the full Library is open."
+      : `Core Journey stays free. ${seedLockedCount} bonus item${seedLockedCount === 1 ? "" : "s"} can be unlocked with Seeds; ${partnerCount} item${partnerCount === 1 ? "" : "s"} need partner access.`;
+  }
   const filtered = resources.filter((item) => {
     const haystack = [item.title, item.topic, item.speaker, item.stage, item.summary, item.format.join(" ")].join(" ").toLowerCase();
     const queryOk = !query || haystack.includes(query);
@@ -20689,16 +21061,31 @@ function renderLibrary() {
 }
 
 function resourceCard(resource) {
+  const level = resourceAccessLevel(resource);
+  const unlocked = resourceIsUnlocked(resource);
+  const cost = resourceSeedCost(resource);
+  const canAfford = state.seeds >= cost;
+  const action = unlocked
+    ? `<button class="primary-btn" type="button" data-discover-open="${esc(resource.id)}">Open</button>`
+    : level === "seed_unlock"
+      ? `<button class="primary-btn" type="button" data-seed-unlock="${esc(resource.id)}" ${canAfford ? "" : "disabled"}>${canAfford ? `Unlock for ${cost}` : `Need ${Math.max(0, cost - state.seeds)} Seeds`}</button>`
+      : `<button class="primary-btn" type="button" data-action="partner-access">Partner access</button>`;
   return `
-    <article class="resource-card">
+    <article class="resource-card ${unlocked ? "" : "locked"}" data-access-level="${esc(level)}">
       <div class="resource-art ${esc(resource.visualType)}"></div>
       <div class="resource-body">
         <strong>${esc(resource.title)}</strong>
         <span>${esc(resource.summary)}</span>
-        <div class="tag-row">${tag(resource.topic, "green")}${tag(resource.length, "orange")}${tag(labelize(resource.stage), "blue")}</div>
+        <div class="tag-row">
+          ${tag(resource.topic, "green")}
+          ${tag(resource.length, "orange")}
+          ${tag(labelize(resource.stage), "blue")}
+          <span class="access-pill ${esc(level)}">${esc(accessLabelForResource(resource))}</span>
+        </div>
+        <span class="access-copy">${esc(accessCopyForResource(resource))}</span>
         <div class="row-actions">
-          <button class="primary-btn" type="button" data-discover-open="${esc(resource.id)}">Open</button>
-          <button class="soft-btn" type="button" data-share="${esc(resource.id)}">Share</button>
+          ${action}
+          <button class="soft-btn" type="button" data-share="${esc(resource.id)}">Share +${SEEDS_PER_SHARE}</button>
         </div>
       </div>
     </article>
@@ -20772,14 +21159,6 @@ function bindDynamicActions() {
       }
       setView(targetView);
       if (shouldRestoreModulePlayer) bindDynamicActions();
-    };
-  });
-  document.querySelectorAll("[data-share]").forEach((button) => {
-    button.onclick = () => {
-      state.activeResourceId = button.dataset.share;
-      renderAll();
-      setView("gatewayView");
-      toast("Sharing will open from the new discovery page");
     };
   });
   document.querySelectorAll("[data-speaker]").forEach((button) => {
@@ -21139,9 +21518,10 @@ function wireStaticActions() {
 	  scheduleStickyStageBannerUpdate();
 	  updateGatewayNavScrollState();
 	});
-  document.addEventListener("click", handleJourneyOutsideClick);
-  document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
-  document.querySelectorAll(".nav-btn").forEach((button) => {
+	  document.addEventListener("click", handleJourneyOutsideClick);
+	  document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
+	  document.addEventListener("click", handleLibraryAccessAction);
+	  document.querySelectorAll(".nav-btn").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.nav));
   });
   document.querySelectorAll("[data-gateway-nav]").forEach((button) => {
@@ -21223,9 +21603,6 @@ function wireStaticActions() {
     event.stopPropagation();
     openQuestionGuide(els.gatewayQuestion.value, els.gatewayQuestion);
   });
-  document.querySelectorAll("[data-action='partner-access']").forEach((button) => {
-    button.addEventListener("click", () => toast(t("library.partnerToast")));
-  });
   document.querySelector("[data-action='play-daily']").addEventListener("click", () => setDiscoveryResource(activeResource().id));
   document.getElementById("askButton").addEventListener("click", (event) => {
     event.stopPropagation();
@@ -21256,6 +21633,33 @@ function wireStaticActions() {
   document.getElementById("inviteFriend").addEventListener("click", () => toast("Invite ready"));
 }
 
+function handleLibraryAccessAction(event) {
+  const shareButton = event.target.closest("[data-share]");
+  if (shareButton) {
+    event.preventDefault();
+    const resource = resources.find((item) => item.id === shareButton.dataset.share);
+    shareResource(resource);
+    return;
+  }
+  const unlockButton = event.target.closest("[data-seed-unlock]");
+  if (unlockButton) {
+    event.preventDefault();
+    const resource = resources.find((item) => item.id === unlockButton.dataset.seedUnlock);
+    if (!resource) return;
+    if (unlockSeedResource(resource)) {
+      toast(`${resource.title} unlocked.`);
+    } else {
+      toast(`Share useful teaching to earn ${Math.max(0, resourceSeedCost(resource) - state.seeds)} more Seeds.`);
+    }
+    return;
+  }
+  const partnerButton = event.target.closest("[data-action='partner-access']");
+  if (partnerButton) {
+    event.preventDefault();
+    activatePrototypePartnerAccess();
+  }
+}
+
 function toast(message) {
   els.toast.textContent = message;
   els.toast.classList.add("show");
@@ -21265,7 +21669,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v88";
+  const workerRefreshKey = "oneinhim-sw-refresh-v89";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21273,7 +21677,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=88", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=89", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
@@ -21298,6 +21702,7 @@ async function boot() {
   await loadSchema();
   await loadContentPackages();
   loadFeedState();
+  loadLibraryAccessState();
   wireStaticActions();
   applyLanguage("en");
 	  renderAll();

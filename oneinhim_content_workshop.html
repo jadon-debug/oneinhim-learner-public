@@ -3780,11 +3780,23 @@ body.workshop-locked .shell {
           <input id="nextLabelInput" data-bind="nextStepLabel" />
         </div>
 
-        <div class="field">
-          <label for="reviewSelect">Quality status</label>
-          <select id="reviewSelect" data-bind="reviewStatus"></select>
-        </div>
-      </form>
+	  <div class="field">
+	    <label for="reviewSelect">Quality status</label>
+	    <select id="reviewSelect" data-bind="reviewStatus"></select>
+	  </div>
+
+	  <div class="field">
+	    <label for="accessLevelSelect">Library access</label>
+	    <select id="accessLevelSelect" data-bind="accessLevel"></select>
+	    <p class="field-hint">Core Journey stays free. Use Seed unlock for bonus Library content and partner access for supporter/staff-only items.</p>
+	  </div>
+
+	  <div class="field">
+	    <label for="seedCostInput">Seed cost</label>
+	    <input id="seedCostInput" type="number" min="1" step="1" data-bind="seedCost" />
+	    <p class="field-hint">Used when Library access is Seed unlock.</p>
+	  </div>
+	</form>
 
       <div class="right-actions">
         <button class="soft-btn" id="resetSample">Reset sample</button>
@@ -3814,7 +3826,8 @@ const embeddedSchema = {
     "journeyStage",
     "questionsAnswered",
     "suggestedNextStep",
-    "reviewStatus"
+    "reviewStatus",
+    "accessLevel"
   ],
   controlledLists: {
     contentTypes: ["full_video", "short_clip", "audio", "book", "book_excerpt", "lesson", "prayer", "question_answer", "journey_package", "speaker_profile"],
@@ -3825,6 +3838,7 @@ const embeddedSchema = {
     sensitivityLevels: ["normal", "careful", "connect_to_person"],
     emotionalTones: ["curious", "encouraging", "peaceful", "challenging", "hopeful", "comforting", "practical", "urgent"],
     reviewStatuses: ["draft", "auto_tagged", "prepared", "needs_cleanup", "ready", "published", "archived"],
+    accessLevels: ["free", "seed_unlock", "partner_access"],
     nextStepTypes: ["watch_next", "start_journey", "answer_question", "pray", "reflect", "practice", "join_group", "talk_to_mentor", "share", "read_more"]
   }
 };
@@ -3849,6 +3863,10 @@ const contentPackageFormat = {
   response: {
     label: "What happens next?",
     description: "Reflection prompt, quick check question, notes prompt, share text, and one recommended next step."
+  },
+  access: {
+    label: "Who can open it?",
+    description: "Free core Journey, Seed unlock bonus Library, or partner/supporter access."
   },
   admin: {
     label: "Is it ready?",
@@ -4359,6 +4377,15 @@ function labelize(value) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+function normalizedAccessLevel(value) {
+  const allowed = state.schema.controlledLists.accessLevels || ["free", "seed_unlock", "partner_access"];
+  return allowed.includes(value) ? value : "free";
+}
+
+function normalizedSeedCost(value) {
+  return Math.max(1, Math.round(Number(value) || 10));
+}
+
 function getActive() {
   return state.sources.find((item) => item.sourceId === state.activeId) || state.sources[0];
 }
@@ -4399,6 +4426,8 @@ function packageToSource(contentPackage) {
   const session = contentPackage.learnerSession || {};
   const placement = contentPackage.placement || {};
   const topic = contentPackage.topics?.[0] || "Discipleship";
+  const accessLevel = normalizedAccessLevel(contentPackage.access?.level || placement.accessLevel || contentPackage.admin?.accessLevel);
+  const seedCost = normalizedSeedCost(contentPackage.access?.seedCost || placement.seedCost);
   return {
     sourceId: `source_${contentPackage.primaryItemId}`,
     visualType: contentPackage.primaryMedium === "watch" ? "video" : contentPackage.primaryMedium === "listen" ? "audio" : "book",
@@ -4423,6 +4452,8 @@ function packageToSource(contentPackage) {
     scriptureReferences: session.scriptureReferences || [],
     sourceLocation: "oneinhim_content_packages.json",
     sourcePreApproved: contentPackage.admin?.sourcePreApproved ?? true,
+    accessLevel,
+    seedCost,
     prepared: {
       sourcePreApproved: contentPackage.admin?.sourcePreApproved ?? true,
       primaryMedium: contentPackage.primaryMedium,
@@ -4446,7 +4477,9 @@ function packageToSource(contentPackage) {
       },
       reflectionPrompt: session.reflectionPrompt || "",
       shareText: contentPackage.sharing?.shareText || "",
-      qualityStatus: contentPackage.admin?.packageStatus || "ready"
+      qualityStatus: contentPackage.admin?.packageStatus || "ready",
+      accessLevel,
+      seedCost
     },
     segments: (session.readBody || []).map((text, index) => ({
       id: `${contentPackage.primaryItemId}_body_${index + 1}`,
@@ -5383,12 +5416,14 @@ function createPreparedFields(item, sourcePreApproved = true) {
       moduleTitle: stage.name,
       lessonOrder: 1,
       isOptional: item.journeyStage === "explore" ? false : true
-    },
-    reflectionPrompt: `What is one thing from "${item.title}" you want to remember or act on?`,
-    shareText: `I found this helpful: ${item.title}. It might be useful for your journey too.`,
-    qualityStatus: item.reviewStatus === "published" || item.reviewStatus === "ready" ? "ready" : "prepared"
-  };
-}
+	    },
+	    reflectionPrompt: `What is one thing from "${item.title}" you want to remember or act on?`,
+	    shareText: `I found this helpful: ${item.title}. It might be useful for your journey too.`,
+	    qualityStatus: item.reviewStatus === "published" || item.reviewStatus === "ready" ? "ready" : "prepared",
+	    accessLevel: normalizedAccessLevel(item.accessLevel),
+	    seedCost: normalizedSeedCost(item.seedCost)
+	  };
+	}
 
 function ensurePreparedFields(item) {
   if (!item.prepared) {
@@ -5401,10 +5436,12 @@ function ensurePreparedFields(item) {
     stage: stageDetails(item.journeyStage).stage,
     moduleId: stageDetails(item.journeyStage).moduleId,
     moduleTitle: item.prepared.journeyPlacement?.moduleTitle || stageDetails(item.journeyStage).name
-  };
-  item.prepared.qualityStatus = item.reviewStatus === "published" || item.reviewStatus === "ready" ? "ready" : item.prepared.qualityStatus || "prepared";
-  return item.prepared;
-}
+	  };
+	  item.prepared.qualityStatus = item.reviewStatus === "published" || item.reviewStatus === "ready" ? "ready" : item.prepared.qualityStatus || "prepared";
+	  item.prepared.accessLevel = normalizedAccessLevel(item.prepared.accessLevel || item.accessLevel);
+	  item.prepared.seedCost = normalizedSeedCost(item.prepared.seedCost || item.seedCost);
+	  return item.prepared;
+	}
 
 function draftSegments(type, title, topic) {
   if (title.toLowerCase().includes("one basics") || topic.toLowerCase().includes("eternal life")) {
@@ -5482,12 +5519,14 @@ function createDraftFromIntake() {
     emotionalTone: inferred.tones,
     sensitivityLevel: inferred.topic === "Peace" ? "careful" : "normal",
     suggestedNextStep: inferred.nextStep,
-    reviewStatus: "auto_tagged",
-    scriptureReferences: [],
-    sourceLocation,
-    sourcePreApproved: true,
-    segments: draftSegments(type, title, inferred.topic)
-  };
+	    reviewStatus: "auto_tagged",
+	    scriptureReferences: [],
+	    sourceLocation,
+	    sourcePreApproved: true,
+	    accessLevel: "free",
+	    seedCost: 10,
+	    segments: draftSegments(type, title, inferred.topic)
+	  };
   item.prepared = createPreparedFields(item, true);
   if (chosenMedium) item.prepared.primaryMedium = chosenMedium;
   if (chosenShelf) item.prepared.discoverPlacement.shelf = chosenShelf;
@@ -6037,12 +6076,16 @@ function learnerPackageFromJourneyClip(record, clip) {
     language: record.language || "en",
     contentType: contentTypeForClipMedium(primaryMedium),
     length,
-    fallbackPlan: {
-      cannotWatch: `${primaryItemId}_read`,
-      cannotListen: `${primaryItemId}_read`,
-      cannotRead: primaryItemId
-    },
-    videoHost: record.videoHost,
+	    fallbackPlan: {
+	      cannotWatch: `${primaryItemId}_read`,
+	      cannotListen: `${primaryItemId}_read`,
+	      cannotRead: primaryItemId
+	    },
+	    access: {
+	      level: "free",
+	      seedCost: 0
+	    },
+	    videoHost: record.videoHost,
     muxVirtualClip: muxClip,
     journeyStage: {
       stage: stage.stage,
@@ -6084,12 +6127,14 @@ function learnerPackageFromJourneyClip(record, clip) {
       lessonOrder: (clip.placement.unitNumber * 100) + (clip.placement.lessonNumber * 10) + clip.placement.pieceNumber,
       unitNumber: clip.placement.unitNumber,
       unitTitle: clip.placement.unitTitle,
-      sectionNumber: clip.placement.sectionNumber,
-      pieceNumber: clip.placement.pieceNumber,
-      primaryMedium,
-      lessonMedium: primaryMedium,
-      isCoreLesson: true
-    },
+	      sectionNumber: clip.placement.sectionNumber,
+	      pieceNumber: clip.placement.pieceNumber,
+	      primaryMedium,
+	      lessonMedium: primaryMedium,
+	      accessLevel: "free",
+	      seedCost: 0,
+	      isCoreLesson: true
+	    },
     recommendedNextStep: {
       label: "Continue the next lesson",
       type: "continue_journey",
@@ -6098,10 +6143,11 @@ function learnerPackageFromJourneyClip(record, clip) {
     sharing: {
       shareText: `This clip from ${record.title} helped me take a next step with Jesus.`
     },
-    admin: {
-      packageStatus: record.videoHost.status === "ready" ? "ready" : "needs_mux_playback",
-      sourcePreApproved: true,
-      owner: "One In Him content team",
+	    admin: {
+	      packageStatus: record.videoHost.status === "ready" ? "ready" : "needs_mux_playback",
+	      sourcePreApproved: true,
+	      accessLevel: "free",
+	      owner: "One In Him content team",
       lastUpdated: new Date().toISOString().slice(0, 10),
       extractionStatus: "mux_virtual_clip",
       sourceRange: clip.virtualClip.timecode
@@ -6225,13 +6271,17 @@ function currentVideoIntakeRecord() {
       verificationMessage: muxValidation.message,
       verifiedAt: muxValidation.checkedAt
     },
-    appPlacement: {
-      discover: placement === "discover" || placement === "both",
-      journey: placement === "journey" || placement === "both",
-      section: stage.name,
-      sectionColour: stage.colour
-    },
-    playbackPrep: {
+	    appPlacement: {
+	      discover: placement === "discover" || placement === "both",
+	      journey: placement === "journey" || placement === "both",
+	      section: stage.name,
+	      sectionColour: stage.colour
+	    },
+	    access: {
+	      level: "free",
+	      seedCost: 0
+	    },
+	    playbackPrep: {
       transcript: document.getElementById("videoCheckTranscript").checked,
       captions: document.getElementById("videoCheckCaptions").checked,
       muxPlayback: muxVerified && document.getElementById("videoCheckMux").checked,
@@ -6427,12 +6477,14 @@ function createVerifiedVideoDraftFromIntake() {
     sensitivityLevel: "normal",
     suggestedNextStep: inferred.nextStep,
     reviewStatus: "prepared",
-    scriptureReferences: [],
-    sourceLocation: "video-intake-folder",
-    sourcePreApproved: true,
-    videoHost,
-    segments: videoClipSuggestions()
-  };
+	    scriptureReferences: [],
+	    sourceLocation: "video-intake-folder",
+	    sourcePreApproved: true,
+	    videoHost,
+	    accessLevel: "free",
+	    seedCost: 10,
+	    segments: videoClipSuggestions()
+	  };
   item.prepared = createPreparedFields(item, true);
   item.prepared.discoverPlacement.showOnHome = els.videoPlacementSelect.value !== "journey";
   item.prepared.discoverPlacement.shelf = els.videoSeriesInput.value.trim() || "Featured teachings";
@@ -6548,6 +6600,8 @@ function renderPackageFormat(item) {
 function buildPreparedAppItem(item) {
   const prepared = ensurePreparedFields(item);
   const stage = stageDetails(item.journeyStage);
+  const accessLevel = normalizedAccessLevel(prepared.accessLevel);
+  const seedCost = normalizedSeedCost(prepared.seedCost);
   return {
     contentId: item.contentId,
     sourceId: item.sourceId,
@@ -6574,6 +6628,10 @@ function buildPreparedAppItem(item) {
     recommendedNextStep: item.suggestedNextStep,
     reflectionPrompt: prepared.reflectionPrompt,
     shareText: prepared.shareText,
+    access: {
+      level: accessLevel,
+      seedCost: accessLevel === "seed_unlock" ? seedCost : 0
+    },
     notes: {
       enabled: true,
       saveToProfile: true,
@@ -6588,6 +6646,7 @@ function buildPreparedAppItem(item) {
     admin: {
       sourcePreApproved: prepared.sourcePreApproved,
       qualityStatus: prepared.qualityStatus,
+      accessLevel,
       qualityNotes: "Prepared by Content Workshop prototype.",
       lastUpdated: "2026-05-19"
     }
@@ -6606,12 +6665,13 @@ function buildContentPackage(item) {
     sourceItems: [prepared.contentId],
     primaryItemId: prepared.contentId,
     primaryMedium: prepared.primaryMedium,
-    fallbackPlan: {
-      cannotWatch: prepared.fallbackMediums.find((fallback) => fallback.when === "cannot_watch")?.useContentId || "Offer read or listen alternative",
-      cannotListen: prepared.fallbackMediums.find((fallback) => fallback.when === "cannot_listen")?.useContentId || "Offer watch or read alternative",
-      cannotRead: prepared.fallbackMediums.find((fallback) => fallback.when === "cannot_read")?.useContentId || "Offer watch or listen alternative"
-    },
-    journeyStage: prepared.journeyStage,
+	    fallbackPlan: {
+	      cannotWatch: prepared.fallbackMediums.find((fallback) => fallback.when === "cannot_watch")?.useContentId || "Offer read or listen alternative",
+	      cannotListen: prepared.fallbackMediums.find((fallback) => fallback.when === "cannot_listen")?.useContentId || "Offer watch or read alternative",
+	      cannotRead: prepared.fallbackMediums.find((fallback) => fallback.when === "cannot_read")?.useContentId || "Offer watch or listen alternative"
+	    },
+	    access: prepared.access,
+	    journeyStage: prepared.journeyStage,
     learnerSession: {
       openingPrompt: firstQuestion,
       contentSummary: prepared.summaryLong,
@@ -6630,18 +6690,21 @@ function buildContentPackage(item) {
       showInDiscover: prepared.discoverPlacement.showOnHome,
       discoverShelf: prepared.discoverPlacement.shelf,
       showInJourney: true,
-      moduleId: prepared.journeyPlacement.moduleId,
-      lessonOrder: prepared.journeyPlacement.lessonOrder,
-      isCoreLesson: !prepared.journeyPlacement.isOptional
-    },
+	      moduleId: prepared.journeyPlacement.moduleId,
+	      lessonOrder: prepared.journeyPlacement.lessonOrder,
+	      accessLevel: prepared.access.level,
+	      seedCost: prepared.access.seedCost,
+	      isCoreLesson: !prepared.journeyPlacement.isOptional
+	    },
     sharing: {
       shareText: prepared.shareText,
       shareImagePrompt: `${prepared.journeyStage.name} share card using stage colour ${prepared.journeyStage.colour}`
     },
     admin: {
-      packageStatus: prepared.admin.qualityStatus,
-      sourcePreApproved: prepared.admin.sourcePreApproved,
-      owner: "One In Him content team",
+	      packageStatus: prepared.admin.qualityStatus,
+	      sourcePreApproved: prepared.admin.sourcePreApproved,
+	      accessLevel: prepared.admin.accessLevel,
+	      owner: "One In Him content team",
       lastUpdated: prepared.admin.lastUpdated
     }
   };
@@ -6783,11 +6846,13 @@ function preparedFieldValue(item, field) {
     availableMediums: prepared.availableMediums?.length,
     stageColour: prepared.journeyStage?.colour,
     discoverPlacement: prepared.discoverPlacement?.shelf,
-    journeyPlacement: prepared.journeyPlacement?.moduleTitle,
-    reflectionPrompt: prepared.reflectionPrompt,
-    shareText: prepared.shareText,
-    qualityStatus: prepared.admin?.qualityStatus
-  };
+	    journeyPlacement: prepared.journeyPlacement?.moduleTitle,
+	    reflectionPrompt: prepared.reflectionPrompt,
+	    shareText: prepared.shareText,
+	    qualityStatus: prepared.admin?.qualityStatus,
+	    accessLevel: prepared.access?.level,
+	    seedCost: prepared.access?.seedCost
+	  };
   return lookup[field];
 }
 
@@ -6800,11 +6865,12 @@ function allReadinessFields() {
     "stageColour",
     "discoverPlacement",
     "journeyPlacement",
-    "reflectionPrompt",
-    "shareText",
-    "qualityStatus"
-  ];
-}
+	    "reflectionPrompt",
+	    "shareText",
+	    "qualityStatus",
+	    "accessLevel"
+	  ];
+	}
 
 function fieldValue(item, field) {
   const lookup = {
@@ -6818,10 +6884,11 @@ function fieldValue(item, field) {
     summaryShort: item.summaryShort,
     primaryTopic: item.primaryTopic,
     journeyStage: item.journeyStage,
-    questionsAnswered: item.questionsAnswered?.length,
-    suggestedNextStep: item.suggestedNextStep?.label,
-    reviewStatus: item.reviewStatus
-  };
+	    questionsAnswered: item.questionsAnswered?.length,
+	    suggestedNextStep: item.suggestedNextStep?.label,
+	    reviewStatus: item.reviewStatus,
+	    accessLevel: normalizedAccessLevel(item.prepared?.accessLevel || item.accessLevel)
+	  };
   return lookup[field] || preparedFieldValue(item, field);
 }
 
@@ -6847,10 +6914,12 @@ function setFormValues(item) {
   document.getElementById("questionsInput").value = item.questionsAnswered.join("\n");
   document.getElementById("difficultySelect").value = item.difficulty;
   document.getElementById("sensitivitySelect").value = item.sensitivityLevel;
-  document.getElementById("nextTypeSelect").value = item.suggestedNextStep.type;
-  document.getElementById("nextLabelInput").value = item.suggestedNextStep.label;
-  document.getElementById("reviewSelect").value = item.reviewStatus;
-  populateChips("formatChips", "formats", item.format, (value) => toggleArray(item.format, value));
+	  document.getElementById("nextTypeSelect").value = item.suggestedNextStep.type;
+	  document.getElementById("nextLabelInput").value = item.suggestedNextStep.label;
+	  document.getElementById("reviewSelect").value = item.reviewStatus;
+	  document.getElementById("accessLevelSelect").value = normalizedAccessLevel(ensurePreparedFields(item).accessLevel);
+	  document.getElementById("seedCostInput").value = normalizedSeedCost(ensurePreparedFields(item).seedCost);
+	  populateChips("formatChips", "formats", item.format, (value) => toggleArray(item.format, value));
   populateChips("roleChips", "resourceRoles", item.resourceRole, (value) => toggleArray(item.resourceRole, value));
   populateChips("toneChips", "emotionalTones", item.emotionalTone, (value) => toggleArray(item.emotionalTone, value));
 }
@@ -6868,7 +6937,7 @@ function toggleArray(array, value) {
 
 function wireForm() {
   document.querySelectorAll("[data-bind]").forEach((field) => {
-    field.addEventListener("input", () => {
+    const updateField = () => {
       const item = getActive();
       const key = field.dataset.bind;
       if (key === "title") item.title = field.value;
@@ -6882,12 +6951,16 @@ function wireForm() {
       if (key === "questionsAnswered") item.questionsAnswered = field.value.split("\n").map((line) => line.trim()).filter(Boolean);
       if (key === "difficulty") item.difficulty = field.value;
       if (key === "sensitivityLevel") item.sensitivityLevel = field.value;
-      if (key === "nextStepType") item.suggestedNextStep.type = field.value;
-      if (key === "nextStepLabel") item.suggestedNextStep.label = field.value;
-      if (key === "reviewStatus") item.reviewStatus = field.value;
+	      if (key === "nextStepType") item.suggestedNextStep.type = field.value;
+	      if (key === "nextStepLabel") item.suggestedNextStep.label = field.value;
+	      if (key === "reviewStatus") item.reviewStatus = field.value;
+	      if (key === "accessLevel") ensurePreparedFields(item).accessLevel = normalizedAccessLevel(field.value);
+      if (key === "seedCost") ensurePreparedFields(item).seedCost = normalizedSeedCost(field.value);
       flashStatus("Draft updated");
       renderAll({ keepFormFocus: true });
-    });
+    };
+    field.addEventListener("input", updateField);
+    field.addEventListener("change", updateField);
   });
 }
 
@@ -7079,10 +7152,11 @@ async function startWorkshopApp() {
   populateSelect("typeSelect", "contentTypes");
   populateSelect("stageSelect", "journeyStages");
   populateSelect("difficultySelect", "difficulty");
-  populateSelect("sensitivitySelect", "sensitivityLevels");
-  populateSelect("nextTypeSelect", "nextStepTypes");
-  populateSelect("reviewSelect", "reviewStatuses");
-  wireForm();
+	  populateSelect("sensitivitySelect", "sensitivityLevels");
+	  populateSelect("nextTypeSelect", "nextStepTypes");
+	  populateSelect("reviewSelect", "reviewStatuses");
+	  populateSelect("accessLevelSelect", "accessLevels");
+	  wireForm();
   wireTabs();
   wireActions();
   renderAll();
