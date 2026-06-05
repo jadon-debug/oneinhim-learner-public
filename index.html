@@ -382,10 +382,10 @@ body.learning-mode .view.active {
 }
 
 .onboarding-top {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 86px;
-  gap: 16px;
+  min-height: 48px;
+  display: flex;
   align-items: center;
+  justify-content: flex-start;
 }
 
 .onboarding-back {
@@ -393,36 +393,10 @@ body.learning-mode .view.active {
   height: 44px;
   border: 0;
   background: transparent;
-  color: #a7a7a7;
+  color: #9b9b9b;
   font-size: 34px;
+  font-weight: 800;
   line-height: 1;
-}
-
-.onboarding-progress {
-  height: 18px;
-  border-radius: 999px;
-  background: #e7e7e7;
-  overflow: hidden;
-}
-
-.onboarding-progress span {
-  display: block;
-  width: var(--progress, 25%);
-  height: 100%;
-  border-radius: inherit;
-  background: var(--oih-orange);
-  box-shadow: inset 0 5px 0 rgba(255,255,255,0.2);
-}
-
-.onboarding-skip {
-  min-height: 40px;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 950;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .onboarding-body {
@@ -6925,23 +6899,13 @@ body.library-mode .library-topic-list {
   }
 
   .onboarding-top {
-    grid-template-columns: 34px minmax(0, 1fr) 62px;
-    gap: 8px;
+    min-height: 36px;
   }
 
   .onboarding-back {
     width: 34px;
     height: 34px;
     font-size: 28px;
-  }
-
-  .onboarding-progress {
-    height: 15px;
-  }
-
-  .onboarding-skip {
-    min-height: 34px;
-    font-size: 11px;
   }
 
   .onboarding-body {
@@ -15202,11 +15166,7 @@ body:not(.gateway-mode) .main {
 	    <section class="view" id="onboardingView">
 	      <div class="onboarding-shell">
         <header class="onboarding-top">
-          <button class="onboarding-back" type="button" id="onboardingBack" aria-label="Back">‹</button>
-          <div class="onboarding-progress" aria-label="Onboarding progress">
-            <span id="onboardingProgress"></span>
-          </div>
-          <button class="onboarding-skip" type="button" id="onboardingSkip" data-i18n="onboarding.skip">Skip</button>
+          <button class="onboarding-back" type="button" id="onboardingBack" aria-label="Close">&times;</button>
         </header>
 
         <main class="onboarding-body">
@@ -17008,12 +16968,10 @@ const els = {
 	  feedPostButton: document.getElementById("feedPostButton"),
 	  feedPostList: document.getElementById("feedPostList"),
 	  feedStatus: document.getElementById("feedStatus"),
-	  onboardingProgress: document.getElementById("onboardingProgress"),
   onboardingPrompt: document.getElementById("onboardingPrompt"),
   onboardingContent: document.getElementById("onboardingContent"),
   onboardingGuideArt: document.getElementById("onboardingGuideArt"),
   onboardingBack: document.getElementById("onboardingBack"),
-  onboardingSkip: document.getElementById("onboardingSkip"),
   onboardingContinue: document.getElementById("onboardingContinue"),
   pathGrid: document.getElementById("pathGrid"),
   stageAppHeader: document.getElementById("stageAppHeader"),
@@ -17697,14 +17655,11 @@ function onboardingStageChoices() {
 
 function renderOnboarding() {
   if (!els.onboardingContent) return;
-  const step = state.onboardingStep;
-  const progress = step === 0 ? 100 : ([22, 50, 78, 100][step] || 100);
+  const step = 0;
   const prompts = [t("onboarding.promptStage"), t("onboarding.promptMethod"), t("onboarding.promptAchieve"), t("onboarding.promptHabit")];
-  els.onboardingProgress.style.setProperty("--progress", `${progress}%`);
   els.onboardingPrompt.textContent = prompts[step] || prompts[0];
   els.onboardingGuideArt.src = gatewayArtByLanguage[state.language] || gatewayArtByLanguage.en;
   els.onboardingContinue.textContent = t("onboarding.continue");
-  els.onboardingSkip.textContent = t("onboarding.skip");
 
   if (step === 0) {
     els.onboardingContent.className = "onboarding-panel";
@@ -21785,16 +21740,7 @@ function wireStaticActions() {
   document.getElementById("gatewayStart").addEventListener("click", () => {
     openOnboarding();
   });
-  els.onboardingBack.addEventListener("click", () => {
-    if (state.onboardingStep <= 0) {
-      setView("gatewayView");
-      return;
-    }
-    state.onboardingStep -= 1;
-    renderOnboarding();
-    bindDynamicActions();
-  });
-  els.onboardingSkip.addEventListener("click", () => openDefaultJourneyPath());
+  els.onboardingBack.addEventListener("click", () => setView("gatewayView"));
   els.onboardingContinue.addEventListener("click", () => {
     finishOnboarding();
   });
@@ -21884,7 +21830,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v96";
+  const workerRefreshKey = "oneinhim-sw-refresh-v97";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21892,7 +21838,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=96", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=97", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
