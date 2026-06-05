@@ -4363,6 +4363,65 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   display: none;
 }
 
+.shelf-scroll-frame {
+  position: relative;
+}
+
+.shelf-scroll-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  width: 54px;
+  height: 96px;
+  display: none;
+  place-items: center;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(90deg, rgba(9, 10, 10, 0.72), rgba(9, 10, 10, 0.24));
+  color: #fff;
+  font-size: 72px;
+  font-family: Montserrat, sans-serif;
+  font-weight: 300;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 160ms ease, background 160ms ease;
+  cursor: pointer;
+}
+
+.shelf-scroll-arrow:hover,
+.shelf-scroll-arrow:focus-visible {
+  background: linear-gradient(90deg, rgba(9, 10, 10, 0.84), rgba(9, 10, 10, 0.32));
+}
+
+.shelf-scroll-arrow.prev {
+  left: 0;
+}
+
+.shelf-scroll-arrow.next {
+  right: 0;
+  background: linear-gradient(270deg, rgba(9, 10, 10, 0.72), rgba(9, 10, 10, 0.24));
+}
+
+.shelf-scroll-arrow.next:hover,
+.shelf-scroll-arrow.next:focus-visible {
+  background: linear-gradient(270deg, rgba(9, 10, 10, 0.84), rgba(9, 10, 10, 0.32));
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 761px) {
+  .shelf-scroll-frame.is-scrollable.has-left .shelf-scroll-arrow.prev,
+  .shelf-scroll-frame.is-scrollable.has-right .shelf-scroll-arrow.next {
+    display: grid;
+  }
+
+  .shelf-scroll-frame:hover .shelf-scroll-arrow,
+  .shelf-scroll-frame:focus-within .shelf-scroll-arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .weekly-card-stack {
   flex: 0 0 clamp(320px, 25vw, 390px);
   display: grid;
@@ -21487,6 +21546,57 @@ function bindDynamicActions() {
   });
 }
 
+function updateShelfArrowState(frame) {
+  const rail = frame && frame.querySelector(".weekly-media-shelf, .discovery-row");
+  if (!rail) return;
+  const maxScroll = rail.scrollWidth - rail.clientWidth;
+  const hasOverflow = maxScroll > 8;
+  frame.classList.toggle("is-scrollable", hasOverflow);
+  frame.classList.toggle("has-left", hasOverflow && rail.scrollLeft > 6);
+  frame.classList.toggle("has-right", hasOverflow && rail.scrollLeft < maxScroll - 6);
+}
+
+function updateAllShelfArrowStates() {
+  document.querySelectorAll(".shelf-scroll-frame").forEach(updateShelfArrowState);
+}
+
+function enhanceDesktopShelves() {
+  document.querySelectorAll(".weekly-media-shelf, .discovery-row").forEach((rail) => {
+    if (rail.closest(".shelf-scroll-frame")) return;
+    const frame = document.createElement("div");
+    frame.className = "shelf-scroll-frame";
+    rail.parentElement.insertBefore(frame, rail);
+    frame.appendChild(rail);
+    frame.insertAdjacentHTML("beforeend", `
+      <button class="shelf-scroll-arrow prev" type="button" data-shelf-scroll="-1" aria-label="Previous shelf items">‹</button>
+      <button class="shelf-scroll-arrow next" type="button" data-shelf-scroll="1" aria-label="Next shelf items">›</button>
+    `);
+    let pendingUpdate = false;
+    rail.addEventListener("scroll", () => {
+      if (pendingUpdate) return;
+      pendingUpdate = true;
+      requestAnimationFrame(() => {
+        pendingUpdate = false;
+        updateShelfArrowState(frame);
+      });
+    }, { passive: true });
+    updateShelfArrowState(frame);
+  });
+}
+
+function handleShelfArrowClick(event) {
+  const button = event.target.closest("[data-shelf-scroll]");
+  if (!button) return;
+  const frame = button.closest(".shelf-scroll-frame");
+  const rail = frame && frame.querySelector(".weekly-media-shelf, .discovery-row");
+  if (!rail) return;
+  event.preventDefault();
+  const direction = Number(button.dataset.shelfScroll) || 1;
+  const distance = Math.max(rail.clientWidth * 0.78, 320);
+  rail.scrollBy({ left: direction * distance, behavior: "smooth" });
+  window.setTimeout(() => updateShelfArrowState(frame), 260);
+}
+
 function wireStaticActions() {
 	window.addEventListener("scroll", () => {
 	  scheduleStickyStageBannerUpdate();
@@ -21497,11 +21607,14 @@ function wireStaticActions() {
 	  scheduleDuoPathCurveUpdate();
 	  scheduleStickyStageBannerUpdate();
 	  updateGatewayNavScrollState();
+	  updateAllShelfArrowStates();
 	});
 	  document.addEventListener("click", handleJourneyOutsideClick);
 	  document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
 	  document.addEventListener("click", handleJourneyShareAction, { capture: true });
 	  document.addEventListener("click", handleLibraryAccessAction);
+	  document.addEventListener("click", handleShelfArrowClick);
+	  enhanceDesktopShelves();
 	  document.querySelectorAll(".nav-btn").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.nav));
   });
@@ -21652,7 +21765,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v92";
+  const workerRefreshKey = "oneinhim-sw-refresh-v93";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21660,7 +21773,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=92", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=93", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
