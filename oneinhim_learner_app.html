@@ -2139,6 +2139,11 @@ body.learning-mode .view.active {
   color: var(--stage-color, var(--oih-orange));
 }
 
+.duo-popout-actions {
+  display: grid;
+  gap: 9px;
+}
+
 .duo-node-popout .soft-btn:disabled {
   color: #aaa9a5;
   background: #e6e6e3;
@@ -2796,7 +2801,7 @@ body.learning-mode .view.active {
 #moduleDetailView .module-session-points {
   border: 0;
   background: transparent;
-  color: #ef5550;
+  color: #8d701a;
   font-size: 17px;
   box-shadow: none;
 }
@@ -3192,7 +3197,7 @@ body.learning-mode .view.active {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--oih-red);
+  color: #8d701a;
   font-weight: 950;
 }
 
@@ -5813,26 +5818,12 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   color: #fff;
 }
 
-.library-layout.library-access-layout {
-  grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
-  min-height: min(820px, calc(100vh - 90px));
-  align-items: start;
-  padding: clamp(34px, 6vw, 72px) clamp(18px, 4vw, 46px);
-  background: var(--oih-black);
-  color: #fff;
-}
-
 .library-partner-panel {
   width: min(640px, 100%);
   display: grid;
   justify-items: center;
   gap: 18px;
   text-align: center;
-}
-
-.library-access-hero {
-  position: sticky;
-  top: 118px;
 }
 
 .library-partner-mark {
@@ -5906,75 +5897,44 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   font-size: 13px !important;
 }
 
-.seed-wallet {
-  width: min(420px, 100%);
-  display: grid;
-  grid-template-columns: auto auto;
+.seed-counter {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 4px 14px;
-  padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.seed-wallet span {
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 12px;
+  gap: 8px;
+  color: #8d701a;
   font-weight: 950;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.seed-wallet strong {
-  color: #f6ca35;
-  font-size: 36px;
-  line-height: 1;
+.seed-icon {
+  position: relative;
+  width: 20px;
+  height: 26px;
+  flex: 0 0 auto;
+  border-radius: 58% 42% 60% 40%;
+  background: linear-gradient(145deg, #f8d84d 0%, #e99b24 70%, #b86512 100%);
+  box-shadow: inset -3px -4px 0 rgba(0, 0, 0, 0.14), 0 2px 0 rgba(0, 0, 0, 0.08);
+  transform: rotate(-22deg);
 }
 
-.seed-wallet small {
-  grid-column: 1 / -1;
-  max-width: 28em;
-  color: rgba(255, 255, 255, 0.58);
-  font-size: 13px;
-  line-height: 1.35;
+.seed-icon::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 4px;
+  width: 8px;
+  height: 16px;
+  border-left: 2px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  transform: rotate(18deg);
 }
 
-.library-bonus-section {
-  min-width: 0;
-  display: grid;
-  gap: 18px;
-}
-
-.library-bonus-head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
-  align-items: end;
-  gap: 18px;
-}
-
-.library-bonus-head h3 {
-  margin: 0;
-  color: #fff;
-  font-size: clamp(28px, 4vw, 48px);
-  line-height: 1;
-}
-
-.library-bonus-head p {
-  max-width: 760px;
-  color: rgba(255, 255, 255, 0.62);
-  line-height: 1.5;
-}
-
-.library-bonus-head .search-input {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.14);
-  color: #fff;
-}
-
-.library-bonus-head .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.42);
+.status-icon.seed-status-icon {
+  color: transparent;
+  border-radius: 58% 42% 60% 40%;
+  background: linear-gradient(145deg, #f8d84d 0%, #e99b24 70%, #b86512 100%);
+  box-shadow: inset -3px -4px 0 rgba(0, 0, 0, 0.14);
+  transform: rotate(-22deg);
 }
 
 .access-pill {
@@ -14328,26 +14288,6 @@ body:not(.gateway-mode) .main {
     place-items: center !important;
   }
 
-  body.library-mode .library-layout.library-access-layout {
-    grid-template-columns: 1fr !important;
-    gap: 28px !important;
-    min-height: calc(100svh - var(--app-top-chrome-space) - var(--app-bottom-chrome-space)) !important;
-    padding: 18px 22px calc(28px + env(safe-area-inset-bottom)) !important;
-  }
-
-  body.library-mode .library-access-hero {
-    position: static !important;
-  }
-
-  body.library-mode .library-bonus-head {
-    grid-template-columns: 1fr !important;
-    gap: 14px !important;
-  }
-
-  body.library-mode .library-bonus-head h3 {
-    font-size: clamp(28px, 8vw, 38px) !important;
-  }
-
   body.library-mode .resource-grid {
     grid-template-columns: 1fr !important;
     padding: 0 !important;
@@ -14412,10 +14352,6 @@ body:not(.gateway-mode) .main {
   body.library-mode .library-layout.library-partner-layout {
     padding-top: 14px !important;
     padding-bottom: 18px !important;
-  }
-
-  body.library-mode .library-layout.library-access-layout {
-    padding-top: 12px !important;
   }
 
   body.library-mode .library-partner-panel {
@@ -15206,7 +15142,7 @@ body:not(.gateway-mode) .main {
             <h3>Save your progress</h3>
             <p>Create a profile later to keep notes, progress, and shared clips across devices.</p>
             <div class="stage-side-actions">
-              <button class="primary-btn" type="button" data-nav-jump="gatewayView">Share a resource</button>
+              <button class="primary-btn" type="button" data-share-journey>Share lesson +5 Seeds</button>
               <button class="soft-btn" type="button" data-nav-jump="gatewayView">Home</button>
             </div>
           </div>
@@ -15300,7 +15236,10 @@ body:not(.gateway-mode) .main {
           <div class="quiz-progress" aria-label="Section progress">
             <span id="quizProgressFill"></span>
           </div>
-          <span class="quiz-life">♥ <span>5</span></span>
+          <span class="quiz-life seed-counter" aria-label="Seeds earned">
+            <span class="seed-icon" aria-hidden="true"></span>
+            <span data-seed-count>0</span>
+          </span>
         </header>
 
         <main class="quiz-main">
@@ -15510,8 +15449,8 @@ body:not(.gateway-mode) .main {
     </section>
 
     <section class="view" id="libraryView" aria-hidden="true">
-      <div class="library-layout library-access-layout">
-        <section class="library-partner-panel library-access-hero" aria-labelledby="libraryPartnerTitle">
+      <div class="library-layout library-partner-layout">
+        <section class="library-partner-panel" aria-labelledby="libraryPartnerTitle">
           <div class="library-partner-mark" aria-hidden="true">
             <svg viewBox="0 0 48 48">
               <path d="M10 39V12.5c0-1.4 1.1-2.5 2.5-2.5H22c2.2 0 4 1.8 4 4v27c0-2.2-1.8-4-4-4H10Z"></path>
@@ -15523,29 +15462,12 @@ body:not(.gateway-mode) .main {
           <p class="eyebrow" data-i18n="library.eyebrow">Library</p>
           <h2 id="libraryPartnerTitle" data-i18n="library.partnerTitle">Become a partner for full access</h2>
           <p data-i18n="library.partnerCopy">Partners and supporters help keep One In Him resources free for people starting their journey. Partner access opens the growing library of teachings, audio, and study guides.</p>
-          <div class="seed-wallet" aria-live="polite">
-            <span>Seeds</span>
-            <strong id="seedBalance">0</strong>
-            <small id="librarySeedProgress">Share a useful teaching to earn Seeds and unlock bonus Library content.</small>
-          </div>
           <button class="primary-btn" type="button" data-action="partner-access" data-i18n="library.partnerButton">Become a partner</button>
           <button class="library-partner-signin" type="button" data-gateway-nav="account">
             <span data-i18n="library.alreadyPartner">Already a partner?</span>
             <strong data-i18n="library.signIn">Sign in</strong>
           </button>
           <p class="library-partner-note" data-i18n="library.partnerNote">One In Him is a charity. This is support, not buying a product; the core journey remains free.</p>
-        </section>
-        <section class="library-bonus-section" aria-label="Library resources">
-          <div class="library-bonus-head">
-            <div>
-              <p class="eyebrow">Bonus Library</p>
-              <h3>Unlock extra teachings with Seeds</h3>
-              <p id="libraryAccessSummary">Core Journey stays free. Bonus Library content can be unlocked with Seeds, or opened directly by partners, supporters, and approved staff.</p>
-            </div>
-            <input class="search-input" id="librarySearch" type="search" placeholder="Search Jesus, prayer, anxiety, speaker" />
-          </div>
-          <div class="resource-grid" id="libraryGrid"></div>
-          <div class="moment-list library-topic-list" id="topicList"></div>
         </section>
       </div>
     </section>
@@ -17007,9 +16929,6 @@ const els = {
   askInput: document.getElementById("askInput"),
   answerCard: document.getElementById("answerCard"),
   askRecommendations: document.getElementById("askRecommendations"),
-  seedBalance: document.getElementById("seedBalance"),
-  libraryAccessSummary: document.getElementById("libraryAccessSummary"),
-  librarySeedProgress: document.getElementById("librarySeedProgress"),
   librarySearch: document.getElementById("librarySearch"),
   libraryGrid: document.getElementById("libraryGrid"),
   topicList: document.getElementById("topicList"),
@@ -18047,6 +17966,16 @@ function saveLibraryAccessState() {
   writeLocalJson(LIBRARY_PARTNER_ACCESS_STORAGE_KEY, state.partnerAccess);
 }
 
+function seedCounterInnerMarkup() {
+  return `<span class="seed-icon" aria-hidden="true"></span><span data-seed-count>${esc(state.seeds)}</span>`;
+}
+
+function updateSeedDisplays() {
+  document.querySelectorAll("[data-seed-count]").forEach((counter) => {
+    counter.textContent = String(state.seeds);
+  });
+}
+
 function userHasFullLibraryAccess() {
   return Boolean(state.partnerAccess || adminAuthState.profile?.active || adminAuthState.profile);
 }
@@ -18088,7 +18017,7 @@ function accessCopyForResource(resource) {
     const cost = resourceSeedCost(resource);
     const needed = Math.max(0, cost - state.seeds);
     if (state.seedUnlocked.has(libraryAccessKey(resource))) return "Unlocked with Seeds.";
-    return needed ? `Share useful teaching to earn ${needed} more Seed${needed === 1 ? "" : "s"}.` : `Ready to unlock for ${cost} Seeds.`;
+    return needed ? `Share from Journey to earn ${needed} more Seed${needed === 1 ? "" : "s"}.` : `Ready to unlock for ${cost} Seeds.`;
   }
   return "Partners, supporters, and approved staff can open the full Library directly.";
 }
@@ -18099,6 +18028,7 @@ function earnSeedsForShare(resource) {
   state.sharedForSeeds.add(key);
   state.seeds += SEEDS_PER_SHARE;
   saveLibraryAccessState();
+  updateSeedDisplays();
   return SEEDS_PER_SHARE;
 }
 
@@ -18131,7 +18061,7 @@ function handleLockedResource(resource) {
   setView("libraryView");
   const level = resourceAccessLevel(resource);
   if (level === "seed_unlock") {
-    toast(`${resource.title} needs ${resourceSeedCost(resource)} Seeds.`);
+    toast(`${resource.title} can unlock with Seeds earned from Journey sharing.`);
     return;
   }
   toast("This is partner Library content.");
@@ -18142,8 +18072,6 @@ async function shareResource(resource) {
   const shareText = resource.shareLine || resource.summary || `I found this helpful: ${resource.title}`;
   const shareUrl = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(resource.id)}`;
   const earned = earnSeedsForShare(resource);
-  renderLibrary();
-  bindDynamicActions();
   toast(earned ? `Shared. +${earned} Seeds.` : "Shared already. Seeds kept.");
   try {
     if (navigator.share) {
@@ -18153,6 +18081,50 @@ async function shareResource(resource) {
     }
   } catch (error) {
     // Sharing can be cancelled by the user; earning Seeds still reflects the intentional share action in this prototype.
+  }
+}
+
+function journeyShareResourceForNode(stageChoice, groupIndex) {
+  const stage = stageForChoice(stageChoice || state.activeStageId);
+  const groups = stageSectionGroups(stage);
+  const safeGroupIndex = Math.max(0, Number(groupIndex) || 0);
+  const group = groups[safeGroupIndex] || groups[0];
+  const firstLesson = group && group.modules.find((item) => moduleResourceFor(stage, item.moduleIndex));
+  const firstResource = firstLesson ? moduleResourceFor(stage, firstLesson.moduleIndex) : null;
+  if (firstResource) return firstResource;
+  const title = group?.title || t(stage.titleKey);
+  return {
+    id: `journey_node_${stage.choice}_${safeGroupIndex}`,
+    title,
+    summary: sectionThemeDescription(stage, { title }),
+    shareLine: `I am taking this One In Him Journey step: ${title}.`
+  };
+}
+
+async function shareCurrentJourneyResource() {
+  const stage = activeStage();
+  const resource = moduleResourceFor(stage, state.activeModuleIndex)
+    || journeyShareResourceForNode(stage.choice, state.selectedSectionIndex)
+    || activeResource();
+  await shareResource(resource);
+}
+
+function handleJourneyShareAction(event) {
+  const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+  if (!target) return;
+  const nodeShareButton = target.closest("[data-share-journey-node]");
+  if (nodeShareButton) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const [stageChoice, groupIndex] = String(nodeShareButton.dataset.shareJourneyNode || "").split(":");
+    shareResource(journeyShareResourceForNode(stageChoice, Number(groupIndex) || 0));
+    return;
+  }
+  const journeyShareButton = target.closest("[data-share-journey]");
+  if (journeyShareButton) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    shareCurrentJourneyResource();
   }
 }
 
@@ -19726,7 +19698,10 @@ function renderDuoNodePopout(node, stage) {
       ${node.locked ? `
         <button class="soft-btn" type="button" disabled>Locked</button>
       ` : `
-        <button class="primary-btn" type="button" data-section-node-start="${esc(`${stage.choice}:${node.groupIndex}`)}">${node.completed ? "Review unit" : "Start unit"}</button>
+        <div class="duo-popout-actions">
+          <button class="primary-btn" type="button" data-section-node-start="${esc(`${stage.choice}:${node.groupIndex}`)}">${node.completed ? "Review unit" : "Start unit"}</button>
+          <button class="soft-btn" type="button" data-share-journey-node="${esc(`${stage.choice}:${node.groupIndex}`)}">Share +5 Seeds</button>
+        </div>
       `}
     </div>
   `;
@@ -19789,14 +19764,14 @@ function renderStageDetail() {
   els.stageQuestProgress.style.setProperty("--stage-color", stage.stageColor);
   els.stageQuestProgress.style.setProperty("--progress", `${Math.max(16, stage.progress)}%`);
   els.stageStatusRow.innerHTML = [
-    ["▰", `${Math.round(stage.progress)}% complete`],
-    ["◆", `${sectionGroups.length} units`],
-    ["♥", "5 hearts"],
-    ["⚡", "1 step today"]
-  ].map(([icon, label]) => `
+    { icon: "▰", label: `${Math.round(stage.progress)}% complete` },
+    { icon: "◆", label: `${sectionGroups.length} units` },
+    { icon: "", label: `${state.seeds} Seeds`, seed: true },
+    { icon: "⚡", label: "1 step today" }
+  ].map((item) => `
     <div class="status-pill">
-      <span class="status-icon">${esc(icon)}</span>
-      <span>${esc(label)}</span>
+      <span class="status-icon ${item.seed ? "seed-status-icon" : ""}">${item.seed ? "" : esc(item.icon)}</span>
+      <span>${item.seed ? `<span data-seed-count>${esc(state.seeds)}</span> Seeds` : esc(item.label)}</span>
     </div>
   `).join("");
   els.journeyCallout.innerHTML = `
@@ -20481,7 +20456,9 @@ function renderModuleDetail() {
   els.moduleContentGrid.classList.toggle("read-session", activeMode === "read");
   els.moduleSessionProgress.style.setProperty("--stage-color", stage.stageColor);
   els.moduleSessionProgress.style.setProperty("--progress", `${Math.max(12, pieceProgress)}%`);
-  els.moduleSessionPoints.textContent = "♥ 5";
+  els.moduleSessionPoints.classList.add("seed-counter");
+  els.moduleSessionPoints.setAttribute("aria-label", "Seeds earned");
+  els.moduleSessionPoints.innerHTML = seedCounterInnerMarkup();
   const lessonPrompt = resource ? (resource.openingPrompt || resource.title) : module.title;
   const lessonCardTitle = resource ? resource.title : module.title;
   const lessonCardLede = resource ? compactText(resource.summary || module.subtitle, 210) : compactText(module.detail || module.subtitle, 210);
@@ -21040,21 +21017,9 @@ function whyRecommended(resource, question) {
 }
 
 function renderLibrary() {
-  const query = els.librarySearch.value.trim().toLowerCase();
-  const fullAccess = userHasFullLibraryAccess();
-  if (els.seedBalance) els.seedBalance.textContent = String(state.seeds);
-  if (els.librarySeedProgress) {
-    els.librarySeedProgress.textContent = fullAccess
-      ? "Full Library access is active for this device or signed-in staff account."
-      : `Share a useful teaching to earn ${SEEDS_PER_SHARE} Seeds. Seeds unlock bonus content; the core Journey stays free.`;
-  }
-  if (els.libraryAccessSummary) {
-    const seedLockedCount = resources.filter((item) => resourceAccessLevel(item) === "seed_unlock" && !resourceIsUnlocked(item)).length;
-    const partnerCount = resources.filter((item) => resourceAccessLevel(item) === "partner_access" && !resourceIsUnlocked(item)).length;
-    els.libraryAccessSummary.textContent = fullAccess
-      ? "Partner/supporter or staff access is active, so the full Library is open."
-      : `Core Journey stays free. ${seedLockedCount} bonus item${seedLockedCount === 1 ? "" : "s"} can be unlocked with Seeds; ${partnerCount} item${partnerCount === 1 ? "" : "s"} need partner access.`;
-  }
+  updateSeedDisplays();
+  if (!els.libraryGrid || !els.topicList) return;
+  const query = els.librarySearch ? els.librarySearch.value.trim().toLowerCase() : "";
   const filtered = resources.filter((item) => {
     const haystack = [item.title, item.topic, item.speaker, item.stage, item.summary, item.format.join(" ")].join(" ").toLowerCase();
     const queryOk = !query || haystack.includes(query);
@@ -21077,15 +21042,17 @@ function renderLibrary() {
 function resourceCard(resource) {
   const level = resourceAccessLevel(resource);
   const unlocked = resourceIsUnlocked(resource);
-  const cost = resourceSeedCost(resource);
-  const canAfford = state.seeds >= cost;
+  const seedAccessResource = level === "seed_unlock";
+  const displayLevel = seedAccessResource && !unlocked ? "partner_access" : level;
+  const displayAccessLabel = seedAccessResource ? (unlocked ? "Unlocked" : "Partner access") : accessLabelForResource(resource);
+  const displayAccessCopy = seedAccessResource
+    ? (unlocked ? "Access is active for this resource." : "Partners, supporters, and approved staff can open this Library resource directly.")
+    : accessCopyForResource(resource);
   const action = unlocked
     ? `<button class="primary-btn" type="button" data-discover-open="${esc(resource.id)}">Open</button>`
-    : level === "seed_unlock"
-      ? `<button class="primary-btn" type="button" data-seed-unlock="${esc(resource.id)}" ${canAfford ? "" : "disabled"}>${canAfford ? `Unlock for ${cost}` : `Need ${Math.max(0, cost - state.seeds)} Seeds`}</button>`
-      : `<button class="primary-btn" type="button" data-action="partner-access">Partner access</button>`;
+    : `<button class="primary-btn" type="button" data-action="partner-access">Partner access</button>`;
   return `
-    <article class="resource-card ${unlocked ? "" : "locked"}" data-access-level="${esc(level)}">
+    <article class="resource-card ${unlocked ? "" : "locked"}" data-access-level="${esc(displayLevel)}">
       <div class="resource-art ${esc(resource.visualType)}"></div>
       <div class="resource-body">
         <strong>${esc(resource.title)}</strong>
@@ -21094,12 +21061,11 @@ function resourceCard(resource) {
           ${tag(resource.topic, "green")}
           ${tag(resource.length, "orange")}
           ${tag(labelize(resource.stage), "blue")}
-          <span class="access-pill ${esc(level)}">${esc(accessLabelForResource(resource))}</span>
+          <span class="access-pill ${esc(displayLevel)}">${esc(displayAccessLabel)}</span>
         </div>
-        <span class="access-copy">${esc(accessCopyForResource(resource))}</span>
+        <span class="access-copy">${esc(displayAccessCopy)}</span>
         <div class="row-actions">
           ${action}
-          <button class="soft-btn" type="button" data-share="${esc(resource.id)}">Share +${SEEDS_PER_SHARE}</button>
         </div>
       </div>
     </article>
@@ -21515,7 +21481,7 @@ function bindDynamicActions() {
   }
   document.querySelectorAll("[data-topic]").forEach((button) => {
     button.onclick = () => {
-      els.librarySearch.value = button.dataset.topic;
+      if (els.librarySearch) els.librarySearch.value = button.dataset.topic;
       renderLibrary();
     };
   });
@@ -21534,6 +21500,7 @@ function wireStaticActions() {
 	});
 	  document.addEventListener("click", handleJourneyOutsideClick);
 	  document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
+	  document.addEventListener("click", handleJourneyShareAction, { capture: true });
 	  document.addEventListener("click", handleLibraryAccessAction);
 	  document.querySelectorAll(".nav-btn").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.nav));
@@ -21630,7 +21597,9 @@ function wireStaticActions() {
       bindDynamicActions();
     });
   });
-  els.librarySearch.addEventListener("input", renderLibrary);
+  if (els.librarySearch) {
+    els.librarySearch.addEventListener("input", renderLibrary);
+  }
   document.querySelectorAll("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => {
       state.libraryFilter = button.dataset.filter;
@@ -21663,7 +21632,7 @@ function handleLibraryAccessAction(event) {
     if (unlockSeedResource(resource)) {
       toast(`${resource.title} unlocked.`);
     } else {
-      toast(`Share useful teaching to earn ${Math.max(0, resourceSeedCost(resource) - state.seeds)} more Seeds.`);
+      toast(`Open Journey and share a lesson to earn ${Math.max(0, resourceSeedCost(resource) - state.seeds)} more Seeds.`);
     }
     return;
   }
@@ -21683,7 +21652,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v91";
+  const workerRefreshKey = "oneinhim-sw-refresh-v92";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21691,7 +21660,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=91", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=92", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
