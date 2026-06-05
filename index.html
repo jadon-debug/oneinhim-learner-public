@@ -19298,7 +19298,7 @@ function stageSections(stage) {
       title,
       subtitle: resource.summary,
       detail: resource.readBody && resource.readBody[0] ? resource.readBody[0] : resource.summary,
-      progress: index === 0 ? 68 : index < 3 ? 24 : 0,
+      progress: 0,
       courses: [resource.topic, resource.length, resource.sourceLabel].filter(Boolean),
       range: `${index + 1} of ${packaged.length}`,
       unitNumber,
@@ -19423,6 +19423,20 @@ function activeSectionPieceInfo(stage, moduleIndex) {
   };
 }
 
+function nodeLessonProgress(stage, moduleIndex) {
+  const info = activeSectionPieceInfo(stage, moduleIndex);
+  const lessons = info.group && Array.isArray(info.group.modules) ? info.group.modules : [];
+  if (!lessons.length) return { completed: 0, total: 1, percent: 0 };
+  const completed = lessons.filter((item) =>
+    state.completedPieces.has(pieceProgressKey(stage, item.moduleIndex))
+  ).length;
+  return {
+    completed,
+    total: lessons.length,
+    percent: Math.round((completed / lessons.length) * 100)
+  };
+}
+
 function sectionReviewQuiz(stage, review) {
   const moduleTitles = review.modules.map((module) => module.title);
   const first = moduleTitles[0] || "the first lesson";
@@ -19442,11 +19456,66 @@ function sectionReviewQuiz(stage, review) {
   };
 }
 
+function lessonTheme(resource, module) {
+  const title = String(resource?.title || module?.title || "this lesson")
+    .replace(/^One Basics\s+/, "")
+    .replace(/^\d+(?:\.\d+)?:\s*/, "")
+    .trim();
+  return title || resource?.topic || module?.title || "this lesson";
+}
+
+function lessonResponseLabel(resource, module) {
+  const next = resource?.recommendedNextStep?.label || resource?.nextStep || resource?.notesPrompt || "";
+  if (next) return next.replace(/\.$/, "");
+  return `Respond to ${lessonTheme(resource, module)}`;
+}
+
+function lessonPracticeOptions(stage, module, resource, reflection) {
+  const theme = lessonTheme(resource, module);
+  const scripture = Array.isArray(resource?.scriptureReferences) && resource.scriptureReferences.length
+    ? resource.scriptureReferences[0]
+    : "";
+  const topic = resource?.topic || theme;
+  const responseLabel = lessonResponseLabel(resource, module);
+  const answers = [
+    {
+      id: "remember",
+      icon: "1",
+      label: `Name the truth about ${theme}`,
+      detail: `Write one sentence you want to remember from ${theme}.`
+    },
+    {
+      id: "pray",
+      icon: "2",
+      label: scripture ? `Pray through ${scripture}` : `Pray about ${topic}`,
+      detail: scripture
+        ? `Turn ${scripture} into a short honest prayer.`
+        : "Tell God honestly what stood out and where you need help."
+    },
+    {
+      id: "respond",
+      icon: "3",
+      label: responseLabel,
+      detail: reflection
+    }
+  ];
+  if (stage.choice === "exploreJesus") {
+    answers[2] = {
+      id: "respond",
+      icon: "3",
+      label: `Ask one honest question about ${theme}`,
+      detail: reflection
+    };
+  }
+  return answers;
+}
+
 function practicalUsePrompt(stage, module, resource) {
   const title = resource ? resource.title : module.title;
   const reflection = resource && resource.reflectionPrompt
     ? resource.reflectionPrompt
     : "What is one honest next step you can take before you leave this section?";
+  const specificActions = lessonPracticeOptions(stage, module, resource, reflection);
   const stageActions = {
     exploreJesus: [
       { id: "pray", icon: "1", label: "Pray one honest sentence", detail: "Tell God what you are really wondering or feeling." },
@@ -19474,11 +19543,13 @@ function practicalUsePrompt(stage, module, resource) {
       { id: "practice", icon: "3", label: "Help someone else take a step", detail: reflection }
     ]
   };
-  const answer = stage.choice === "exploreJesus" ? "notice" : "practice";
-  const answers = stageActions[stage.choice] || stageActions.startFollowing;
+  const answer = resource
+    ? "respond"
+    : stage.choice === "exploreJesus" ? "notice" : "practice";
+  const answers = resource ? specificActions : (stageActions[stage.choice] || stageActions.startFollowing);
   return {
     kicker: "Practical use",
-    question: `How could you live out ${title} today?`,
+    question: resource && resource.reflectionPrompt ? resource.reflectionPrompt : `How could you live out ${title} today?`,
     options: orderedQuizOptions(answers, answer, `${stage.choice}|${resource?.id || module.title}|practical`),
     answer,
     feedback: "Good. The goal is not just to finish content, but to carry one faithful step into real life."
@@ -19652,7 +19723,9 @@ function orderedQuizOptions(answers, correctAnswer, seedText) {
 }
 
 function moduleQuiz(stage, module, mode) {
-  if (module.quickCheck) {
+  const quickCheck = module.quickCheck;
+  const isGenericQuickCheck = quickCheck && /best response to this lesson/i.test(quickCheck.question || "");
+  if (quickCheck && !isGenericQuickCheck) {
     const answers = module.quickCheck.answers || [];
     const seedText = [
       stage.choice,
@@ -19675,15 +19748,17 @@ function moduleQuiz(stage, module, mode) {
     };
   }
   const stageTitle = t(stage.titleKey);
+  const theme = lessonTheme(moduleResourceFor(stage, state.activeModuleIndex), module);
+  const reflection = module.reflectionPrompt || module.subtitle || `Take one faithful step from ${theme}.`;
   const fallbackAnswers = [
-    { id: "rush", label: "Rush ahead", detail: "Move on without responding." },
-    { id: "respond", label: module.subtitle, detail: "Take one simple step with Jesus today." },
-    { id: "save", label: "Only save it", detail: "Keep the idea but do not act yet." }
+    { id: "rush", label: `Rush past ${theme}`, detail: "Move on without responding." },
+    { id: "respond", label: lessonResponseLabel(moduleResourceFor(stage, state.activeModuleIndex), module), detail: reflection },
+    { id: "save", label: "Only save it for later", detail: "Keep the idea but do not act yet." }
   ];
   const seedText = [stage.choice, module.id, module.title, mode.key || mode.label].join("|");
   return {
     kicker: `${mode.label} check`,
-    question: "What is a good response to this session?",
+    question: `What is a good response to ${theme}?`,
     options: orderedQuizOptions(fallbackAnswers, "respond", seedText).map((answer) => ({
       id: answer.id,
       icon: answer.icon,
@@ -20575,9 +20650,7 @@ function renderModuleDetail() {
   const section = sectionInfo.group;
   const sectionItems = section ? section.modules : [];
   const fallback = moduleFallbackInfo(resource, activeMode, modes, stage, sectionInfo);
-  const pieceProgress = sectionInfo.pieceCount
-    ? Math.round(((sectionInfo.pieceIndex + 1) / sectionInfo.pieceCount) * 86)
-    : Math.max(12, module.progress || 12);
+  const lessonProgress = nodeLessonProgress(stage, state.activeModuleIndex);
   const practice = practicalUsePrompt(stage, module, resource);
   els.moduleHeader.textContent = t(stage.titleKey);
   els.moduleHero.style.setProperty("--stage-color", stage.stageColor);
@@ -20587,7 +20660,7 @@ function renderModuleDetail() {
   els.moduleHero.classList.toggle("read-session", activeMode === "read");
   els.moduleContentGrid.classList.toggle("read-session", activeMode === "read");
   els.moduleSessionProgress.style.setProperty("--stage-color", stage.stageColor);
-  els.moduleSessionProgress.style.setProperty("--progress", `${Math.max(12, pieceProgress)}%`);
+  els.moduleSessionProgress.style.setProperty("--progress", `${lessonProgress.percent}%`);
   els.moduleSessionPoints.classList.add("seed-counter");
   els.moduleSessionPoints.setAttribute("aria-label", "Seeds earned");
   els.moduleSessionPoints.innerHTML = seedCounterInnerMarkup();
@@ -20812,8 +20885,14 @@ function renderModuleQuiz() {
         </span>
       `;
     }).join("");
+    const pickerCompleted = picker.modules.filter((item) =>
+      state.completedPieces.has(pieceProgressKey(stage, item.moduleIndex))
+    ).length;
+    const pickerProgress = picker.modules.length
+      ? Math.round((pickerCompleted / picker.modules.length) * 100)
+      : 0;
     els.quizProgressFill.style.setProperty("--stage-color", stage.stageColor);
-    els.quizProgressFill.style.setProperty("--progress", `${Math.max(18, Math.min(86, picker.progress || 18))}%`);
+    els.quizProgressFill.style.setProperty("--progress", `${pickerProgress}%`);
     els.quizKicker.textContent = `Unit ${picker.sectionIndex + 1} · ${t(stage.titleKey)}`;
     els.quizKicker.style.setProperty("--stage-color", stage.stageColor);
     els.quizQuestion.textContent = picker.title;
@@ -20863,8 +20942,10 @@ function renderModuleQuiz() {
     state.quizChecked = false;
     document.body.classList.remove("quiz-checked");
   }
+  const lessonProgress = nodeLessonProgress(stage, state.activeModuleIndex);
+  const quizProgress = review || state.practicalUse ? 100 : lessonProgress.percent;
   els.quizProgressFill.style.setProperty("--stage-color", stage.stageColor);
-  els.quizProgressFill.style.setProperty("--progress", state.quizChecked ? "86%" : review ? "72%" : "58%");
+  els.quizProgressFill.style.setProperty("--progress", `${quizProgress}%`);
   els.quizKicker.textContent = quiz.kicker;
   els.quizKicker.style.setProperty("--stage-color", stage.stageColor);
   els.quizQuestion.textContent = quiz.question;
@@ -21830,7 +21911,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v97";
+  const workerRefreshKey = "oneinhim-sw-refresh-v98";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -21838,7 +21919,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=97", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=98", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
