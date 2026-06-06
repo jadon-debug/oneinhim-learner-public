@@ -14664,6 +14664,31 @@ body:not(.gateway-mode) .main {
   }
 }
 
+/* Global media-card rule: artwork owns card text.
+   Titles, labels, and marketing copy should be baked into the image asset or shown
+   outside the card surface. Keep only system indicators such as locks. */
+.weekly-cover-kicker,
+.weekly-cover-art strong,
+.tile-art-title,
+.tile-art > .content-kind,
+.event-cover-art > .content-kind,
+.podcast-cover-art > .content-kind,
+.documentary-tile .tile-art > .content-kind {
+  display: none !important;
+}
+
+.weekly-cover-art {
+  align-content: stretch !important;
+}
+
+.weekly-media-card::after,
+.documentary-tile .tile-art::after,
+.podcast-cover-art::after,
+.event-cover-art::after {
+  content: none !important;
+  display: none !important;
+}
+
 			</style>
 </head>
 <body class="gateway-mode">
@@ -22155,7 +22180,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v119";
+  const workerRefreshKey = "oneinhim-sw-refresh-v120";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22163,7 +22188,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=119", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=120", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
