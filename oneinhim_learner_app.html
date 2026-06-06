@@ -10957,6 +10957,15 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
     background: transparent !important;
   }
 
+  body.gateway-mode:not(.dark-app-chrome-active):not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action {
+    color: #090a0a !important;
+    filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.74)) !important;
+  }
+
+  body.gateway-mode:not(.dark-app-chrome-active):not(.gateway-nav-scrolled) .app-top-chrome .gateway-logo {
+    color: #090a0a !important;
+  }
+
   body.gateway-mode .home-hero {
     --home-hero-height: min(690px, calc(100svh - var(--app-bottom-chrome-space))) !important;
     --home-hero-gutter: var(--gateway-page-gutter) !important;
@@ -10998,6 +11007,34 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
   body.gateway-mode .home-hero-slide.documentary-hero .hero-actions,
   body.gateway-mode .home-hero-slide.one-basics-hero .hero-actions {
     width: 100% !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+    gap: 16px !important;
+    padding-top: calc(104px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(104px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    height: clamp(128px, 20svh, 166px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    font-size: clamp(34px, 10.2vw, 46px) !important;
+    line-height: 0.92 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+    font-size: 16px !important;
+    line-height: 1.32 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .hero-actions {
+    gap: 10px !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-controls {
+    bottom: calc(6px + env(safe-area-inset-bottom)) !important;
   }
 }
 			</style>
@@ -18464,7 +18501,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v108";
+  const workerRefreshKey = "oneinhim-sw-refresh-v111";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -18472,7 +18509,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=108", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=111", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
