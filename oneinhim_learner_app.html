@@ -4470,6 +4470,11 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   pointer-events: none;
 }
 
+.weekly-media-card.has-self-contained-cover::after {
+  content: none;
+  display: none;
+}
+
 .weekly-cover-art {
   padding: 16px;
   display: grid;
@@ -15276,12 +15281,8 @@ body:not(.gateway-mode) .main {
               </div>
             </div>
             <div class="weekly-media-shelf" aria-label="Classics audiobooks">
-              <button class="weekly-media-card is-square classics-audiobook-card" type="button" data-discover-open="aud_death_ivan_ilyich_classics" data-content-kind="audio">
+              <button class="weekly-media-card is-square has-self-contained-cover classics-audiobook-card" type="button" data-discover-open="aud_death_ivan_ilyich_classics" data-content-kind="audio" aria-label="The Death of Ivan Ilyich audiobook placeholder">
                 <img src="assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg" alt="" loading="lazy" />
-                <span class="weekly-card-title">
-                  <small data-i18n="homeDiscover.audiobookPlaceholder">Audiobook placeholder</small>
-                  <strong>The Death of Ivan Ilyich</strong>
-                </span>
               </button>
             </div>
           </section>
@@ -22202,7 +22203,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v114";
+  const workerRefreshKey = "oneinhim-sw-refresh-v115";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22210,7 +22211,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=114", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=115", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
