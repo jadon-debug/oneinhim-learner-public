@@ -1,4 +1,4 @@
-const ONEINHIM_CACHE = "oneinhim-app-v117";
+const ONEINHIM_CACHE = "oneinhim-app-v119";
 
 const APP_SHELL = [
   "./oneinhim.webmanifest",
@@ -11,7 +11,7 @@ const APP_SHELL = [
   "./assets/oneinhim-characters-international.png",
   "./assets/oneinhim-characters-dutch.png",
   "./assets/outoftheshadows-brenda-hero-v4.jpg",
-  "./assets/outoftheshadows-brenda-mobile-hero-clean-v6.jpg",
+  "./assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
   "./assets/one-basics-1-1-eternal-life-mobile-hero.png",
   "./assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
   "./assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
