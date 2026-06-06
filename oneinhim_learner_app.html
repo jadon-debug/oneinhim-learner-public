@@ -14659,8 +14659,37 @@ body:not(.gateway-mode) .main {
   body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg,
   body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
     object-fit: cover !important;
-    object-position: center top !important;
     filter: saturate(1.04) contrast(1.02) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg {
+    object-position: 50% 0% !important;
+    transform: translateY(54px) scale(1.025) !important;
+    transform-origin: top center !important;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.12) 5%, #000 18%, #000 100%) !important;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.12) 5%, #000 18%, #000 100%) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
+    object-position: 56% 0% !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: calc(var(--app-top-chrome-space) + 74px) !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    background: linear-gradient(180deg, rgba(5, 6, 8, 0.92) 0%, rgba(5, 6, 8, 0.72) 48%, rgba(5, 6, 8, 0) 100%) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero .gateway-copy,
+  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-controls {
+    position: relative !important;
+    z-index: 2 !important;
   }
 }
 
@@ -17469,6 +17498,9 @@ function updateGatewayNavScrollState() {
 function setGatewayHero(index, options = {}) {
   const slides = Array.from(document.querySelectorAll("[data-gateway-hero-slide]"));
   if (!slides.length) return;
+  if (options.scrollToHeroTop && window.innerWidth <= 760 && state.activeView === "gatewayView") {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
   state.gatewayHeroIndex = normalizeGatewayHeroIndex(index, slides);
   renderGatewayHeroSlider();
   updateGatewayNavScrollState();
@@ -22046,7 +22078,7 @@ function wireStaticActions() {
     button.addEventListener("click", () => handleGatewayNav(button.dataset.gatewayNav));
   });
   document.querySelectorAll("[data-hero-dot]").forEach((button) => {
-    button.addEventListener("click", () => setGatewayHero(Number(button.dataset.heroDot) || 0));
+    button.addEventListener("click", () => setGatewayHero(Number(button.dataset.heroDot) || 0, { scrollToHeroTop: true }));
   });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stopGatewayHeroAutoplay();
@@ -22180,7 +22212,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v120";
+  const workerRefreshKey = "oneinhim-sw-refresh-v121";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22188,7 +22220,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=120", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=121", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
