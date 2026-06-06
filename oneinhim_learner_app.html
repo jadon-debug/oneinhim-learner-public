@@ -12737,6 +12737,95 @@ body.gateway-mode .home-hero .gateway-hero-controls {
   z-index: 18 !important;
 }
 
+/* Mobile dark hero seam fix: the photo must live behind the chrome from the top,
+   with the header only becoming a solid bar after scroll. */
+body.gateway-mode.one-basics-hero-active::before,
+body.gateway-mode.documentary-hero-active::before {
+  content: none !important;
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  body.gateway-mode.dark-gateway-hero-active:not(.gateway-nav-scrolled) .gateway-header.app-top-chrome,
+  body.gateway-mode.dark-gateway-hero-active:not(.gateway-nav-scrolled) .app-top-chrome {
+    background:
+      linear-gradient(180deg, rgba(5, 6, 8, 0.78) 0%, rgba(5, 6, 8, 0.38) 58%, rgba(5, 6, 8, 0) 100%) !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .gateway-header.app-top-chrome,
+  body.gateway-mode.gateway-nav-scrolled .app-top-chrome {
+    background: rgba(9, 10, 10, 0.94) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28) !important;
+  }
+
+  body.gateway-mode.dark-gateway-hero-active .home-hero {
+    margin-top: calc(-1 * var(--app-top-chrome-space)) !important;
+    height: calc(min(660px, calc(100svh - var(--app-bottom-chrome-space) - 18px)) + var(--app-top-chrome-space)) !important;
+    min-height: calc(min(660px, calc(100svh - var(--app-bottom-chrome-space) - 18px)) + var(--app-top-chrome-space)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero,
+  body.gateway-mode .home-hero-slide.one-basics-hero {
+    padding-top: calc(var(--app-top-chrome-space) + 110px) !important;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero::before,
+  body.gateway-mode .home-hero-slide.one-basics-hero::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+    background:
+      linear-gradient(180deg, rgba(5, 6, 8, 0.88) 0%, rgba(5, 6, 8, 0.42) 23%, rgba(5, 6, 8, 0) 42%),
+      linear-gradient(0deg, #111111 0%, rgba(17, 17, 17, 0.86) 13%, rgba(17, 17, 17, 0.24) 36%, rgba(17, 17, 17, 0) 58%),
+      linear-gradient(90deg, rgba(5, 6, 8, 0.64) 0%, rgba(5, 6, 8, 0.24) 58%, rgba(5, 6, 8, 0.06) 100%) !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg-picture,
+  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration,
+  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration picture {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    display: block !important;
+    overflow: hidden !important;
+    border-radius: 0 !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg,
+  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg {
+    object-position: 62% top !important;
+  }
+
+  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
+    object-position: 56% top !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-dot:focus:not(:focus-visible) {
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
 @media (min-width: 1041px) {
   body.gateway-mode .gateway-header.app-top-chrome,
   body.gateway-mode .app-top-chrome {
@@ -22113,7 +22202,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v112";
+  const workerRefreshKey = "oneinhim-sw-refresh-v113";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22121,7 +22210,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=112", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=113", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
