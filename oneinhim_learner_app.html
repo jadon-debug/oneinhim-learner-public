@@ -9018,6 +9018,12 @@ body:not(.gateway-mode) #stageDetailView .stage-shell {
     border: 0 !important;
     border-radius: 999px !important;
     background: transparent !important;
+    color: #090a0a !important;
+    filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.74));
+  }
+
+  body.dark-app-chrome-active .app-top-chrome .gateway-mobile-action,
+  body.gateway-nav-scrolled .app-top-chrome .gateway-mobile-action {
     color: #fff !important;
     filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.48));
   }
@@ -9047,6 +9053,11 @@ body:not(.gateway-mode) #stageDetailView .stage-shell {
     max-width: 70px !important;
     min-width: 0 !important;
     gap: 0 !important;
+    color: #090a0a !important;
+  }
+
+  body.dark-app-chrome-active .app-top-chrome .gateway-logo,
+  body.gateway-nav-scrolled .app-top-chrome .gateway-logo {
     color: #fff !important;
   }
 
@@ -10958,12 +10969,12 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
   }
 
   body.gateway-mode .home-hero {
-    --home-hero-height: min(642px, calc(100svh - var(--app-bottom-chrome-space) - 4px)) !important;
+    --home-hero-height: min(704px, calc(100svh - var(--app-bottom-chrome-space))) !important;
     --home-hero-gutter: var(--gateway-page-gutter) !important;
-    --home-hero-top: calc(86px + env(safe-area-inset-top)) !important;
-    --home-hero-bottom: calc(58px + env(safe-area-inset-bottom)) !important;
+    --home-hero-top: calc(112px + env(safe-area-inset-top)) !important;
+    --home-hero-bottom: calc(74px + env(safe-area-inset-bottom)) !important;
     margin-top: 0 !important;
-    background: #090a0a !important;
+    background: #fff !important;
   }
 
   body.gateway-mode .home-hero-slide.documentary-hero,
@@ -10976,24 +10987,22 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
   body.gateway-mode .home-hero-slide.documentary-hero::before,
   body.gateway-mode .home-hero-slide.one-basics-hero::before {
     background:
-      linear-gradient(180deg, rgba(4, 6, 8, 0.46) 0%, rgba(4, 6, 8, 0.04) 24%, rgba(4, 6, 8, 0.14) 58%, #090a0a 100%),
-      linear-gradient(90deg, rgba(4, 6, 8, 0.6) 0%, rgba(4, 6, 8, 0.22) 54%, rgba(4, 6, 8, 0.04) 100%) !important;
+      linear-gradient(180deg, rgba(4, 6, 8, 0.5) 0%, rgba(4, 6, 8, 0.08) 26%, rgba(4, 6, 8, 0.12) 60%, #090a0a 100%),
+      linear-gradient(90deg, rgba(4, 6, 8, 0.58) 0%, rgba(4, 6, 8, 0.22) 56%, rgba(4, 6, 8, 0.04) 100%) !important;
   }
 
   body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg,
   body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
-    height: calc(100% + 150px) !important;
-    transform: translateY(-92px) !important;
+    height: 100% !important;
+    transform: none !important;
   }
 
   body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
-    height: calc(100% + 230px) !important;
-    object-position: 62% 0 !important;
-    transform: translateY(-142px) !important;
+    object-position: 64% top !important;
   }
 
   body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg {
-    object-position: 60% 0 !important;
+    object-position: 60% top !important;
   }
 
   body.gateway-mode .home-hero-slide.documentary-hero .gateway-copy,
@@ -11007,7 +11016,7 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
 
   body.gateway-mode .home-hero-slide.documentary-hero .gateway-copy h2,
   body.gateway-mode .home-hero-slide.one-basics-hero .gateway-copy h2 {
-    font-size: clamp(44px, 12.4vw, 58px) !important;
+    font-size: clamp(42px, 11.4vw, 54px) !important;
     line-height: 0.94 !important;
     text-align: left !important;
   }
@@ -11024,7 +11033,31 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
   }
 
   body.gateway-mode .home-hero .gateway-hero-controls {
-    bottom: calc(24px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(28px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+    gap: 16px !important;
+    padding-top: calc(104px + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(104px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-illustration {
+    height: clamp(128px, 20svh, 166px) !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy h2 {
+    font-size: clamp(34px, 10.2vw, 46px) !important;
+    line-height: 0.92 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .gateway-copy p {
+    font-size: 16px !important;
+    line-height: 1.32 !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] .hero-actions {
+    gap: 10px !important;
   }
 
   body.gateway-mode .gateway-discover {
@@ -11042,6 +11075,14 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
   body.gateway-mode .discovery-band {
     border-top: 0 !important;
     border-bottom: 0 !important;
+  }
+
+  body.gateway-mode:not(.dark-gateway-hero-active) .gateway-discover {
+    background: #090a0a !important;
+  }
+
+  body.gateway-mode .home-hero-slide[data-gateway-hero-slide="0"] {
+    background: #fff !important;
   }
 }
 			</style>
@@ -18512,7 +18553,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v109";
+  const workerRefreshKey = "oneinhim-sw-refresh-v110";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -18520,7 +18561,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=109", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=110", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
