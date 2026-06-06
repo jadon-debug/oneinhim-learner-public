@@ -4533,32 +4533,6 @@ body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) 
   line-height: 1;
 }
 
-.weekly-card-title {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 14px;
-  z-index: 1;
-  display: grid;
-  gap: 6px;
-}
-
-.weekly-card-title small {
-  color: rgba(255,255,255,0.78);
-  font-size: 10px;
-  font-weight: 950;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.weekly-card-title strong {
-  color: #fff;
-  font-size: clamp(17px, 1.45vw, 24px);
-  font-weight: 950;
-  line-height: 1.04;
-  letter-spacing: 0;
-}
-
 .weekly-card-lock {
   position: absolute;
   right: 10px;
@@ -14862,19 +14836,11 @@ body:not(.gateway-mode) .main {
               </div>
             </div>
             <div class="weekly-media-shelf" aria-label="Start this week">
-              <button class="weekly-media-card is-hero stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video">
+              <button class="weekly-media-card is-hero has-self-contained-cover stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video" aria-label="One Basics 1.1 Eternal Life full video">
                 <img src="assets/one-basics-1-1-eternal-life-course-cover.png" alt="" loading="lazy" />
-                <span class="weekly-card-title">
-                  <small data-i18n="homeDiscover.fullVideo">Full video</small>
-                  <strong data-i18n="homeDiscover.oneBasics11VideoTitle">1.1 Eternal Life</strong>
-                </span>
               </button>
-              <button class="weekly-media-card is-square stage-2" type="button" data-discover-open="aud_darkness_sonship_004" data-content-kind="audio">
+              <button class="weekly-media-card is-square has-self-contained-cover stage-2" type="button" data-discover-open="aud_darkness_sonship_004" data-content-kind="audio" aria-label="From Darkness to Sonship audio">
                 <img src="assets/one-gospel-podcast-cover.png" alt="" loading="lazy" />
-                <span class="weekly-card-title">
-                  <small data-i18n="discover.audio">Audio</small>
-                  <strong data-i18n="homeDiscover.podcastTitle">From Darkness to Sonship</strong>
-                </span>
               </button>
               <div class="weekly-card-stack" aria-label="Quick starts" data-home-mode="discover">
                 <button class="weekly-media-card stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life" data-content-kind="text">
@@ -14903,9 +14869,8 @@ body:not(.gateway-mode) .main {
                 </button>
               </div>
               <button class="weekly-media-card is-wide stage-1" type="button" data-discover-open="mux_out_of_shadows_documentary" data-content-kind="video">
-                <img src="assets/outoftheshadows-brenda-hero.png" alt="" loading="lazy" />
-                <span class="weekly-card-title">
-                  <small data-i18n="homeDiscover.documentaryLabel">Documentary</small>
+                <span class="weekly-cover-art">
+                  <span class="weekly-cover-kicker" data-i18n="homeDiscover.documentaryLabel">Documentary</span>
                   <strong data-i18n="homeDiscover.brendaDocTitle">Out of the Shadows</strong>
                 </span>
               </button>
@@ -22203,7 +22168,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v115";
+  const workerRefreshKey = "oneinhim-sw-refresh-v116";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22211,7 +22176,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=115", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=116", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
