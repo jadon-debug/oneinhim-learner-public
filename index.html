@@ -10958,10 +10958,10 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
   }
 
   body.gateway-mode .home-hero {
-    --home-hero-height: min(642px, calc(100svh - var(--app-bottom-chrome-space) - 4px)) !important;
+    --home-hero-height: min(690px, calc(100svh - var(--app-bottom-chrome-space))) !important;
     --home-hero-gutter: var(--gateway-page-gutter) !important;
-    --home-hero-top: calc(86px + env(safe-area-inset-top)) !important;
-    --home-hero-bottom: calc(58px + env(safe-area-inset-bottom)) !important;
+    --home-hero-top: calc(104px + env(safe-area-inset-top)) !important;
+    --home-hero-bottom: calc(92px + env(safe-area-inset-bottom)) !important;
     margin-top: 0 !important;
     background: #090a0a !important;
   }
@@ -10971,29 +10971,6 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
     align-content: end !important;
     padding-top: var(--home-hero-top) !important;
     padding-bottom: var(--home-hero-bottom) !important;
-  }
-
-  body.gateway-mode .home-hero-slide.documentary-hero::before,
-  body.gateway-mode .home-hero-slide.one-basics-hero::before {
-    background:
-      linear-gradient(180deg, rgba(4, 6, 8, 0.46) 0%, rgba(4, 6, 8, 0.04) 24%, rgba(4, 6, 8, 0.14) 58%, #090a0a 100%),
-      linear-gradient(90deg, rgba(4, 6, 8, 0.6) 0%, rgba(4, 6, 8, 0.22) 54%, rgba(4, 6, 8, 0.04) 100%) !important;
-  }
-
-  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg,
-  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
-    height: calc(100% + 150px) !important;
-    transform: translateY(-92px) !important;
-  }
-
-  body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
-    height: calc(100% + 230px) !important;
-    object-position: 62% 0 !important;
-    transform: translateY(-142px) !important;
-  }
-
-  body.gateway-mode .home-hero-slide.documentary-hero .gateway-hero-bg {
-    object-position: 60% 0 !important;
   }
 
   body.gateway-mode .home-hero-slide.documentary-hero .gateway-copy,
@@ -11021,27 +10998,6 @@ body.gateway-mode .home-hero-slide.one-basics-hero .gateway-illustration img {
   body.gateway-mode .home-hero-slide.documentary-hero .hero-actions,
   body.gateway-mode .home-hero-slide.one-basics-hero .hero-actions {
     width: 100% !important;
-  }
-
-  body.gateway-mode .home-hero .gateway-hero-controls {
-    bottom: calc(24px + env(safe-area-inset-bottom)) !important;
-  }
-
-  body.gateway-mode .gateway-discover {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    background: #090a0a !important;
-  }
-
-  body.gateway-mode .gateway-discover > .discovery-band:first-child {
-    margin-top: 0 !important;
-    padding-top: 14px !important;
-    border-top: 0 !important;
-  }
-
-  body.gateway-mode .discovery-band {
-    border-top: 0 !important;
-    border-bottom: 0 !important;
   }
 }
 			</style>
@@ -13798,12 +13754,8 @@ function updateGatewayNavScrollState() {
 function setGatewayHero(index, options = {}) {
   const slides = Array.from(document.querySelectorAll("[data-gateway-hero-slide]"));
   if (!slides.length) return;
-  const preserveScrollY = window.scrollY;
   state.gatewayHeroIndex = normalizeGatewayHeroIndex(index, slides);
   renderGatewayHeroSlider();
-  if (options.preserveScroll !== false && Math.abs(window.scrollY - preserveScrollY) > 1) {
-    window.scrollTo(window.scrollX, preserveScrollY);
-  }
   updateGatewayNavScrollState();
   if (options.restartAutoplay !== false) scheduleGatewayHeroAutoplay();
 }
@@ -18512,7 +18464,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v109";
+  const workerRefreshKey = "oneinhim-sw-refresh-v108";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -18520,7 +18472,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=109", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=108", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
