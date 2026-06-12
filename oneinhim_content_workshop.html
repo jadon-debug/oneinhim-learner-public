@@ -3641,7 +3641,7 @@ body.workshop-locked .shell {
           <div class="package-header">
             <div>
               <h3 class="section-title">Home layout</h3>
-              <p class="panel-copy">Replace home hero and shelf artwork here. The app keeps fixed slide and card sizes; the uploaded artwork fills those frames.</p>
+              <p class="panel-copy">Replace home hero and shelf artwork here. Hero slides use a fixed frame with editable overlay text; shelf cards stay artwork-only.</p>
             </div>
             <div class="top-actions">
               <button class="soft-btn" id="homeLayoutLoadDefault" type="button">Load default</button>
@@ -3652,7 +3652,7 @@ body.workshop-locked .shell {
           <div class="json-box">
             <textarea id="homeLayoutJson" spellcheck="false" style="min-height: 520px; width: 100%; border: 0; background: transparent; color: inherit; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; resize: vertical;"></textarea>
           </div>
-          <p class="panel-copy" style="margin-top: 12px;">Use local asset paths such as <strong>assets/my-cover.jpg</strong> or a public image URL. Do not add title fields for cards unless the text is already part of the artwork.</p>
+          <p class="panel-copy" style="margin-top: 12px;">Use local asset paths such as <strong>assets/my-cover.jpg</strong> or a public image URL. Hero fields can use eyebrow, title, description, and cta. Do not add app text to shelf cards unless the text is already part of the artwork.</p>
         </section>
 
         <section class="view" id="preparedView">
@@ -4386,7 +4386,11 @@ const DEFAULT_HOME_CONTENT = {
       desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
       targetType: "discover",
       target: "mux_one_basics_1_1_full_video",
-      alt: "One Basics Eternal Life"
+      alt: "One Basics Eternal Life",
+      eyebrow: "One Basics",
+      title: "Start with Eternal Life",
+      description: "Watch the full One Basics episode and begin the foundation of knowing God personally through Jesus.",
+      cta: "Watch full episode"
     },
     {
       id: "out_of_the_shadows_hero",
@@ -4395,7 +4399,11 @@ const DEFAULT_HOME_CONTENT = {
       desktopArtwork: "assets/outoftheshadows-brenda-hero-v4.jpg",
       targetType: "discover",
       target: "mux_out_of_shadows_documentary",
-      alt: "Out of the Shadows"
+      alt: "Out of the Shadows",
+      eyebrow: "New to the OneApp",
+      title: "Out of the Shadows",
+      description: "A powerful documentary story of hope, healing, and stepping into the light.",
+      cta: "Watch now"
     },
     {
       id: "journey_hero",
@@ -4404,7 +4412,11 @@ const DEFAULT_HOME_CONTENT = {
       desktopArtwork: "assets/oneinhim-characters-international.png",
       targetType: "journey",
       target: "pathSelectView",
-      alt: "One In Him discipleship journey"
+      alt: "One In Him discipleship journey",
+      eyebrow: "Guided path",
+      title: "Continue your journey",
+      description: "Take the next clear step through short teachings, prayer, Scripture, and guided milestones.",
+      cta: "Open Journey"
     }
   ],
   shelves: [
@@ -4453,10 +4465,23 @@ const DEFAULT_HOME_CONTENT = {
   ]
 };
 
+function normalizeHomeLayout(layout) {
+  const defaultSlidesById = new Map(DEFAULT_HOME_CONTENT.heroSlides.map((slide) => [slide.id, slide]));
+  return {
+    ...DEFAULT_HOME_CONTENT,
+    ...layout,
+    heroSlides: (layout.heroSlides || DEFAULT_HOME_CONTENT.heroSlides).map((slide, index) => ({
+      ...(defaultSlidesById.get(slide.id) || DEFAULT_HOME_CONTENT.heroSlides[index] || {}),
+      ...slide
+    })),
+    shelves: layout.shelves || DEFAULT_HOME_CONTENT.shelves
+  };
+}
+
 function readHomeLayoutForWorkshop() {
   try {
     const raw = window.localStorage.getItem(HOME_CONTENT_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : DEFAULT_HOME_CONTENT;
+    return raw ? normalizeHomeLayout(JSON.parse(raw)) : DEFAULT_HOME_CONTENT;
   } catch (error) {
     console.warn("Home layout override could not be read.", error);
     return DEFAULT_HOME_CONTENT;

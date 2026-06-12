@@ -14748,6 +14748,27 @@ body.gateway-mode .home-hero .artwork-home-slide.active {
   z-index: 1 !important;
 }
 
+body.gateway-mode .home-hero .artwork-home-slide::before,
+body.gateway-mode .home-hero .artwork-home-slide::after {
+  content: "" !important;
+  inset-inline: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: 2 !important;
+}
+
+body.gateway-mode .home-hero .artwork-home-slide::before {
+  background: linear-gradient(180deg, rgba(17, 17, 17, 0.68) 0%, rgba(17, 17, 17, 0.22) 52%, rgba(17, 17, 17, 0) 100%) !important;
+  height: calc(var(--app-top-chrome-space, 96px) + 96px) !important;
+  top: 0 !important;
+}
+
+body.gateway-mode .home-hero .artwork-home-slide::after {
+  background: linear-gradient(180deg, rgba(17, 17, 17, 0) 0%, rgba(17, 17, 17, 0.72) 58%, #111111 100%) !important;
+  bottom: 0 !important;
+  height: clamp(230px, 34svh, 360px) !important;
+}
+
 body.gateway-mode .home-hero .home-artwork-picture,
 body.gateway-mode .home-hero .home-artwork-image {
   display: block !important;
@@ -14760,9 +14781,79 @@ body.gateway-mode .home-hero .home-artwork-image {
   object-position: center center !important;
 }
 
+body.gateway-mode .home-hero .home-hero-copy {
+  bottom: clamp(96px, 13svh, 150px) !important;
+  color: #ffffff !important;
+  display: grid !important;
+  gap: 10px !important;
+  left: clamp(28px, 4.2vw, 58px) !important;
+  max-width: min(520px, 42vw) !important;
+  position: absolute !important;
+  text-align: left !important;
+  white-space: normal !important;
+  z-index: 4 !important;
+}
+
+body.gateway-mode .home-hero .home-hero-eyebrow {
+  color: #f2d35f !important;
+  display: block !important;
+  font-family: inherit !important;
+  font-size: clamp(12px, 0.9vw, 15px) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.18em !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+}
+
+body.gateway-mode .home-hero .home-hero-title {
+  color: #ffffff !important;
+  display: block !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(34px, 3.3vw, 58px) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  line-height: 0.98 !important;
+  max-width: 100% !important;
+  overflow-wrap: anywhere !important;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.42) !important;
+  white-space: normal !important;
+}
+
+body.gateway-mode .home-hero .home-hero-description {
+  color: rgba(255, 255, 255, 0.9) !important;
+  display: block !important;
+  font-size: clamp(16px, 1.25vw, 21px) !important;
+  font-weight: 650 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.35 !important;
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.42) !important;
+  white-space: normal !important;
+}
+
+body.gateway-mode .home-hero .home-hero-cta {
+  align-items: center !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  font-size: clamp(15px, 1vw, 18px) !important;
+  font-weight: 900 !important;
+  gap: 8px !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  margin-top: 2px !important;
+}
+
+body.gateway-mode .home-hero .home-hero-cta::after {
+  content: "›" !important;
+  font-size: 1.7em !important;
+  font-weight: 400 !important;
+  line-height: 0.7 !important;
+}
+
 body.gateway-mode .home-hero::before,
 body.gateway-mode .home-hero::after {
-  content: "" !important;
+  content: none !important;
   pointer-events: none !important;
   position: absolute !important;
   z-index: 2 !important;
@@ -14896,6 +14987,43 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 
   body.gateway-mode .home-hero .home-artwork-image {
     object-position: center top !important;
+  }
+
+  body.gateway-mode .home-hero .home-hero-copy {
+    bottom: 118px !important;
+    display: block !important;
+    gap: 8px !important;
+    left: 36px !important;
+    max-width: none !important;
+    width: min(300px, calc(100vw - 84px)) !important;
+  }
+
+  body.gateway-mode .home-hero .home-hero-eyebrow,
+  body.gateway-mode .home-hero .home-hero-title,
+  body.gateway-mode .home-hero .home-hero-description {
+    display: block !important;
+    white-space: normal !important;
+  }
+
+  body.gateway-mode .home-hero .home-hero-cta {
+    display: inline-flex !important;
+    white-space: normal !important;
+  }
+
+  body.gateway-mode .home-hero .home-hero-eyebrow,
+  body.gateway-mode .home-hero .home-hero-title,
+  body.gateway-mode .home-hero .home-hero-description {
+    margin-bottom: 8px !important;
+  }
+
+  body.gateway-mode .home-hero .home-hero-title {
+    font-size: clamp(31px, 9.2vw, 42px) !important;
+    line-height: 0.98 !important;
+  }
+
+  body.gateway-mode .home-hero .home-hero-description {
+    font-size: 15.5px !important;
+    line-height: 1.35 !important;
   }
 
   body.gateway-mode .gateway-discover {
@@ -15032,6 +15160,12 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
               <source media="(min-width: 761px)" srcset="assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg" />
               <img class="home-artwork-image" src="assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg" alt="One Basics Eternal Life" loading="eager" />
             </picture>
+            <span class="home-hero-copy">
+              <span class="home-hero-eyebrow">One Basics</span>
+              <span class="home-hero-title">Start with Eternal Life</span>
+              <span class="home-hero-description">Watch the full One Basics episode and begin the foundation of knowing God personally through Jesus.</span>
+              <span class="home-hero-cta">Watch full episode</span>
+            </span>
           </button>
 
           <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="1" data-hero-mode="discover watch" data-discover-open="mux_out_of_shadows_documentary" aria-label="Out of the Shadows">
@@ -15039,6 +15173,12 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
               <source media="(min-width: 761px)" srcset="assets/outoftheshadows-brenda-hero-v4.jpg" />
               <img class="home-artwork-image" src="assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg" alt="Out of the Shadows" loading="lazy" />
             </picture>
+            <span class="home-hero-copy">
+              <span class="home-hero-eyebrow">New to the OneApp</span>
+              <span class="home-hero-title">Out of the Shadows</span>
+              <span class="home-hero-description">A powerful documentary story of hope, healing, and stepping into the light.</span>
+              <span class="home-hero-cta">Watch now</span>
+            </span>
           </button>
 
           <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="2" data-hero-mode="discover" data-nav-jump="pathSelectView" aria-label="One In Him discipleship journey">
@@ -15046,6 +15186,12 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
               <source media="(min-width: 761px)" srcset="assets/oneinhim-characters-international.png" />
               <img class="home-artwork-image" src="assets/oneinhim-characters-international.png" alt="One In Him discipleship journey" loading="lazy" />
             </picture>
+            <span class="home-hero-copy">
+              <span class="home-hero-eyebrow">Guided path</span>
+              <span class="home-hero-title">Continue your journey</span>
+              <span class="home-hero-description">Take the next clear step through short teachings, prayer, Scripture, and guided milestones.</span>
+              <span class="home-hero-cta">Open Journey</span>
+            </span>
           </button>
 
           <div class="gateway-hero-controls" aria-label="Hero slides">
@@ -17553,7 +17699,11 @@ const DEFAULT_HOME_CONTENT = {
       desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
       targetType: "discover",
       target: "mux_one_basics_1_1_full_video",
-      alt: "One Basics Eternal Life"
+      alt: "One Basics Eternal Life",
+      eyebrow: "One Basics",
+      title: "Start with Eternal Life",
+      description: "Watch the full One Basics episode and begin the foundation of knowing God personally through Jesus.",
+      cta: "Watch full episode"
     },
     {
       id: "out_of_the_shadows_hero",
@@ -17562,7 +17712,11 @@ const DEFAULT_HOME_CONTENT = {
       desktopArtwork: "assets/outoftheshadows-brenda-hero-v4.jpg",
       targetType: "discover",
       target: "mux_out_of_shadows_documentary",
-      alt: "Out of the Shadows"
+      alt: "Out of the Shadows",
+      eyebrow: "New to the OneApp",
+      title: "Out of the Shadows",
+      description: "A powerful documentary story of hope, healing, and stepping into the light.",
+      cta: "Watch now"
     },
     {
       id: "journey_hero",
@@ -17571,7 +17725,11 @@ const DEFAULT_HOME_CONTENT = {
       desktopArtwork: "assets/oneinhim-characters-international.png",
       targetType: "journey",
       target: "pathSelectView",
-      alt: "One In Him discipleship journey"
+      alt: "One In Him discipleship journey",
+      eyebrow: "Guided path",
+      title: "Continue your journey",
+      description: "Take the next clear step through short teachings, prayer, Scripture, and guided milestones.",
+      cta: "Open Journey"
     }
   ],
   shelves: [
@@ -17620,13 +17778,26 @@ const DEFAULT_HOME_CONTENT = {
   ]
 };
 
+function normalizeHomeContent(layout) {
+  const defaultSlidesById = new Map(DEFAULT_HOME_CONTENT.heroSlides.map((slide) => [slide.id, slide]));
+  return {
+    ...DEFAULT_HOME_CONTENT,
+    ...layout,
+    heroSlides: (layout.heroSlides || DEFAULT_HOME_CONTENT.heroSlides).map((slide, index) => ({
+      ...(defaultSlidesById.get(slide.id) || DEFAULT_HOME_CONTENT.heroSlides[index] || {}),
+      ...slide
+    })),
+    shelves: layout.shelves || DEFAULT_HOME_CONTENT.shelves
+  };
+}
+
 function readHomeContent() {
   try {
     const raw = window.localStorage.getItem(HOME_CONTENT_STORAGE_KEY);
     if (!raw) return DEFAULT_HOME_CONTENT;
     const parsed = JSON.parse(raw);
     if (!parsed || !Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) return DEFAULT_HOME_CONTENT;
-    return parsed;
+    return normalizeHomeContent(parsed);
   } catch (error) {
     console.warn("Home content override could not be read.", error);
     return DEFAULT_HOME_CONTENT;
@@ -17656,6 +17827,12 @@ function renderArtworkHome() {
             <source media="(min-width: 761px)" srcset="${esc(slide.desktopArtwork || slide.artwork || "")}" />
             <img class="home-artwork-image" src="${esc(slide.artwork || slide.desktopArtwork || "")}" alt="${esc(slide.alt || "")}" loading="${index === 0 ? "eager" : "lazy"}" />
           </picture>
+          <span class="home-hero-copy">
+            ${slide.eyebrow ? `<span class="home-hero-eyebrow">${esc(slide.eyebrow)}</span>` : ""}
+            ${slide.title ? `<span class="home-hero-title">${esc(slide.title)}</span>` : ""}
+            ${slide.description ? `<span class="home-hero-description">${esc(slide.description)}</span>` : ""}
+            ${slide.cta ? `<span class="home-hero-cta">${esc(slide.cta)}</span>` : ""}
+          </span>
         </button>
       `).join("")}
       <div class="gateway-hero-controls" aria-label="Hero slides">
@@ -22553,7 +22730,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v122";
+  const workerRefreshKey = "oneinhim-sw-refresh-v123";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22561,7 +22738,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=122", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=123", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
