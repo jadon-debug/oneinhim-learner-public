@@ -14718,9 +14718,224 @@ body:not(.gateway-mode) .main {
   display: none !important;
 }
 
+/* Artwork-driven home: the admin uploads the art, the app owns fixed frames. */
+body.gateway-mode .home-hero {
+  --home-frame-bg: #111111;
+  background: var(--home-frame-bg) !important;
+  height: clamp(620px, 74svh, 820px) !important;
+  min-height: clamp(620px, 74svh, 820px) !important;
+  overflow: hidden !important;
+}
+
+body.gateway-mode .home-hero .artwork-home-slide {
+  appearance: none !important;
+  border: 0 !important;
+  cursor: pointer !important;
+  display: block !important;
+  height: 100% !important;
+  inset: 0 !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 100% !important;
+}
+
+body.gateway-mode .home-hero .artwork-home-slide.active {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 1 !important;
+}
+
+body.gateway-mode .home-hero .home-artwork-picture,
+body.gateway-mode .home-hero .home-artwork-image {
+  display: block !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+body.gateway-mode .home-hero .home-artwork-image {
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
+body.gateway-mode .home-hero::before,
+body.gateway-mode .home-hero::after {
+  content: "" !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: 2 !important;
+}
+
+body.gateway-mode .home-hero::before {
+  background: linear-gradient(180deg, #111111 0%, rgba(17, 17, 17, 0.86) 32%, rgba(17, 17, 17, 0) 100%) !important;
+  height: calc(var(--app-top-chrome-space, 96px) + 86px) !important;
+  inset: 0 0 auto !important;
+}
+
+body.gateway-mode .home-hero::after {
+  background: linear-gradient(180deg, rgba(17, 17, 17, 0) 0%, #111111 86%) !important;
+  height: clamp(150px, 24svh, 260px) !important;
+  inset: auto 0 0 !important;
+}
+
+body.gateway-mode .home-hero .gateway-hero-controls {
+  bottom: clamp(26px, 4.4svh, 54px) !important;
+  left: 50% !important;
+  position: absolute !important;
+  right: auto !important;
+  top: auto !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  z-index: 3 !important;
+}
+
+body.gateway-mode .gateway-discover {
+  background: #111111 !important;
+  color: #f7f4ee !important;
+  padding-top: clamp(18px, 3.4vw, 42px) !important;
+}
+
+body.gateway-mode .artwork-home-shelf {
+  background: transparent !important;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 clamp(18px, 3vw, 54px) clamp(34px, 4vw, 58px) !important;
+}
+
+body.gateway-mode .artwork-home-shelf .discovery-section-head {
+  display: block !important;
+  margin: 0 0 14px !important;
+}
+
+body.gateway-mode .artwork-home-shelf .discovery-section-head h2 {
+  color: #f7f4ee !important;
+  font-size: clamp(25px, 2vw, 34px) !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+body.gateway-mode .artwork-card-shelf {
+  display: grid !important;
+  gap: 16px !important;
+  grid-auto-flow: column !important;
+  grid-auto-columns: 360px !important;
+  overflow-x: auto !important;
+  padding: 0 0 12px !important;
+  scroll-snap-type: x proximity !important;
+}
+
+body.gateway-mode .artwork-home-card {
+  aspect-ratio: 16 / 9 !important;
+  background: #191919 !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  scroll-snap-align: start !important;
+  width: 100% !important;
+}
+
+body.gateway-mode .artwork-card-square {
+  aspect-ratio: 1 / 1 !important;
+}
+
+body.gateway-mode .artwork-card-poster {
+  aspect-ratio: 4 / 5 !important;
+}
+
+body.gateway-mode .home-card-art,
+body.gateway-mode .home-card-art img {
+  display: block !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+body.gateway-mode .home-card-art {
+  position: relative !important;
+}
+
+body.gateway-mode .home-card-art img {
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
+body.gateway-mode .artwork-home-card .content-lock-badge {
+  bottom: 12px !important;
+  right: 12px !important;
+}
+
+@media (max-width: 760px) {
+  body.gateway-mode.dark-gateway-hero-active .app-top-chrome .gateway-mobile-action,
+  body.gateway-mode.dark-app-chrome-active .app-top-chrome .gateway-mobile-action,
+  html.dark-app-chrome-active body.gateway-mode .app-top-chrome .gateway-mobile-action {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.58)) !important;
+  }
+
+  body.gateway-mode.dark-gateway-hero-active .app-top-chrome .gateway-mobile-action svg,
+  body.gateway-mode.dark-app-chrome-active .app-top-chrome .gateway-mobile-action svg,
+  html.dark-app-chrome-active body.gateway-mode .app-top-chrome .gateway-mobile-action svg {
+    color: #ffffff !important;
+    stroke: currentColor !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.gateway-mode .home-hero {
+    height: min(690px, calc(100svh - 78px)) !important;
+    min-height: min(690px, calc(100svh - 78px)) !important;
+  }
+
+  body.gateway-mode .home-hero .home-artwork-image {
+    object-position: center top !important;
+  }
+
+  body.gateway-mode .gateway-discover {
+    padding-bottom: calc(var(--app-bottom-chrome-space) + 24px) !important;
+    padding-top: 18px !important;
+  }
+
+  body.gateway-mode .artwork-home-shelf {
+    padding: 0 24px 34px !important;
+  }
+
+  body.gateway-mode .artwork-home-shelf .discovery-section-head {
+    margin-bottom: 12px !important;
+  }
+
+  body.gateway-mode .artwork-home-shelf .discovery-section-head h2 {
+    font-size: 30px !important;
+  }
+
+  body.gateway-mode .artwork-card-shelf {
+    gap: 18px !important;
+    grid-auto-columns: 76vw !important;
+    margin-left: -24px !important;
+    margin-right: -24px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  body.gateway-mode .artwork-home-card {
+    border-radius: 7px !important;
+  }
+
+  body.gateway-mode .artwork-card-square {
+    grid-auto-columns: 64vw !important;
+  }
+}
+
 			</style>
 </head>
-<body class="gateway-mode">
+<body class="gateway-mode dark-gateway-hero-active dark-app-chrome-active">
 <div class="app-shell">
   <main class="main">
 	    <header class="topbar">
@@ -14812,51 +15027,26 @@ body:not(.gateway-mode) .main {
 		    <section class="view active" id="gatewayView">
 		      <section class="gateway-panel">
         <div class="gateway-landing home-hero" aria-label="Featured home slides">
-          <article class="gateway-slide home-hero-slide active" data-gateway-hero-slide="0" data-hero-mode="discover">
-            <div class="gateway-illustration" aria-hidden="true">
-              <img id="gatewayCharacterArt" src="assets/oneinhim-characters-international.png" alt="" />
-            </div>
-            <div class="gateway-copy">
-              <h2 data-i18n="gateway.headline">Want to grow in your&#10;Christian journey?</h2>
-              <p data-i18n="gateway.copy">Find a clear next step through short teachings, prayer, Scripture, trusted voices, and guided milestones.</p>
-              <div class="hero-actions">
-                <button class="primary-btn" id="gatewayStart" data-i18n="gateway.start">Get started</button>
-                <button class="soft-btn" data-nav-jump="pathSelectView" data-i18n="gateway.browse">Continue journey</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="gateway-slide home-hero-slide documentary-hero" data-gateway-hero-slide="1" data-hero-mode="discover watch">
-            <picture class="gateway-hero-bg-picture" aria-hidden="true">
-              <source media="(max-width: 760px)" srcset="assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg" />
-              <img class="gateway-hero-bg" src="assets/outoftheshadows-brenda-hero-v4.jpg" alt="" />
+          <button class="gateway-slide home-hero-slide artwork-home-slide active" type="button" data-gateway-hero-slide="0" data-hero-mode="discover watch" data-discover-open="mux_one_basics_1_1_full_video" aria-label="One Basics Eternal Life">
+            <picture class="home-artwork-picture">
+              <source media="(min-width: 761px)" srcset="assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg" />
+              <img class="home-artwork-image" src="assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg" alt="One Basics Eternal Life" loading="eager" />
             </picture>
-            <div class="gateway-copy">
-              <span class="hero-eyebrow" data-i18n="gateway.watchEyebrow">New to the ONEapp</span>
-              <h2 data-i18n="gateway.watchHeadline">Out of the Shadows</h2>
-              <p data-i18n="gateway.watchCopy">A powerful documentary story of hope, healing, and stepping into the light.</p>
-              <div class="hero-actions">
-                <button class="primary-btn" type="button" data-discover-open="mux_out_of_shadows_documentary" data-i18n="gateway.watchButton">Watch now</button>
-              </div>
-            </div>
-          </article>
+          </button>
 
-          <article class="gateway-slide home-hero-slide one-basics-hero" data-gateway-hero-slide="2" data-hero-mode="discover watch">
-            <div class="gateway-illustration" aria-hidden="true">
-              <picture>
-                <source media="(max-width: 760px)" srcset="assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg" />
-                <img src="assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg" alt="" />
-              </picture>
-            </div>
-            <div class="gateway-copy">
-              <span class="hero-eyebrow" data-i18n="gateway.basicsEyebrow">One Basics</span>
-              <h2 data-i18n="gateway.basicsHeadline">Start with Eternal Life</h2>
-              <p data-i18n="gateway.basicsCopy">Watch the full One Basics 1.1 episode and begin the foundation of knowing God personally through Jesus.</p>
-              <div class="hero-actions">
-                <button class="primary-btn" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-i18n="gateway.basicsButton">Watch full episode</button>
-              </div>
-            </div>
-          </article>
+          <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="1" data-hero-mode="discover watch" data-discover-open="mux_out_of_shadows_documentary" aria-label="Out of the Shadows">
+            <picture class="home-artwork-picture">
+              <source media="(min-width: 761px)" srcset="assets/outoftheshadows-brenda-hero-v4.jpg" />
+              <img class="home-artwork-image" src="assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg" alt="Out of the Shadows" loading="lazy" />
+            </picture>
+          </button>
+
+          <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="2" data-hero-mode="discover" data-nav-jump="pathSelectView" aria-label="One In Him discipleship journey">
+            <picture class="home-artwork-picture">
+              <source media="(min-width: 761px)" srcset="assets/oneinhim-characters-international.png" />
+              <img class="home-artwork-image" src="assets/oneinhim-characters-international.png" alt="One In Him discipleship journey" loading="lazy" />
+            </picture>
+          </button>
 
           <div class="gateway-hero-controls" aria-label="Hero slides">
             <div class="gateway-hero-dots">
@@ -17353,6 +17543,149 @@ function esc(value) {
   }[char]));
 }
 
+const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v1";
+const DEFAULT_HOME_CONTENT = {
+  heroSlides: [
+    {
+      id: "one_basics_hero",
+      mode: "discover watch",
+      artwork: "assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
+      desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
+      targetType: "discover",
+      target: "mux_one_basics_1_1_full_video",
+      alt: "One Basics Eternal Life"
+    },
+    {
+      id: "out_of_the_shadows_hero",
+      mode: "discover watch",
+      artwork: "assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
+      desktopArtwork: "assets/outoftheshadows-brenda-hero-v4.jpg",
+      targetType: "discover",
+      target: "mux_out_of_shadows_documentary",
+      alt: "Out of the Shadows"
+    },
+    {
+      id: "journey_hero",
+      mode: "discover",
+      artwork: "assets/oneinhim-characters-international.png",
+      desktopArtwork: "assets/oneinhim-characters-international.png",
+      targetType: "journey",
+      target: "pathSelectView",
+      alt: "One In Him discipleship journey"
+    }
+  ],
+  shelves: [
+    {
+      id: "start_this_week",
+      title: "Start This Week",
+      mode: "discover",
+      cardSize: "wide",
+      items: [
+        { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+        { id: "darkness_sonship", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
+        { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+        { id: "oneevent_duane", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
+      ]
+    },
+    {
+      id: "listen_this_week",
+      title: "Listen This Week",
+      mode: "discover listen",
+      cardSize: "square",
+      items: [
+        { id: "darkness_sonship_audio", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
+        { id: "ivan_ilyich", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+      ]
+    },
+    {
+      id: "Watch This Week",
+      title: "Watch This Week",
+      mode: "discover watch",
+      cardSize: "poster",
+      items: [
+        { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+        { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+        { id: "oneevent_watch", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
+      ]
+    },
+    {
+      id: "classics",
+      title: "Classics",
+      mode: "discover listen",
+      cardSize: "square",
+      items: [
+        { id: "death_ivan_classics", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+      ]
+    }
+  ]
+};
+
+function readHomeContent() {
+  try {
+    const raw = window.localStorage.getItem(HOME_CONTENT_STORAGE_KEY);
+    if (!raw) return DEFAULT_HOME_CONTENT;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) return DEFAULT_HOME_CONTENT;
+    return parsed;
+  } catch (error) {
+    console.warn("Home content override could not be read.", error);
+    return DEFAULT_HOME_CONTENT;
+  }
+}
+
+function homeActionAttributes(item) {
+  if (!item) return "";
+  if (item.targetType === "journey") return `data-nav-jump="${esc(item.target || "pathSelectView")}"`;
+  if (item.targetType === "choice") return `data-gateway-choice="${esc(item.target || "exploreJesus")}"`;
+  return `data-discover-open="${esc(item.target || "")}"`;
+}
+
+function homeLockBadge(item) {
+  return item?.locked ? contentLockBadgeMarkup() : "";
+}
+
+function renderArtworkHome() {
+  const content = readHomeContent();
+  const heroRoot = document.querySelector(".gateway-landing.home-hero");
+  const shelvesRoot = document.querySelector(".gateway-discover");
+  if (heroRoot && Array.isArray(content.heroSlides)) {
+    heroRoot.innerHTML = `
+      ${content.heroSlides.map((slide, index) => `
+        <button class="gateway-slide home-hero-slide artwork-home-slide${index === 0 ? " active" : ""}" type="button" data-gateway-hero-slide="${index}" data-hero-mode="${esc(slide.mode || "discover")}" ${homeActionAttributes(slide)} aria-label="${esc(slide.alt || `Home slide ${index + 1}`)}">
+          <picture class="home-artwork-picture">
+            <source media="(min-width: 761px)" srcset="${esc(slide.desktopArtwork || slide.artwork || "")}" />
+            <img class="home-artwork-image" src="${esc(slide.artwork || slide.desktopArtwork || "")}" alt="${esc(slide.alt || "")}" loading="${index === 0 ? "eager" : "lazy"}" />
+          </picture>
+        </button>
+      `).join("")}
+      <div class="gateway-hero-controls" aria-label="Hero slides">
+        <div class="gateway-hero-dots">
+          ${content.heroSlides.map((_, index) => `<button class="gateway-hero-dot${index === 0 ? " active" : ""}" type="button" data-hero-dot="${index}" aria-label="Show hero slide ${index + 1}"></button>`).join("")}
+        </div>
+      </div>
+    `;
+  }
+  if (shelvesRoot && Array.isArray(content.shelves)) {
+    shelvesRoot.innerHTML = content.shelves.map((shelf) => `
+      <section class="discovery-band dark artwork-home-shelf" data-home-mode="${esc(shelf.mode || "discover")}">
+        <div class="discovery-section-head">
+          <h2>${esc(shelf.title || "Featured")}</h2>
+        </div>
+        <div class="weekly-media-shelf artwork-card-shelf" aria-label="${esc(shelf.title || "Featured")}">
+          ${(shelf.items || []).map((item) => `
+            <button class="weekly-media-card artwork-home-card artwork-card-${esc(shelf.cardSize || "wide")}${item.locked ? " is-content-locked" : ""}" type="button" ${homeActionAttributes(item)} aria-label="${esc(item.alt || item.id || "Open item")}">
+              <span class="home-card-art">
+                <img src="${esc(item.artwork || "")}" alt="${esc(item.alt || "")}" loading="lazy" />
+                ${homeLockBadge(item)}
+              </span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+    `).join("");
+  }
+}
+
 function labelize(value) {
   return String(value || "")
     .replace(/_/g, " ")
@@ -17459,7 +17792,8 @@ function renderGatewayHeroSlider() {
   const activeSlide = slides[activeIndex];
   const isDocumentaryHero = activeSlide?.classList.contains("documentary-hero");
   const isOneBasicsHero = activeSlide?.classList.contains("one-basics-hero");
-  const isDarkHero = Boolean(isDocumentaryHero || isOneBasicsHero);
+  const isArtworkHero = activeSlide?.classList.contains("artwork-home-slide");
+  const isDarkHero = Boolean(isDocumentaryHero || isOneBasicsHero || isArtworkHero);
   document.body.classList.toggle("documentary-hero-active", isDocumentaryHero);
   document.body.classList.toggle("one-basics-hero-active", isOneBasicsHero);
   document.body.classList.toggle("dark-gateway-hero-active", isDarkHero);
@@ -21611,6 +21945,7 @@ function renderShare() {
 }
 
 function renderAll() {
+  renderArtworkHome();
   renderGatewayHeroSlider();
   scheduleGatewayHeroAutoplay();
   renderHome();
@@ -21664,6 +21999,9 @@ function bindDynamicActions() {
   });
   document.querySelectorAll("[data-gateway-choice]").forEach((button) => {
     button.onclick = () => handleGatewayChoice(button.dataset.gatewayChoice);
+  });
+  document.querySelectorAll("[data-hero-dot]").forEach((button) => {
+    button.onclick = () => setGatewayHero(Number(button.dataset.heroDot) || 0, { scrollToHeroTop: true });
   });
   document.querySelectorAll("[data-question-guide-start]").forEach((button) => {
     button.onclick = (event) => {
@@ -22119,9 +22457,12 @@ function wireStaticActions() {
       if (els.popularRail) els.popularRail.scrollBy({ left: direction * 260, behavior: "smooth" });
     });
   });
-  document.getElementById("gatewayStart").addEventListener("click", () => {
-    openOnboarding();
-  });
+  const gatewayStartButton = document.getElementById("gatewayStart");
+  if (gatewayStartButton) {
+    gatewayStartButton.addEventListener("click", () => {
+      openOnboarding();
+    });
+  }
   els.onboardingBack.addEventListener("click", () => setView("gatewayView"));
   els.onboardingContinue.addEventListener("click", () => {
     finishOnboarding();
@@ -22212,7 +22553,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v121";
+  const workerRefreshKey = "oneinhim-sw-refresh-v122";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22220,7 +22561,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=121", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=122", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };

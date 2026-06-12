@@ -3329,6 +3329,7 @@ body.workshop-locked .shell {
         <button class="tab-btn" data-view="clipsView">Clips and excerpts</button>
         <button class="tab-btn" data-view="packageView">Package builder</button>
         <button class="tab-btn" data-view="placementMapView">Placement map</button>
+        <button class="tab-btn" data-view="homeLayoutView">Home layout</button>
         <button class="tab-btn" data-view="packageFormatView">App package format</button>
         <button class="tab-btn" data-view="preparedView">Prepared app item</button>
         <button class="tab-btn" data-view="recommendView">Recommendation preview</button>
@@ -3634,6 +3635,24 @@ body.workshop-locked .shell {
           </div>
           <div class="format-map" id="packageFormatMap"></div>
           <div class="package-flow-preview" id="packageFlowPreview"></div>
+        </section>
+
+        <section class="view" id="homeLayoutView">
+          <div class="package-header">
+            <div>
+              <h3 class="section-title">Home layout</h3>
+              <p class="panel-copy">Replace home hero and shelf artwork here. The app keeps fixed slide and card sizes; the uploaded artwork fills those frames.</p>
+            </div>
+            <div class="top-actions">
+              <button class="soft-btn" id="homeLayoutLoadDefault" type="button">Load default</button>
+              <button class="soft-btn" id="homeLayoutExport" type="button">Export JSON</button>
+              <button class="primary-btn" id="homeLayoutSave" type="button">Save home layout</button>
+            </div>
+          </div>
+          <div class="json-box">
+            <textarea id="homeLayoutJson" spellcheck="false" style="min-height: 520px; width: 100%; border: 0; background: transparent; color: inherit; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; resize: vertical;"></textarea>
+          </div>
+          <p class="panel-copy" style="margin-top: 12px;">Use local asset paths such as <strong>assets/my-cover.jpg</strong> or a public image URL. Do not add title fields for cards unless the text is already part of the artwork.</p>
         </section>
 
         <section class="view" id="preparedView">
@@ -4345,6 +4364,10 @@ const els = {
   preparedJsonPreview: document.getElementById("preparedJsonPreview"),
   recommendCard: document.getElementById("recommendCard"),
   needInput: document.getElementById("needInput"),
+  homeLayoutJson: document.getElementById("homeLayoutJson"),
+  homeLayoutSave: document.getElementById("homeLayoutSave"),
+  homeLayoutLoadDefault: document.getElementById("homeLayoutLoadDefault"),
+  homeLayoutExport: document.getElementById("homeLayoutExport"),
   completionLabel: document.getElementById("completionLabel"),
   completionFill: document.getElementById("completionFill"),
   schemaSource: document.getElementById("schemaSource"),
@@ -4352,6 +4375,93 @@ const els = {
   controlledList: document.getElementById("controlledList"),
   jsonPreview: document.getElementById("jsonPreview")
 };
+
+const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v1";
+const DEFAULT_HOME_CONTENT = {
+  heroSlides: [
+    {
+      id: "one_basics_hero",
+      mode: "discover watch",
+      artwork: "assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
+      desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
+      targetType: "discover",
+      target: "mux_one_basics_1_1_full_video",
+      alt: "One Basics Eternal Life"
+    },
+    {
+      id: "out_of_the_shadows_hero",
+      mode: "discover watch",
+      artwork: "assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
+      desktopArtwork: "assets/outoftheshadows-brenda-hero-v4.jpg",
+      targetType: "discover",
+      target: "mux_out_of_shadows_documentary",
+      alt: "Out of the Shadows"
+    },
+    {
+      id: "journey_hero",
+      mode: "discover",
+      artwork: "assets/oneinhim-characters-international.png",
+      desktopArtwork: "assets/oneinhim-characters-international.png",
+      targetType: "journey",
+      target: "pathSelectView",
+      alt: "One In Him discipleship journey"
+    }
+  ],
+  shelves: [
+    {
+      id: "start_this_week",
+      title: "Start This Week",
+      mode: "discover",
+      cardSize: "wide",
+      items: [
+        { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+        { id: "darkness_sonship", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
+        { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+        { id: "oneevent_duane", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
+      ]
+    },
+    {
+      id: "listen_this_week",
+      title: "Listen This Week",
+      mode: "discover listen",
+      cardSize: "square",
+      items: [
+        { id: "darkness_sonship_audio", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
+        { id: "ivan_ilyich", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+      ]
+    },
+    {
+      id: "watch_this_week",
+      title: "Watch This Week",
+      mode: "discover watch",
+      cardSize: "poster",
+      items: [
+        { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+        { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+        { id: "oneevent_watch", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
+      ]
+    },
+    {
+      id: "classics",
+      title: "Classics",
+      mode: "discover listen",
+      cardSize: "square",
+      items: [
+        { id: "death_ivan_classics", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+      ]
+    }
+  ]
+};
+
+function readHomeLayoutForWorkshop() {
+  try {
+    const raw = window.localStorage.getItem(HOME_CONTENT_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : DEFAULT_HOME_CONTENT;
+  } catch (error) {
+    console.warn("Home layout override could not be read.", error);
+    return DEFAULT_HOME_CONTENT;
+  }
+}
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -6801,6 +6911,60 @@ function renderSchemaView(item) {
   els.jsonPreview.textContent = JSON.stringify(toSchemaShape(item), null, 2);
 }
 
+function validateHomeLayout(layout) {
+  if (!layout || !Array.isArray(layout.heroSlides) || !Array.isArray(layout.shelves)) {
+    throw new Error("Home layout needs heroSlides and shelves arrays.");
+  }
+  layout.heroSlides.forEach((slide, index) => {
+    if (!slide.artwork && !slide.desktopArtwork) throw new Error(`Hero slide ${index + 1} needs artwork.`);
+  });
+  layout.shelves.forEach((shelf, shelfIndex) => {
+    if (!Array.isArray(shelf.items)) throw new Error(`Shelf ${shelfIndex + 1} needs an items array.`);
+    shelf.items.forEach((item, itemIndex) => {
+      if (!item.artwork) throw new Error(`Shelf ${shelfIndex + 1}, item ${itemIndex + 1} needs artwork.`);
+    });
+  });
+  return layout;
+}
+
+function renderHomeLayoutEditor() {
+  if (!els.homeLayoutJson) return;
+  if (!els.homeLayoutJson.value.trim()) {
+    els.homeLayoutJson.value = JSON.stringify(readHomeLayoutForWorkshop(), null, 2);
+  }
+}
+
+function saveHomeLayoutFromEditor() {
+  try {
+    const layout = validateHomeLayout(JSON.parse(els.homeLayoutJson.value));
+    window.localStorage.setItem(HOME_CONTENT_STORAGE_KEY, JSON.stringify(layout));
+    flashStatus("Home layout saved");
+  } catch (error) {
+    flashStatus(error.message || "Home layout is not valid JSON");
+  }
+}
+
+function loadDefaultHomeLayoutEditor() {
+  els.homeLayoutJson.value = JSON.stringify(DEFAULT_HOME_CONTENT, null, 2);
+  flashStatus("Default home layout loaded");
+}
+
+function exportHomeLayoutJson() {
+  try {
+    const layout = validateHomeLayout(JSON.parse(els.homeLayoutJson.value));
+    const text = JSON.stringify(layout, null, 2);
+    const blob = new Blob([text], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "oneinhim_home_layout.json";
+    link.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    flashStatus(error.message || "Home layout is not valid JSON");
+  }
+}
+
 function toSchemaShape(item) {
   return {
     identity: {
@@ -7004,6 +7168,7 @@ function renderAll(options = {}) {
   renderPreparedItem(item);
   renderRecommendation(item);
   renderSchemaView(item);
+  renderHomeLayoutEditor();
   renderCompletion(item);
   renderTabs();
   if (!options.keepFormFocus) setFormValues(item);
@@ -7051,6 +7216,9 @@ function wireActions() {
     renderPlacementMap();
   });
   document.getElementById("exportPackageJson").addEventListener("click", exportCurrentPackageJson);
+  if (els.homeLayoutSave) els.homeLayoutSave.addEventListener("click", saveHomeLayoutFromEditor);
+  if (els.homeLayoutLoadDefault) els.homeLayoutLoadDefault.addEventListener("click", loadDefaultHomeLayoutEditor);
+  if (els.homeLayoutExport) els.homeLayoutExport.addEventListener("click", exportHomeLayoutJson);
   document.getElementById("videoGenerateTranscript").addEventListener("click", fillVideoTranscriptFromActive);
   document.getElementById("videoPrepareClips").addEventListener("click", () => {
     renderVideoIntake(getActive());
