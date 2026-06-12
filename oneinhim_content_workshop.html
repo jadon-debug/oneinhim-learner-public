@@ -926,6 +926,259 @@ body.workshop-locked .shell {
   font-size: 14px;
 }
 
+.home-builder {
+  display: grid;
+  gap: 14px;
+}
+
+.home-builder-grid {
+  display: grid;
+  grid-template-columns: 230px minmax(360px, 1fr) minmax(280px, 0.72fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.home-builder-panel {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fbfcfc;
+  overflow: hidden;
+}
+
+.home-builder-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.home-builder-panel-head h4 {
+  margin: 0;
+  font-size: 13px;
+}
+
+.home-item-list {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+}
+
+.home-editor-row {
+  width: 100%;
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+}
+
+.home-editor-row.active {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(217, 107, 43, 0.13);
+}
+
+.home-editor-row strong {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.home-editor-row span {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.home-hero-preview {
+  position: relative;
+  min-height: 390px;
+  overflow: hidden;
+  background: #111;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+
+.home-hero-preview img {
+  width: 100%;
+  height: 100%;
+  min-height: 390px;
+  display: block;
+  object-fit: cover;
+}
+
+.home-hero-preview::before,
+.home-hero-preview::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+}
+
+.home-hero-preview::before {
+  top: 0;
+  height: 110px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.62), transparent);
+}
+
+.home-hero-preview::after {
+  bottom: 0;
+  height: 190px;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,0.82));
+}
+
+.home-hero-preview-copy {
+  position: absolute;
+  left: 24px;
+  bottom: 38px;
+  z-index: 1;
+  width: min(360px, calc(100% - 48px));
+  color: #fff;
+}
+
+.home-hero-preview-copy .kicker {
+  display: block;
+  color: #f1d45b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.home-hero-preview-copy .title {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 900;
+  line-height: 0.98;
+  margin-bottom: 8px;
+}
+
+.home-hero-preview-copy .copy,
+.home-hero-preview-copy .cta {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.home-hero-preview-copy .cta {
+  margin-top: 10px;
+}
+
+.home-hero-preview-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+}
+
+.home-hero-preview-dots span {
+  width: 42px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.42);
+}
+
+.home-hero-preview-dots span.active {
+  background: var(--orange);
+}
+
+.home-inspector {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.home-field {
+  display: grid;
+  gap: 5px;
+}
+
+.home-field label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.home-field input,
+.home-field select,
+.home-field textarea {
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 9px;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.home-field textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.home-shelf-manager {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr) minmax(260px, 0.42fr);
+  gap: 12px;
+}
+
+.home-shelf-cards {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 180px;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 12px;
+}
+
+.home-shelf-card {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #111;
+}
+
+.home-shelf-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.home-shelf-card .lock-pill {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.56);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.home-json-details summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
 .package-stack {
   display: grid;
   gap: 8px;
@@ -3640,19 +3893,116 @@ body.workshop-locked .shell {
         <section class="view" id="homeLayoutView">
           <div class="package-header">
             <div>
-              <h3 class="section-title">Home layout</h3>
-              <p class="panel-copy">Replace home hero and shelf artwork here. Each hero slide has a mobile/portrait image and a desktop/wide image; the frame, shadows, dots, and text placement stay fixed.</p>
+              <h3 class="section-title">Home builder</h3>
+              <p class="panel-copy">Build the home page by linking hero slides and shelves to real content. Hero slides control promotion; shelves control library placement.</p>
             </div>
             <div class="top-actions">
+              <button class="soft-btn" id="homeHeroAdd" type="button">Add hero</button>
+              <button class="soft-btn" id="homeShelfAdd" type="button">Add shelf</button>
               <button class="soft-btn" id="homeLayoutLoadDefault" type="button">Load default</button>
               <button class="soft-btn" id="homeLayoutExport" type="button">Export JSON</button>
               <button class="primary-btn" id="homeLayoutSave" type="button">Save home layout</button>
             </div>
           </div>
-          <div class="json-box">
-            <textarea id="homeLayoutJson" spellcheck="false" style="min-height: 520px; width: 100%; border: 0; background: transparent; color: inherit; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; resize: vertical;"></textarea>
+          <div class="home-builder">
+            <section class="home-builder-grid" aria-label="Home hero builder">
+              <aside class="home-builder-panel">
+                <div class="home-builder-panel-head">
+                  <h4>Hero slides</h4>
+                  <span class="tag orange" id="homeHeroCount">0</span>
+                </div>
+                <div class="home-item-list" id="homeHeroList"></div>
+              </aside>
+              <div class="home-hero-preview" id="homeHeroPreview"></div>
+              <aside class="home-builder-panel">
+                <div class="home-builder-panel-head">
+                  <h4>Hero settings</h4>
+                </div>
+                <div class="home-inspector">
+                  <div class="home-field">
+                    <label for="homeHeroContentId">Linked content</label>
+                    <select id="homeHeroContentId"></select>
+                  </div>
+                  <div class="home-field">
+                    <label for="homeHeroMobileArtwork">Mobile artwork</label>
+                    <input id="homeHeroMobileArtwork" placeholder="assets/mobile-hero.jpg" />
+                  </div>
+                  <div class="home-field">
+                    <label for="homeHeroDesktopArtwork">Desktop artwork</label>
+                    <input id="homeHeroDesktopArtwork" placeholder="assets/desktop-hero.jpg" />
+                  </div>
+                  <div class="home-field">
+                    <label for="homeHeroEyebrow">Eyebrow</label>
+                    <input id="homeHeroEyebrow" />
+                  </div>
+                  <div class="home-field">
+                    <label for="homeHeroTitle">Title</label>
+                    <input id="homeHeroTitle" />
+                  </div>
+                  <div class="home-field">
+                    <label for="homeHeroDescription">Description</label>
+                    <textarea id="homeHeroDescription"></textarea>
+                  </div>
+                  <div class="home-field">
+                    <label for="homeHeroCta">CTA</label>
+                    <input id="homeHeroCta" />
+                  </div>
+                </div>
+              </aside>
+            </section>
+
+            <section class="home-shelf-manager" aria-label="Library shelf manager">
+              <aside class="home-builder-panel">
+                <div class="home-builder-panel-head">
+                  <h4>Shelves</h4>
+                  <span class="tag green" id="homeShelfCount">0</span>
+                </div>
+                <div class="home-item-list" id="homeShelfList"></div>
+              </aside>
+              <div class="home-builder-panel">
+                <div class="home-builder-panel-head">
+                  <h4 id="homeShelfPreviewTitle">Shelf preview</h4>
+                  <button class="tiny-btn" id="homeShelfAddItem" type="button">Add content</button>
+                </div>
+                <div class="home-shelf-cards" id="homeShelfCards"></div>
+              </div>
+              <aside class="home-builder-panel">
+                <div class="home-builder-panel-head">
+                  <h4>Shelf settings</h4>
+                </div>
+                <div class="home-inspector">
+                  <div class="home-field">
+                    <label for="homeShelfTitleInput">Shelf title</label>
+                    <input id="homeShelfTitleInput" />
+                  </div>
+                  <div class="home-field">
+                    <label for="homeShelfModeInput">Where it appears</label>
+                    <input id="homeShelfModeInput" placeholder="discover listen watch" />
+                  </div>
+                  <div class="home-field">
+                    <label for="homeShelfCardSizeInput">Card size</label>
+                    <select id="homeShelfCardSizeInput">
+                      <option value="wide">Wide</option>
+                      <option value="square">Square</option>
+                      <option value="poster">Poster</option>
+                    </select>
+                  </div>
+                  <div class="home-field">
+                    <label for="homeShelfContentPicker">Add content item</label>
+                    <select id="homeShelfContentPicker"></select>
+                  </div>
+                </div>
+              </aside>
+            </section>
+
+            <details class="home-json-details">
+              <summary>Advanced JSON</summary>
+              <div class="json-box">
+                <textarea id="homeLayoutJson" spellcheck="false" style="min-height: 420px; width: 100%; border: 0; background: transparent; color: inherit; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; resize: vertical;"></textarea>
+              </div>
+            </details>
           </div>
-          <p class="panel-copy" style="margin-top: 12px;">Hero slides use <strong>mobileArtwork</strong> for phone portrait crops and <strong>desktopArtwork</strong> for wide screens. Use local asset paths such as <strong>assets/my-cover.jpg</strong> or a public image URL. Hero text fields are eyebrow, title, description, and cta. Shelf cards stay artwork-only.</p>
+          <p class="panel-copy" style="margin-top: 12px;">Hero slides use <strong>mobileArtwork</strong> for phone portrait crops and <strong>desktopArtwork</strong> for wide screens. Shelves point to content and control where items appear in the library.</p>
         </section>
 
         <section class="view" id="preparedView">
@@ -4202,6 +4552,8 @@ const state = {
     message: "Waiting for a Mux playback ID.",
     checkedAt: ""
   },
+  homeHeroIndex: 0,
+  homeShelfIndex: 0,
   recommendationNeed: "I feel far from God and do not know where to start"
 };
 
@@ -4365,6 +4717,27 @@ const els = {
   recommendCard: document.getElementById("recommendCard"),
   needInput: document.getElementById("needInput"),
   homeLayoutJson: document.getElementById("homeLayoutJson"),
+  homeHeroList: document.getElementById("homeHeroList"),
+  homeHeroCount: document.getElementById("homeHeroCount"),
+  homeHeroPreview: document.getElementById("homeHeroPreview"),
+  homeHeroContentId: document.getElementById("homeHeroContentId"),
+  homeHeroMobileArtwork: document.getElementById("homeHeroMobileArtwork"),
+  homeHeroDesktopArtwork: document.getElementById("homeHeroDesktopArtwork"),
+  homeHeroEyebrow: document.getElementById("homeHeroEyebrow"),
+  homeHeroTitle: document.getElementById("homeHeroTitle"),
+  homeHeroDescription: document.getElementById("homeHeroDescription"),
+  homeHeroCta: document.getElementById("homeHeroCta"),
+  homeHeroAdd: document.getElementById("homeHeroAdd"),
+  homeShelfList: document.getElementById("homeShelfList"),
+  homeShelfCount: document.getElementById("homeShelfCount"),
+  homeShelfPreviewTitle: document.getElementById("homeShelfPreviewTitle"),
+  homeShelfCards: document.getElementById("homeShelfCards"),
+  homeShelfTitleInput: document.getElementById("homeShelfTitleInput"),
+  homeShelfModeInput: document.getElementById("homeShelfModeInput"),
+  homeShelfCardSizeInput: document.getElementById("homeShelfCardSizeInput"),
+  homeShelfContentPicker: document.getElementById("homeShelfContentPicker"),
+  homeShelfAdd: document.getElementById("homeShelfAdd"),
+  homeShelfAddItem: document.getElementById("homeShelfAddItem"),
   homeLayoutSave: document.getElementById("homeLayoutSave"),
   homeLayoutLoadDefault: document.getElementById("homeLayoutLoadDefault"),
   homeLayoutExport: document.getElementById("homeLayoutExport"),
@@ -6969,16 +7342,205 @@ function validateHomeLayout(layout) {
   return layout;
 }
 
+function homeLayoutDraft() {
+  if (!els.homeLayoutJson) return normalizeHomeLayout(DEFAULT_HOME_CONTENT);
+  const text = els.homeLayoutJson.value.trim();
+  if (!text) return normalizeHomeLayout(readHomeLayoutForWorkshop());
+  try {
+    return normalizeHomeLayout(JSON.parse(text));
+  } catch (error) {
+    return normalizeHomeLayout(readHomeLayoutForWorkshop());
+  }
+}
+
+function writeHomeLayoutDraft(layout) {
+  if (!els.homeLayoutJson) return;
+  els.homeLayoutJson.value = JSON.stringify(normalizeHomeLayout(layout), null, 2);
+}
+
+function clampHomeSelections(layout) {
+  const heroCount = Math.max(1, layout.heroSlides.length);
+  const shelfCount = Math.max(1, layout.shelves.length);
+  state.homeHeroIndex = Math.min(Math.max(state.homeHeroIndex || 0, 0), heroCount - 1);
+  state.homeShelfIndex = Math.min(Math.max(state.homeShelfIndex || 0, 0), shelfCount - 1);
+}
+
+function contentArtworkForHome(source) {
+  const id = source?.contentId || "";
+  const lowerTitle = String(source?.title || "").toLowerCase();
+  if (/out of the shadows/.test(lowerTitle) || /shadows/.test(id)) return "assets/outoftheshadows-brenda-hero-v4.jpg";
+  if (/darkness|sonship/.test(lowerTitle) || /darkness|sonship/.test(id)) return "assets/one-gospel-podcast-cover.png";
+  if (/ivan/.test(lowerTitle) || /ivan/.test(id)) return "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg";
+  if (/duane|oneevent/.test(lowerTitle) || /duane|oneevent/.test(id)) return "assets/oneevent-ps-duane-friday-cover.png";
+  if (/one basics|eternal life|saved by grace/.test(lowerTitle) || /one_basics/.test(id)) return "assets/one-basics-1-1-eternal-life-course-cover.png";
+  return source?.prepared?.discoverPlacement?.coverImage || "";
+}
+
+function homeContentOptions(currentId = "") {
+  const seen = new Set();
+  const options = [];
+  state.sources.forEach((source) => {
+    const id = source.contentId || source.sourceId;
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    options.push({
+      id,
+      title: source.title || id,
+      source,
+      artwork: contentArtworkForHome(source)
+    });
+  });
+  if (currentId && !seen.has(currentId)) {
+    options.unshift({ id: currentId, title: currentId, source: null, artwork: "" });
+  }
+  return options;
+}
+
+function fillHomeContentSelect(select, currentId = "") {
+  if (!select) return;
+  const options = homeContentOptions(currentId);
+  select.innerHTML = options.map((option) => (
+    `<option value="${esc(option.id)}">${esc(option.title)}</option>`
+  )).join("");
+  if (currentId) select.value = currentId;
+}
+
+function updateHomeHeroPreview(layout) {
+  if (!els.homeHeroPreview) return;
+  const slide = layout.heroSlides[state.homeHeroIndex] || {};
+  const artwork = slide.desktopArtwork || slide.mobileArtwork || slide.artwork || "";
+  els.homeHeroPreview.innerHTML = `
+    ${artwork ? `<img src="${esc(artwork)}" alt="${esc(slide.alt || slide.title || "Hero slide")}">` : ""}
+    <div class="home-hero-preview-copy">
+      <span class="kicker">${esc(slide.eyebrow || "Featured")}</span>
+      <span class="title">${esc(slide.title || "New hero slide")}</span>
+      <span class="copy">${esc(slide.description || "Add short slide copy for this hero.")}</span>
+      <span class="cta">${esc(slide.cta || "Open")}</span>
+    </div>
+    <div class="home-hero-preview-dots">
+      ${layout.heroSlides.map((_, index) => `<span class="${index === state.homeHeroIndex ? "active" : ""}"></span>`).join("")}
+    </div>
+  `;
+}
+
+function updateHomeHeroDraftFromFields() {
+  const layout = homeLayoutDraft();
+  clampHomeSelections(layout);
+  const slide = layout.heroSlides[state.homeHeroIndex];
+  if (!slide) return;
+  const contentId = els.homeHeroContentId?.value || slide.target || "";
+  slide.contentId = contentId;
+  slide.target = contentId;
+  slide.targetType = contentId === "pathSelectView" ? "journey" : "discover";
+  slide.mobileArtwork = els.homeHeroMobileArtwork?.value.trim() || "";
+  slide.artwork = slide.mobileArtwork;
+  slide.desktopArtwork = els.homeHeroDesktopArtwork?.value.trim() || "";
+  slide.eyebrow = els.homeHeroEyebrow?.value.trim() || "";
+  slide.title = els.homeHeroTitle?.value.trim() || "";
+  slide.description = els.homeHeroDescription?.value.trim() || "";
+  slide.cta = els.homeHeroCta?.value.trim() || "";
+  writeHomeLayoutDraft(layout);
+  updateHomeHeroPreview(layout);
+}
+
+function renderHomeHeroBuilder(layout) {
+  if (!els.homeHeroList) return;
+  const slide = layout.heroSlides[state.homeHeroIndex] || {};
+  els.homeHeroCount.textContent = String(layout.heroSlides.length);
+  els.homeHeroList.innerHTML = layout.heroSlides.map((item, index) => `
+    <button class="home-editor-row ${index === state.homeHeroIndex ? "active" : ""}" type="button" data-home-hero-index="${index}">
+      <strong>${esc(item.title || `Hero ${index + 1}`)}</strong>
+      <span>${esc(item.target || item.contentId || "No content linked yet")}</span>
+    </button>
+  `).join("");
+  els.homeHeroList.querySelectorAll("[data-home-hero-index]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.homeHeroIndex = Number(button.dataset.homeHeroIndex);
+      renderHomeLayoutEditor();
+    });
+  });
+  fillHomeContentSelect(els.homeHeroContentId, slide.contentId || slide.target || "");
+  els.homeHeroMobileArtwork.value = slide.mobileArtwork || slide.artwork || "";
+  els.homeHeroDesktopArtwork.value = slide.desktopArtwork || "";
+  els.homeHeroEyebrow.value = slide.eyebrow || "";
+  els.homeHeroTitle.value = slide.title || "";
+  els.homeHeroDescription.value = slide.description || "";
+  els.homeHeroCta.value = slide.cta || "";
+  updateHomeHeroPreview(layout);
+}
+
+function updateHomeShelfCards(layout) {
+  if (!els.homeShelfCards) return;
+  const shelf = layout.shelves[state.homeShelfIndex] || { items: [] };
+  els.homeShelfPreviewTitle.textContent = shelf.title || "Shelf preview";
+  els.homeShelfCards.innerHTML = (shelf.items || []).map((item, index) => `
+    <button class="home-shelf-card" type="button" data-home-remove-item="${index}" title="Remove ${esc(item.alt || item.target || "item")}">
+      ${item.artwork ? `<img src="${esc(item.artwork)}" alt="${esc(item.alt || item.target || "Shelf item")}">` : ""}
+      ${item.locked ? `<small class="lock-pill">Locked</small>` : ""}
+    </button>
+  `).join("") || `<p class="panel-copy" style="padding: 12px;">Add content to this shelf.</p>`;
+  els.homeShelfCards.querySelectorAll("[data-home-remove-item]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const latest = homeLayoutDraft();
+      const latestShelf = latest.shelves[state.homeShelfIndex];
+      if (!latestShelf) return;
+      latestShelf.items.splice(Number(button.dataset.homeRemoveItem), 1);
+      writeHomeLayoutDraft(latest);
+      renderHomeLayoutEditor();
+    });
+  });
+}
+
+function updateHomeShelfDraftFromFields() {
+  const layout = homeLayoutDraft();
+  clampHomeSelections(layout);
+  const shelf = layout.shelves[state.homeShelfIndex];
+  if (!shelf) return;
+  shelf.title = els.homeShelfTitleInput?.value.trim() || "";
+  shelf.mode = els.homeShelfModeInput?.value.trim() || "discover";
+  shelf.cardSize = els.homeShelfCardSizeInput?.value || "wide";
+  writeHomeLayoutDraft(layout);
+  if (els.homeShelfPreviewTitle) els.homeShelfPreviewTitle.textContent = shelf.title || "Shelf preview";
+}
+
+function renderHomeShelfBuilder(layout) {
+  if (!els.homeShelfList) return;
+  const shelf = layout.shelves[state.homeShelfIndex] || {};
+  els.homeShelfCount.textContent = String(layout.shelves.length);
+  els.homeShelfList.innerHTML = layout.shelves.map((item, index) => `
+    <button class="home-editor-row ${index === state.homeShelfIndex ? "active" : ""}" type="button" data-home-shelf-index="${index}">
+      <strong>${esc(item.title || `Shelf ${index + 1}`)}</strong>
+      <span>${esc(item.mode || "discover")} · ${esc(item.cardSize || "wide")} · ${(item.items || []).length} items</span>
+    </button>
+  `).join("");
+  els.homeShelfList.querySelectorAll("[data-home-shelf-index]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.homeShelfIndex = Number(button.dataset.homeShelfIndex);
+      renderHomeLayoutEditor();
+    });
+  });
+  els.homeShelfTitleInput.value = shelf.title || "";
+  els.homeShelfModeInput.value = shelf.mode || "discover";
+  els.homeShelfCardSizeInput.value = shelf.cardSize || "wide";
+  fillHomeContentSelect(els.homeShelfContentPicker, "");
+  updateHomeShelfCards(layout);
+}
+
 function renderHomeLayoutEditor() {
   if (!els.homeLayoutJson) return;
   if (!els.homeLayoutJson.value.trim()) {
     els.homeLayoutJson.value = JSON.stringify(readHomeLayoutForWorkshop(), null, 2);
   }
+  const layout = homeLayoutDraft();
+  clampHomeSelections(layout);
+  renderHomeHeroBuilder(layout);
+  renderHomeShelfBuilder(layout);
 }
 
 function saveHomeLayoutFromEditor() {
   try {
-    const layout = validateHomeLayout(JSON.parse(els.homeLayoutJson.value));
+    const layout = validateHomeLayout(homeLayoutDraft());
+    writeHomeLayoutDraft(layout);
     window.localStorage.setItem(HOME_CONTENT_STORAGE_KEY, JSON.stringify(layout));
     flashStatus("Home layout saved");
   } catch (error) {
@@ -6987,13 +7549,17 @@ function saveHomeLayoutFromEditor() {
 }
 
 function loadDefaultHomeLayoutEditor() {
-  els.homeLayoutJson.value = JSON.stringify(DEFAULT_HOME_CONTENT, null, 2);
+  state.homeHeroIndex = 0;
+  state.homeShelfIndex = 0;
+  writeHomeLayoutDraft(DEFAULT_HOME_CONTENT);
+  renderHomeLayoutEditor();
   flashStatus("Default home layout loaded");
 }
 
 function exportHomeLayoutJson() {
   try {
-    const layout = validateHomeLayout(JSON.parse(els.homeLayoutJson.value));
+    const layout = validateHomeLayout(homeLayoutDraft());
+    writeHomeLayoutDraft(layout);
     const text = JSON.stringify(layout, null, 2);
     const blob = new Blob([text], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -7005,6 +7571,65 @@ function exportHomeLayoutJson() {
   } catch (error) {
     flashStatus(error.message || "Home layout is not valid JSON");
   }
+}
+
+function addHomeHeroSlide() {
+  const layout = homeLayoutDraft();
+  const option = homeContentOptions()[0] || {};
+  layout.heroSlides.push({
+    id: `hero_${Date.now()}`,
+    mode: "discover",
+    mobileArtwork: option.artwork || "",
+    artwork: option.artwork || "",
+    desktopArtwork: option.artwork || "",
+    targetType: "discover",
+    target: option.id || "",
+    contentId: option.id || "",
+    alt: option.title || "New hero slide",
+    eyebrow: "Featured",
+    title: option.title || "New hero slide",
+    description: "Add short, editable copy for this hero slide.",
+    cta: "Open"
+  });
+  state.homeHeroIndex = layout.heroSlides.length - 1;
+  writeHomeLayoutDraft(layout);
+  renderHomeLayoutEditor();
+  flashStatus("Hero slide added");
+}
+
+function addHomeShelf() {
+  const layout = homeLayoutDraft();
+  layout.shelves.push({
+    id: `shelf_${Date.now()}`,
+    title: "New Shelf",
+    mode: "discover",
+    cardSize: "wide",
+    items: []
+  });
+  state.homeShelfIndex = layout.shelves.length - 1;
+  writeHomeLayoutDraft(layout);
+  renderHomeLayoutEditor();
+  flashStatus("Shelf added");
+}
+
+function addSelectedContentToShelf() {
+  const layout = homeLayoutDraft();
+  clampHomeSelections(layout);
+  const shelf = layout.shelves[state.homeShelfIndex];
+  const selectedId = els.homeShelfContentPicker?.value || "";
+  const option = homeContentOptions(selectedId).find((item) => item.id === selectedId) || {};
+  if (!shelf || !selectedId) return;
+  shelf.items = Array.isArray(shelf.items) ? shelf.items : [];
+  shelf.items.push({
+    id: `${selectedId}_${Date.now()}`,
+    artwork: option.artwork || "",
+    targetType: selectedId === "pathSelectView" ? "journey" : "discover",
+    target: selectedId,
+    alt: option.title || selectedId
+  });
+  writeHomeLayoutDraft(layout);
+  renderHomeLayoutEditor();
+  flashStatus("Content added to shelf");
 }
 
 function toSchemaShape(item) {
@@ -7258,9 +7883,32 @@ function wireActions() {
     renderPlacementMap();
   });
   document.getElementById("exportPackageJson").addEventListener("click", exportCurrentPackageJson);
+  if (els.homeHeroAdd) els.homeHeroAdd.addEventListener("click", addHomeHeroSlide);
+  if (els.homeShelfAdd) els.homeShelfAdd.addEventListener("click", addHomeShelf);
+  if (els.homeShelfAddItem) els.homeShelfAddItem.addEventListener("click", addSelectedContentToShelf);
   if (els.homeLayoutSave) els.homeLayoutSave.addEventListener("click", saveHomeLayoutFromEditor);
   if (els.homeLayoutLoadDefault) els.homeLayoutLoadDefault.addEventListener("click", loadDefaultHomeLayoutEditor);
   if (els.homeLayoutExport) els.homeLayoutExport.addEventListener("click", exportHomeLayoutJson);
+  [
+    els.homeHeroContentId,
+    els.homeHeroMobileArtwork,
+    els.homeHeroDesktopArtwork,
+    els.homeHeroEyebrow,
+    els.homeHeroTitle,
+    els.homeHeroDescription,
+    els.homeHeroCta
+  ].filter(Boolean).forEach((field) => {
+    field.addEventListener("input", updateHomeHeroDraftFromFields);
+    field.addEventListener("change", updateHomeHeroDraftFromFields);
+  });
+  [
+    els.homeShelfTitleInput,
+    els.homeShelfModeInput,
+    els.homeShelfCardSizeInput
+  ].filter(Boolean).forEach((field) => {
+    field.addEventListener("input", updateHomeShelfDraftFromFields);
+    field.addEventListener("change", updateHomeShelfDraftFromFields);
+  });
   document.getElementById("videoGenerateTranscript").addEventListener("click", fillVideoTranscriptFromActive);
   document.getElementById("videoPrepareClips").addEventListener("click", () => {
     renderVideoIntake(getActive());
