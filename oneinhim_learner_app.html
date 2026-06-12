@@ -17708,6 +17708,7 @@ const DEFAULT_HOME_CONTENT = {
     {
       id: "one_basics_hero",
       mode: "discover watch",
+      mobileArtwork: "assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
       artwork: "assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
       desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
       targetType: "discover",
@@ -17721,6 +17722,7 @@ const DEFAULT_HOME_CONTENT = {
     {
       id: "out_of_the_shadows_hero",
       mode: "discover watch",
+      mobileArtwork: "assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
       artwork: "assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
       desktopArtwork: "assets/outoftheshadows-brenda-hero-v4.jpg",
       targetType: "discover",
@@ -17734,6 +17736,7 @@ const DEFAULT_HOME_CONTENT = {
     {
       id: "journey_hero",
       mode: "discover",
+      mobileArtwork: "assets/oneinhim-characters-international.png",
       artwork: "assets/oneinhim-characters-international.png",
       desktopArtwork: "assets/oneinhim-characters-international.png",
       targetType: "journey",
@@ -17796,10 +17799,20 @@ function normalizeHomeContent(layout) {
   return {
     ...DEFAULT_HOME_CONTENT,
     ...layout,
-    heroSlides: (layout.heroSlides || DEFAULT_HOME_CONTENT.heroSlides).map((slide, index) => ({
-      ...(defaultSlidesById.get(slide.id) || DEFAULT_HOME_CONTENT.heroSlides[index] || {}),
-      ...slide
-    })),
+    heroSlides: (layout.heroSlides || DEFAULT_HOME_CONTENT.heroSlides).map((slide, index) => {
+      const merged = {
+        ...(defaultSlidesById.get(slide.id) || DEFAULT_HOME_CONTENT.heroSlides[index] || {}),
+        ...slide
+      };
+      const mobileArtwork = merged.mobileArtwork || merged.artwork || merged.desktopArtwork || "";
+      const desktopArtwork = merged.desktopArtwork || merged.artwork || merged.mobileArtwork || "";
+      return {
+        ...merged,
+        mobileArtwork,
+        artwork: mobileArtwork,
+        desktopArtwork
+      };
+    }),
     shelves: layout.shelves || DEFAULT_HOME_CONTENT.shelves
   };
 }
@@ -17837,8 +17850,8 @@ function renderArtworkHome() {
       ${content.heroSlides.map((slide, index) => `
         <button class="gateway-slide home-hero-slide artwork-home-slide${index === 0 ? " active" : ""}" type="button" data-gateway-hero-slide="${index}" data-hero-mode="${esc(slide.mode || "discover")}" ${homeActionAttributes(slide)} aria-label="${esc(slide.alt || `Home slide ${index + 1}`)}">
           <picture class="home-artwork-picture">
-            <source media="(min-width: 761px)" srcset="${esc(slide.desktopArtwork || slide.artwork || "")}" />
-            <img class="home-artwork-image" src="${esc(slide.artwork || slide.desktopArtwork || "")}" alt="${esc(slide.alt || "")}" loading="${index === 0 ? "eager" : "lazy"}" />
+            <source media="(min-width: 761px)" srcset="${esc(slide.desktopArtwork || slide.mobileArtwork || slide.artwork || "")}" />
+            <img class="home-artwork-image" src="${esc(slide.mobileArtwork || slide.artwork || slide.desktopArtwork || "")}" alt="${esc(slide.alt || "")}" loading="${index === 0 ? "eager" : "lazy"}" />
           </picture>
           <span class="home-hero-copy">
             ${slide.eyebrow ? `<span class="home-hero-eyebrow">${esc(slide.eyebrow)}</span>` : ""}
@@ -22743,7 +22756,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v124";
+  const workerRefreshKey = "oneinhim-sw-refresh-v125";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22751,7 +22764,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=124", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=125", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };

@@ -3641,7 +3641,7 @@ body.workshop-locked .shell {
           <div class="package-header">
             <div>
               <h3 class="section-title">Home layout</h3>
-              <p class="panel-copy">Replace home hero and shelf artwork here. Hero slides use a fixed frame with editable overlay text; shelf cards stay artwork-only.</p>
+              <p class="panel-copy">Replace home hero and shelf artwork here. Each hero slide has a mobile/portrait image and a desktop/wide image; the frame, shadows, dots, and text placement stay fixed.</p>
             </div>
             <div class="top-actions">
               <button class="soft-btn" id="homeLayoutLoadDefault" type="button">Load default</button>
@@ -3652,7 +3652,7 @@ body.workshop-locked .shell {
           <div class="json-box">
             <textarea id="homeLayoutJson" spellcheck="false" style="min-height: 520px; width: 100%; border: 0; background: transparent; color: inherit; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; resize: vertical;"></textarea>
           </div>
-          <p class="panel-copy" style="margin-top: 12px;">Use local asset paths such as <strong>assets/my-cover.jpg</strong> or a public image URL. Hero fields can use eyebrow, title, description, and cta. Do not add app text to shelf cards unless the text is already part of the artwork.</p>
+          <p class="panel-copy" style="margin-top: 12px;">Hero slides use <strong>mobileArtwork</strong> for phone portrait crops and <strong>desktopArtwork</strong> for wide screens. Use local asset paths such as <strong>assets/my-cover.jpg</strong> or a public image URL. Hero text fields are eyebrow, title, description, and cta. Shelf cards stay artwork-only.</p>
         </section>
 
         <section class="view" id="preparedView">
@@ -4382,6 +4382,7 @@ const DEFAULT_HOME_CONTENT = {
     {
       id: "one_basics_hero",
       mode: "discover watch",
+      mobileArtwork: "assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
       artwork: "assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
       desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
       targetType: "discover",
@@ -4395,6 +4396,7 @@ const DEFAULT_HOME_CONTENT = {
     {
       id: "out_of_the_shadows_hero",
       mode: "discover watch",
+      mobileArtwork: "assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
       artwork: "assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
       desktopArtwork: "assets/outoftheshadows-brenda-hero-v4.jpg",
       targetType: "discover",
@@ -4408,6 +4410,7 @@ const DEFAULT_HOME_CONTENT = {
     {
       id: "journey_hero",
       mode: "discover",
+      mobileArtwork: "assets/oneinhim-characters-international.png",
       artwork: "assets/oneinhim-characters-international.png",
       desktopArtwork: "assets/oneinhim-characters-international.png",
       targetType: "journey",
@@ -4470,10 +4473,20 @@ function normalizeHomeLayout(layout) {
   return {
     ...DEFAULT_HOME_CONTENT,
     ...layout,
-    heroSlides: (layout.heroSlides || DEFAULT_HOME_CONTENT.heroSlides).map((slide, index) => ({
-      ...(defaultSlidesById.get(slide.id) || DEFAULT_HOME_CONTENT.heroSlides[index] || {}),
-      ...slide
-    })),
+    heroSlides: (layout.heroSlides || DEFAULT_HOME_CONTENT.heroSlides).map((slide, index) => {
+      const merged = {
+        ...(defaultSlidesById.get(slide.id) || DEFAULT_HOME_CONTENT.heroSlides[index] || {}),
+        ...slide
+      };
+      const mobileArtwork = merged.mobileArtwork || merged.artwork || merged.desktopArtwork || "";
+      const desktopArtwork = merged.desktopArtwork || merged.artwork || merged.mobileArtwork || "";
+      return {
+        ...merged,
+        mobileArtwork,
+        artwork: mobileArtwork,
+        desktopArtwork
+      };
+    }),
     shelves: layout.shelves || DEFAULT_HOME_CONTENT.shelves
   };
 }
@@ -6941,7 +6954,11 @@ function validateHomeLayout(layout) {
     throw new Error("Home layout needs heroSlides and shelves arrays.");
   }
   layout.heroSlides.forEach((slide, index) => {
-    if (!slide.artwork && !slide.desktopArtwork) throw new Error(`Hero slide ${index + 1} needs artwork.`);
+    const mobileArtwork = slide.mobileArtwork || slide.artwork;
+    if (!mobileArtwork) throw new Error(`Hero slide ${index + 1} needs mobileArtwork for phones.`);
+    if (!slide.desktopArtwork) throw new Error(`Hero slide ${index + 1} needs desktopArtwork for wide screens.`);
+    slide.mobileArtwork = mobileArtwork;
+    slide.artwork = mobileArtwork;
   });
   layout.shelves.forEach((shelf, shelfIndex) => {
     if (!Array.isArray(shelf.items)) throw new Error(`Shelf ${shelfIndex + 1} needs an items array.`);
