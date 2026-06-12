@@ -91,7 +91,7 @@
     <h1>Reset ONEapp</h1>
     <p>This clears the installed app cache and reloads the latest One In Him prototype.</p>
     <button id="resetButton" type="button">Clear cache and reopen</button>
-    <a class="secondary" href="oneinhim_learner_app.html?v=123">Open without reset</a>
+    <a class="secondary" href="oneinhim_learner_app.html?v=124">Open without reset</a>
     <p id="status" role="status">Ready.</p>
   </main>
 
@@ -115,7 +115,7 @@
         }
         sessionStorage.clear();
         status.textContent = "Opening the latest app...";
-        window.location.replace(`oneinhim_learner_app.html?v=123&reset=${Date.now()}`);
+        window.location.replace(`oneinhim_learner_app.html?v=124&reset=${Date.now()}`);
       } catch (error) {
         status.textContent = "Reset failed. Use Safari settings to clear website data for this app, then reopen.";
         resetButton.disabled = false;

@@ -14990,7 +14990,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   }
 
   body.gateway-mode .home-hero .home-hero-copy {
-    bottom: 118px !important;
+    bottom: 88px !important;
     display: block !important;
     gap: 8px !important;
     left: 36px !important;
@@ -15017,13 +15017,26 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   }
 
   body.gateway-mode .home-hero .home-hero-title {
-    font-size: clamp(31px, 9.2vw, 42px) !important;
+    font-size: clamp(33px, 9.6vw, 43px) !important;
     line-height: 0.98 !important;
   }
 
   body.gateway-mode .home-hero .home-hero-description {
     font-size: 15.5px !important;
     line-height: 1.35 !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-controls {
+    bottom: 34px !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-dot::before {
+    background: rgba(255, 255, 255, 0.42) !important;
+    box-shadow: none !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-dot.active::before {
+    background: #f37021 !important;
   }
 
   body.gateway-mode .gateway-discover {
@@ -22730,7 +22743,7 @@ function toast(message) {
 
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v123";
+  const workerRefreshKey = "oneinhim-sw-refresh-v124";
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22738,7 +22751,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=123", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register("oneinhim_service_worker.js?v=124", { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
