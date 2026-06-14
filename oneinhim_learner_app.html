@@ -11981,6 +11981,12 @@ body.gateway-mode.gateway-filter-listen .gateway-landing.home-hero {
   display: none;
 }
 
+@media (min-width: 761px) {
+  body.gateway-mode.gateway-filter-listen .gateway-discover {
+    padding-top: 112px !important;
+  }
+}
+
 /* Keep non-hero mobile screens below the phone status area. */
 @media (max-width: 760px) {
   :root {
@@ -15934,8 +15940,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=160"></script>
-<script src="./oneinhim_journey_layout.js?v=160"></script>
+<script src="./oneinhim_home_layout.js?v=161"></script>
+<script src="./oneinhim_journey_layout.js?v=161"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17372,7 +17378,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "160";
+const APP_RELEASE_VERSION = "161";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
