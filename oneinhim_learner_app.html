@@ -14326,19 +14326,19 @@ body.gateway-mode .home-hero .gateway-hero-controls [data-hero-dot] {
 body.gateway-mode .gateway-discover {
   background: #111111 !important;
   color: #f7f4ee !important;
-  padding-top: clamp(18px, 3.4vw, 42px) !important;
+  padding-top: clamp(12px, 2vw, 26px) !important;
 }
 
 body.gateway-mode .artwork-home-shelf {
   background: transparent !important;
   border: 0 !important;
   margin: 0 !important;
-  padding: 0 clamp(18px, 3vw, 54px) clamp(34px, 4vw, 58px) !important;
+  padding: 0 clamp(18px, 3vw, 54px) clamp(18px, 2.2vw, 30px) !important;
 }
 
 body.gateway-mode .artwork-home-shelf .discovery-section-head {
   display: block !important;
-  margin: 0 0 14px !important;
+  margin: 0 0 10px !important;
 }
 
 body.gateway-mode .artwork-home-shelf .discovery-section-head h2 {
@@ -14351,11 +14351,11 @@ body.gateway-mode .artwork-home-shelf .discovery-section-head h2 {
 
 body.gateway-mode .artwork-card-shelf {
   display: grid !important;
-  gap: 16px !important;
+  gap: 14px !important;
   grid-auto-flow: column !important;
   grid-auto-columns: 360px !important;
   overflow-x: auto !important;
-  padding: 0 0 12px !important;
+  padding: 0 0 6px !important;
   scroll-snap-type: x proximity !important;
 }
 
@@ -14426,16 +14426,16 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 
 @media (max-width: 760px) {
   body.gateway-mode .gateway-discover {
-    padding-bottom: calc(var(--app-bottom-chrome-space) + 24px) !important;
-    padding-top: 18px !important;
+    padding-bottom: calc(var(--app-bottom-chrome-space) + 18px) !important;
+    padding-top: 12px !important;
   }
 
   body.gateway-mode .artwork-home-shelf {
-    padding: 0 24px 34px !important;
+    padding: 0 24px 22px !important;
   }
 
   body.gateway-mode .artwork-home-shelf .discovery-section-head {
-    margin-bottom: 12px !important;
+    margin-bottom: 8px !important;
   }
 
   body.gateway-mode .artwork-home-shelf .discovery-section-head h2 {
@@ -14443,7 +14443,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   }
 
   body.gateway-mode .artwork-card-shelf {
-    gap: 18px !important;
+    gap: 14px !important;
     grid-auto-columns: 76vw !important;
     margin-left: -24px !important;
     margin-right: -24px !important;
@@ -15934,8 +15934,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=158"></script>
-<script src="./oneinhim_journey_layout.js?v=158"></script>
+<script src="./oneinhim_home_layout.js?v=159"></script>
+<script src="./oneinhim_journey_layout.js?v=159"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17372,7 +17372,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "158";
+const APP_RELEASE_VERSION = "159";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
