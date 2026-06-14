@@ -694,7 +694,7 @@
 
     .journey-editor {
       display: grid;
-      grid-template-columns: minmax(420px, 1fr) minmax(320px, 420px);
+      grid-template-columns: minmax(520px, 1fr) minmax(340px, 440px);
       gap: 16px;
       align-items: start;
     }
@@ -727,6 +727,20 @@
       display: grid;
       gap: 18px;
       margin-bottom: 28px;
+    }
+
+    .journey-section-title {
+      width: min(620px, 100%);
+      margin: 0 auto -4px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(17,23,22,.08);
+      color: #4b4944;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .09em;
+      text-align: center;
+      text-transform: uppercase;
     }
 
     .journey-unit-banner {
@@ -779,7 +793,8 @@
     .journey-node-row {
       display: grid;
       justify-items: center;
-      gap: 12px;
+      gap: 10px;
+      margin: 14px 0 22px;
     }
 
     .journey-node {
@@ -830,6 +845,66 @@
       color: #6b6761;
       font-size: 12px;
       font-weight: 800;
+    }
+
+    .journey-step-stack {
+      width: min(420px, 100%);
+      display: grid;
+      gap: 7px;
+    }
+
+    .journey-step-chip {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid rgba(17,23,22,.1);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,.9);
+      color: #111716;
+      text-align: left;
+      box-shadow: 0 7px 14px rgba(0,0,0,.06);
+    }
+
+    .journey-step-chip.active {
+      border-color: rgba(238,115,38,.65);
+      box-shadow: 0 0 0 3px rgba(238,115,38,.14), 0 7px 14px rgba(0,0,0,.06);
+    }
+
+    .journey-step-chip b {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(17,23,22,.08);
+      font-size: 11px;
+    }
+
+    .journey-step-chip strong,
+    .journey-step-chip span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .journey-step-chip strong {
+      font-size: 12px;
+    }
+
+    .journey-step-chip span {
+      color: #6b6761;
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .journey-step-chip em {
+      color: #8a857d;
+      font-size: 11px;
+      font-style: normal;
+      font-weight: 900;
     }
 
     .journey-empty {
@@ -906,7 +981,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_learner_app.html?v=153">Open published app</a>
+        <a class="btn" href="oneinhim_learner_app.html?v=154">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -922,7 +997,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_learner_app.html?v=153&draft=1">Preview draft</a>
+        <a class="btn" href="oneinhim_learner_app.html?v=154&draft=1">Preview draft</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Content prep</a>
@@ -1059,7 +1134,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_learner_app.html?v=153#journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_learner_app.html?v=154#journey">Preview Journey</a>
               <a class="btn green" href="oneinhim_content_workshop.html?legacy=1">Edit lesson content</a>
             </div>
           </div>
@@ -1084,18 +1159,26 @@
                 <div class="field"><label for="journeyNodeTitle">Node title</label><input id="journeyNodeTitle" /></div>
                 <div class="field"><label for="journeyNodeType">Node type</label><select id="journeyNodeType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option></select></div>
                 <div class="field"><label for="journeyNodeContent">Linked content</label><select id="journeyNodeContent"></select></div>
+                <hr class="form-divider" />
+                <div class="field"><label for="journeyStep">Lesson step</label><select id="journeyStep"></select></div>
+                <div class="field"><label for="journeyStepTitle">Step title</label><input id="journeyStepTitle" /></div>
+                <div class="field"><label for="journeyStepType">Step type</label><select id="journeyStepType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option><option>Prayer</option><option>Quiz</option></select></div>
+                <div class="field"><label for="journeyStepContent">Step content link</label><select id="journeyStepContent"></select></div>
+                <div class="field"><label for="journeyStepPrompt">Step prompt</label><textarea id="journeyStepPrompt"></textarea></div>
                 <div class="btn-row">
                   <button class="btn" id="addJourneySectionButton" type="button">Add section</button>
                   <button class="btn" id="addJourneyUnitButton" type="button">Add unit</button>
                   <button class="btn" id="addJourneyNodeButton" type="button">Add node</button>
                   <button class="btn" id="removeJourneyNodeButton" type="button">Remove node</button>
+                  <button class="btn" id="addJourneyStepButton" type="button">Add step</button>
+                  <button class="btn" id="removeJourneyStepButton" type="button">Remove step</button>
                 </div>
               </div>
               <div class="panel-head">
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_learner_app.html?v=153#journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_learner_app.html?v=154#journey">Preview Journey</a>
                 <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Open legacy prep</a>
               </div>
             </aside>
@@ -1345,6 +1428,7 @@
       journeySectionIndex: 0,
       journeyUnitIndex: 0,
       journeyNodeIndex: 0,
+      journeyStepIndex: 0,
       journey: readJourney(),
       layout: readLayout()
     };
@@ -1613,6 +1697,32 @@
       return unit?.nodes?.[state.journeyNodeIndex] || unit?.nodes?.[0];
     }
 
+    function defaultJourneyStepForNode(node) {
+      return {
+        id: `${node?.id || "node"}_step_1`,
+        title: node?.title || "Open lesson",
+        type: node?.type || "Read",
+        contentId: node?.contentId || "",
+        prompt: ""
+      };
+    }
+
+    function journeyNodeSteps(node, options = {}) {
+      if (!node) return [];
+      if (!Array.isArray(node.steps) || !node.steps.length) {
+        const fallback = defaultJourneyStepForNode(node);
+        if (options.materialize) node.steps = [fallback];
+        return [fallback];
+      }
+      return node.steps;
+    }
+
+    function currentJourneyStep() {
+      const node = currentJourneyNode();
+      const steps = journeyNodeSteps(node);
+      return steps[state.journeyStepIndex] || steps[0] || null;
+    }
+
     function normaliseJourneySelection() {
       const sections = state.journey.sections || [];
       state.journeySectionIndex = Math.max(0, Math.min(state.journeySectionIndex, sections.length - 1));
@@ -1620,6 +1730,8 @@
       state.journeyUnitIndex = Math.max(0, Math.min(state.journeyUnitIndex, units.length - 1));
       const nodes = currentJourneyUnit()?.nodes || [];
       state.journeyNodeIndex = Math.max(0, Math.min(state.journeyNodeIndex, nodes.length - 1));
+      const steps = journeyNodeSteps(currentJourneyNode());
+      state.journeyStepIndex = Math.max(0, Math.min(state.journeyStepIndex, Math.max(0, steps.length - 1)));
     }
 
     function render() {
@@ -1736,6 +1848,7 @@
       const section = currentJourneySection();
       const unit = currentJourneyUnit();
       const node = currentJourneyNode();
+      const step = currentJourneyStep();
       const map = document.getElementById("journeyMapContent");
       if (!map) return;
       if (!section) {
@@ -1744,6 +1857,7 @@
       }
       map.innerHTML = state.journey.sections.map((journeySection, sectionIndex) => `
         <div class="journey-section-block">
+          <div class="journey-section-title">Section ${esc(journeySection.number || sectionIndex + 1)} · ${esc(journeySection.title || "Untitled section")}</div>
           ${(journeySection.units || []).map((journeyUnit, unitIndex) => `
             <button class="journey-unit-banner${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex ? " active" : ""}" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" style="background:${esc(journeySection.color || "#ee7326")}">
               <span>Section ${esc(journeySection.number || sectionIndex + 1)} · ${esc(journeySection.title || "Untitled section")}</span>
@@ -1757,6 +1871,18 @@
                   <strong>${esc(journeyNode.title || "Untitled node")}</strong>
                   <span>${esc(journeyNode.type || "Lesson")} · ${esc(selectedContent(journeyNode.contentId)?.title || journeyNode.contentId || "No content")}</span>
                 </button>
+                <div class="journey-step-stack">
+                  ${journeyNodeSteps(journeyNode).map((journeyStep, stepIndex) => `
+                    <button class="journey-step-chip${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex && nodeIndex === state.journeyNodeIndex && stepIndex === state.journeyStepIndex ? " active" : ""}" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="${nodeIndex}" data-journey-step="${stepIndex}">
+                      <b>${stepIndex + 1}</b>
+                      <span>
+                        <strong>${esc(journeyStep.title || "Untitled step")}</strong>
+                        <span>${esc(journeyStep.type || journeyNode.type || "Step")} · ${esc(selectedContent(journeyStep.contentId || journeyNode.contentId)?.title || journeyStep.contentId || journeyNode.contentId || "No content")}</span>
+                      </span>
+                      <em>Step</em>
+                    </button>
+                  `).join("")}
+                </div>
               `).join("")}
             </div>
           `).join("")}
@@ -1772,12 +1898,18 @@
       document.getElementById("journeyNodeTitle").value = node?.title || "";
       document.getElementById("journeyNodeType").value = node?.type || "Read";
       document.getElementById("journeyNodeContent").innerHTML = contentOptions(node?.contentId || "");
+      document.getElementById("journeyStep").innerHTML = journeyNodeSteps(node).map((item, index) => `<option value="${index}"${index === state.journeyStepIndex ? " selected" : ""}>${index + 1}. ${esc(item.title || "Untitled step")}</option>`).join("");
+      document.getElementById("journeyStepTitle").value = step?.title || "";
+      document.getElementById("journeyStepType").value = step?.type || node?.type || "Read";
+      document.getElementById("journeyStepContent").innerHTML = contentOptions(step?.contentId || node?.contentId || "");
+      document.getElementById("journeyStepPrompt").value = step?.prompt || "";
     }
 
     function updateJourneyField(field, value) {
       const section = currentJourneySection();
       const unit = currentJourneyUnit();
       const node = currentJourneyNode();
+      const step = currentJourneyStep();
       if (field === "sectionTitle" && section) section.title = value;
       if (field === "sectionColor" && section) section.color = value;
       if (field === "unitTitle" && unit) unit.title = value;
@@ -1785,6 +1917,18 @@
       if (field === "nodeTitle" && node) node.title = value;
       if (field === "nodeType" && node) node.type = value;
       if (field === "nodeContent" && node) node.contentId = value;
+      if (field === "stepTitle" && step) {
+        journeyNodeSteps(node, { materialize: true })[state.journeyStepIndex].title = value;
+      }
+      if (field === "stepType" && step) {
+        journeyNodeSteps(node, { materialize: true })[state.journeyStepIndex].type = value;
+      }
+      if (field === "stepContent" && step) {
+        journeyNodeSteps(node, { materialize: true })[state.journeyStepIndex].contentId = value;
+      }
+      if (field === "stepPrompt" && step) {
+        journeyNodeSteps(node, { materialize: true })[state.journeyStepIndex].prompt = value;
+      }
       renderJourney();
     }
 
@@ -1925,6 +2069,7 @@
         state.journeySectionIndex = Number(target.dataset.journeySection);
         state.journeyUnitIndex = Number(target.dataset.journeyUnit || 0);
         state.journeyNodeIndex = target.dataset.journeyNode ? Number(target.dataset.journeyNode) : 0;
+        state.journeyStepIndex = target.dataset.journeyStep ? Number(target.dataset.journeyStep) : 0;
         renderJourney();
       });
       document.getElementById("heroContent").addEventListener("change", (event) => updateHeroField("content", event.target.value));
@@ -1973,15 +2118,22 @@
         state.journeySectionIndex = Number(event.target.value);
         state.journeyUnitIndex = 0;
         state.journeyNodeIndex = 0;
+        state.journeyStepIndex = 0;
         renderJourney();
       });
       document.getElementById("journeyUnit").addEventListener("change", (event) => {
         state.journeyUnitIndex = Number(event.target.value);
         state.journeyNodeIndex = 0;
+        state.journeyStepIndex = 0;
         renderJourney();
       });
       document.getElementById("journeyNode").addEventListener("change", (event) => {
         state.journeyNodeIndex = Number(event.target.value);
+        state.journeyStepIndex = 0;
+        renderJourney();
+      });
+      document.getElementById("journeyStep").addEventListener("change", (event) => {
+        state.journeyStepIndex = Number(event.target.value);
         renderJourney();
       });
       document.getElementById("journeySectionTitle").addEventListener("input", (event) => updateJourneyField("sectionTitle", event.target.value));
@@ -1991,6 +2143,10 @@
       document.getElementById("journeyNodeTitle").addEventListener("input", (event) => updateJourneyField("nodeTitle", event.target.value));
       document.getElementById("journeyNodeType").addEventListener("change", (event) => updateJourneyField("nodeType", event.target.value));
       document.getElementById("journeyNodeContent").addEventListener("change", (event) => updateJourneyField("nodeContent", event.target.value));
+      document.getElementById("journeyStepTitle").addEventListener("input", (event) => updateJourneyField("stepTitle", event.target.value));
+      document.getElementById("journeyStepType").addEventListener("change", (event) => updateJourneyField("stepType", event.target.value));
+      document.getElementById("journeyStepContent").addEventListener("change", (event) => updateJourneyField("stepContent", event.target.value));
+      document.getElementById("journeyStepPrompt").addEventListener("input", (event) => updateJourneyField("stepPrompt", event.target.value));
       document.getElementById("addShelfItemButton").addEventListener("click", () => {
         const content = selectedContent(document.getElementById("shelfContent").value);
         currentShelf().items = currentShelf().items || [];
@@ -2060,7 +2216,15 @@
               title: "New unit",
               description: "Describe what this unit helps someone take hold of.",
               nodes: [
-                { id: `node_${Date.now()}`, title: "New lesson node", type: "Read", contentId: CONTENT[0].id }
+                {
+                  id: `node_${Date.now()}`,
+                  title: "New lesson node",
+                  type: "Read",
+                  contentId: CONTENT[0].id,
+                  steps: [
+                    { id: `step_${Date.now()}`, title: "Open lesson", type: "Read", contentId: CONTENT[0].id, prompt: "" }
+                  ]
+                }
               ]
             }
           ]
@@ -2068,6 +2232,7 @@
         state.journeySectionIndex = state.journey.sections.length - 1;
         state.journeyUnitIndex = 0;
         state.journeyNodeIndex = 0;
+        state.journeyStepIndex = 0;
         renderJourney();
       });
       document.getElementById("addJourneyUnitButton").addEventListener("click", () => {
@@ -2079,11 +2244,20 @@
           title: "New unit",
           description: "Describe what this unit helps someone take hold of.",
           nodes: [
-            { id: `node_${Date.now()}`, title: "New lesson node", type: "Read", contentId: CONTENT[0].id }
+            {
+              id: `node_${Date.now()}`,
+              title: "New lesson node",
+              type: "Read",
+              contentId: CONTENT[0].id,
+              steps: [
+                { id: `step_${Date.now()}`, title: "Open lesson", type: "Read", contentId: CONTENT[0].id, prompt: "" }
+              ]
+            }
           ]
         });
         state.journeyUnitIndex = section.units.length - 1;
         state.journeyNodeIndex = 0;
+        state.journeyStepIndex = 0;
         renderJourney();
       });
       document.getElementById("addJourneyNodeButton").addEventListener("click", () => {
@@ -2094,9 +2268,13 @@
           id: `node_${Date.now()}`,
           title: "New lesson node",
           type: "Read",
-          contentId: CONTENT[0].id
+          contentId: CONTENT[0].id,
+          steps: [
+            { id: `step_${Date.now()}`, title: "Open lesson", type: "Read", contentId: CONTENT[0].id, prompt: "" }
+          ]
         });
         state.journeyNodeIndex = unit.nodes.length - 1;
+        state.journeyStepIndex = 0;
         renderJourney();
       });
       document.getElementById("removeJourneyNodeButton").addEventListener("click", () => {
@@ -2104,8 +2282,34 @@
         if (!unit?.nodes?.length) return;
         unit.nodes.splice(state.journeyNodeIndex, 1);
         state.journeyNodeIndex = Math.max(0, state.journeyNodeIndex - 1);
+        state.journeyStepIndex = 0;
         renderJourney();
         toast("Removed Journey node. Remember to save.");
+      });
+      document.getElementById("addJourneyStepButton").addEventListener("click", () => {
+        const node = currentJourneyNode();
+        if (!node) return;
+        const steps = journeyNodeSteps(node, { materialize: true });
+        const contentId = node.contentId || CONTENT[0].id;
+        steps.push({
+          id: `step_${Date.now()}`,
+          title: "New lesson step",
+          type: node.type || "Read",
+          contentId,
+          prompt: ""
+        });
+        state.journeyStepIndex = steps.length - 1;
+        renderJourney();
+      });
+      document.getElementById("removeJourneyStepButton").addEventListener("click", () => {
+        const node = currentJourneyNode();
+        const steps = journeyNodeSteps(node, { materialize: true });
+        if (!steps.length) return;
+        steps.splice(state.journeyStepIndex, 1);
+        if (!steps.length) steps.push(defaultJourneyStepForNode(node));
+        state.journeyStepIndex = Math.max(0, state.journeyStepIndex - 1);
+        renderJourney();
+        toast("Removed Journey step. Remember to save.");
       });
       ["saveButton", "saveButtonShelves", "saveButtonContent"].forEach((id) => document.getElementById(id).addEventListener("click", saveLayout));
       document.getElementById("saveButtonJourney").addEventListener("click", saveJourney);
