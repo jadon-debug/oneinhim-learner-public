@@ -32,8 +32,8 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     {
       "id": "journey_hero",
       "mode": "discover",
-      "mobileArtwork": "assets/oneinhim-characters-international.png",
-      "artwork": "assets/oneinhim-characters-international.png",
+      "mobileArtwork": "assets/oneinhim-journey-hero-custom-mobile.webp",
+      "artwork": "assets/oneinhim-journey-hero-custom-mobile.webp",
       "desktopArtwork": "assets/Journey hero_desktop_larger.webp",
       "targetType": "journey",
       "target": "onboardingView",
