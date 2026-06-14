@@ -14941,6 +14941,10 @@ body.gateway-mode .artwork-home-card {
   width: 100% !important;
 }
 
+body.gateway-mode .artwork-home-card[aria-disabled="true"] {
+  cursor: default !important;
+}
+
 body.gateway-mode .artwork-card-square {
   aspect-ratio: 1 / 1 !important;
 }
@@ -16439,8 +16443,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=145"></script>
-<script src="./oneinhim_journey_layout.js?v=145"></script>
+<script src="./oneinhim_home_layout.js?v=146"></script>
+<script src="./oneinhim_journey_layout.js?v=146"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17875,7 +17879,7 @@ function esc(value) {
 }
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
-const APP_RELEASE_VERSION = "145";
+const APP_RELEASE_VERSION = "146";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -17973,6 +17977,9 @@ const DEFAULT_HOME_CONTENT = {
 function normalizeHomeContent(layout) {
   const defaultSlidesById = new Map(DEFAULT_HOME_CONTENT.heroSlides.map((slide) => [slide.id, slide]));
   const normalizeHomeItemTarget = (item) => {
+    if (item.targetType === "none" || item.placeholder || (!item.target && !item.contentId)) {
+      return { target: "", contentId: "", targetType: "none", placeholder: true };
+    }
     const shouldUpgradeOneBasicsWatchTarget = ["one_basics_hero", "one_basics_course", "one_basics_watch"].includes(item.id)
       && (item.target === "book_one_basics_1_1_eternal_life" || item.contentId === "book_one_basics_1_1_eternal_life");
     const rawTarget = shouldUpgradeOneBasicsWatchTarget ? "mux_one_basics_1_1_full_video" : (item.target || "");
@@ -18046,6 +18053,7 @@ function readHomeContent() {
 function homeActionAttributes(item) {
   if (!item) return "";
   const target = item.contentId || item.target || "";
+  if (item.targetType === "none" || item.placeholder || !target) return `data-home-disabled="true" aria-disabled="true"`;
   if (item.targetType === "journey") {
     const resourceId = resolveContentTargetId(item.contentId || target);
     const viewTarget = item.target && item.target !== "pathSelectView" ? item.target : "stageDetailView";
@@ -18096,7 +18104,7 @@ function renderArtworkHome() {
           ${(shelf.items || []).map((item) => `
             <button class="weekly-media-card artwork-home-card artwork-card-${esc(shelf.cardSize || "wide")}${item.locked ? " is-content-locked" : ""}" type="button" ${homeActionAttributes(item)} aria-label="${esc(item.alt || item.id || "Open item")}">
               <span class="home-card-art">
-                <img src="${esc(item.artwork || "")}" alt="${esc(item.alt || "")}" loading="lazy" />
+                ${item.artwork ? `<img src="${esc(item.artwork)}" alt="${esc(item.alt || "")}" loading="lazy" />` : ""}
                 ${homeLockBadge(item)}
               </span>
             </button>
