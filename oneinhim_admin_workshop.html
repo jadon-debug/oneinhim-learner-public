@@ -861,7 +861,10 @@
             <section class="panel">
               <div class="panel-head">
                 <h3 id="shelfPreviewTitle">Shelf preview</h3>
-                <button class="btn" id="addShelfItemButton" type="button">Add content</button>
+                <div class="btn-row">
+                  <button class="btn" id="addShelfItemButton" type="button">Add content</button>
+                  <button class="btn" id="addComingSoonItemButton" type="button">Add artwork-only card</button>
+                </div>
               </div>
               <div class="cards" id="shelfCards"></div>
             </section>
@@ -1201,14 +1204,22 @@
       setTimeout(() => node.remove(), 1800);
     }
 
-    function contentOptions(current = "") {
+    function contentOptions(current = "", options = {}) {
+      const allowNone = Boolean(options.allowNone);
       const ids = new Set(CONTENT.map((item) => item.id));
       if (current && !ids.has(current)) CONTENT.push({ id: current, title: current, type: "Custom", artwork: "", summary: "" });
-      return CONTENT.map((item) => `<option value="${esc(item.id)}"${item.id === current ? " selected" : ""}>${esc(item.title)} · ${esc(item.type)}</option>`).join("");
+      const noneOption = allowNone ? `<option value=""${!current ? " selected" : ""}>No link yet · artwork only</option>` : "";
+      return `${noneOption}${CONTENT.map((item) => `<option value="${esc(item.id)}"${item.id === current ? " selected" : ""}>${esc(item.title)} · ${esc(item.type)}</option>`).join("")}`;
     }
 
     function selectedContent(id) {
       return CONTENT.find((item) => item.id === id) || CONTENT[0];
+    }
+
+    function shelfItemLabel(item) {
+      if (!item) return "card";
+      if (item.targetType === "none" || item.placeholder || (!item.contentId && !item.target)) return item.alt || "artwork-only card";
+      return item.alt || selectedContent(item.contentId || item.target)?.title || "card";
     }
 
     function shelfSizeHelp(size) {
@@ -1311,9 +1322,9 @@
       `).join("");
       document.getElementById("shelfPreviewTitle").textContent = shelf.title || "Shelf preview";
       document.getElementById("shelfCards").innerHTML = (shelf.items || []).map((item, index) => `
-        <div class="card-preview ${esc(shelf.cardSize || "wide")}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(item.alt || selectedContent(item.contentId || item.target)?.title || "card")} artwork">
+        <div class="card-preview ${esc(shelf.cardSize || "wide")}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(shelfItemLabel(item))} artwork">
           <img src="${esc(item.artwork || selectedContent(item.contentId || item.target)?.artwork || "")}" alt="${esc(item.alt || "")}" />
-          <button class="card-remove" type="button" data-remove-shelf-item="${index}" aria-label="Remove ${esc(item.alt || "card")}">Remove</button>
+          <button class="card-remove" type="button" data-remove-shelf-item="${index}" aria-label="Remove ${esc(shelfItemLabel(item))}">Remove</button>
         </div>
       `).join("");
       document.getElementById("shelfTitle").value = shelf.title || "";
@@ -1321,7 +1332,7 @@
       document.getElementById("shelfSize").value = shelf.cardSize || "wide";
       document.getElementById("shelfSizeHelp").textContent = shelfSizeHelp(shelf.cardSize || "wide");
       document.getElementById("shelfContent").innerHTML = contentOptions("");
-      document.getElementById("shelfCardContent").innerHTML = contentOptions(shelfItem?.contentId || shelfItem?.target || "");
+      document.getElementById("shelfCardContent").innerHTML = contentOptions(shelfItem?.contentId || shelfItem?.target || "", { allowNone: true });
       document.getElementById("shelfCardArtwork").value = shelfItem?.artwork || "";
       document.getElementById("shelfCardArtwork").disabled = !shelfItem;
       document.getElementById("shelfCardAlt").value = shelfItem?.alt || "";
@@ -1421,10 +1432,20 @@
       const item = currentShelfItem();
       if (!item) return;
       if (field === "content") {
+        if (!value) {
+          item.contentId = "";
+          item.target = "";
+          item.targetType = "none";
+          item.placeholder = true;
+          if (!item.alt) item.alt = "Coming soon";
+          renderShelves();
+          return;
+        }
         const content = selectedContent(value);
         item.contentId = value;
         item.target = value;
         item.targetType = value === "stageDetailView" ? "journey" : "discover";
+        item.placeholder = false;
         if (!item.artwork) item.artwork = content.artwork;
         if (!item.alt) item.alt = content.title;
       } else {
@@ -1535,6 +1556,22 @@
         });
         state.shelfItemIndex = currentShelf().items.length - 1;
         renderShelves();
+      });
+      document.getElementById("addComingSoonItemButton").addEventListener("click", () => {
+        currentShelf().items = currentShelf().items || [];
+        currentShelf().items.push({
+          id: `artwork_only_${Date.now()}`,
+          artwork: "",
+          targetType: "none",
+          target: "",
+          contentId: "",
+          alt: "Coming soon",
+          placeholder: true,
+          locked: false
+        });
+        state.shelfItemIndex = currentShelf().items.length - 1;
+        renderShelves();
+        toast("Artwork-only card added. Add its artwork path on the right.");
       });
       document.getElementById("addHeroButton").addEventListener("click", () => {
         const content = CONTENT[0];
