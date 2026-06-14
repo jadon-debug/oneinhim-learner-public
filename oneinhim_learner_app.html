@@ -16439,6 +16439,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
+<script src="./oneinhim_home_layout.js?v=145"></script>
+<script src="./oneinhim_journey_layout.js?v=145"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17873,7 +17875,7 @@ function esc(value) {
 }
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
-const APP_RELEASE_VERSION = "144";
+const APP_RELEASE_VERSION = "145";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -18018,15 +18020,26 @@ function normalizeHomeContent(layout) {
 }
 
 function readHomeContent() {
+  const published = window.ONEINHIM_PUBLISHED_HOME_CONTENT;
   try {
     const raw = window.localStorage.getItem(HOME_CONTENT_STORAGE_KEY);
-    if (!raw) return DEFAULT_HOME_CONTENT;
+    if (!raw) {
+      return published && Array.isArray(published.heroSlides) && Array.isArray(published.shelves)
+        ? normalizeHomeContent(published)
+        : DEFAULT_HOME_CONTENT;
+    }
     const parsed = JSON.parse(raw);
-    if (!parsed || !Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) return DEFAULT_HOME_CONTENT;
+    if (!parsed || !Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) {
+      return published && Array.isArray(published.heroSlides) && Array.isArray(published.shelves)
+        ? normalizeHomeContent(published)
+        : DEFAULT_HOME_CONTENT;
+    }
     return normalizeHomeContent(parsed);
   } catch (error) {
     console.warn("Home content override could not be read.", error);
-    return DEFAULT_HOME_CONTENT;
+    return published && Array.isArray(published.heroSlides) && Array.isArray(published.shelves)
+      ? normalizeHomeContent(published)
+      : DEFAULT_HOME_CONTENT;
   }
 }
 

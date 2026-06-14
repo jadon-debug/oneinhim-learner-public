@@ -171,6 +171,20 @@
       color: #fff;
     }
 
+    .btn:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    .publish-status {
+      align-self: center;
+      max-width: 320px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
     .app {
       min-height: 100vh;
       display: grid;
@@ -754,7 +768,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_learner_app.html?v=144">Open app</a>
+        <a class="btn" href="oneinhim_learner_app.html?v=145">Open app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -770,7 +784,9 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_learner_app.html?v=144">Preview app</a>
+        <a class="btn" href="oneinhim_learner_app.html?v=145">Preview app</a>
+        <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
+        <span class="publish-status" id="publishStatus" role="status"></span>
         <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Content prep</a>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
       </div>
@@ -875,7 +891,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_learner_app.html?v=144#journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_learner_app.html?v=145#journey">Preview Journey</a>
               <a class="btn green" href="oneinhim_content_workshop.html?legacy=1">Edit lesson content</a>
             </div>
           </div>
@@ -911,7 +927,7 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_learner_app.html?v=144#journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_learner_app.html?v=145#journey">Preview Journey</a>
                 <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Open legacy prep</a>
               </div>
             </aside>
@@ -1163,6 +1179,11 @@
     function saveJourney() {
       localStorage.setItem(JOURNEY_KEY, JSON.stringify(state.journey, null, 2));
       toast("Journey saved. Preview the app to see it.");
+    }
+
+    function persistWorkspace() {
+      localStorage.setItem(HOME_KEY, JSON.stringify(state.layout, null, 2));
+      localStorage.setItem(JOURNEY_KEY, JSON.stringify(state.journey, null, 2));
     }
 
     function toast(message) {
@@ -1603,6 +1624,7 @@
       });
       ["saveButton", "saveButtonShelves", "saveButtonContent"].forEach((id) => document.getElementById(id).addEventListener("click", saveLayout));
       document.getElementById("saveButtonJourney").addEventListener("click", saveJourney);
+      document.getElementById("publishButton").addEventListener("click", publishToGithub);
       document.getElementById("exportButton").addEventListener("click", () => {
         const blob = new Blob([JSON.stringify(state.layout, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
@@ -1612,6 +1634,36 @@
         a.click();
         URL.revokeObjectURL(url);
       });
+    }
+
+    async function publishToGithub() {
+      const button = document.getElementById("publishButton");
+      const status = document.getElementById("publishStatus");
+      persistWorkspace();
+      button.disabled = true;
+      status.textContent = "Publishing...";
+      try {
+        const response = await fetch("http://localhost:8777/publish", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            homeLayout: state.layout,
+            journeyLayout: state.journey
+          })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "Publish failed.");
+        }
+        status.textContent = data.message || "Published to GitHub.";
+        toast(status.textContent);
+      } catch (error) {
+        console.warn("Publish failed", error);
+        status.textContent = "Publish helper is not running. Ask Codex to start it.";
+        toast("Could not publish yet.");
+      } finally {
+        button.disabled = false;
+      }
     }
 
     function config() {
