@@ -45,14 +45,6 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "cta": "Open Journey"
     }
   ],
-  "contentAccess": {
-    "mux_out_of_shadows_documentary": {
-      "level": "partner_access"
-    },
-    "aud_death_ivan_ilyich_classics": {
-      "level": "partner_access"
-    }
-  },
   "shelves": [
     {
       "id": "start_this_week",
@@ -80,7 +72,8 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "artwork": "assets/outoftheshadows_documentary-coverart_16x9.webp",
           "targetType": "discover",
           "target": "mux_out_of_shadows_documentary",
-          "alt": "Out of the Shadows"
+          "alt": "Out of the Shadows",
+          "locked": true
         }
       ]
     },
@@ -102,7 +95,8 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "artwork": "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg",
           "targetType": "discover",
           "target": "aud_death_ivan_ilyich_classics",
-          "alt": "The Death of Ivan Ilyich"
+          "alt": "The Death of Ivan Ilyich",
+          "locked": true
         }
       ]
     },
@@ -162,7 +156,8 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "artwork": "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg",
           "targetType": "discover",
           "target": "aud_death_ivan_ilyich_classics",
-          "alt": "The Death of Ivan Ilyich"
+          "alt": "The Death of Ivan Ilyich",
+          "locked": true
         }
       ]
     },
@@ -189,5 +184,40 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "cardSize": "wide",
       "items": []
     }
-  ]
+  ],
+  "contentAccess": {
+    "mux_one_basics_1_1_full_video": {
+      "level": "free"
+    },
+    "mux_out_of_shadows_documentary": {
+      "level": "free"
+    },
+    "aud_darkness_sonship_004": {
+      "level": "free"
+    },
+    "mux_oneevent_ps_duane_friday": {
+      "level": "free"
+    },
+    "aud_death_ivan_ilyich_classics": {
+      "level": "partner_access"
+    },
+    "pkg_one_basics_1_1_eternal_life": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_2_saved_by_grace": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_3_righteousness_by_grace": {
+      "level": "free"
+    },
+    "pkg_why_jesus_came_near_discover": {
+      "level": "free"
+    },
+    "pkg_hard_questions_when_life_feels_heavy": {
+      "level": "free"
+    },
+    "stageDetailView": {
+      "level": "free"
+    }
+  }
 };
