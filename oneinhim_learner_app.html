@@ -240,8 +240,34 @@ body.discovery-detail-mode {
   background: #fff;
 }
 
+body.discovery-audio-detail-mode {
+  background: #111;
+  color: #fff;
+}
+
 body.discovery-detail-mode .app-shell {
   background: #fff;
+}
+
+body.discovery-audio-detail-mode .app-shell,
+body.discovery-audio-detail-mode .main {
+  background: #111;
+}
+
+body.discovery-audio-detail-mode .app-top-chrome {
+  background: #111;
+  color: #fff;
+}
+
+body.discovery-audio-detail-mode .app-nav a,
+body.discovery-audio-detail-mode .app-nav button,
+body.discovery-audio-detail-mode .language-toggle button {
+  color: rgba(255,255,255,0.72);
+}
+
+body.discovery-audio-detail-mode .app-nav .active,
+body.discovery-audio-detail-mode .language-toggle button.active {
+  color: #fff;
 }
 
 body.discovery-detail-mode .main {
@@ -254,6 +280,10 @@ body.discovery-detail-mode .main {
 
 body.discovery-detail-mode .view.active {
   width: 100%;
+}
+
+body.discovery-audio-detail-mode .view.active {
+  background: #111;
 }
 
 body.journey-mode {
@@ -5201,6 +5231,11 @@ body.gateway-filter-listen [data-content-kind]:not([data-content-kind~="audio"])
   color: var(--ink);
 }
 
+.discover-watch-shell.audio-detail {
+  background: #111;
+  color: #fff;
+}
+
 .discover-watch-main {
   order: 3;
   width: min(1120px, calc(100% - 36px));
@@ -5267,6 +5302,192 @@ body.gateway-filter-listen [data-content-kind]:not([data-content-kind~="audio"])
   --media-object-position: center;
   --controls-backdrop-color: rgba(9, 10, 10, 0.36);
   --media-background-color: #090a0a;
+}
+
+.discover-watch-shell.audio-detail {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: clamp(96px, 12vh, 150px) 0 76px;
+  display: grid;
+  grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+  grid-template-areas:
+    "media info"
+    "media details"
+    "related related";
+  gap: 28px 42px;
+  align-items: start;
+}
+
+.discover-watch-shell.audio-detail .discover-watch-main,
+.discover-watch-shell.audio-detail .discover-watch-info,
+.discover-watch-shell.audio-detail .discover-watch-details,
+.discover-watch-shell.audio-detail .discover-related {
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.discover-watch-shell.audio-detail .discover-watch-main {
+  grid-area: media;
+}
+
+.discover-watch-shell.audio-detail .discover-watch-info {
+  grid-area: info;
+  display: block;
+}
+
+.discover-watch-shell.audio-detail .discover-watch-details {
+  grid-area: details;
+}
+
+.discover-watch-shell.audio-detail .discover-related {
+  grid-area: related;
+  padding-bottom: 0;
+}
+
+.discover-watch-shell.audio-detail .discover-related h3 {
+  color: #fff;
+}
+
+.discover-watch-shell.audio-detail .discover-related-card {
+  border-color: rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+.discover-watch-shell.audio-detail .discover-related-card span span {
+  color: rgba(255,255,255,0.62);
+}
+
+.discover-watch-shell.audio-detail .discover-watch-media {
+  aspect-ratio: 1 / 1;
+  border: 0;
+  border-radius: 8px;
+  background: #181818;
+  box-shadow: none;
+}
+
+.discover-watch-shell.audio-detail .discover-watch-cover-art {
+  object-fit: cover;
+}
+
+.discover-audio-engine {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.discover-audio-series {
+  margin: 0 0 8px;
+  color: rgba(255,255,255,0.72);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.discover-audio-series strong {
+  color: #fff;
+}
+
+.discover-watch-shell.audio-detail .discover-watch-info h2 {
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.05;
+}
+
+.discover-watch-shell.audio-detail .discover-watch-meta,
+.discover-watch-shell.audio-detail .discover-watch-summary {
+  color: rgba(255,255,255,0.78);
+  max-width: 660px;
+}
+
+.discover-audio-progress {
+  margin: 20px 0 18px;
+}
+
+.discover-audio-time {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: rgba(255,255,255,0.56);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.discover-audio-range {
+  width: 100%;
+  height: 5px;
+  margin: 8px 0 0;
+  accent-color: var(--oih-orange);
+}
+
+.discover-audio-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 0 0 22px;
+}
+
+.discover-audio-controls button,
+.discover-audio-timer {
+  min-height: 44px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 10px;
+  padding: 0 14px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+}
+
+.discover-audio-controls button:disabled,
+.discover-audio-timer:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.discover-audio-controls .discover-audio-play {
+  min-width: 112px;
+  border-color: var(--oih-orange);
+  background: var(--oih-orange);
+  color: #fff;
+}
+
+.discover-audio-timer {
+  color: rgba(255,255,255,0.9);
+}
+
+.discover-watch-shell.audio-detail .discover-watch-buttons {
+  margin-top: 18px;
+}
+
+@media (max-width: 760px) {
+  .discover-watch-shell.audio-detail {
+    width: min(100% - 32px, 520px);
+    padding: calc(var(--app-top-chrome-height) + 28px) 0 calc(var(--app-bottom-nav-height) + 32px);
+    display: block;
+  }
+
+  .discover-watch-shell.audio-detail .discover-watch-main {
+    margin-bottom: 22px;
+  }
+
+  .discover-watch-shell.audio-detail .discover-watch-info h2 {
+    font-size: clamp(30px, 9vw, 42px);
+  }
+
+  .discover-audio-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .discover-audio-controls .discover-audio-play,
+  .discover-audio-timer {
+    grid-column: span 3;
+  }
 }
 
 .discover-watch-play {
@@ -11885,6 +12106,19 @@ body:not(.gateway-mode) .app-top-chrome .lang-btn.active {
   color: #fff !important;
 }
 
+body.discovery-audio-detail-mode:not(.gateway-mode) .app-top-chrome {
+  background: #111 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: none !important;
+}
+
+body.discovery-audio-detail-mode:not(.gateway-mode) .app-top-chrome .gateway-logo,
+body.discovery-audio-detail-mode:not(.gateway-mode) .app-top-chrome .gateway-nav-btn,
+body.discovery-audio-detail-mode:not(.gateway-mode) .app-top-chrome .gateway-nav-btn:hover,
+body.discovery-audio-detail-mode:not(.gateway-mode) .app-top-chrome .gateway-nav-btn.active {
+  color: #fff !important;
+}
+
 body:not(.gateway-mode) #stageDetailView .stage-web-nav {
   display: none !important;
 }
@@ -12942,6 +13176,39 @@ body:not(.gateway-mode) .main {
 
   body.discovery-detail-mode:not(.app-chrome-hidden) .discover-related {
     margin-top: 28px !important;
+  }
+
+  body.discovery-audio-detail-mode:not(.app-chrome-hidden) .discover-watch-shell.audio-detail {
+    display: grid !important;
+    grid-template-columns: minmax(260px, 420px) minmax(0, 620px) !important;
+    align-items: start !important;
+    justify-content: center !important;
+    gap: clamp(28px, 4vw, 60px) !important;
+    padding: clamp(92px, 9vw, 140px) var(--desktop-shell-gutter) 72px !important;
+  }
+
+  body.discovery-audio-detail-mode:not(.app-chrome-hidden) .discover-watch-shell.audio-detail .discover-watch-main,
+  body.discovery-audio-detail-mode:not(.app-chrome-hidden) .discover-watch-shell.audio-detail .discover-watch-info,
+  body.discovery-audio-detail-mode:not(.app-chrome-hidden) .discover-watch-shell.audio-detail .discover-watch-details,
+  body.discovery-audio-detail-mode:not(.app-chrome-hidden) .discover-watch-shell.audio-detail .discover-related {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.discovery-audio-detail-mode:not(.app-chrome-hidden) .discover-watch-shell.audio-detail .discover-watch-main {
+    grid-row: 1 / span 3 !important;
+  }
+
+  body.discovery-audio-detail-mode:not(.app-chrome-hidden) .discover-watch-shell.audio-detail .discover-watch-info {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  body.discovery-audio-detail-mode:not(.app-chrome-hidden) .discover-watch-shell.audio-detail .discover-watch-media {
+    aspect-ratio: 1 / 1 !important;
+    max-height: none !important;
   }
 }
 
@@ -15663,8 +15930,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=150"></script>
-<script src="./oneinhim_journey_layout.js?v=150"></script>
+<script src="./oneinhim_home_layout.js?v=151"></script>
+<script src="./oneinhim_journey_layout.js?v=151"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -16169,6 +16436,7 @@ const LIBRARY_PARTNER_ACCESS_STORAGE_KEY = "oneinhim.library.partnerAccess.v1";
 const SEEDS_PER_SHARE = 5;
 const DEFAULT_SEED_UNLOCK_COST = 10;
 let gatewayHeroAutoplayTimer = null;
+let discoveryAudioSleepTimer = null;
 let journeyContentVersion = 0;
 let stickyStageBannerFrame = 0;
 let duoPathCurveFrame = 0;
@@ -17100,7 +17368,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "150";
+const APP_RELEASE_VERSION = "151";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -19105,6 +19373,7 @@ function setView(viewId, options = {}) {
     setGatewayChromeColor(false);
   }
   document.body.classList.toggle("discovery-detail-mode", nextViewId === "discoveryDetailView");
+  document.body.classList.toggle("discovery-audio-detail-mode", nextViewId === "discoveryDetailView" && isAudioResource(activeResource()));
   document.body.classList.toggle("feed-mode", nextViewId === "feedView");
   document.body.classList.toggle("library-mode", nextViewId === "libraryView");
   document.body.classList.toggle("journey-mode", nextViewId === "stageDetailView");
@@ -19465,6 +19734,260 @@ function discoveryRelatedItems(item) {
   };
 }
 
+function isAudioResource(resource) {
+  if (!resource) return false;
+  const formats = Array.isArray(resource.format) ? resource.format : [];
+  return resource.visualType === "audio"
+    || resource.primaryMedium === "listen"
+    || resource.contentType === "podcast"
+    || resource.contentType === "audiobook"
+    || (formats.includes("listen") && !formats.includes("watch"));
+}
+
+function resourceArtwork(resource) {
+  return resource?.posterUrl || resource?.thumbnailUrl || resource?.videoHost?.thumbnailUrl || "";
+}
+
+function formatClock(seconds) {
+  const total = Math.max(0, Math.floor(Number(seconds) || 0));
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const secs = total % 60;
+  if (hours) return `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  return `${minutes}:${String(secs).padStart(2, "0")}`;
+}
+
+function audioMuxPlayerElementHtml(resource) {
+  const playbackId = resourceMuxPlaybackId(resource);
+  if (!playbackId) return "";
+  const title = resource?.title || "One In Him audio";
+  const poster = resourceArtwork(resource);
+  const attrs = [
+    `id="discoverAudioPlayer"`,
+    `class="discover-audio-engine"`,
+    `playback-id="${esc(playbackId)}"`,
+    `stream-type="on-demand"`,
+    `accent-color="#ee7326"`,
+    `video-title="${esc(title)}"`,
+    `metadata-video-title="${esc(title)}"`,
+    `playsinline`,
+    `no-tooltips`
+  ];
+  if (poster) attrs.push(`poster="${esc(poster)}"`);
+  return `<mux-player ${attrs.join(" ")}></mux-player>`;
+}
+
+function clearDiscoveryAudioSleepTimer() {
+  if (!discoveryAudioSleepTimer) return;
+  window.clearTimeout(discoveryAudioSleepTimer);
+  discoveryAudioSleepTimer = null;
+}
+
+function discoverAudioNextEpisode(item) {
+  if (!item?.seriesId) return null;
+  return resources
+    .filter((resource) =>
+      resource.id !== item.id
+      && resource.seriesId === item.seriesId
+      && isAudioResource(resource)
+      && (Number(resource.episode) || 0) > (Number(item.episode) || 0)
+    )
+    .sort((a, b) => (Number(a.episode) || 0) - (Number(b.episode) || 0))[0] || null;
+}
+
+function bindDiscoveryAudioControls(item) {
+  const player = document.getElementById("discoverAudioPlayer");
+  const playButton = document.getElementById("discoverAudioPlay");
+  const range = document.getElementById("discoverAudioRange");
+  const currentLabel = document.getElementById("discoverAudioCurrent");
+  const durationLabel = document.getElementById("discoverAudioDuration");
+  const speedButton = document.getElementById("discoverAudioSpeed");
+  const timerSelect = document.getElementById("discoverAudioTimer");
+  const nextButton = document.querySelector("[data-audio-next]");
+  const nextEpisode = discoverAudioNextEpisode(item);
+  const speeds = [1, 1.25, 1.5, 2];
+
+  function durationSeconds() {
+    const playerDuration = Number(player?.duration);
+    return Number.isFinite(playerDuration) && playerDuration > 0 ? playerDuration : Number(item.seconds) || 0;
+  }
+
+  function syncProgress() {
+    const duration = durationSeconds();
+    const current = Math.max(0, Number(player?.currentTime) || 0);
+    if (range) {
+      range.max = String(Math.max(duration, 1));
+      if (document.activeElement !== range) range.value = String(Math.min(current, duration || current));
+    }
+    if (currentLabel) currentLabel.textContent = formatClock(current);
+    if (durationLabel) durationLabel.textContent = duration ? formatClock(duration) : "--:--";
+  }
+
+  function syncPlayState() {
+    if (!playButton) return;
+    playButton.textContent = player && !player.paused ? "Pause" : "Listen";
+  }
+
+  if (!player) {
+    [playButton, range, speedButton, timerSelect].filter(Boolean).forEach((control) => {
+      control.disabled = true;
+      control.setAttribute("aria-disabled", "true");
+    });
+    syncProgress();
+    return;
+  }
+
+  syncProgress();
+  syncPlayState();
+
+  playButton?.addEventListener("click", async () => {
+    try {
+      if (player.paused) {
+        await player.play();
+      } else {
+        player.pause();
+      }
+    } catch (error) {
+      toast("Tap once more to start audio.");
+    }
+    syncPlayState();
+  });
+
+  document.querySelectorAll("[data-audio-skip]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const delta = Number(button.dataset.audioSkip) || 0;
+      const duration = durationSeconds();
+      player.currentTime = Math.max(0, Math.min(duration || Number.MAX_SAFE_INTEGER, (Number(player.currentTime) || 0) + delta));
+      syncProgress();
+    });
+  });
+
+  range?.addEventListener("input", () => {
+    player.currentTime = Number(range.value) || 0;
+    syncProgress();
+  });
+
+  speedButton?.addEventListener("click", () => {
+    const currentSpeed = Number(player.playbackRate) || 1;
+    const nextSpeed = speeds[(speeds.indexOf(currentSpeed) + 1) % speeds.length] || 1;
+    player.playbackRate = nextSpeed;
+    speedButton.textContent = `${nextSpeed}x`;
+  });
+
+  timerSelect?.addEventListener("change", () => {
+    clearDiscoveryAudioSleepTimer();
+    const minutes = Number(timerSelect.value) || 0;
+    if (!minutes) return;
+    discoveryAudioSleepTimer = window.setTimeout(() => {
+      player.pause();
+      syncPlayState();
+      timerSelect.value = "";
+      discoveryAudioSleepTimer = null;
+    }, minutes * 60 * 1000);
+  });
+
+  nextButton?.addEventListener("click", () => {
+    if (nextEpisode) setDiscoveryResource(nextEpisode.id);
+  });
+
+  player.addEventListener("loadedmetadata", syncProgress);
+  player.addEventListener("durationchange", syncProgress);
+  player.addEventListener("timeupdate", syncProgress);
+  player.addEventListener("play", syncPlayState);
+  player.addEventListener("pause", syncPlayState);
+  player.addEventListener("ended", () => {
+    clearDiscoveryAudioSleepTimer();
+    if (nextEpisode) setDiscoveryResource(nextEpisode.id);
+  });
+}
+
+function renderDiscoveryAudioDetail(item) {
+  clearDiscoveryAudioSleepTimer();
+  const shell = document.querySelector(".discover-watch-shell");
+  const buttons = document.querySelector(".discover-watch-buttons");
+  const target = moduleTargetForResource(item.id);
+  const related = discoveryRelatedItems(item);
+  const nextEpisode = discoverAudioNextEpisode(item);
+  const artwork = resourceArtwork(item);
+  const playerMarkup = audioMuxPlayerElementHtml(item);
+
+  shell?.classList.add("audio-detail");
+  stopEmbeddedMediaInElement(els.discoverWatchMedia);
+  els.discoverWatchMedia.className = `discover-watch-media audio-cover${artwork ? " has-cover-art" : ""}${playerMarkup ? " has-audio-player" : ""}`;
+  els.discoverWatchMedia.innerHTML = `
+    ${artwork ? `<img class="discover-watch-cover-art" src="${esc(artwork)}" alt="" />` : `<span class="discover-watch-placeholder-badge">${esc(t("homeDiscover.comingSoon"))}</span>`}
+    ${playerMarkup}
+  `;
+
+  if (buttons) {
+    buttons.innerHTML = `
+      <button class="primary-btn" type="button" id="discoverJoinJourney">Open journey step</button>
+      ${nextEpisode ? `<button class="soft-btn" type="button" data-audio-next>Next episode</button>` : ""}
+      <button class="soft-btn" type="button" data-nav-jump="gatewayView">Share</button>
+    `;
+    els.discoverJoinJourney = document.getElementById("discoverJoinJourney");
+  }
+
+  els.discoverDetailTitle.textContent = item.title;
+  els.discoverDetailMeta.textContent = `${labelize(item.contentType)} · ${item.length} · ${item.speaker}`;
+  els.discoverDetailSummary.textContent = item.summary;
+  els.discoverRelatedTitle.textContent = related.title;
+  els.discoverJoinJourney.onclick = () => {
+    state.activeStageId = target.stageId;
+    state.activeModuleIndex = target.moduleIndex;
+    state.moduleMode = "listen";
+    state.selectedSectionIndex = selectedSectionIndexForModule(target.stageId, target.moduleIndex);
+    state.quizChoice = "";
+    state.quizChecked = false;
+    renderStageDetail();
+    renderModuleDetail();
+    setView("moduleDetailView");
+    bindDynamicActions();
+  };
+
+  const duration = Number(item.seconds) || 0;
+  const details = document.querySelector(".discover-watch-details");
+  if (details) {
+    details.innerHTML = `
+      <p class="discover-watch-meta" id="discoverDetailMeta">${esc(labelize(item.contentType))} · ${esc(item.length)} · ${esc(item.speaker)}</p>
+      <div class="discover-audio-progress" aria-label="Audio progress">
+        <input class="discover-audio-range" id="discoverAudioRange" type="range" min="0" max="${esc(String(Math.max(duration, 1)))}" value="0" step="1" />
+        <div class="discover-audio-time">
+          <span id="discoverAudioCurrent">0:00</span>
+          <span id="discoverAudioDuration">${esc(duration ? formatClock(duration) : "--:--")}</span>
+        </div>
+      </div>
+      <div class="discover-audio-controls" aria-label="Audio controls">
+        <button class="soft-btn" type="button" data-audio-skip="-15">-15</button>
+        <button class="primary-btn discover-audio-play" type="button" id="discoverAudioPlay">Listen</button>
+        <button class="soft-btn" type="button" data-audio-skip="30">+30</button>
+        <button class="soft-btn" type="button" id="discoverAudioSpeed">1x</button>
+        <select class="discover-audio-timer" id="discoverAudioTimer" aria-label="Sleep timer">
+          <option value="">Timer off</option>
+          <option value="5">5 min</option>
+          <option value="10">10 min</option>
+          <option value="15">15 min</option>
+          <option value="30">30 min</option>
+        </select>
+      </div>
+      <p class="discover-watch-summary" id="discoverDetailSummary">${esc(item.summary)}</p>
+    `;
+    els.discoverDetailMeta = document.getElementById("discoverDetailMeta");
+    els.discoverDetailSummary = document.getElementById("discoverDetailSummary");
+  }
+
+  els.discoverRelatedList.innerHTML = related.items.map((resource) => `
+    <button class="discover-related-card" type="button" data-discover-open="${esc(resource.id)}">
+      <span class="discover-related-thumb">${esc(isAudioResource(resource) ? "♪" : resource.format.includes("read") && !resource.format.includes("watch") ? "“" : "▶")}</span>
+      <span>
+        <strong>${esc(resource.title)}</strong>
+        <span>${esc(resource.length)} · ${esc(resource.topic)}</span>
+      </span>
+    </button>
+  `).join("");
+  bindDiscoveryAudioControls(item);
+}
+
 function renderDiscoveryMedia(item, options = {}) {
   const playIcon = item.format.includes("read") && !item.format.includes("watch") ? "“" : item.format.includes("listen") && !item.format.includes("watch") ? "♪" : "▶";
   const allowMedia = options.allowMedia ?? state.activeView === "discoveryDetailView";
@@ -19503,6 +20026,30 @@ function renderDiscoveryMedia(item, options = {}) {
 
 function renderDiscoveryDetail() {
   const item = activeResource();
+  const shell = document.querySelector(".discover-watch-shell");
+  const buttons = document.querySelector(".discover-watch-buttons");
+  if (isAudioResource(item)) {
+    renderDiscoveryAudioDetail(item);
+    return;
+  }
+  clearDiscoveryAudioSleepTimer();
+  shell?.classList.remove("audio-detail");
+  if (buttons) {
+    buttons.innerHTML = `
+      <button class="primary-btn" type="button" id="discoverJoinJourney">Join the journey</button>
+      <button class="soft-btn" type="button" data-nav-jump="gatewayView">Share</button>
+    `;
+    els.discoverJoinJourney = document.getElementById("discoverJoinJourney");
+  }
+  const details = document.querySelector(".discover-watch-details");
+  if (details) {
+    details.innerHTML = `
+      <p class="discover-watch-meta" id="discoverDetailMeta"></p>
+      <p class="discover-watch-summary" id="discoverDetailSummary"></p>
+    `;
+    els.discoverDetailMeta = document.getElementById("discoverDetailMeta");
+    els.discoverDetailSummary = document.getElementById("discoverDetailSummary");
+  }
   const target = moduleTargetForResource(item.id);
   const related = discoveryRelatedItems(item);
   renderDiscoveryMedia(item);
@@ -20952,6 +21499,7 @@ function stopEmbeddedMediaInElement(root) {
 }
 
 function stopEmbeddedMediaInView(viewId) {
+  if (viewId === "discoveryDetailView") clearDiscoveryAudioSleepTimer();
   stopEmbeddedMediaInElement(document.getElementById(viewId));
 }
 
@@ -21006,7 +21554,7 @@ function refreshActiveViewMedia(viewId) {
     return;
   }
   if (viewId === "discoveryDetailView") {
-    renderDiscoveryMedia(activeResource(), { allowMedia: true });
+    renderDiscoveryDetail();
   }
 }
 
