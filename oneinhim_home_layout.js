@@ -122,6 +122,16 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "alt": "Coming soon",
           "placeholder": true,
           "locked": false
+        },
+        {
+          "id": "artwork_only_1781435680260",
+          "artwork": "assets/OE_May_JohanToet_saturday2.webp",
+          "targetType": "none",
+          "target": "",
+          "contentId": "",
+          "alt": "Coming soon",
+          "placeholder": true,
+          "locked": false
         }
       ]
     },
