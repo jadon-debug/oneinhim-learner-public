@@ -132,6 +132,16 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "alt": "Coming soon",
           "placeholder": true,
           "locked": false
+        },
+        {
+          "id": "artwork_only_1781437780877",
+          "artwork": "assets/OE_May_Duanesheriff_saturday2.webp",
+          "targetType": "none",
+          "target": "",
+          "contentId": "",
+          "alt": "Coming soon",
+          "placeholder": true,
+          "locked": false
         }
       ]
     },
@@ -166,6 +176,13 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "alt": "Out of the Shadows"
         }
       ]
+    },
+    {
+      "id": "shelf_1781437768568",
+      "title": "New shelf",
+      "mode": "discover",
+      "cardSize": "wide",
+      "items": []
     }
   ]
 };
