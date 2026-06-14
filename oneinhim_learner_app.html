@@ -14817,10 +14817,10 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
             </span>
           </button>
 
-          <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="2" data-hero-mode="discover" style="--home-mobile-artwork-position:center center;--home-mobile-artwork-scale:1.35;--home-mobile-artwork-origin:center 45%" data-nav-jump="stageDetailView" data-linked-resource="book_one_basics_1_1_eternal_life" aria-label="One In Him discipleship journey">
+          <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="2" data-hero-mode="discover" data-nav-jump="stageDetailView" data-linked-resource="book_one_basics_1_1_eternal_life" aria-label="One In Him discipleship journey">
             <picture class="home-artwork-picture">
-              <source media="(min-width: 761px)" srcset="assets/Journey hero_desktop.webp" />
-              <img class="home-artwork-image" src="assets/Journey hero_desktop.webp" alt="One In Him discipleship journey" loading="lazy" />
+              <source media="(min-width: 761px)" srcset="assets/oneinhim-journey-hero-custom-desktop.webp" />
+              <img class="home-artwork-image" src="assets/oneinhim-journey-hero-custom-mobile.webp" alt="One In Him discipleship journey" loading="lazy" />
             </picture>
             <span class="home-hero-copy">
               <span class="home-hero-eyebrow">Guided path</span>
@@ -15934,8 +15934,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=159"></script>
-<script src="./oneinhim_journey_layout.js?v=159"></script>
+<script src="./oneinhim_home_layout.js?v=160"></script>
+<script src="./oneinhim_journey_layout.js?v=160"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17372,7 +17372,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "159";
+const APP_RELEASE_VERSION = "160";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -17408,12 +17408,9 @@ const DEFAULT_HOME_CONTENT = {
     {
       id: "journey_hero",
       mode: "discover",
-      mobileArtwork: "assets/Journey hero_desktop.webp",
-      artwork: "assets/Journey hero_desktop.webp",
-      desktopArtwork: "assets/Journey hero_desktop.webp",
-      mobileArtworkPosition: "center center",
-      mobileArtworkScale: "1.35",
-      mobileArtworkOrigin: "center 45%",
+      mobileArtwork: "assets/oneinhim-journey-hero-custom-mobile.webp",
+      artwork: "assets/oneinhim-journey-hero-custom-mobile.webp",
+      desktopArtwork: "assets/oneinhim-journey-hero-custom-desktop.webp",
       targetType: "journey",
       target: "stageDetailView",
       contentId: "book_one_basics_1_1_eternal_life",

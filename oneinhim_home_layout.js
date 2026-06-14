@@ -32,9 +32,9 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     {
       "id": "journey_hero",
       "mode": "discover",
-      "mobileArtwork": "assets/journey_discipleship-hero_mobile.webp",
-      "artwork": "assets/journey_discipleship-hero_mobile.webp",
-      "desktopArtwork": "assets/Hero_journey_desktop.jpg",
+      "mobileArtwork": "assets/oneinhim-journey-hero-custom-mobile.webp",
+      "artwork": "assets/oneinhim-journey-hero-custom-mobile.webp",
+      "desktopArtwork": "assets/oneinhim-journey-hero-custom-desktop.webp",
       "targetType": "journey",
       "target": "stageDetailView",
       "contentId": "book_one_basics_1_1_eternal_life",

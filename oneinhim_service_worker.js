@@ -1,4 +1,4 @@
-const ONEINHIM_CACHE = "oneinhim-app-v159";
+const ONEINHIM_CACHE = "oneinhim-app-v160";
 
 const APP_SHELL = [
   "./oneinhim.webmanifest",
@@ -20,6 +20,8 @@ const APP_SHELL = [
   "./assets/outoftheshadows_documentary-coverart.webp",
   "./assets/journey_discipleship-hero_mobile.webp",
   "./assets/Journey hero_desktop.webp",
+  "./assets/oneinhim-journey-hero-custom-mobile.webp",
+  "./assets/oneinhim-journey-hero-custom-desktop.webp",
   "./assets/one-gospel-podcast-cover.png",
   "./assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg",
   "./assets/OE_May_PsDuaneS_friday.webp",
