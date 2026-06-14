@@ -14725,6 +14725,7 @@ body.gateway-mode .home-hero {
   height: clamp(620px, 74svh, 820px) !important;
   min-height: clamp(620px, 74svh, 820px) !important;
   overflow: hidden !important;
+  touch-action: pan-y !important;
 }
 
 body.gateway-mode .home-hero .artwork-home-slide {
@@ -14739,6 +14740,7 @@ body.gateway-mode .home-hero .artwork-home-slide {
   overflow: hidden !important;
   padding: 0 !important;
   position: absolute !important;
+  touch-action: pan-y !important;
   width: 100% !important;
 }
 
@@ -16972,12 +16974,15 @@ let adminAuthState = {
 };
 const gatewayHeroSwipe = {
   active: false,
+  pointerId: null,
   startX: 0,
   startY: 0,
   lastX: 0,
   lastY: 0,
+  moved: false,
   suppressClick: false,
-  lastActivationAt: 0
+  lastActivationAt: 0,
+  lastWheelAt: 0
 };
 
 const viewText = {
@@ -17868,7 +17873,7 @@ function esc(value) {
 }
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
-const APP_RELEASE_VERSION = "143";
+const APP_RELEASE_VERSION = "144";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -18263,35 +18268,56 @@ function scheduleGatewayHeroAutoplay() {
 
 function resetGatewayHeroSwipe() {
   gatewayHeroSwipe.active = false;
+  gatewayHeroSwipe.pointerId = null;
   gatewayHeroSwipe.startX = 0;
   gatewayHeroSwipe.startY = 0;
   gatewayHeroSwipe.lastX = 0;
   gatewayHeroSwipe.lastY = 0;
+  gatewayHeroSwipe.moved = false;
+}
+
+function heroSwipeControlTarget(target) {
+  return target instanceof Element && Boolean(target.closest("[data-hero-dot], .gateway-hero-controls, input, textarea, select"));
 }
 
 function handleGatewayHeroSwipeStart(event) {
-  const target = event.target;
-  if (event.touches.length !== 1 || (target instanceof Element && target.closest("[data-hero-dot]"))) return;
-  const touch = event.touches[0];
+  if (event.button !== undefined && event.button !== 0) return;
+  if (heroSwipeControlTarget(event.target)) return;
   gatewayHeroSwipe.active = true;
-  gatewayHeroSwipe.startX = touch.clientX;
-  gatewayHeroSwipe.startY = touch.clientY;
-  gatewayHeroSwipe.lastX = touch.clientX;
-  gatewayHeroSwipe.lastY = touch.clientY;
+  gatewayHeroSwipe.pointerId = event.pointerId ?? null;
+  gatewayHeroSwipe.startX = event.clientX;
+  gatewayHeroSwipe.startY = event.clientY;
+  gatewayHeroSwipe.lastX = event.clientX;
+  gatewayHeroSwipe.lastY = event.clientY;
+  gatewayHeroSwipe.moved = false;
+  stopGatewayHeroAutoplay();
+  if (event.currentTarget?.setPointerCapture && gatewayHeroSwipe.pointerId !== null) {
+    try {
+      event.currentTarget.setPointerCapture(gatewayHeroSwipe.pointerId);
+    } catch (_) {
+      // Pointer capture is optional; the swipe still works without it.
+    }
+  }
 }
 
 function handleGatewayHeroSwipeMove(event) {
-  if (!gatewayHeroSwipe.active || event.touches.length !== 1) return;
-  const touch = event.touches[0];
-  gatewayHeroSwipe.lastX = touch.clientX;
-  gatewayHeroSwipe.lastY = touch.clientY;
-}
-
-function handleGatewayHeroSwipeEnd() {
   if (!gatewayHeroSwipe.active) return;
+  if (gatewayHeroSwipe.pointerId !== null && event.pointerId !== gatewayHeroSwipe.pointerId) return;
+  gatewayHeroSwipe.lastX = event.clientX;
+  gatewayHeroSwipe.lastY = event.clientY;
   const deltaX = gatewayHeroSwipe.lastX - gatewayHeroSwipe.startX;
   const deltaY = gatewayHeroSwipe.lastY - gatewayHeroSwipe.startY;
-  const movedBeyondTap = Math.hypot(deltaX, deltaY) > GATEWAY_HERO_TAP_MAX_PX;
+  if (Math.hypot(deltaX, deltaY) > GATEWAY_HERO_TAP_MAX_PX) {
+    gatewayHeroSwipe.moved = true;
+  }
+}
+
+function handleGatewayHeroSwipeEnd(event) {
+  if (!gatewayHeroSwipe.active) return;
+  if (event && gatewayHeroSwipe.pointerId !== null && event.pointerId !== gatewayHeroSwipe.pointerId) return;
+  const deltaX = gatewayHeroSwipe.lastX - gatewayHeroSwipe.startX;
+  const deltaY = gatewayHeroSwipe.lastY - gatewayHeroSwipe.startY;
+  const movedBeyondTap = gatewayHeroSwipe.moved || Math.hypot(deltaX, deltaY) > GATEWAY_HERO_TAP_MAX_PX;
   resetGatewayHeroSwipe();
   if (Math.abs(deltaX) < GATEWAY_HERO_SWIPE_MIN_PX || Math.abs(deltaX) < Math.abs(deltaY) * GATEWAY_HERO_SWIPE_AXIS_RATIO) {
     if (movedBeyondTap) {
@@ -18309,13 +18335,29 @@ function handleGatewayHeroSwipeEnd() {
   setGatewayHero(state.gatewayHeroIndex + (deltaX < 0 ? 1 : -1));
 }
 
+function handleGatewayHeroWheel(event) {
+  if (heroSwipeControlTarget(event.target)) return;
+  if (Math.abs(event.deltaX) < GATEWAY_HERO_SWIPE_MIN_PX || Math.abs(event.deltaX) < Math.abs(event.deltaY) * GATEWAY_HERO_SWIPE_AXIS_RATIO) return;
+  const now = Date.now();
+  if (now - gatewayHeroSwipe.lastWheelAt < 650) return;
+  gatewayHeroSwipe.lastWheelAt = now;
+  gatewayHeroSwipe.suppressClick = true;
+  window.setTimeout(() => {
+    gatewayHeroSwipe.suppressClick = false;
+  }, 450);
+  event.preventDefault();
+  stopGatewayHeroAutoplay();
+  setGatewayHero(state.gatewayHeroIndex + (event.deltaX > 0 ? 1 : -1));
+}
+
 function wireGatewayHeroSwipe() {
   const hero = document.querySelector(".gateway-landing.home-hero");
   if (!hero) return;
-  hero.addEventListener("touchstart", handleGatewayHeroSwipeStart, { passive: true });
-  hero.addEventListener("touchmove", handleGatewayHeroSwipeMove, { passive: true });
-  hero.addEventListener("touchend", handleGatewayHeroSwipeEnd, { passive: true });
-  hero.addEventListener("touchcancel", resetGatewayHeroSwipe, { passive: true });
+  hero.addEventListener("pointerdown", handleGatewayHeroSwipeStart);
+  hero.addEventListener("pointermove", handleGatewayHeroSwipeMove);
+  hero.addEventListener("pointerup", handleGatewayHeroSwipeEnd);
+  hero.addEventListener("pointercancel", resetGatewayHeroSwipe);
+  hero.addEventListener("wheel", handleGatewayHeroWheel, { passive: false });
   hero.addEventListener("click", (event) => {
     if (!gatewayHeroSwipe.suppressClick) return;
     gatewayHeroSwipe.suppressClick = false;
@@ -22914,8 +22956,6 @@ function wireStaticActions() {
   document.addEventListener("click", handleLibraryAccessAction);
   document.addEventListener("click", handleShelfArrowClick);
   document.addEventListener("click", handleHomeHeroActivation, { capture: true });
-  document.addEventListener("pointerup", handleHomeHeroActivation, { capture: true });
-  document.addEventListener("touchend", handleHomeHeroActivation, { capture: true, passive: false });
   enhanceDesktopShelves();
   document.querySelectorAll(".nav-btn").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.nav));
