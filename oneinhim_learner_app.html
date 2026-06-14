@@ -15655,8 +15655,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=147"></script>
-<script src="./oneinhim_journey_layout.js?v=147"></script>
+<script src="./oneinhim_home_layout.js?v=148"></script>
+<script src="./oneinhim_journey_layout.js?v=148"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17091,7 +17091,7 @@ function esc(value) {
 }
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
-const APP_RELEASE_VERSION = "147";
+const APP_RELEASE_VERSION = "148";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -17140,6 +17140,10 @@ const DEFAULT_HOME_CONTENT = {
       cta: "Open Journey"
     }
   ],
+  contentAccess: {
+    mux_out_of_shadows_documentary: { level: "partner_access" },
+    aud_death_ivan_ilyich_classics: { level: "partner_access" }
+  },
   shelves: [
     {
       id: "start_this_week",
@@ -17149,7 +17153,7 @@ const DEFAULT_HOME_CONTENT = {
       items: [
         { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
         { id: "darkness_sonship", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
-        { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+        { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows" },
         { id: "oneevent_duane", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
       ]
     },
@@ -17160,7 +17164,7 @@ const DEFAULT_HOME_CONTENT = {
       cardSize: "square",
       items: [
         { id: "darkness_sonship_audio", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
-        { id: "ivan_ilyich", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+        { id: "ivan_ilyich", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich" }
       ]
     },
     {
@@ -17170,7 +17174,7 @@ const DEFAULT_HOME_CONTENT = {
       cardSize: "poster",
       items: [
         { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
-        { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+        { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows" },
         { id: "oneevent_watch", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
       ]
     },
@@ -17180,7 +17184,7 @@ const DEFAULT_HOME_CONTENT = {
       mode: "discover listen",
       cardSize: "square",
       items: [
-        { id: "death_ivan_classics", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+        { id: "death_ivan_classics", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich" }
       ]
     }
   ]
@@ -17188,6 +17192,9 @@ const DEFAULT_HOME_CONTENT = {
 
 function normalizeHomeContent(layout) {
   const defaultSlidesById = new Map(DEFAULT_HOME_CONTENT.heroSlides.map((slide) => [slide.id, slide]));
+  const defaultContentAccess = {
+    ...(DEFAULT_HOME_CONTENT.contentAccess || {})
+  };
   const normalizeHomeItemTarget = (item) => {
     if (item.targetType === "none" || item.placeholder || (!item.target && !item.contentId)) {
       return { target: "", contentId: "", targetType: "none", placeholder: true };
@@ -17207,9 +17214,22 @@ function normalizeHomeContent(layout) {
     const resolvedTarget = resolveContentTargetId(shouldUpgradeOneBasicsWatchTarget ? rawTarget : (item.contentId || rawTarget));
     return { target: resolvedTarget, contentId: shouldUpgradeOneBasicsWatchTarget ? resolvedTarget : (item.contentId || resolvedTarget) };
   };
+  const contentAccess = {
+    ...defaultContentAccess,
+    ...(layout.contentAccess || {})
+  };
+  (layout.shelves || []).forEach((shelf) => {
+    (shelf.items || []).forEach((item) => {
+      const target = item.contentId || item.target || "";
+      if (target && item.locked && !layout.contentAccess?.[target]) {
+        contentAccess[target] = { level: "partner_access" };
+      }
+    });
+  });
   return {
     ...DEFAULT_HOME_CONTENT,
     ...layout,
+    contentAccess,
     heroSlides: (layout.heroSlides || DEFAULT_HOME_CONTENT.heroSlides).map((slide, index) => {
       const merged = {
         ...(defaultSlidesById.get(slide.id) || DEFAULT_HOME_CONTENT.heroSlides[index] || {}),
@@ -17276,7 +17296,20 @@ function homeActionAttributes(item) {
 }
 
 function homeLockBadge(item) {
-  return item?.locked ? contentLockBadgeMarkup() : "";
+  return homeItemIsLocked(item) ? contentLockBadgeMarkup() : "";
+}
+
+function homeContentAccessLevel(content, id) {
+  const access = content?.contentAccess?.[id];
+  return normalizedAccessLevel(access?.level || access || "free");
+}
+
+function homeItemIsLocked(item, content = readHomeContent()) {
+  if (!item || item.targetType === "none" || item.placeholder) return false;
+  const target = item.contentId || item.target || "";
+  if (!target) return false;
+  if (item.locked && !content?.contentAccess?.[target]) return true;
+  return homeContentAccessLevel(content, target) !== "free";
 }
 
 function renderArtworkHome() {
@@ -17314,10 +17347,10 @@ function renderArtworkHome() {
         </div>
         <div class="weekly-media-shelf artwork-card-shelf" aria-label="${esc(shelf.title || "Featured")}">
           ${(shelf.items || []).map((item) => `
-            <button class="weekly-media-card artwork-home-card artwork-card-${esc(shelf.cardSize || "wide")}${item.locked ? " is-content-locked" : ""}" type="button" ${homeActionAttributes(item)} aria-label="${esc(item.alt || item.id || "Open item")}">
+            <button class="weekly-media-card artwork-home-card artwork-card-${esc(shelf.cardSize || "wide")}${homeItemIsLocked(item, content) ? " is-content-locked" : ""}" type="button" ${homeActionAttributes(item)} aria-label="${esc(item.alt || item.id || "Open item")}">
               <span class="home-card-art">
                 ${item.artwork ? `<img src="${esc(item.artwork)}" alt="${esc(item.alt || "")}" loading="lazy" />` : ""}
-                ${homeLockBadge(item)}
+                ${homeItemIsLocked(item, content) ? contentLockBadgeMarkup() : ""}
               </span>
             </button>
           `).join("")}
@@ -18396,7 +18429,9 @@ function userHasFullLibraryAccess() {
 }
 
 function resourceAccessLevel(resource) {
-  const configured = normalizedAccessLevel(resource?.access?.level || resource?.accessLevel);
+  const homeContent = readHomeContent();
+  const homeAccess = homeContent?.contentAccess?.[resource?.id];
+  const configured = normalizedAccessLevel(homeAccess?.level || homeAccess || resource?.access?.level || resource?.accessLevel);
   if (configured === "free") return "free";
   if (resource?.showInJourney && resource?.access?.lockJourney !== true) return "free";
   return configured;

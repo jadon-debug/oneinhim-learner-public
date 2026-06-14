@@ -527,6 +527,26 @@
       object-fit: cover;
     }
 
+    .card-preview.locked img {
+      filter: brightness(.74);
+    }
+
+    .card-lock {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.68);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
     .card-preview-placeholder {
       align-items: center;
       color: var(--muted);
@@ -779,7 +799,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_learner_app.html?v=147">Open app</a>
+        <a class="btn" href="oneinhim_learner_app.html?v=148">Open app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -795,7 +815,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_learner_app.html?v=147">Preview app</a>
+        <a class="btn" href="oneinhim_learner_app.html?v=148">Preview app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Content prep</a>
@@ -892,7 +912,15 @@
                 <div class="field"><label for="shelfCardArtwork">Selected card artwork</label><input id="shelfCardArtwork" placeholder="assets/my-cover.jpg" /></div>
                 <p class="field-help">Put artwork files in the assets folder, then use a path like assets/my-cover.jpg.</p>
                 <div class="field"><label for="shelfCardAlt">Selected card description</label><input id="shelfCardAlt" /></div>
-                <label class="check-row"><input id="shelfCardLocked" type="checkbox" /> Show lock badge</label>
+                <div class="field">
+                  <label for="shelfCardAccess">Selected content access</label>
+                  <select id="shelfCardAccess">
+                    <option value="free">Free / unlocked</option>
+                    <option value="seed_unlock">Unlock with Seeds</option>
+                    <option value="partner_access">Partner / supporter only</option>
+                  </select>
+                </div>
+                <p class="field-help">This changes the linked content everywhere it appears, on mobile and desktop.</p>
               </div>
             </aside>
           </div>
@@ -905,7 +933,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_learner_app.html?v=147#journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_learner_app.html?v=148#journey">Preview Journey</a>
               <a class="btn green" href="oneinhim_content_workshop.html?legacy=1">Edit lesson content</a>
             </div>
           </div>
@@ -941,7 +969,7 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_learner_app.html?v=147#journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_learner_app.html?v=148#journey">Preview Journey</a>
                 <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Open legacy prep</a>
               </div>
             </aside>
@@ -952,7 +980,7 @@
           <div class="section-head">
             <div>
               <h2>Content Links</h2>
-              <p>These are the current link targets used by hero slides and shelf cards. The next step is connecting this list to Supabase content records.</p>
+              <p>These are the current link targets used by hero slides, shelves, and Journey nodes. Access settings apply everywhere the content appears.</p>
             </div>
             <div class="btn-row">
               <button class="btn" id="exportButton" type="button">Export JSON</button>
@@ -1016,6 +1044,10 @@
           cta: "Open Journey"
         }
       ],
+      contentAccess: {
+        mux_out_of_shadows_documentary: { level: "partner_access" },
+        aud_death_ivan_ilyich_classics: { level: "partner_access" }
+      },
       shelves: [
         {
           id: "start_this_week",
@@ -1025,7 +1057,7 @@
           items: [
             { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
             { id: "darkness_sonship", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
-            { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+            { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows" },
             { id: "oneevent_duane", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
           ]
         },
@@ -1036,7 +1068,7 @@
           cardSize: "square",
           items: [
             { id: "darkness_sonship_audio", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
-            { id: "ivan_ilyich", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+            { id: "ivan_ilyich", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich" }
           ]
         },
         {
@@ -1046,7 +1078,7 @@
           cardSize: "poster",
           items: [
             { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
-            { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+            { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows" },
             { id: "oneevent_watch", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
           ]
         },
@@ -1056,7 +1088,7 @@
           mode: "discover listen",
           cardSize: "square",
           items: [
-            { id: "death_ivan_classics", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+            { id: "death_ivan_classics", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich" }
           ]
         }
       ]
@@ -1130,17 +1162,17 @@
     };
 
     const CONTENT = [
-      { id: "mux_one_basics_1_1_full_video", title: "One Basics 1.1: Eternal Life", type: "Video", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Full One Basics episode." },
-      { id: "mux_out_of_shadows_documentary", title: "Out of the Shadows", type: "Documentary", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", summary: "Brenda's story of hope and healing." },
-      { id: "aud_darkness_sonship_004", title: "From Darkness to Sonship", type: "Audio", artwork: "assets/one-gospel-podcast-cover.png", summary: "One Gospel podcast episode." },
-      { id: "mux_oneevent_ps_duane_friday", title: "Ps Duane: Friday Session", type: "Event", artwork: "assets/oneevent-ps-duane-friday-cover.png", summary: "ONEEVENT Friday teaching." },
-      { id: "aud_death_ivan_ilyich_classics", title: "The Death of Ivan Ilyich", type: "Audiobook", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", summary: "Classics audiobook placeholder." },
-      { id: "pkg_one_basics_1_1_eternal_life", title: "One Basics 1.1: Eternal Life", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson." },
-      { id: "pkg_one_basics_1_2_saved_by_grace", title: "One Basics 1.2: Saved by Grace", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson." },
-      { id: "pkg_one_basics_1_3_righteousness_by_grace", title: "One Basics 1.3: Righteousness by Grace", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson." },
-      { id: "pkg_why_jesus_came_near_discover", title: "Why Jesus Came Near", type: "Journey Start", artwork: "", summary: "Explore Jesus starter content." },
-      { id: "pkg_hard_questions_when_life_feels_heavy", title: "Hard Questions: When Life Feels Heavy", type: "Journey Read", artwork: "", summary: "Grow Deep Roots lesson." },
-      { id: "stageDetailView", title: "Journey", type: "Journey", artwork: "assets/oneinhim-characters-international.png", summary: "Guided discipleship path." }
+      { id: "mux_one_basics_1_1_full_video", title: "One Basics 1.1: Eternal Life", type: "Video", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Full One Basics episode.", accessLevel: "free" },
+      { id: "mux_out_of_shadows_documentary", title: "Out of the Shadows", type: "Documentary", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", summary: "Brenda's story of hope and healing.", accessLevel: "partner_access" },
+      { id: "aud_darkness_sonship_004", title: "From Darkness to Sonship", type: "Audio", artwork: "assets/one-gospel-podcast-cover.png", summary: "One Gospel podcast episode.", accessLevel: "free" },
+      { id: "mux_oneevent_ps_duane_friday", title: "Ps Duane: Friday Session", type: "Event", artwork: "assets/oneevent-ps-duane-friday-cover.png", summary: "ONEEVENT Friday teaching.", accessLevel: "free" },
+      { id: "aud_death_ivan_ilyich_classics", title: "The Death of Ivan Ilyich", type: "Audiobook", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", summary: "Classics audiobook placeholder.", accessLevel: "partner_access" },
+      { id: "pkg_one_basics_1_1_eternal_life", title: "One Basics 1.1: Eternal Life", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson.", accessLevel: "free" },
+      { id: "pkg_one_basics_1_2_saved_by_grace", title: "One Basics 1.2: Saved by Grace", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson.", accessLevel: "free" },
+      { id: "pkg_one_basics_1_3_righteousness_by_grace", title: "One Basics 1.3: Righteousness by Grace", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson.", accessLevel: "free" },
+      { id: "pkg_why_jesus_came_near_discover", title: "Why Jesus Came Near", type: "Journey Start", artwork: "", summary: "Explore Jesus starter content.", accessLevel: "free" },
+      { id: "pkg_hard_questions_when_life_feels_heavy", title: "Hard Questions: When Life Feels Heavy", type: "Journey Read", artwork: "", summary: "Grow Deep Roots lesson.", accessLevel: "free" },
+      { id: "stageDetailView", title: "Journey", type: "Journey", artwork: "assets/oneinhim-characters-international.png", summary: "Guided discipleship path.", accessLevel: "free" }
     ];
 
     const state = {
@@ -1164,13 +1196,45 @@
     function readLayout() {
       try {
         const raw = localStorage.getItem(HOME_KEY);
-        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_HOME));
+        if (!raw) return normalizeLayout(JSON.parse(JSON.stringify(DEFAULT_HOME)));
         const parsed = JSON.parse(raw);
-        if (!Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) return JSON.parse(JSON.stringify(DEFAULT_HOME));
-        return parsed;
+        if (!Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) return normalizeLayout(JSON.parse(JSON.stringify(DEFAULT_HOME)));
+        return normalizeLayout(parsed);
       } catch {
-        return JSON.parse(JSON.stringify(DEFAULT_HOME));
+        return normalizeLayout(JSON.parse(JSON.stringify(DEFAULT_HOME)));
       }
+    }
+
+    function normalizedAccessLevel(value) {
+      return ["free", "seed_unlock", "partner_access"].includes(value) ? value : "free";
+    }
+
+    function defaultContentAccessMap() {
+      return CONTENT.reduce((map, item) => {
+        map[item.id] = { level: normalizedAccessLevel(item.accessLevel) };
+        return map;
+      }, {});
+    }
+
+    function normalizeLayout(layout) {
+      const next = {
+        ...layout,
+        heroSlides: Array.isArray(layout.heroSlides) ? layout.heroSlides : [],
+        shelves: Array.isArray(layout.shelves) ? layout.shelves : [],
+        contentAccess: {
+          ...defaultContentAccessMap(),
+          ...(layout.contentAccess || {})
+        }
+      };
+      next.shelves.forEach((shelf) => {
+        (shelf.items || []).forEach((item) => {
+          const target = item.contentId || item.target || "";
+          if (target && item.locked && !layout.contentAccess?.[target]) {
+            next.contentAccess[target] = { level: "partner_access" };
+          }
+        });
+      });
+      return next;
     }
 
     function readJourney() {
@@ -1186,6 +1250,7 @@
     }
 
     function saveLayout() {
+      state.layout = normalizeLayout(state.layout);
       localStorage.setItem(HOME_KEY, JSON.stringify(state.layout, null, 2));
       toast("Saved. Preview the app to see it.");
     }
@@ -1225,6 +1290,50 @@
 
     function selectedContent(id) {
       return CONTENT.find((item) => item.id === id) || CONTENT[0];
+    }
+
+    function contentAccess(id) {
+      const target = String(id || "").trim();
+      if (!target) return { level: "free" };
+      state.layout.contentAccess = state.layout.contentAccess || defaultContentAccessMap();
+      state.layout.contentAccess[target] = state.layout.contentAccess[target] || { level: normalizedAccessLevel(selectedContent(target)?.accessLevel) };
+      state.layout.contentAccess[target].level = normalizedAccessLevel(state.layout.contentAccess[target].level);
+      return state.layout.contentAccess[target];
+    }
+
+    function setContentAccess(id, level) {
+      const target = String(id || "").trim();
+      if (!target) return;
+      const access = contentAccess(target);
+      access.level = normalizedAccessLevel(level);
+    }
+
+    function contentAccessLabel(level) {
+      return {
+        free: "Free",
+        seed_unlock: "Seeds",
+        partner_access: "Partner"
+      }[normalizedAccessLevel(level)] || "Free";
+    }
+
+    function contentAccessOptions(current) {
+      const level = normalizedAccessLevel(current);
+      return [
+        ["free", "Free / unlocked"],
+        ["seed_unlock", "Unlock with Seeds"],
+        ["partner_access", "Partner / supporter only"]
+      ].map(([value, label]) => `<option value="${value}"${value === level ? " selected" : ""}>${label}</option>`).join("");
+    }
+
+    function shelfItemContentId(item) {
+      if (!item || item.targetType === "none" || item.placeholder) return "";
+      return item.contentId || item.target || "";
+    }
+
+    function shelfItemIsLocked(item) {
+      const id = shelfItemContentId(item);
+      if (!id) return false;
+      return contentAccess(id).level !== "free";
     }
 
     function shelfItemLabel(item) {
@@ -1336,9 +1445,11 @@
         const linkedId = item.contentId || item.target || "";
         const linkedContent = linkedId ? selectedContent(linkedId) : null;
         const artwork = item.artwork || linkedContent?.artwork || "";
+        const locked = shelfItemIsLocked(item);
         return `
-        <div class="card-preview ${esc(shelf.cardSize || "wide")}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(shelfItemLabel(item))} artwork">
+        <div class="card-preview ${esc(shelf.cardSize || "wide")}${locked ? " locked" : ""}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(shelfItemLabel(item))} artwork">
           ${artwork ? `<img src="${esc(artwork)}" alt="${esc(item.alt || "")}" />` : `<div class="card-preview-placeholder">Add artwork path</div>`}
+          ${locked ? `<span class="card-lock" aria-label="Locked content">Locked</span>` : ""}
           <button class="card-remove" type="button" data-remove-shelf-item="${index}" aria-label="Remove ${esc(shelfItemLabel(item))}">Remove</button>
         </div>
       `;
@@ -1354,8 +1465,9 @@
       document.getElementById("shelfCardAlt").value = shelfItem?.alt || "";
       document.getElementById("shelfCardAlt").disabled = !shelfItem;
       document.getElementById("shelfCardContent").disabled = !shelfItem;
-      document.getElementById("shelfCardLocked").checked = Boolean(shelfItem?.locked);
-      document.getElementById("shelfCardLocked").disabled = !shelfItem;
+      const shelfContentId = shelfItemContentId(shelfItem);
+      document.getElementById("shelfCardAccess").innerHTML = contentAccessOptions(contentAccess(shelfContentId).level);
+      document.getElementById("shelfCardAccess").disabled = !shelfContentId;
     }
 
     function renderContent() {
@@ -1365,6 +1477,13 @@
           <h3>${esc(item.title)}</h3>
           <p>${esc(item.id)}</p>
           <p>${esc(item.summary)}</p>
+          <div class="field">
+            <label for="access_${esc(item.id)}">Access</label>
+            <select id="access_${esc(item.id)}" data-content-access="${esc(item.id)}">
+              ${contentAccessOptions(contentAccess(item.id).level)}
+            </select>
+          </div>
+          <p class="field-help">${esc(contentAccessLabel(contentAccess(item.id).level))} across mobile, desktop, heroes, shelves, and Library.</p>
         </article>
       `).join("");
     }
@@ -1536,7 +1655,18 @@
       document.getElementById("shelfCardContent").addEventListener("change", (event) => updateShelfItemField("content", event.target.value));
       document.getElementById("shelfCardArtwork").addEventListener("input", (event) => updateShelfItemField("artwork", event.target.value));
       document.getElementById("shelfCardAlt").addEventListener("input", (event) => updateShelfItemField("alt", event.target.value));
-      document.getElementById("shelfCardLocked").addEventListener("change", (event) => updateShelfItemField("locked", event.target.checked));
+      document.getElementById("shelfCardAccess").addEventListener("change", (event) => {
+        setContentAccess(shelfItemContentId(currentShelfItem()), event.target.value);
+        renderShelves();
+        renderContent();
+      });
+      document.getElementById("contentGrid").addEventListener("change", (event) => {
+        const select = event.target.closest("[data-content-access]");
+        if (!select) return;
+        setContentAccess(select.dataset.contentAccess, select.value);
+        renderShelves();
+        renderContent();
+      });
       document.getElementById("journeySection").addEventListener("change", (event) => {
         state.journeySectionIndex = Number(event.target.value);
         state.journeyUnitIndex = 0;

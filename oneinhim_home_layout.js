@@ -45,6 +45,14 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "cta": "Open Journey"
     }
   ],
+  "contentAccess": {
+    "mux_out_of_shadows_documentary": {
+      "level": "partner_access"
+    },
+    "aud_death_ivan_ilyich_classics": {
+      "level": "partner_access"
+    }
+  },
   "shelves": [
     {
       "id": "start_this_week",
@@ -72,8 +80,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "artwork": "assets/outoftheshadows_documentary-coverart_16x9.webp",
           "targetType": "discover",
           "target": "mux_out_of_shadows_documentary",
-          "alt": "Out of the Shadows",
-          "locked": true
+          "alt": "Out of the Shadows"
         }
       ]
     },
@@ -95,8 +102,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "artwork": "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg",
           "targetType": "discover",
           "target": "aud_death_ivan_ilyich_classics",
-          "alt": "The Death of Ivan Ilyich",
-          "locked": true
+          "alt": "The Death of Ivan Ilyich"
         }
       ]
     },
@@ -156,8 +162,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "artwork": "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg",
           "targetType": "discover",
           "target": "aud_death_ivan_ilyich_classics",
-          "alt": "The Death of Ivan Ilyich",
-          "locked": true
+          "alt": "The Death of Ivan Ilyich"
         }
       ]
     },
