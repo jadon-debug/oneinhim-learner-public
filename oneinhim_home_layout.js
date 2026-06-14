@@ -121,7 +121,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "contentId": "",
           "alt": "Coming soon",
           "placeholder": true,
-          "locked": false
+          "locked": true
         },
         {
           "id": "artwork_only_1781435680260",
@@ -131,7 +131,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "contentId": "",
           "alt": "Coming soon",
           "placeholder": true,
-          "locked": false
+          "locked": true
         },
         {
           "id": "artwork_only_1781437780877",
@@ -141,7 +141,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "contentId": "",
           "alt": "Coming soon",
           "placeholder": true,
-          "locked": false
+          "locked": true
         }
       ]
     },

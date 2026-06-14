@@ -15655,8 +15655,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=148"></script>
-<script src="./oneinhim_journey_layout.js?v=148"></script>
+<script src="./oneinhim_home_layout.js?v=149"></script>
+<script src="./oneinhim_journey_layout.js?v=149"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17091,7 +17091,8 @@ function esc(value) {
 }
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
-const APP_RELEASE_VERSION = "148";
+const HOME_CONTENT_DRAFT_PARAM = "draft";
+const APP_RELEASE_VERSION = "149";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -17260,25 +17261,24 @@ function normalizeHomeContent(layout) {
 
 function readHomeContent() {
   const published = window.ONEINHIM_PUBLISHED_HOME_CONTENT;
+  const publishedLayout = published && Array.isArray(published.heroSlides) && Array.isArray(published.shelves)
+    ? normalizeHomeContent(published)
+    : normalizeHomeContent(DEFAULT_HOME_CONTENT);
+  const useDraft = new URLSearchParams(window.location.search).get(HOME_CONTENT_DRAFT_PARAM) === "1";
+  if (!useDraft) return publishedLayout;
   try {
     const raw = window.localStorage.getItem(HOME_CONTENT_STORAGE_KEY);
     if (!raw) {
-      return published && Array.isArray(published.heroSlides) && Array.isArray(published.shelves)
-        ? normalizeHomeContent(published)
-        : DEFAULT_HOME_CONTENT;
+      return publishedLayout;
     }
     const parsed = JSON.parse(raw);
     if (!parsed || !Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) {
-      return published && Array.isArray(published.heroSlides) && Array.isArray(published.shelves)
-        ? normalizeHomeContent(published)
-        : DEFAULT_HOME_CONTENT;
+      return publishedLayout;
     }
     return normalizeHomeContent(parsed);
   } catch (error) {
     console.warn("Home content override could not be read.", error);
-    return published && Array.isArray(published.heroSlides) && Array.isArray(published.shelves)
-      ? normalizeHomeContent(published)
-      : DEFAULT_HOME_CONTENT;
+    return publishedLayout;
   }
 }
 
@@ -17305,9 +17305,10 @@ function homeContentAccessLevel(content, id) {
 }
 
 function homeItemIsLocked(item, content = readHomeContent()) {
-  if (!item || item.targetType === "none" || item.placeholder) return false;
+  if (!item) return false;
+  if (item.targetType === "none" || item.placeholder) return true;
   const target = item.contentId || item.target || "";
-  if (!target) return false;
+  if (!target) return true;
   if (item.locked && !content?.contentAccess?.[target]) return true;
   return homeContentAccessLevel(content, target) !== "free";
 }
