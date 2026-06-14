@@ -164,7 +164,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     {
       "id": "shelf_1781379195538",
       "title": "Documentaries",
-      "mode": "discover",
+      "mode": "discover watch",
       "cardSize": "poster",
       "items": [
         {

@@ -4156,7 +4156,9 @@ body.documentary-hero-active .gateway-hero-dot.active::before {
 }
 
 body.gateway-filter-watch [data-home-mode]:not([data-home-mode~="watch"]),
-body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) {
+body.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]),
+body.gateway-filter-listen [data-home-mode]:not([data-home-mode~="listen"]),
+body.gateway-filter-listen [data-content-kind]:not([data-content-kind~="audio"]) {
   display: none !important;
 }
 
@@ -11748,8 +11750,14 @@ body.gateway-mode.gateway-nav-scrolled .lang-btn.active {
 }
 
 body.gateway-mode.gateway-filter-watch [data-home-mode]:not([data-home-mode~="watch"]),
-body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]) {
+body.gateway-mode.gateway-filter-watch [data-content-kind]:not([data-content-kind~="video"]),
+body.gateway-mode.gateway-filter-listen [data-home-mode]:not([data-home-mode~="listen"]),
+body.gateway-mode.gateway-filter-listen [data-content-kind]:not([data-content-kind~="audio"]) {
   display: none !important;
+}
+
+body.gateway-mode.gateway-filter-listen .gateway-landing.home-hero {
+  display: none;
 }
 
 /* Keep non-hero mobile screens below the phone status area. */
@@ -15655,8 +15663,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=149"></script>
-<script src="./oneinhim_journey_layout.js?v=149"></script>
+<script src="./oneinhim_home_layout.js?v=150"></script>
+<script src="./oneinhim_journey_layout.js?v=150"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17092,7 +17100,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "149";
+const APP_RELEASE_VERSION = "150";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -17313,8 +17321,53 @@ function homeItemIsLocked(item, content = readHomeContent()) {
   return homeContentAccessLevel(content, target) !== "free";
 }
 
+function normalizeGatewayContentMode(mode) {
+  return mode === "watch" || mode === "listen" ? mode : "discover";
+}
+
+function homeModeTokens(value) {
+  return new Set(String(value || "discover").toLowerCase().split(/\s+/).filter(Boolean));
+}
+
+function homeResourceForItem(item) {
+  const target = resolveContentTargetId(item?.contentId || item?.target || "");
+  return resources.find((resource) => resource.id === target) || null;
+}
+
+function homeResourceMediaKind(resource, fallbackId = "") {
+  const id = String(resource?.id || fallbackId || "").toLowerCase();
+  const values = [
+    resource?.primaryMedium,
+    resource?.visualType,
+    resource?.contentType,
+    ...(Array.isArray(resource?.format) ? resource.format : [])
+  ].map((value) => String(value || "").toLowerCase());
+  if (id.startsWith("aud_") || values.some((value) => ["listen", "audio", "audiobook", "podcast"].includes(value))) return "audio";
+  if (id.startsWith("mux_") || id.startsWith("vid_") || values.some((value) => ["watch", "video", "full_video", "short_clip", "documentary", "event_teaching"].includes(value))) return "video";
+  return "other";
+}
+
+function homeItemMediaKind(item) {
+  const target = item?.contentId || item?.target || "";
+  return homeResourceMediaKind(homeResourceForItem(item), target);
+}
+
+function homeItemMatchesGatewayMode(item, shelf, mode = state.gatewayContentMode) {
+  const currentMode = normalizeGatewayContentMode(mode);
+  if (currentMode === "discover") return true;
+  const itemModes = homeModeTokens(item?.mode || "");
+  const shelfModes = homeModeTokens(shelf?.mode || "");
+  if (itemModes.has(currentMode) || shelfModes.has(currentMode)) return true;
+  if (item?.targetType === "none" || item?.placeholder || !(item?.target || item?.contentId)) return false;
+  const mediaKind = homeItemMediaKind(item);
+  if (currentMode === "watch") return mediaKind === "video";
+  if (currentMode === "listen") return mediaKind === "audio";
+  return true;
+}
+
 function renderArtworkHome() {
   const content = readHomeContent();
+  const currentMode = normalizeGatewayContentMode(state.gatewayContentMode);
   const heroRoot = document.querySelector(".gateway-landing.home-hero");
   const shelvesRoot = document.querySelector(".gateway-discover");
   if (heroRoot && Array.isArray(content.heroSlides)) {
@@ -17341,23 +17394,33 @@ function renderArtworkHome() {
     `;
   }
   if (shelvesRoot && Array.isArray(content.shelves)) {
-    shelvesRoot.innerHTML = content.shelves.map((shelf) => `
-      <section class="discovery-band dark artwork-home-shelf" data-home-mode="${esc(shelf.mode || "discover")}">
+    shelvesRoot.innerHTML = content.shelves.map((shelf) => ({
+      shelf,
+      items: (shelf.items || []).filter((item) => homeItemMatchesGatewayMode(item, shelf, currentMode))
+    })).filter(({ items }) => currentMode === "discover" || items.length).map(({ shelf, items }) => {
+      const shelfMode = currentMode === "discover" ? (shelf.mode || "discover") : `${shelf.mode || "discover"} ${currentMode}`;
+      return `
+      <section class="discovery-band dark artwork-home-shelf" data-home-mode="${esc(shelfMode)}">
         <div class="discovery-section-head">
           <h2>${esc(shelf.title || "Featured")}</h2>
         </div>
         <div class="weekly-media-shelf artwork-card-shelf" aria-label="${esc(shelf.title || "Featured")}">
-          ${(shelf.items || []).map((item) => `
-            <button class="weekly-media-card artwork-home-card artwork-card-${esc(shelf.cardSize || "wide")}${homeItemIsLocked(item, content) ? " is-content-locked" : ""}" type="button" ${homeActionAttributes(item)} aria-label="${esc(item.alt || item.id || "Open item")}">
+          ${items.map((item) => {
+            const mediaKind = homeItemMediaKind(item);
+            const contentKind = mediaKind === "other" && currentMode === "watch" ? "video" : (mediaKind === "other" && currentMode === "listen" ? "audio" : mediaKind);
+            return `
+            <button class="weekly-media-card artwork-home-card artwork-card-${esc(shelf.cardSize || "wide")}${homeItemIsLocked(item, content) ? " is-content-locked" : ""}" type="button" data-content-kind="${esc(contentKind)}" ${homeActionAttributes(item)} aria-label="${esc(item.alt || item.id || "Open item")}">
               <span class="home-card-art">
                 ${item.artwork ? `<img src="${esc(item.artwork)}" alt="${esc(item.alt || "")}" loading="lazy" />` : ""}
                 ${homeItemIsLocked(item, content) ? contentLockBadgeMarkup() : ""}
               </span>
             </button>
-          `).join("")}
+          `;
+          }).join("")}
         </div>
       </section>
-    `).join("");
+    `;
+    }).join("");
   }
 }
 
@@ -17436,9 +17499,10 @@ function parseStageGroupTarget(value) {
 
 function gatewayHeroSlideAllowed(slide) {
   if (!slide) return false;
-  const mode = state.gatewayContentMode || "discover";
+  const mode = normalizeGatewayContentMode(state.gatewayContentMode);
   const modes = String(slide.dataset.heroMode || "discover").split(/\s+/).filter(Boolean);
   if (mode === "watch") return modes.includes("watch");
+  if (mode === "listen") return modes.includes("listen");
   return modes.includes("discover");
 }
 
@@ -17643,16 +17707,21 @@ function wireGatewayHeroSwipe() {
 	  if (viewId === "feedView") return "feed";
 	  if (viewId === "accountView") return "account";
 	  if (viewId === "libraryView") return "library";
-	  if (viewId === "gatewayView") return state.gatewayContentMode === "watch" ? "watch" : "discover";
+	  if (viewId === "gatewayView") return normalizeGatewayContentMode(state.gatewayContentMode);
 	  if (viewId === "discoveryDetailView") return "discover";
 	  return "";
 	}
 
 function setGatewayContentMode(mode = "discover") {
-  const nextMode = mode === "watch" ? "watch" : "discover";
+  const nextMode = normalizeGatewayContentMode(mode);
   state.gatewayContentMode = nextMode;
   document.body.classList.toggle("gateway-filter-watch", nextMode === "watch");
+  document.body.classList.toggle("gateway-filter-listen", nextMode === "listen");
+  renderArtworkHome();
   setGatewayHero(state.gatewayHeroIndex, { restartAutoplay: false });
+  bindDynamicActions();
+  enhanceDesktopShelves();
+  updateAllShelfArrowStates();
   scheduleGatewayHeroAutoplay();
 }
 
@@ -17805,6 +17874,17 @@ async function handleAdminLogout() {
     }
     window.requestAnimationFrame(() => {
       document.querySelector(".gateway-landing")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return;
+  }
+  if (target === "listen") {
+    setGatewayNavActive(target);
+    setGatewayContentMode("listen");
+    if (state.activeView !== "gatewayView") {
+      setView("gatewayView");
+    }
+    window.requestAnimationFrame(() => {
+      document.querySelector(".gateway-discover")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     return;
   }
