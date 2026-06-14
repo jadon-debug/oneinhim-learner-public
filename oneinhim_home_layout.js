@@ -40,7 +40,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "contentId": "book_one_basics_1_1_eternal_life",
       "alt": "One In Him discipleship journey",
       "eyebrow": "Guided path",
-      "title": "Continue your journey",
+      "title": "Start your discipleship journey",
       "description": "Take the next clear step through short teachings, prayer, Scripture, and guided milestones.",
       "cta": "Open Journey"
     }
