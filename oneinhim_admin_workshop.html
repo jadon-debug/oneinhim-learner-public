@@ -486,6 +486,71 @@
       border-color: var(--line);
     }
 
+    .artwork-actions {
+      display: grid;
+      gap: 10px;
+    }
+
+    .artwork-action-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .artwork-status {
+      min-height: 18px;
+      margin: -4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1.3;
+    }
+
+    .artwork-status.ok { color: #78d6a8; }
+    .artwork-status.warn { color: #ffc46d; }
+
+    .asset-picker {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .asset-option {
+      min-width: 0;
+      display: grid;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 7px;
+      background: #0f1111;
+      color: #fff;
+      text-align: left;
+    }
+
+    .asset-option.active {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(238,115,38,.14);
+    }
+
+    .asset-option img {
+      width: 100%;
+      aspect-ratio: 1;
+      display: block;
+      border-radius: 7px;
+      object-fit: cover;
+      background: #050606;
+    }
+
+    .asset-option span {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .shelf-layout {
       display: grid;
       grid-template-columns: 280px minmax(0, 1fr) 340px;
@@ -841,7 +906,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_learner_app.html?v=152">Open published app</a>
+        <a class="btn" href="oneinhim_learner_app.html?v=153">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -857,7 +922,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_learner_app.html?v=152&draft=1">Preview draft</a>
+        <a class="btn" href="oneinhim_learner_app.html?v=153&draft=1">Preview draft</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Content prep</a>
@@ -900,8 +965,20 @@
               <div class="panel-head"><h3>Slide settings</h3></div>
               <div class="form">
                 <div class="field"><label for="heroContent">Linked content</label><select id="heroContent"></select></div>
-                <div class="field"><label for="heroMobile">Mobile artwork</label><input id="heroMobile" /></div>
-                <div class="field"><label for="heroDesktop">Desktop artwork</label><input id="heroDesktop" /></div>
+                <div class="artwork-actions">
+                  <div class="artwork-action-row">
+                    <div class="field"><label for="heroMobile">Mobile artwork</label><input id="heroMobile" /></div>
+                    <button class="btn" id="focusHeroMobileArtwork" type="button">Replace</button>
+                  </div>
+                  <p class="artwork-status" id="heroMobileStatus"></p>
+                  <div class="artwork-action-row">
+                    <div class="field"><label for="heroDesktop">Desktop artwork</label><input id="heroDesktop" /></div>
+                    <button class="btn" id="focusHeroDesktopArtwork" type="button">Replace</button>
+                  </div>
+                  <p class="artwork-status" id="heroDesktopStatus"></p>
+                  <p class="field-help">Hero templates: mobile 1200 x 1800 px, desktop 1920 x 1080 px. The hero frame owns the crop, text, CTA, shadows, and dots.</p>
+                  <div class="asset-picker" id="heroAssetPicker"></div>
+                </div>
                 <div class="field"><label for="heroEyebrow">Eyebrow</label><input id="heroEyebrow" /></div>
                 <div class="field"><label for="heroTitle">Title</label><input id="heroTitle" /></div>
                 <div class="field"><label for="heroDescription">Description</label><textarea id="heroDescription"></textarea></div>
@@ -952,8 +1029,13 @@
                 <hr class="form-divider" />
                 <div class="selected-card-summary" id="selectedCardSummary"></div>
                 <div class="field"><label for="shelfCardContent">Selected card link</label><select id="shelfCardContent"></select></div>
-                <div class="field"><label for="shelfCardArtwork">Selected card artwork</label><input id="shelfCardArtwork" placeholder="assets/my-cover.jpg" /></div>
+                <div class="artwork-action-row">
+                  <div class="field"><label for="shelfCardArtwork">Selected card artwork</label><input id="shelfCardArtwork" placeholder="assets/my-cover.jpg" /></div>
+                  <button class="btn" id="focusShelfArtwork" type="button">Replace</button>
+                </div>
+                <p class="artwork-status" id="shelfCardArtworkStatus"></p>
                 <p class="field-help" id="shelfCardArtworkHelp">Put artwork files in the assets folder, then use a path like assets/my-cover.jpg.</p>
+                <div class="asset-picker" id="shelfAssetPicker"></div>
                 <div class="field"><label for="shelfCardAlt">Selected card description</label><input id="shelfCardAlt" /></div>
                 <label class="check-row"><input id="shelfCardLocked" type="checkbox" /> Lock selected card</label>
                 <div class="field">
@@ -977,7 +1059,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_learner_app.html?v=152#journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_learner_app.html?v=153#journey">Preview Journey</a>
               <a class="btn green" href="oneinhim_content_workshop.html?legacy=1">Edit lesson content</a>
             </div>
           </div>
@@ -1013,7 +1095,7 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_learner_app.html?v=152#journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_learner_app.html?v=153#journey">Preview Journey</a>
                 <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Open legacy prep</a>
               </div>
             </aside>
@@ -1238,6 +1320,23 @@
       { id: "stageDetailView", title: "Journey", type: "Journey", artwork: "assets/oneinhim-characters-international.png", summary: "Guided discipleship path.", accessLevel: "free" }
     ];
 
+    const ASSET_LIBRARY = [
+      { label: "One Basics hero", path: "assets/one-basics-1-1-eternal-life-desktop-hero-mobile.webp", use: "hero mobile" },
+      { label: "One Basics desktop", path: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg", use: "hero desktop" },
+      { label: "Journey mobile", path: "assets/journey_discipleship-hero_mobile.webp", use: "hero mobile" },
+      { label: "Journey desktop", path: "assets/Journey hero_desktop.webp", use: "hero desktop" },
+      { label: "Shadows hero", path: "assets/outoftheshadows_documentary_hero_mobile.webp", use: "hero mobile" },
+      { label: "Shadows wide", path: "assets/outoftheshadows_documentary-coverart_16x9.webp", use: "wide" },
+      { label: "Shadows poster", path: "assets/outoftheshadows_documentary-coverart.webp", use: "poster" },
+      { label: "One Basics cover", path: "assets/one-basics-1-1-eternal-life-course-cover.png", use: "wide" },
+      { label: "Podcast cover", path: "assets/one-gospel-podcast-cover.png", use: "square" },
+      { label: "Classics cover", path: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", use: "square" },
+      { label: "OE Duane", path: "assets/OE_May_PsDuaneS_friday.webp", use: "poster" },
+      { label: "OE Johan Fri", path: "assets/OE_May_JohanToet_friday.webp", use: "poster" },
+      { label: "OE Johan Sat", path: "assets/OE_May_JohanToet_saturday2.webp", use: "poster" },
+      { label: "OE Duane Sat", path: "assets/OE_May_Duanesheriff_saturday2.webp", use: "poster" }
+    ];
+
     const state = {
       view: "heroes",
       heroIndex: 0,
@@ -1419,6 +1518,55 @@
       return guides[size || "wide"] || guides.wide;
     }
 
+    function assetFileName(path) {
+      return String(path || "").split("/").pop() || "asset";
+    }
+
+    function assetPickerOptions(kind, currentPath = "", cardSize = "wide") {
+      const preferred = ASSET_LIBRARY.filter((asset) => {
+        if (kind === "hero") return asset.use.includes("hero");
+        return asset.use === cardSize || asset.use === "wide";
+      });
+      const options = preferred.length ? preferred : ASSET_LIBRARY;
+      return options.map((asset) => `
+        <button class="asset-option${asset.path === currentPath ? " active" : ""}" type="button" data-artwork-preset="${esc(asset.path)}" data-artwork-kind="${esc(kind)}" title="${esc(asset.path)}">
+          <img src="${esc(asset.path)}" alt="" loading="lazy" />
+          <span>${esc(asset.label)}</span>
+        </button>
+      `).join("");
+    }
+
+    function setArtworkStatus(elementId, path, label) {
+      const status = document.getElementById(elementId);
+      if (!status) return;
+      status.className = "artwork-status";
+      const value = String(path || "").trim();
+      if (!value) {
+        status.textContent = `${label} is empty.`;
+        status.classList.add("warn");
+        return;
+      }
+      status.textContent = `Checking ${assetFileName(value)}...`;
+      const image = new Image();
+      image.onload = () => {
+        status.textContent = `${label} found · ${image.naturalWidth} x ${image.naturalHeight} px`;
+        status.className = "artwork-status ok";
+      };
+      image.onerror = () => {
+        status.textContent = `${label} was not found. Check the assets path.`;
+        status.className = "artwork-status warn";
+      };
+      image.src = value;
+    }
+
+    function refreshArtworkStatus() {
+      const hero = currentHero();
+      const shelfItem = currentShelfItem();
+      setArtworkStatus("heroMobileStatus", hero?.mobileArtwork || hero?.artwork || "", "Mobile artwork");
+      setArtworkStatus("heroDesktopStatus", hero?.desktopArtwork || hero?.artwork || "", "Desktop artwork");
+      setArtworkStatus("shelfCardArtworkStatus", shelfItem?.artwork || "", "Selected card artwork");
+    }
+
     function selectedCardSummary(item, shelf) {
       if (!item) {
         return `
@@ -1508,11 +1656,13 @@
       document.getElementById("heroContent").innerHTML = contentOptions(hero.contentId || hero.target || "");
       document.getElementById("heroMobile").value = hero.mobileArtwork || "";
       document.getElementById("heroDesktop").value = hero.desktopArtwork || "";
+      document.getElementById("heroAssetPicker").innerHTML = assetPickerOptions("hero", hero.mobileArtwork || hero.desktopArtwork || hero.artwork || "");
       document.getElementById("heroEyebrow").value = hero.eyebrow || "";
       document.getElementById("heroTitle").value = hero.title || "";
       document.getElementById("heroDescription").value = hero.description || "";
       document.getElementById("heroCta").value = hero.cta || "";
       document.getElementById("heroTargetType").value = hero.targetType || "discover";
+      refreshArtworkStatus();
     }
 
     function renderShelves() {
@@ -1552,6 +1702,7 @@
         ? `Replace this card by entering an assets path. ${shelfSizeHelp(shelf.cardSize || "wide")}`
         : "Select a card first, then enter an assets path.";
       document.getElementById("shelfCardAlt").value = shelfItem?.alt || "";
+      document.getElementById("shelfAssetPicker").innerHTML = shelfItem ? assetPickerOptions("shelf", shelfItem.artwork || "", shelf.cardSize || "wide") : "";
       document.getElementById("shelfCardAlt").disabled = !shelfItem;
       document.getElementById("shelfCardContent").disabled = !shelfItem;
       document.getElementById("shelfCardLocked").checked = Boolean(shelfItem && shelfItemIsLocked(shelfItem));
@@ -1559,6 +1710,7 @@
       const shelfContentId = shelfItemContentId(shelfItem);
       document.getElementById("shelfCardAccess").innerHTML = contentAccessOptions(contentAccess(shelfContentId).level);
       document.getElementById("shelfCardAccess").disabled = !shelfContentId;
+      refreshArtworkStatus();
     }
 
     function renderContent() {
@@ -1698,6 +1850,29 @@
       renderContent();
     }
 
+    function applyArtworkPreset(kind, path) {
+      const asset = ASSET_LIBRARY.find((item) => item.path === path);
+      if (kind === "hero") {
+        const hero = currentHero();
+        if (!hero) return;
+        if (asset?.use.includes("desktop")) {
+          hero.desktopArtwork = path;
+          toast("Desktop hero artwork replaced.");
+        } else {
+          hero.mobileArtwork = path;
+          hero.artwork = path;
+          toast("Mobile hero artwork replaced.");
+        }
+        renderHeroes();
+        return;
+      }
+      const item = currentShelfItem();
+      if (!item) return;
+      item.artwork = path;
+      renderShelves();
+      toast("Shelf card artwork replaced.");
+    }
+
     function wire() {
       document.querySelectorAll(".side-nav button").forEach((button) => {
         button.addEventListener("click", () => {
@@ -1755,6 +1930,13 @@
       document.getElementById("heroContent").addEventListener("change", (event) => updateHeroField("content", event.target.value));
       document.getElementById("heroMobile").addEventListener("input", (event) => updateHeroField("mobileArtwork", event.target.value));
       document.getElementById("heroDesktop").addEventListener("input", (event) => updateHeroField("desktopArtwork", event.target.value));
+      document.getElementById("focusHeroMobileArtwork").addEventListener("click", () => document.getElementById("heroMobile").focus());
+      document.getElementById("focusHeroDesktopArtwork").addEventListener("click", () => document.getElementById("heroDesktop").focus());
+      document.getElementById("heroAssetPicker").addEventListener("click", (event) => {
+        const option = event.target.closest("[data-artwork-preset]");
+        if (!option) return;
+        applyArtworkPreset("hero", option.dataset.artworkPreset);
+      });
       document.getElementById("heroEyebrow").addEventListener("input", (event) => updateHeroField("eyebrow", event.target.value));
       document.getElementById("heroTitle").addEventListener("input", (event) => updateHeroField("title", event.target.value));
       document.getElementById("heroDescription").addEventListener("input", (event) => updateHeroField("description", event.target.value));
@@ -1765,6 +1947,12 @@
       document.getElementById("shelfSize").addEventListener("change", (event) => { currentShelf().cardSize = event.target.value; renderShelves(); });
       document.getElementById("shelfCardContent").addEventListener("change", (event) => updateShelfItemField("content", event.target.value));
       document.getElementById("shelfCardArtwork").addEventListener("input", (event) => updateShelfItemField("artwork", event.target.value));
+      document.getElementById("focusShelfArtwork").addEventListener("click", () => document.getElementById("shelfCardArtwork").focus());
+      document.getElementById("shelfAssetPicker").addEventListener("click", (event) => {
+        const option = event.target.closest("[data-artwork-preset]");
+        if (!option) return;
+        applyArtworkPreset("shelf", option.dataset.artworkPreset);
+      });
       document.getElementById("shelfCardAlt").addEventListener("input", (event) => updateShelfItemField("alt", event.target.value));
       document.getElementById("shelfCardLocked").addEventListener("change", (event) => setShelfItemLocked(event.target.checked));
       document.getElementById("shelfCardAccess").addEventListener("change", (event) => {
