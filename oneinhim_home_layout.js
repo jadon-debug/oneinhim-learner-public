@@ -32,12 +32,9 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     {
       "id": "journey_hero",
       "mode": "discover",
-      "mobileArtwork": "assets/Journey hero_desktop.webp",
-      "artwork": "assets/Journey hero_desktop.webp",
+      "mobileArtwork": "assets/journey_discipleship-hero_mobile.webp",
+      "artwork": "assets/journey_discipleship-hero_mobile.webp",
       "desktopArtwork": "assets/Journey hero_desktop.webp",
-      "mobileArtworkPosition": "center center",
-      "mobileArtworkScale": "1.35",
-      "mobileArtworkOrigin": "center 45%",
       "targetType": "journey",
       "target": "stageDetailView",
       "contentId": "book_one_basics_1_1_eternal_life",
@@ -124,7 +121,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "contentId": "",
           "alt": "Coming soon",
           "placeholder": true,
-          "locked": true
+          "locked": false
         },
         {
           "id": "artwork_only_1781435680260",
@@ -134,11 +131,21 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "contentId": "",
           "alt": "Coming soon",
           "placeholder": true,
-          "locked": true
+          "locked": false
         },
         {
           "id": "artwork_only_1781437780877",
           "artwork": "assets/OE_May_Duanesheriff_saturday2.webp",
+          "targetType": "none",
+          "target": "",
+          "contentId": "",
+          "alt": "Coming soon",
+          "placeholder": true,
+          "locked": false
+        },
+        {
+          "id": "artwork_only_1781460432612",
+          "artwork": "assets/OE_Johantoet_saturday1.webp",
           "targetType": "none",
           "target": "",
           "contentId": "",
@@ -167,7 +174,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     {
       "id": "shelf_1781379195538",
       "title": "Documentaries",
-      "mode": "discover watch",
+      "mode": "discover",
       "cardSize": "poster",
       "items": [
         {
