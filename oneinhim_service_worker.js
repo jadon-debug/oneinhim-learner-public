@@ -68,7 +68,9 @@ self.addEventListener("fetch", (event) => {
     url.pathname.endsWith("/oneinhim_admin_workshop.html") ||
     url.pathname.endsWith("oneinhim_admin_workshop.html") ||
     url.pathname.endsWith("/oneinhim_cache_reset.html") ||
-    url.pathname.endsWith("oneinhim_cache_reset.html");
+    url.pathname.endsWith("oneinhim_cache_reset.html") ||
+    url.pathname.endsWith("/oneinhim_cache_reset_v162.html") ||
+    url.pathname.endsWith("oneinhim_cache_reset_v162.html");
 
   if (isWorkshopDocument) {
     event.respondWith(fetch(request, { cache: "no-store" }));
