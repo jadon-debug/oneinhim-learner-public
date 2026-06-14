@@ -14773,6 +14773,7 @@ body.gateway-mode .home-hero .home-artwork-picture,
 body.gateway-mode .home-hero .home-artwork-image {
   display: block !important;
   height: 100% !important;
+  pointer-events: none !important;
   width: 100% !important;
 }
 
@@ -14874,12 +14875,17 @@ body.gateway-mode .home-hero::after {
 body.gateway-mode .home-hero .gateway-hero-controls {
   bottom: clamp(26px, 4.4svh, 54px) !important;
   left: 50% !important;
+  pointer-events: none !important;
   position: absolute !important;
   right: auto !important;
   top: auto !important;
   transform: translateX(-50%) !important;
   width: auto !important;
   z-index: 3 !important;
+}
+
+body.gateway-mode .home-hero .gateway-hero-controls [data-hero-dot] {
+  pointer-events: auto !important;
 }
 
 body.gateway-mode .gateway-discover {
@@ -15074,6 +15080,126 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   }
 }
 
+/* Canonical desktop Discover frame.
+   The home hero owns the full viewport width; the chrome and hero copy share
+   the same visible page frame so they do not feel like separate pages. */
+@media (min-width: 761px) {
+  body.gateway-mode {
+    background: #111111 !important;
+    overflow-x: hidden !important;
+  }
+
+  body.gateway-mode .gateway-header.app-top-chrome,
+  body.gateway-mode .app-top-chrome {
+    box-sizing: border-box !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 120 !important;
+    display: grid !important;
+    grid-template-columns: minmax(240px, 0.8fr) minmax(420px, 1fr) minmax(260px, 0.8fr) !important;
+    align-items: center !important;
+    gap: clamp(18px, 2.2vw, 44px) !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 82px !important;
+    min-height: 82px !important;
+    margin: 0 !important;
+    padding: 0 clamp(28px, 3.2vw, 72px) !important;
+    background: linear-gradient(180deg, rgba(9, 10, 10, 0.44), rgba(9, 10, 10, 0)) !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.gateway-mode.gateway-nav-scrolled .gateway-header.app-top-chrome,
+  body.gateway-mode.gateway-nav-scrolled .app-top-chrome {
+    background: rgba(12, 12, 12, 0.94) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  body.gateway-mode .app-top-chrome .gateway-logo,
+  body.gateway-mode .app-top-chrome .gateway-nav-btn,
+  body.gateway-mode .app-top-chrome .gateway-nav-btn:hover,
+  body.gateway-mode .app-top-chrome .gateway-nav-btn.active {
+    color: #ffffff !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.42) !important;
+  }
+
+  body.gateway-mode .app-top-chrome .gateway-nav-btn {
+    opacity: 0.74 !important;
+  }
+
+  body.gateway-mode .app-top-chrome .gateway-nav-btn:hover,
+  body.gateway-mode .app-top-chrome .gateway-nav-btn.active {
+    opacity: 1 !important;
+  }
+
+  body.gateway-mode .app-top-chrome .gateway-logo span {
+    color: #ffffff !important;
+  }
+
+  body.gateway-mode .app-top-chrome .gateway-language {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16) !important;
+  }
+
+  body.gateway-mode .home-hero {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body.gateway-mode .home-hero .artwork-home-slide,
+  body.gateway-mode .home-hero .artwork-home-slide.active {
+    box-sizing: border-box !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    translate: none !important;
+    overflow: hidden !important;
+  }
+
+  body.gateway-mode .home-hero .artwork-home-slide.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  body.gateway-mode .home-hero .home-hero-copy {
+    left: clamp(28px, 3.2vw, 72px) !important;
+    bottom: clamp(112px, 13svh, 156px) !important;
+    width: min(560px, 42vw) !important;
+    max-width: min(560px, 42vw) !important;
+    transform: none !important;
+    translate: none !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-controls {
+    bottom: clamp(44px, 5.2svh, 72px) !important;
+    z-index: 12 !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-dot::before {
+    background: rgba(255, 255, 255, 0.48) !important;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.28) !important;
+  }
+
+  body.gateway-mode .home-hero .gateway-hero-dot.active::before {
+    background: #f37021 !important;
+  }
+}
+
 			</style>
 </head>
 <body class="gateway-mode dark-gateway-hero-active dark-app-chrome-active">
@@ -15105,7 +15231,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 	        </picture>
 	        <span>One In Him</span>
 	      </button>
-	      <button class="gateway-mobile-action gateway-search-shortcut" type="button" data-nav-jump="pathSelectView" aria-label="Journey">
+	      <button class="gateway-mobile-action gateway-search-shortcut" type="button" data-nav-jump="stageDetailView" aria-label="Journey">
 	        <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
 	          <path d="M8 24c4.4 0 3.8-7.9 8-8s3.8-8 8-8"></path>
 	          <circle cx="8" cy="24" r="3.2" fill="currentColor" stroke="none"></circle>
@@ -15194,7 +15320,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
             </span>
           </button>
 
-          <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="2" data-hero-mode="discover" data-nav-jump="pathSelectView" aria-label="One In Him discipleship journey">
+          <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="2" data-hero-mode="discover" data-nav-jump="onboardingView" data-linked-resource="book_one_basics_1_1_eternal_life" aria-label="One In Him discipleship journey">
             <picture class="home-artwork-picture">
               <source media="(min-width: 761px)" srcset="assets/oneinhim-characters-international.png" />
               <img class="home-artwork-image" src="assets/oneinhim-characters-international.png" alt="One In Him discipleship journey" loading="lazy" />
@@ -15226,14 +15352,14 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
               </div>
             </div>
             <div class="weekly-media-shelf" aria-label="Start this week">
-              <button class="weekly-media-card is-hero has-self-contained-cover stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video" aria-label="One Basics 1.1 Eternal Life full video">
+              <button class="weekly-media-card is-hero has-self-contained-cover stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video" aria-label="One Basics 1.1 Eternal Life">
                 <img src="assets/one-basics-1-1-eternal-life-course-cover.png" alt="" loading="lazy" />
               </button>
               <button class="weekly-media-card is-square has-self-contained-cover stage-2" type="button" data-discover-open="aud_darkness_sonship_004" data-content-kind="audio" aria-label="From Darkness to Sonship audio">
                 <img src="assets/one-gospel-podcast-cover.png" alt="" loading="lazy" />
               </button>
               <div class="weekly-card-stack" aria-label="Quick starts" data-home-mode="discover">
-                <button class="weekly-media-card stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life" data-content-kind="text">
+                <button class="weekly-media-card stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video">
                   <span class="weekly-cover-art">
                     <span class="weekly-cover-kicker" data-i18n="discover.read">Read</span>
                     <strong data-i18n="homeDiscover.miniBasicsTitle">One Basics: Eternal Life</strong>
@@ -15479,7 +15605,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
               </div>
             </div>
             <div class="discovery-row series-row courses-row">
-              <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video">
+              <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life" data-content-kind="text">
                 <span class="tile-art">
                   <span class="series-stack" aria-hidden="true">
                     <span>1.1</span>
@@ -15501,7 +15627,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
                   <span class="content-chip" data-i18n="homeDiscover.fullVideo">Full video</span>
                 </span>
               </button>
-              <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="mux_one_basics_1_1_full_video" data-content-kind="video">
+              <button class="discovery-tile series-tile stage-2" type="button" data-discover-open="book_one_basics_1_1_eternal_life" data-content-kind="text">
                 <span class="tile-art episode-cover-art">
                   <img src="assets/one-basics-1-1-eternal-life-course-cover.png" alt="One Basics 1.1 Eternal Life course cover">
                 </span>
@@ -15719,7 +15845,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 	              <span id="adminSessionLabel">Signed in on this device.</span>
 	            </div>
 	            <div class="admin-action-row">
-	              <a class="primary-btn" id="adminWorkshopLink" href="oneinhim_content_workshop.html" data-i18n="account.openWorkshop">Open content workshop</a>
+	              <a class="primary-btn" id="adminWorkshopLink" href="oneinhim_admin_workshop.html" data-i18n="account.openWorkshop">Open content workshop</a>
 	              <button class="soft-btn" id="adminLogout" type="button" data-i18n="account.signOut">Sign out</button>
 	            </div>
 	            <p class="admin-note" data-i18n="account.nextSecurity">Next security step: real admin accounts in Supabase, then only approved admins can publish content.</p>
@@ -15982,7 +16108,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
               <h2 data-i18n="discover.title">Taste the quality</h2>
               <p data-i18n="discover.copy">Short, useful resources you can finish straight away before choosing a full journey.</p>
             </div>
-            <button class="soft-btn" type="button" data-nav-jump="pathSelectView" data-i18n="discover.more">Continue my discipleship journey</button>
+            <button class="soft-btn" type="button" data-nav-jump="stageDetailView" data-i18n="discover.more">Continue my discipleship journey</button>
           </div>
           <div class="discover-grid">
             <button class="discover-card featured" type="button" data-discover-open="vid_jesus_001">
@@ -16051,7 +16177,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
               <div class="hero-actions">
                 <button class="primary-btn" data-action="play-daily">Start now</button>
                 <button class="soft-btn" data-nav-jump="askView">Ask a question</button>
-                <button class="ghost-btn" data-nav-jump="pathSelectView">Continue my discipleship journey</button>
+                <button class="ghost-btn" data-nav-jump="stageDetailView">Continue my discipleship journey</button>
               </div>
             </div>
             <button class="visual-card" id="homeHeroVisual" data-action="play-daily" type="button">
@@ -16135,7 +16261,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
             </div>
             <div class="ask-guide-actions">
               <button class="primary-btn" id="askButton">Find my next step</button>
-              <button class="soft-btn" type="button" data-nav-jump="pathSelectView">See all journey sections</button>
+              <button class="soft-btn" type="button" data-nav-jump="stageDetailView">See all journey sections</button>
             </div>
           </div>
         </section>
@@ -16476,6 +16602,44 @@ const resources = [
     ]
   },
   {
+    id: "mux_one_basics_1_1_full_video",
+    visualType: "video",
+    contentType: "full_video",
+    title: "One Basics 1.1: Eternal Life",
+    speaker: "Johan Toet",
+    speakerId: "author_johan_toet",
+    language: "en",
+    primaryMedium: "watch",
+    format: ["watch"],
+    length: "27 min video",
+    seconds: 1620,
+    summary: "The full One Basics 1.1 teaching on eternal life and knowing God personally through Jesus.",
+    topic: "Eternal life",
+    stage: "foundations",
+    questions: ["What is eternal life?", "How do I know God personally?", "Where should a new Christian begin?"],
+    tone: ["foundational", "clear", "encouraging"],
+    nextStep: "Continue the One Basics journey",
+    nextTarget: "book_one_basics_1_1_eternal_life",
+    seriesId: "one_basics_1",
+    episode: 1,
+    showInJourney: false,
+    journeyResourceId: "book_one_basics_1_1_eternal_life",
+    shareLine: "This One Basics episode explains eternal life as knowing God personally through Jesus.",
+    sourceLabel: "One Basics full episode",
+    posterUrl: "assets/one-basics-1-1-eternal-life-course-cover.png",
+    videoHost: {
+      provider: "mux",
+      playbackId: "167yz8JQrceeB2Lb1fnB4WK5W3pksV6GiE00KL6DUGbs",
+      status: "ready",
+      hlsUrl: "https://stream.mux.com/167yz8JQrceeB2Lb1fnB4WK5W3pksV6GiE00KL6DUGbs.m3u8",
+      thumbnailUrl: "https://image.mux.com/167yz8JQrceeB2Lb1fnB4WK5W3pksV6GiE00KL6DUGbs/thumbnail.jpg?time=1",
+      verified: true
+    },
+    transcript: [
+      "This full One Basics episode is streamed from Mux as the approved source video."
+    ]
+  },
+  {
     id: "lesson_bible_004",
     visualType: "video",
     contentType: "lesson",
@@ -16812,7 +16976,8 @@ const gatewayHeroSwipe = {
   startY: 0,
   lastX: 0,
   lastY: 0,
-  suppressClick: false
+  suppressClick: false,
+  lastActivationAt: 0
 };
 
 const viewText = {
@@ -17702,7 +17867,9 @@ function esc(value) {
   }[char]));
 }
 
-const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v1";
+const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
+const APP_RELEASE_VERSION = "143";
+const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
     {
@@ -17713,6 +17880,7 @@ const DEFAULT_HOME_CONTENT = {
       desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
       targetType: "discover",
       target: "mux_one_basics_1_1_full_video",
+      contentId: "mux_one_basics_1_1_full_video",
       alt: "One Basics Eternal Life",
       eyebrow: "One Basics",
       title: "Start with Eternal Life",
@@ -17740,7 +17908,8 @@ const DEFAULT_HOME_CONTENT = {
       artwork: "assets/oneinhim-characters-international.png",
       desktopArtwork: "assets/oneinhim-characters-international.png",
       targetType: "journey",
-      target: "pathSelectView",
+      target: "onboardingView",
+      contentId: "book_one_basics_1_1_eternal_life",
       alt: "One In Him discipleship journey",
       eyebrow: "Guided path",
       title: "Continue your journey",
@@ -17755,7 +17924,7 @@ const DEFAULT_HOME_CONTENT = {
       mode: "discover",
       cardSize: "wide",
       items: [
-        { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+        { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
         { id: "darkness_sonship", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
         { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
         { id: "oneevent_duane", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
@@ -17777,7 +17946,7 @@ const DEFAULT_HOME_CONTENT = {
       mode: "discover watch",
       cardSize: "poster",
       items: [
-        { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+        { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
         { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
         { id: "oneevent_watch", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
       ]
@@ -17796,6 +17965,22 @@ const DEFAULT_HOME_CONTENT = {
 
 function normalizeHomeContent(layout) {
   const defaultSlidesById = new Map(DEFAULT_HOME_CONTENT.heroSlides.map((slide) => [slide.id, slide]));
+  const normalizeHomeItemTarget = (item) => {
+    const shouldUpgradeOneBasicsWatchTarget = ["one_basics_hero", "one_basics_course", "one_basics_watch"].includes(item.id)
+      && (item.target === "book_one_basics_1_1_eternal_life" || item.contentId === "book_one_basics_1_1_eternal_life");
+    const rawTarget = shouldUpgradeOneBasicsWatchTarget ? "mux_one_basics_1_1_full_video" : (item.target || "");
+    if (item.targetType === "journey") {
+      const viewTarget = item.id === "journey_hero"
+        ? "onboardingView"
+        : (rawTarget === "moduleDetailView" || rawTarget === "stageDetailView" || rawTarget === "onboardingView" || rawTarget === "pathSelectView"
+          ? (rawTarget === "pathSelectView" ? "onboardingView" : rawTarget)
+          : "onboardingView");
+      const contentId = resolveContentTargetId(item.contentId || rawTarget || "book_one_basics_1_1_eternal_life");
+      return { target: viewTarget, contentId };
+    }
+    const resolvedTarget = resolveContentTargetId(shouldUpgradeOneBasicsWatchTarget ? rawTarget : (item.contentId || rawTarget));
+    return { target: resolvedTarget, contentId: shouldUpgradeOneBasicsWatchTarget ? resolvedTarget : (item.contentId || resolvedTarget) };
+  };
   return {
     ...DEFAULT_HOME_CONTENT,
     ...layout,
@@ -17806,14 +17991,24 @@ function normalizeHomeContent(layout) {
       };
       const mobileArtwork = merged.mobileArtwork || merged.artwork || merged.desktopArtwork || "";
       const desktopArtwork = merged.desktopArtwork || merged.artwork || merged.mobileArtwork || "";
+      const resolvedTarget = normalizeHomeItemTarget(merged);
       return {
         ...merged,
+        ...resolvedTarget,
         mobileArtwork,
         artwork: mobileArtwork,
         desktopArtwork
       };
     }),
-    shelves: layout.shelves || DEFAULT_HOME_CONTENT.shelves
+    shelves: (layout.shelves || DEFAULT_HOME_CONTENT.shelves).map((shelf) => ({
+      ...shelf,
+      items: (shelf.items || []).map((item) => {
+        return {
+          ...item,
+          ...normalizeHomeItemTarget(item)
+        };
+      })
+    }))
   };
 }
 
@@ -17832,9 +18027,14 @@ function readHomeContent() {
 
 function homeActionAttributes(item) {
   if (!item) return "";
-  if (item.targetType === "journey") return `data-nav-jump="${esc(item.target || "pathSelectView")}"`;
-  if (item.targetType === "choice") return `data-gateway-choice="${esc(item.target || "exploreJesus")}"`;
-  return `data-discover-open="${esc(item.target || "")}"`;
+  const target = item.contentId || item.target || "";
+  if (item.targetType === "journey") {
+    const resourceId = resolveContentTargetId(item.contentId || target);
+    const viewTarget = item.target && item.target !== "pathSelectView" ? item.target : "stageDetailView";
+    return `data-nav-jump="${esc(viewTarget)}" data-linked-resource="${esc(resourceId)}"`;
+  }
+  if (item.targetType === "choice") return `data-gateway-choice="${esc(target || "exploreJesus")}"`;
+  return `data-discover-open="${esc(resolveContentTargetId(target))}"`;
 }
 
 function homeLockBadge(item) {
@@ -18109,29 +18309,8 @@ function handleGatewayHeroSwipeEnd() {
   setGatewayHero(state.gatewayHeroIndex + (deltaX < 0 ? 1 : -1));
 }
 
-function activateGatewayHeroPrimaryAction(event) {
-  if (event.defaultPrevented) return;
-  const target = event.target;
-  if (target instanceof Element && target.closest("button, a, input, textarea, select, [data-hero-dot], .gateway-header, .gateway-nav")) return;
-  const activeSlide = document.querySelector("[data-gateway-hero-slide].active");
-  const primaryAction = activeSlide?.querySelector(".hero-actions .primary-btn");
-  if (!primaryAction) return;
-  event.preventDefault();
-  const resourceId = primaryAction.dataset.discoverOpen;
-  if (resourceId) {
-    setDiscoveryResource(resourceId);
-    return;
-  }
-  if (primaryAction.id === "gatewayStart") {
-    openOnboarding();
-    return;
-  }
-  const navTarget = primaryAction.dataset.navJump;
-  if (navTarget) setView(navTarget);
-}
-
 function wireGatewayHeroSwipe() {
-  const hero = document.querySelector(".gateway-landing");
+  const hero = document.querySelector(".gateway-landing.home-hero");
   if (!hero) return;
   hero.addEventListener("touchstart", handleGatewayHeroSwipeStart, { passive: true });
   hero.addEventListener("touchmove", handleGatewayHeroSwipeMove, { passive: true });
@@ -18143,7 +18322,6 @@ function wireGatewayHeroSwipe() {
     event.preventDefault();
     event.stopPropagation();
   }, true);
-  hero.addEventListener("click", activateGatewayHeroPrimaryAction);
 }
 
 	function setGatewayNavActive(target) {
@@ -18227,7 +18405,7 @@ async function renderAdminAccount() {
   els.adminSignedOut.hidden = Boolean(session);
   els.adminSignedIn.hidden = !session;
   if (els.adminWorkshopLink) {
-    els.adminWorkshopLink.href = "oneinhim_content_workshop.html";
+    els.adminWorkshopLink.href = "oneinhim_admin_workshop.html";
   }
 	  if (els.adminSessionLabel) {
 	    if (session) {
@@ -18354,9 +18532,9 @@ function applyLanguage(language, showToast = false) {
   els.langButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.lang === nextLanguage);
   });
-  els.gatewayCharacterArt.src = gatewayArtByLanguage[nextLanguage] || gatewayArtByLanguage.en;
-  els.gatewayQuestion.placeholder = t("gateway.questionDefault");
-  els.askInput.placeholder = t("gateway.questionDefault");
+  if (els.gatewayCharacterArt) els.gatewayCharacterArt.src = gatewayArtByLanguage[nextLanguage] || gatewayArtByLanguage.en;
+  if (els.gatewayQuestion) els.gatewayQuestion.placeholder = t("gateway.questionDefault");
+  if (els.askInput) els.askInput.placeholder = t("gateway.questionDefault");
   if (els.feedComposer) els.feedComposer.placeholder = t("feed.placeholder");
   if (shouldClearGatewayQuestion) els.gatewayQuestion.value = "";
   if (shouldClearAskQuestion) els.askInput.value = "";
@@ -18379,6 +18557,26 @@ function openOnboarding() {
 
 function activeResource() {
   return resources.find((item) => item.id === state.activeResourceId) || resources[0];
+}
+
+const CONTENT_TARGET_ALIASES = {
+  mux_one_basics_1_1_opening_clip: "mux_one_basics_1_1_full_video",
+  pathSelectView: "book_one_basics_1_1_eternal_life",
+  oneevent_ps_duane_friday: "mux_oneevent_ps_duane_friday",
+  out_of_the_shadows: "mux_out_of_shadows_documentary",
+  journey_start_here: "book_one_basics_1_1_eternal_life",
+  practice_prayer_002: "book_prayer_002",
+  prayer_peace_003: "aud_peace_003",
+  practice_bible_004: "lesson_bible_004"
+};
+
+function resolveContentTargetId(id) {
+  const requestedId = String(id || "").trim();
+  if (!requestedId) return resources[0]?.id || "";
+  if (resources.some((item) => item.id === requestedId)) return requestedId;
+  const alias = CONTENT_TARGET_ALIASES[requestedId];
+  if (alias && resources.some((item) => item.id === alias)) return alias;
+  return requestedId;
 }
 
 function resourceMuxPlaybackId(resource) {
@@ -18433,7 +18631,8 @@ function journeyResourceForResource(resource) {
 }
 
 function moduleTargetForResource(id) {
-  const requestedResource = resources.find((item) => item.id === id) || resources[0];
+  const resolvedId = resolveContentTargetId(id);
+  const requestedResource = resources.find((item) => item.id === resolvedId) || resources[0];
   const resource = journeyResourceForResource(requestedResource) || requestedResource;
   const stageByResourceStage = {
     explore: "exploreJesus",
@@ -18445,6 +18644,7 @@ function moduleTargetForResource(id) {
   };
   const specific = {
     vid_jesus_001: { stageId: "startFollowing", moduleIndex: 0, mode: "watch" },
+    mux_one_basics_1_1_full_video: { stageId: "startFollowing", moduleIndex: 0, mode: "watch" },
     book_one_basics_1_1_eternal_life: { stageId: "startFollowing", moduleIndex: 0, mode: "read" },
     book_prayer_002: { stageId: "startFollowing", moduleIndex: 1, mode: "read" },
     aud_peace_003: { stageId: "growRoots", moduleIndex: 1, mode: "read" },
@@ -18463,11 +18663,16 @@ function moduleTargetForResource(id) {
       return { stageId, moduleIndex: packagedIndex, mode: fallbackMode };
     }
   }
-  return specific[resource.id] || specific[id] || {
+  return specific[resource.id] || specific[resolvedId] || {
     stageId,
     moduleIndex: 0,
     mode: fallbackMode
   };
+}
+
+function selectedSectionIndexForModule(stageId, moduleIndex) {
+  const stage = stageForChoice(stageId);
+  return Math.max(0, Math.floor((Number(moduleIndex) || 0) / stageSectionSize(stage)));
 }
 
 function tag(text, color = "") {
@@ -18956,8 +19161,28 @@ function setContentCardLockedState(card, locked) {
 
 function refreshContentLockBadges(root = document) {
   root.querySelectorAll(".weekly-media-card[data-discover-open], .discovery-tile[data-discover-open], .discover-card[data-discover-open], .voice-button[data-discover-open]").forEach((card) => {
-    const resource = resources.find((item) => item.id === card.dataset.discoverOpen);
+    const resourceId = resolveContentTargetId(card.dataset.discoverOpen);
+    if (resourceId !== card.dataset.discoverOpen) card.dataset.discoverOpen = resourceId;
+    const resource = resources.find((item) => item.id === resourceId);
     setContentCardLockedState(card, Boolean(resource && !resourceIsUnlocked(resource)));
+  });
+}
+
+function normalizeRenderedContentTargets(root = document) {
+  root.querySelectorAll("[data-discover-open]").forEach((element) => {
+    const resolvedId = resolveContentTargetId(element.dataset.discoverOpen);
+    if (resolvedId && resolvedId !== element.dataset.discoverOpen) {
+      element.dataset.discoverOpen = resolvedId;
+    }
+  });
+  root.querySelectorAll("[data-open]").forEach((element) => {
+    const resolvedId = resolveContentTargetId(element.dataset.open);
+    if (resolvedId && resolvedId !== element.dataset.open) {
+      element.dataset.open = resolvedId;
+    }
+  });
+  root.querySelectorAll("[data-nav-jump='pathSelectView']").forEach((element) => {
+    element.dataset.navJump = "stageDetailView";
   });
 }
 
@@ -19525,10 +19750,13 @@ function setView(viewId, options = {}) {
 }
 
 function setActiveResource(id, view = "moduleDetailView") {
-  const target = moduleTargetForResource(id);
-  state.activeResourceId = id;
+  const resolvedId = resolveContentTargetId(id);
+  const target = moduleTargetForResource(resolvedId);
+  state.activeResourceId = resolvedId;
   state.activeStageId = target.stageId;
   state.activeModuleIndex = target.moduleIndex;
+  state.selectedSectionIndex = selectedSectionIndexForModule(target.stageId, target.moduleIndex);
+  state.selectedPathNode = pathNodeKey("content", stageForChoice(target.stageId), state.selectedSectionIndex);
   state.moduleMode = target.mode;
   state.quizChoice = "";
   state.quizChecked = false;
@@ -19538,13 +19766,14 @@ function setActiveResource(id, view = "moduleDetailView") {
 }
 
 function setDiscoveryResource(id) {
-  const resource = resources.find((item) => item.id === id);
+  const resolvedId = resolveContentTargetId(id);
+  const resource = resources.find((item) => item.id === resolvedId);
   if (resource && !resourceIsUnlocked(resource)) {
     handleLockedResource(resource);
     bindDynamicActions();
     return;
   }
-  state.activeResourceId = id;
+  state.activeResourceId = resolvedId;
   renderDiscoveryDetail();
   setView("discoveryDetailView");
   bindDynamicActions();
@@ -19581,7 +19810,8 @@ function handleGatewayChoice(choice) {
     care: {
       resourceId: "aud_peace_003",
       question: t("choice.care.question"),
-      view: "askView",
+      view: "stageDetailView",
+      stageId: "growRoots",
       message: t("toast.choiceCare")
     },
     exploreJesus: {
@@ -19679,12 +19909,14 @@ function handleGatewayChoice(choice) {
   state.selectedPathNode = "";
   state.guidedPathNode = "";
   state.practicalUse = false;
-  state.activeResourceId = selected.resourceId;
-  if (selected.view === "moduleDetailView") {
+  state.activeResourceId = resolveContentTargetId(selected.resourceId);
+  if (selected.view === "moduleDetailView" || selected.view === "stageDetailView") {
     const target = moduleTargetForResource(selected.resourceId);
     state.activeStageId = target.stageId;
     state.pathPreviewStageId = state.activeStageId;
     state.activeModuleIndex = target.moduleIndex;
+    state.selectedSectionIndex = selectedSectionIndexForModule(target.stageId, target.moduleIndex);
+    state.selectedPathNode = pathNodeKey("content", stageForChoice(target.stageId), state.selectedSectionIndex);
     state.moduleMode = target.mode;
     state.quizChoice = "";
     state.quizChecked = false;
@@ -19768,12 +20000,14 @@ function handlePopularStart(choice) {
     farFromGod: {
       resourceId: "vid_jesus_001",
       question: t("quick.farFromGod.question"),
-      view: "askView"
+      view: "stageDetailView",
+      stageId: "exploreJesus"
     },
     speakers: {
       resourceId: state.activeResourceId,
       question: state.lastQuestion,
-      view: "gatewayView"
+      view: "stageDetailView",
+      stageId: "leadMultiply"
     }
   };
   const selected = starts[choice] || starts.newChristian;
@@ -19783,12 +20017,14 @@ function handlePopularStart(choice) {
   state.selectedPathNode = "";
   state.guidedPathNode = "";
   state.practicalUse = false;
-  state.activeResourceId = selected.resourceId;
-  if (selected.view === "moduleDetailView") {
+  state.activeResourceId = resolveContentTargetId(selected.resourceId);
+  if (selected.view === "moduleDetailView" || selected.view === "stageDetailView") {
     const target = moduleTargetForResource(selected.resourceId);
     state.activeStageId = target.stageId;
     state.pathPreviewStageId = state.activeStageId;
     state.activeModuleIndex = target.moduleIndex;
+    state.selectedSectionIndex = selectedSectionIndexForModule(target.stageId, target.moduleIndex);
+    state.selectedPathNode = pathNodeKey("content", stageForChoice(target.stageId), state.selectedSectionIndex);
     state.moduleMode = target.mode;
     state.quizChoice = "";
     state.quizChecked = false;
@@ -19815,9 +20051,9 @@ function renderHome() {
   els.homeVisualMeta.textContent = `${item.length} · ${labelize(item.stage)}`;
   els.homeLessons.innerHTML = journeyLessons.slice(0, 3).map((lesson, index) => {
     const resource = resources.find((entry) => entry.id === lesson.resourceId);
-    return rowHtml(resource, `${index + 1}. ${lesson.title}`, lesson.detail, "Open", `data-discover-open="${resource.id}"`);
+    return rowHtml(resource, `${index + 1}. ${lesson.title}`, lesson.detail, "Open", `data-discover-open="${resolveContentTargetId(resource.id)}"`);
   }).join("");
-  els.homeMoments.innerHTML = resources.slice(1).map((resource) => rowHtml(resource, resource.title, `${resource.length} · ${resource.topic}`, "Open", `data-discover-open="${resource.id}"`)).join("");
+  els.homeMoments.innerHTML = resources.slice(1).map((resource) => rowHtml(resource, resource.title, `${resource.length} · ${resource.topic}`, "Open", `data-discover-open="${resolveContentTargetId(resource.id)}"`)).join("");
 }
 
 function discoveryRelatedItems(item) {
@@ -20937,7 +21173,7 @@ function renderStageDetail() {
 	  els.stageSectionList.className = "stage-section-list duo-lesson-path";
 	  els.stageSectionList.innerHTML = `
     <div class="duo-unit-banner" style="--stage-color: ${esc(unitAccentColor(stage, selectedGroupIndex))}">
-      <button class="duo-unit-back" type="button" data-nav-jump="pathSelectView" aria-label="Back to sections">
+      <button class="duo-unit-back" type="button" data-nav-jump="stageDetailView" aria-label="Back to sections">
         <span>
           <strong>${esc(t(stage.metaKey).replace(/\s+·\s+.+$/, ` · ${t(stage.titleKey)}`))}</strong>
           <small class="duo-banner-next-step">Next step</small>
@@ -21814,8 +22050,11 @@ function renderModuleQuiz() {
 }
 
 function rowHtml(resource, title, subtitle, actionLabel, attr) {
+  const safeAttr = String(attr || "")
+    .replace(/data-discover-open="([^"]+)"/g, (_match, id) => `data-discover-open="${esc(resolveContentTargetId(id))}"`)
+    .replace(/data-open="([^"]+)"/g, (_match, id) => `data-open="${esc(resolveContentTargetId(id))}"`);
   return `
-    <button class="mini-row" type="button" ${attr}>
+    <button class="mini-row" type="button" ${safeAttr}>
       <span class="mini-thumb ${esc(resource.visualType)}"></span>
       <span>
         <strong>${esc(title)}</strong>
@@ -22166,16 +22405,23 @@ function renderAll() {
 }
 
 function bindDynamicActions() {
+  normalizeRenderedContentTargets();
   refreshContentLockBadges();
   document.querySelectorAll("[data-open]").forEach((button) => {
     button.onclick = () => setActiveResource(button.dataset.open);
   });
   document.querySelectorAll("[data-discover-open]").forEach((button) => {
+    if (button.closest(".home-hero-slide")) return;
     button.onclick = () => setDiscoveryResource(button.dataset.discoverOpen);
   });
   document.querySelectorAll("[data-nav-jump]").forEach((button) => {
+    if (button.closest(".home-hero-slide")) return;
     button.onclick = () => {
       let targetView = button.dataset.navJump;
+      if (button.dataset.linkedResource) {
+        setActiveResource(button.dataset.linkedResource, targetView === "stageDetailView" ? "stageDetailView" : targetView);
+        return;
+      }
       if (targetView === "pathSelectView") {
         openDefaultJourneyPath();
         return;
@@ -22594,25 +22840,84 @@ function handleShelfArrowClick(event) {
   window.setTimeout(() => updateShelfArrowState(frame), 260);
 }
 
+function activateHomeTarget(element) {
+  if (!element) return false;
+  const discoverTarget = element.dataset.discoverOpen;
+  if (discoverTarget) {
+    setDiscoveryResource(discoverTarget);
+    return true;
+  }
+  const choiceTarget = element.dataset.gatewayChoice;
+  if (choiceTarget) {
+    handleGatewayChoice(choiceTarget);
+    return true;
+  }
+  let targetView = element.dataset.navJump;
+  if (!targetView) return false;
+  if (element.dataset.linkedResource) {
+    setActiveResource(element.dataset.linkedResource, targetView === "stageDetailView" ? "stageDetailView" : targetView);
+    return true;
+  }
+  if (targetView === "pathSelectView") {
+    openDefaultJourneyPath();
+    return true;
+  }
+  if (state.sectionPicker && (targetView === "moduleDetailView" || targetView === "stageDetailView")) {
+    state.sectionPicker = null;
+    targetView = "stageDetailView";
+  }
+  if (targetView === "gatewayView") {
+    setGatewayContentMode("discover");
+    setGatewayNavActive("discover");
+  }
+  setView(targetView);
+  return true;
+}
+
+function handleHomeHeroActivation(event) {
+  if (event.defaultPrevented || gatewayHeroSwipe.suppressClick) return;
+  const now = Date.now();
+  if (now - gatewayHeroSwipe.lastActivationAt < 700) {
+    event.preventDefault();
+    event.stopPropagation();
+    return;
+  }
+  if (event.target.closest("[data-hero-dot]")) return;
+  const hero = event.target.closest(".home-hero");
+  if (!hero || state.activeView !== "gatewayView") return;
+  const slide = event.target.closest(".home-hero-slide[data-gateway-hero-slide]")
+    || hero.querySelector(".home-hero-slide.active[data-gateway-hero-slide]");
+  if (!slide || !slide.classList.contains("active")) return;
+  if (activateHomeTarget(slide)) {
+    gatewayHeroSwipe.lastActivationAt = now;
+    stopGatewayHeroAutoplay();
+    event.preventDefault();
+    event.stopPropagation();
+  }
+}
+
 function wireStaticActions() {
-	window.addEventListener("scroll", () => {
-	  scheduleStickyStageBannerUpdate();
-	  scheduleGatewayNavScrollState();
-	}, { passive: true });
-	window.addEventListener("resize", () => {
-	  resetJourneyBannerCache();
-	  scheduleDuoPathCurveUpdate();
-	  scheduleStickyStageBannerUpdate();
-	  updateGatewayNavScrollState();
-	  updateAllShelfArrowStates();
-	});
-	  document.addEventListener("click", handleJourneyOutsideClick);
-	  document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
-	  document.addEventListener("click", handleJourneyShareAction, { capture: true });
-	  document.addEventListener("click", handleLibraryAccessAction);
-	  document.addEventListener("click", handleShelfArrowClick);
-	  enhanceDesktopShelves();
-	  document.querySelectorAll(".nav-btn").forEach((button) => {
+  window.addEventListener("scroll", () => {
+    scheduleStickyStageBannerUpdate();
+    scheduleGatewayNavScrollState();
+  }, { passive: true });
+  window.addEventListener("resize", () => {
+    resetJourneyBannerCache();
+    scheduleDuoPathCurveUpdate();
+    scheduleStickyStageBannerUpdate();
+    updateGatewayNavScrollState();
+    updateAllShelfArrowStates();
+  });
+  document.addEventListener("click", handleJourneyOutsideClick);
+  document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
+  document.addEventListener("click", handleJourneyShareAction, { capture: true });
+  document.addEventListener("click", handleLibraryAccessAction);
+  document.addEventListener("click", handleShelfArrowClick);
+  document.addEventListener("click", handleHomeHeroActivation, { capture: true });
+  document.addEventListener("pointerup", handleHomeHeroActivation, { capture: true });
+  document.addEventListener("touchend", handleHomeHeroActivation, { capture: true, passive: false });
+  enhanceDesktopShelves();
+  document.querySelectorAll(".nav-btn").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.nav));
   });
   document.querySelectorAll("[data-gateway-nav]").forEach((button) => {
@@ -22754,9 +23059,36 @@ function toast(message) {
   toast.timer = window.setTimeout(() => els.toast.classList.remove("show"), 1300);
 }
 
+async function ensureFreshAppVersion() {
+  try {
+    const storedVersion = window.localStorage.getItem(APP_RELEASE_STORAGE_KEY);
+    if (storedVersion === APP_RELEASE_VERSION) return;
+    window.localStorage.setItem(APP_RELEASE_STORAGE_KEY, APP_RELEASE_VERSION);
+    if (window.location.protocol === "file:") return;
+    const refreshSessionKey = `oneinhim-auto-refresh-${APP_RELEASE_VERSION}`;
+    if (window.sessionStorage.getItem(refreshSessionKey)) return;
+    window.sessionStorage.setItem(refreshSessionKey, "1");
+    if ("serviceWorker" in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.allSettled(registrations.map((registration) => registration.unregister()));
+    }
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.allSettled(keys.filter((key) => key.startsWith("oneinhim-")).map((key) => caches.delete(key)));
+    }
+    const freshUrl = new URL(window.location.href);
+    freshUrl.searchParams.set("v", APP_RELEASE_VERSION);
+    freshUrl.searchParams.set("refresh", String(Date.now()));
+    window.location.replace(freshUrl.toString());
+    await new Promise(() => {});
+  } catch (error) {
+    console.warn("App cache refresh skipped.", error);
+  }
+}
+
 function registerAppInstallWorker() {
   if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  const workerRefreshKey = "oneinhim-sw-refresh-v125";
+  const workerRefreshKey = `oneinhim-sw-refresh-v${APP_RELEASE_VERSION}`;
   let refreshingWorker = false;
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     if (refreshingWorker || sessionStorage.getItem(workerRefreshKey)) return;
@@ -22764,7 +23096,7 @@ function registerAppInstallWorker() {
     sessionStorage.setItem(workerRefreshKey, "1");
     window.location.reload();
   });
-  navigator.serviceWorker.register("oneinhim_service_worker.js?v=126", { updateViaCache: "none" }).then((registration) => {
+  navigator.serviceWorker.register(`oneinhim_service_worker.js?v=${APP_RELEASE_VERSION}`, { updateViaCache: "none" }).then((registration) => {
     const activateWaitingWorker = () => {
       if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
     };
@@ -22785,6 +23117,7 @@ function registerAppInstallWorker() {
 }
 
 async function boot() {
+  await ensureFreshAppVersion();
   registerAppInstallWorker();
   await loadSchema();
   await loadContentPackages();

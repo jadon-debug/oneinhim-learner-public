@@ -1,0 +1,1679 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>One In Him Admin</title>
+  <script src="./oneinhim_team_sync_config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #0d0f0f;
+      --panel: #151818;
+      --panel-2: #1d2120;
+      --line: rgba(255,255,255,.11);
+      --text: #f6f4ee;
+      --muted: rgba(246,244,238,.62);
+      --orange: #ee7326;
+      --green: #2d9465;
+      --radius: 12px;
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .auth {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(238,115,38,.22), transparent 28%),
+        linear-gradient(135deg, #101313, #1c241f);
+    }
+
+    .auth[hidden],
+    .app[hidden] {
+      display: none;
+    }
+
+    .auth-card {
+      width: min(520px, 100%);
+      display: grid;
+      gap: 16px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: #f7f6f1;
+      color: #111716;
+      box-shadow: 0 24px 70px rgba(0,0,0,.32);
+    }
+
+    .auth-card h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 64px);
+      line-height: .92;
+      letter-spacing: -.02em;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .auth-card p {
+      margin: 0;
+      color: #66706b;
+      line-height: 1.5;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: inherit;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid rgba(17,23,22,.16);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fff;
+      color: #111716;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 86px;
+      resize: vertical;
+      line-height: 1.35;
+    }
+
+    .field-help {
+      margin: -4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 4px rgba(238,115,38,.16);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0 16px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .btn.primary {
+      border-color: transparent;
+      background: var(--orange);
+      color: #fff;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
+    }
+
+    .btn.green {
+      border-color: transparent;
+      background: var(--green);
+      color: #fff;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px clamp(18px, 3vw, 42px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(13,15,15,.9);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      padding: 18px;
+      background: #101212;
+    }
+
+    .side-nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .side-nav button {
+      min-height: 46px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 0 14px;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+      font-weight: 900;
+    }
+
+    .side-nav button.active {
+      border-color: rgba(238,115,38,.35);
+      background: rgba(238,115,38,.13);
+      color: #fff;
+    }
+
+    .main {
+      min-width: 0;
+      padding: clamp(18px, 3vw, 34px);
+      overflow: auto;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: .9;
+      letter-spacing: -.03em;
+    }
+
+    .section-head p {
+      margin: 10px 0 0;
+      max-width: 680px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 320px) minmax(0, 1fr) minmax(280px, 390px);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .list {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .row {
+      width: 100%;
+      display: grid;
+      gap: 4px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #101313;
+      color: #fff;
+      text-align: left;
+    }
+
+    .row.active {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(238,115,38,.15);
+    }
+
+    .row strong { font-size: 13px; }
+    .row span { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+
+    .hero-preview {
+      min-height: 600px;
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #050606;
+      border: 1px solid var(--line);
+    }
+
+    .hero-preview img {
+      width: 100%;
+      height: 100%;
+      min-height: 600px;
+      display: block;
+      object-fit: cover;
+    }
+
+    .hero-preview::before,
+    .hero-preview::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      pointer-events: none;
+    }
+
+    .hero-preview::before {
+      top: 0;
+      height: 120px;
+      background: linear-gradient(180deg, rgba(0,0,0,.55), transparent);
+    }
+
+    .hero-preview::after {
+      bottom: 0;
+      height: 260px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,.9));
+    }
+
+    .hero-copy {
+      position: absolute;
+      left: clamp(22px, 4vw, 54px);
+      bottom: 64px;
+      z-index: 2;
+      width: min(520px, calc(100% - 44px));
+      text-shadow: 0 2px 18px rgba(0,0,0,.5);
+    }
+
+    .hero-copy .kicker {
+      display: block;
+      margin-bottom: 9px;
+      color: #f1d45b;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy .title {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 7vw, 76px);
+      font-weight: 900;
+      line-height: .92;
+    }
+
+    .hero-copy .desc,
+    .hero-copy .cta {
+      display: block;
+      margin-top: 13px;
+      color: rgba(255,255,255,.88);
+      font-size: 18px;
+      font-weight: 750;
+      line-height: 1.32;
+    }
+
+    .hero-copy .cta {
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .dots {
+      position: absolute;
+      left: 50%;
+      bottom: 28px;
+      z-index: 3;
+      display: flex;
+      gap: 9px;
+      transform: translateX(-50%);
+    }
+
+    .dots span {
+      width: 52px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.34);
+    }
+
+    .dots span.active { background: var(--orange); }
+
+    .form {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .form-divider {
+      width: 100%;
+      height: 1px;
+      border: 0;
+      background: var(--line);
+      margin: 4px 0;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: rgba(255,255,255,.82);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .check-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--orange);
+    }
+
+    .form .field input,
+    .form .field select,
+    .form .field textarea {
+      background: #0f1111;
+      color: #fff;
+      border-color: var(--line);
+    }
+
+    .shelf-layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr) 340px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .cards {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 260px;
+      gap: 14px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+
+    .card-preview {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #080909;
+      cursor: pointer;
+    }
+
+    .card-preview.active {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(238,115,38,.22);
+    }
+
+    .card-preview.square { aspect-ratio: 1; }
+    .card-preview.poster { aspect-ratio: 3 / 4; }
+
+    .card-preview img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .card-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      min-height: 32px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 999px;
+      padding: 0 10px;
+      background: rgba(0,0,0,.68);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity .16s ease, transform .16s ease, background .16s ease;
+    }
+
+    .card-remove:hover {
+      background: #c94d2c;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .journey-editor {
+      display: grid;
+      grid-template-columns: minmax(420px, 1fr) minmax(320px, 420px);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .journey-map {
+      min-height: 680px;
+      position: relative;
+      padding: 18px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,.08), transparent 24%),
+        linear-gradient(180deg, #f9f8f3, #f4f1e9);
+      color: #111716;
+    }
+
+    .journey-path {
+      position: absolute;
+      left: 50%;
+      top: 96px;
+      bottom: 26px;
+      width: 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(17,23,22,.08), rgba(17,23,22,.22), rgba(17,23,22,.08));
+      transform: translateX(-50%);
+    }
+
+    .journey-section-block {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .journey-unit-banner {
+      width: min(620px, 100%);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      margin: 0 auto;
+      border: 0;
+      border-radius: 18px;
+      padding: 18px 20px;
+      color: #fff;
+      text-align: left;
+      box-shadow: inset 0 -5px 0 rgba(0,0,0,.18), 0 18px 35px rgba(0,0,0,.14);
+    }
+
+    .journey-unit-banner.active {
+      outline: 4px solid rgba(255,255,255,.82);
+      outline-offset: 3px;
+    }
+
+    .journey-unit-banner span {
+      display: block;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      opacity: .88;
+    }
+
+    .journey-unit-banner strong {
+      display: block;
+      margin-top: 3px;
+      font-size: clamp(24px, 4vw, 38px);
+      line-height: .95;
+    }
+
+    .journey-unit-banner em {
+      display: inline-grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.18);
+      font-style: normal;
+      font-weight: 900;
+    }
+
+    .journey-node-row {
+      display: grid;
+      justify-items: center;
+      gap: 12px;
+    }
+
+    .journey-node {
+      width: 84px;
+      height: 84px;
+      display: grid;
+      place-items: center;
+      border: 8px solid #fff;
+      border-radius: 999px;
+      background: #e6e2d8;
+      color: #aaa49a;
+      font-size: 28px;
+      font-weight: 950;
+      box-shadow: inset 0 -6px 0 rgba(0,0,0,.12), 0 10px 20px rgba(0,0,0,.14);
+    }
+
+    .journey-node.active {
+      color: #fff;
+      outline: 4px solid rgba(17,23,22,.2);
+      outline-offset: 4px;
+    }
+
+    .journey-node-meta {
+      width: min(420px, 100%);
+      border: 0;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.82);
+      color: #111716;
+      text-align: left;
+      box-shadow: 0 8px 18px rgba(0,0,0,.08);
+    }
+
+    .journey-node-meta strong,
+    .journey-node-meta span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .journey-node-meta strong {
+      font-size: 13px;
+    }
+
+    .journey-node-meta span {
+      margin-top: 2px;
+      color: #6b6761;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .journey-empty {
+      padding: 20px;
+      color: var(--muted);
+    }
+
+    .content-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--panel);
+    }
+
+    .content-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .content-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 0 9px;
+      background: rgba(238,115,38,.15);
+      color: #ffc29d;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    @media (max-width: 1120px) {
+      .layout,
+      .hero-grid,
+      .shelf-layout,
+      .journey-editor {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .side-nav {
+        display: flex;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="auth" id="authScreen">
+    <div class="auth-card">
+      <p class="eyebrow">Admin</p>
+      <h1>Home & Library Workshop</h1>
+      <p>Sign in to manage hero slides, library shelves, and the content links behind them.</p>
+      <div class="field">
+        <label for="adminEmail">Admin email</label>
+        <input id="adminEmail" type="email" autocomplete="username" value="admin@oneinhim.org" />
+      </div>
+      <div class="field">
+        <label for="adminPassword">Password</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" />
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="signInButton" type="button">Sign in</button>
+        <a class="btn" href="oneinhim_learner_app.html?v=143">Open app</a>
+      </div>
+      <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
+    </div>
+  </section>
+
+  <div class="app" id="appShell" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/oih-logo-2023-orange.png" alt="" />
+        <div>
+          <h1>One In Him Admin</h1>
+          <p>Heroes, shelves, and content links.</p>
+        </div>
+      </div>
+      <div class="btn-row">
+        <a class="btn" href="oneinhim_learner_app.html?v=143">Preview app</a>
+        <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Content prep</a>
+        <button class="btn" id="signOutButton" type="button">Sign out</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <nav class="side-nav" aria-label="Admin sections">
+          <button class="active" type="button" data-view="heroes">Hero slides</button>
+          <button type="button" data-view="shelves">Library shelves</button>
+          <button type="button" data-view="journey">Journey workflow</button>
+          <button type="button" data-view="content">Content links</button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <section class="view active" id="heroesView">
+          <div class="section-head">
+            <div>
+              <h2>Hero Slides</h2>
+              <p>Each slide has fixed frame rules. Artwork can change, text can change, and dots are created automatically from the number of slides.</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn" id="addHeroButton" type="button">Add hero</button>
+              <button class="btn green" id="saveButton" type="button">Save</button>
+            </div>
+          </div>
+          <div class="hero-grid">
+            <aside class="panel">
+              <div class="panel-head">
+                <h3>Slides</h3>
+                <span class="pill" id="heroCount">0</span>
+              </div>
+              <div class="list" id="heroList"></div>
+            </aside>
+            <div class="hero-preview" id="heroPreview"></div>
+            <aside class="panel">
+              <div class="panel-head"><h3>Slide settings</h3></div>
+              <div class="form">
+                <div class="field"><label for="heroContent">Linked content</label><select id="heroContent"></select></div>
+                <div class="field"><label for="heroMobile">Mobile artwork</label><input id="heroMobile" /></div>
+                <div class="field"><label for="heroDesktop">Desktop artwork</label><input id="heroDesktop" /></div>
+                <div class="field"><label for="heroEyebrow">Eyebrow</label><input id="heroEyebrow" /></div>
+                <div class="field"><label for="heroTitle">Title</label><input id="heroTitle" /></div>
+                <div class="field"><label for="heroDescription">Description</label><textarea id="heroDescription"></textarea></div>
+                <div class="field"><label for="heroCta">Call to action</label><input id="heroCta" /></div>
+                <div class="field"><label for="heroTargetType">Target type</label><select id="heroTargetType"><option value="discover">Content</option><option value="journey">Journey</option></select></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="shelvesView">
+          <div class="section-head">
+            <div>
+              <h2>Library Shelves</h2>
+              <p>Shelves are independent from heroes. Add a shelf, choose where it appears, then add linked content cards.</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn" id="addShelfButton" type="button">Add shelf</button>
+              <button class="btn green" id="saveButtonShelves" type="button">Save</button>
+            </div>
+          </div>
+          <div class="shelf-layout">
+            <aside class="panel">
+              <div class="panel-head">
+                <h3>Shelves</h3>
+                <span class="pill" id="shelfCount">0</span>
+              </div>
+              <div class="list" id="shelfList"></div>
+            </aside>
+            <section class="panel">
+              <div class="panel-head">
+                <h3 id="shelfPreviewTitle">Shelf preview</h3>
+                <button class="btn" id="addShelfItemButton" type="button">Add content</button>
+              </div>
+              <div class="cards" id="shelfCards"></div>
+            </section>
+            <aside class="panel">
+              <div class="panel-head"><h3>Shelf settings</h3></div>
+              <div class="form">
+                <div class="field"><label for="shelfTitle">Shelf title</label><input id="shelfTitle" /></div>
+                <div class="field"><label for="shelfMode">Where it appears</label><input id="shelfMode" placeholder="discover listen watch" /></div>
+                <div class="field"><label for="shelfSize">Card size</label><select id="shelfSize"><option value="wide">Wide</option><option value="square">Square</option><option value="poster">Poster</option></select></div>
+                <p class="field-help" id="shelfSizeHelp"></p>
+                <div class="field"><label for="shelfContent">Add content</label><select id="shelfContent"></select></div>
+                <hr class="form-divider" />
+                <div class="field"><label for="shelfCardContent">Selected card link</label><select id="shelfCardContent"></select></div>
+                <div class="field"><label for="shelfCardArtwork">Selected card artwork</label><input id="shelfCardArtwork" placeholder="assets/my-cover.jpg" /></div>
+                <p class="field-help">Put artwork files in the assets folder, then use a path like assets/my-cover.jpg.</p>
+                <div class="field"><label for="shelfCardAlt">Selected card description</label><input id="shelfCardAlt" /></div>
+                <label class="check-row"><input id="shelfCardLocked" type="checkbox" /> Show lock badge</label>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="journeyView">
+          <div class="section-head">
+            <div>
+              <h2>Journey Workflow</h2>
+              <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
+            </div>
+            <div class="btn-row">
+              <a class="btn" href="oneinhim_learner_app.html?v=143#journey">Preview Journey</a>
+              <a class="btn green" href="oneinhim_content_workshop.html?legacy=1">Edit lesson content</a>
+            </div>
+          </div>
+          <div class="journey-editor">
+            <section class="panel journey-map" id="journeyMap">
+              <div class="journey-path" aria-hidden="true"></div>
+              <div id="journeyMapContent"></div>
+            </section>
+            <aside class="panel">
+              <div class="panel-head">
+                <h3>Selected item</h3>
+                <button class="btn green" id="saveButtonJourney" type="button">Save</button>
+              </div>
+              <div class="form">
+                <div class="field"><label for="journeySection">Section</label><select id="journeySection"></select></div>
+                <div class="field"><label for="journeyUnit">Unit</label><select id="journeyUnit"></select></div>
+                <div class="field"><label for="journeyNode">Node</label><select id="journeyNode"></select></div>
+                <div class="field"><label for="journeySectionTitle">Section title</label><input id="journeySectionTitle" /></div>
+                <div class="field"><label for="journeySectionColor">Section colour</label><input id="journeySectionColor" type="color" /></div>
+                <div class="field"><label for="journeyUnitTitle">Unit title</label><input id="journeyUnitTitle" /></div>
+                <div class="field"><label for="journeyUnitDescription">Unit description</label><textarea id="journeyUnitDescription"></textarea></div>
+                <div class="field"><label for="journeyNodeTitle">Node title</label><input id="journeyNodeTitle" /></div>
+                <div class="field"><label for="journeyNodeType">Node type</label><select id="journeyNodeType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option></select></div>
+                <div class="field"><label for="journeyNodeContent">Linked content</label><select id="journeyNodeContent"></select></div>
+                <div class="btn-row">
+                  <button class="btn" id="addJourneySectionButton" type="button">Add section</button>
+                  <button class="btn" id="addJourneyUnitButton" type="button">Add unit</button>
+                  <button class="btn" id="addJourneyNodeButton" type="button">Add node</button>
+                  <button class="btn" id="removeJourneyNodeButton" type="button">Remove node</button>
+                </div>
+              </div>
+              <div class="panel-head">
+                <h3>Workflow links</h3>
+              </div>
+              <div class="form">
+                <a class="btn" href="oneinhim_learner_app.html?v=143#journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Open legacy prep</a>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="contentView">
+          <div class="section-head">
+            <div>
+              <h2>Content Links</h2>
+              <p>These are the current link targets used by hero slides and shelf cards. The next step is connecting this list to Supabase content records.</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn" id="exportButton" type="button">Export JSON</button>
+              <button class="btn green" id="saveButtonContent" type="button">Save</button>
+            </div>
+          </div>
+          <div class="content-grid" id="contentGrid"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const HOME_KEY = "oneinhim.homeContent.v2";
+    const JOURNEY_KEY = "oneinhim.journeyFlow.v1";
+    const ADMIN_TABLE = "oih_admin_users";
+    const DEFAULT_HOME = {
+      heroSlides: [
+        {
+          id: "one_basics_hero",
+          mode: "discover watch",
+          mobileArtwork: "assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
+          artwork: "assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
+          desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
+          targetType: "discover",
+          target: "mux_one_basics_1_1_full_video",
+          contentId: "mux_one_basics_1_1_full_video",
+          alt: "One Basics Eternal Life",
+          eyebrow: "One Basics",
+          title: "Start with Eternal Life",
+          description: "Watch the full One Basics episode and begin the foundation of knowing God personally through Jesus.",
+          cta: "Watch full episode"
+        },
+        {
+          id: "out_of_the_shadows_hero",
+          mode: "discover watch",
+          mobileArtwork: "assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
+          artwork: "assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
+          desktopArtwork: "assets/outoftheshadows-brenda-hero-v4.jpg",
+          targetType: "discover",
+          target: "mux_out_of_shadows_documentary",
+          alt: "Out of the Shadows",
+          eyebrow: "New to the OneApp",
+          title: "Out of the Shadows",
+          description: "A powerful documentary story of hope, healing, and stepping into the light.",
+          cta: "Watch now"
+        },
+        {
+          id: "journey_hero",
+          mode: "discover",
+          mobileArtwork: "assets/oneinhim-characters-international.png",
+          artwork: "assets/oneinhim-characters-international.png",
+          desktopArtwork: "assets/oneinhim-characters-international.png",
+          targetType: "journey",
+          target: "onboardingView",
+          contentId: "book_one_basics_1_1_eternal_life",
+          alt: "One In Him discipleship journey",
+          eyebrow: "Guided path",
+          title: "Continue your journey",
+          description: "Take the next clear step through short teachings, prayer, Scripture, and guided milestones.",
+          cta: "Open Journey"
+        }
+      ],
+      shelves: [
+        {
+          id: "start_this_week",
+          title: "Start This Week",
+          mode: "discover",
+          cardSize: "wide",
+          items: [
+            { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+            { id: "darkness_sonship", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
+            { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+            { id: "oneevent_duane", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
+          ]
+        },
+        {
+          id: "listen_this_week",
+          title: "Listen This Week",
+          mode: "discover listen",
+          cardSize: "square",
+          items: [
+            { id: "darkness_sonship_audio", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
+            { id: "ivan_ilyich", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+          ]
+        },
+        {
+          id: "watch_this_week",
+          title: "Watch This Week",
+          mode: "discover watch",
+          cardSize: "poster",
+          items: [
+            { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+            { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
+            { id: "oneevent_watch", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
+          ]
+        },
+        {
+          id: "classics",
+          title: "Classics",
+          mode: "discover listen",
+          cardSize: "square",
+          items: [
+            { id: "death_ivan_classics", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", targetType: "discover", target: "aud_death_ivan_ilyich_classics", alt: "The Death of Ivan Ilyich", locked: true }
+          ]
+        }
+      ]
+    };
+
+    const DEFAULT_JOURNEY = {
+      sections: [
+        {
+          id: "stage_1_explore_jesus",
+          number: 1,
+          title: "Explore Jesus",
+          color: "#ee7326",
+          units: [
+            {
+              id: "stage_1_unit_1",
+              title: "Explore Jesus",
+              description: "A first section for honest questions, curiosity, and meeting Jesus.",
+              nodes: [
+                { id: "why_jesus_came_near", title: "Why Jesus Came Near", type: "Watch", contentId: "pkg_why_jesus_came_near_discover" },
+                { id: "who_is_jesus", title: "Who is Jesus?", type: "Read", contentId: "pkg_why_jesus_came_near_discover" },
+                { id: "honest_question", title: "Ask one honest question", type: "Reflect", contentId: "pkg_why_jesus_came_near_discover" }
+              ]
+            }
+          ]
+        },
+        {
+          id: "stage_2_start_following",
+          number: 2,
+          title: "Start Following Jesus",
+          color: "#f6ca35",
+          units: [
+            {
+              id: "stage_2_unit_1",
+              title: "New Life in Jesus",
+              description: "A foundations section on eternal life, grace, righteousness, intimacy with God, and repentance.",
+              nodes: [
+                { id: "eternal_life_opening", title: "1.1: Eternal Life opening", type: "Watch", contentId: "mux_one_basics_1_1_full_video" },
+                { id: "eternal_life_read", title: "1.1: Eternal Life", type: "Read", contentId: "pkg_one_basics_1_1_eternal_life" },
+                { id: "saved_by_grace", title: "1.2: Saved by Grace", type: "Read", contentId: "pkg_one_basics_1_2_saved_by_grace" }
+              ]
+            },
+            {
+              id: "stage_2_unit_2",
+              title: "First Foundations",
+              description: "Foundational steps for a new Christian or someone starting again.",
+              nodes: [
+                { id: "righteousness_by_grace", title: "1.3: Righteousness by Grace", type: "Read", contentId: "pkg_one_basics_1_3_righteousness_by_grace" },
+                { id: "daily_step", title: "One simple daily step", type: "Practice", contentId: "stageDetailView" }
+              ]
+            }
+          ]
+        },
+        {
+          id: "stage_3_grow_deep_roots",
+          number: 3,
+          title: "Grow Deep Roots",
+          color: "#446523",
+          units: [
+            {
+              id: "stage_3_unit_1",
+              title: "Bring Honest Questions",
+              description: "Formation, prayer, anxiety, suffering, community, and growing deeper roots.",
+              nodes: [
+                { id: "life_feels_heavy", title: "Hard Questions: When Life Feels Heavy", type: "Read", contentId: "pkg_hard_questions_when_life_feels_heavy" },
+                { id: "pray_when_heavy", title: "Pray honestly", type: "Reflect", contentId: "pkg_hard_questions_when_life_feels_heavy" }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    const CONTENT = [
+      { id: "mux_one_basics_1_1_full_video", title: "One Basics 1.1: Eternal Life", type: "Video", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Full One Basics episode." },
+      { id: "mux_out_of_shadows_documentary", title: "Out of the Shadows", type: "Documentary", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", summary: "Brenda's story of hope and healing." },
+      { id: "aud_darkness_sonship_004", title: "From Darkness to Sonship", type: "Audio", artwork: "assets/one-gospel-podcast-cover.png", summary: "One Gospel podcast episode." },
+      { id: "mux_oneevent_ps_duane_friday", title: "Ps Duane: Friday Session", type: "Event", artwork: "assets/oneevent-ps-duane-friday-cover.png", summary: "ONEEVENT Friday teaching." },
+      { id: "aud_death_ivan_ilyich_classics", title: "The Death of Ivan Ilyich", type: "Audiobook", artwork: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", summary: "Classics audiobook placeholder." },
+      { id: "pkg_one_basics_1_1_eternal_life", title: "One Basics 1.1: Eternal Life", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson." },
+      { id: "pkg_one_basics_1_2_saved_by_grace", title: "One Basics 1.2: Saved by Grace", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson." },
+      { id: "pkg_one_basics_1_3_righteousness_by_grace", title: "One Basics 1.3: Righteousness by Grace", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson." },
+      { id: "pkg_why_jesus_came_near_discover", title: "Why Jesus Came Near", type: "Journey Start", artwork: "", summary: "Explore Jesus starter content." },
+      { id: "pkg_hard_questions_when_life_feels_heavy", title: "Hard Questions: When Life Feels Heavy", type: "Journey Read", artwork: "", summary: "Grow Deep Roots lesson." },
+      { id: "stageDetailView", title: "Journey", type: "Journey", artwork: "assets/oneinhim-characters-international.png", summary: "Guided discipleship path." }
+    ];
+
+    const state = {
+      view: "heroes",
+      heroIndex: 0,
+      shelfIndex: 0,
+      shelfItemIndex: 0,
+      journeySectionIndex: 0,
+      journeyUnitIndex: 0,
+      journeyNodeIndex: 0,
+      journey: readJourney(),
+      layout: readLayout()
+    };
+
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[char]));
+    }
+
+    function readLayout() {
+      try {
+        const raw = localStorage.getItem(HOME_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_HOME));
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) return JSON.parse(JSON.stringify(DEFAULT_HOME));
+        return parsed;
+      } catch {
+        return JSON.parse(JSON.stringify(DEFAULT_HOME));
+      }
+    }
+
+    function readJourney() {
+      try {
+        const raw = localStorage.getItem(JOURNEY_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_JOURNEY));
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed.sections)) return JSON.parse(JSON.stringify(DEFAULT_JOURNEY));
+        return parsed;
+      } catch {
+        return JSON.parse(JSON.stringify(DEFAULT_JOURNEY));
+      }
+    }
+
+    function saveLayout() {
+      localStorage.setItem(HOME_KEY, JSON.stringify(state.layout, null, 2));
+      toast("Saved. Preview the app to see it.");
+    }
+
+    function saveJourney() {
+      localStorage.setItem(JOURNEY_KEY, JSON.stringify(state.journey, null, 2));
+      toast("Journey saved. Preview the app to see it.");
+    }
+
+    function toast(message) {
+      const old = document.querySelector(".toast");
+      if (old) old.remove();
+      const node = document.createElement("div");
+      node.className = "toast";
+      node.textContent = message;
+      Object.assign(node.style, {
+        position: "fixed", right: "18px", bottom: "18px", zIndex: 99,
+        padding: "12px 14px", borderRadius: "12px", background: "#ee7326",
+        color: "#fff", fontWeight: "900", boxShadow: "0 14px 36px rgba(0,0,0,.28)"
+      });
+      document.body.appendChild(node);
+      setTimeout(() => node.remove(), 1800);
+    }
+
+    function contentOptions(current = "") {
+      const ids = new Set(CONTENT.map((item) => item.id));
+      if (current && !ids.has(current)) CONTENT.push({ id: current, title: current, type: "Custom", artwork: "", summary: "" });
+      return CONTENT.map((item) => `<option value="${esc(item.id)}"${item.id === current ? " selected" : ""}>${esc(item.title)} · ${esc(item.type)}</option>`).join("");
+    }
+
+    function selectedContent(id) {
+      return CONTENT.find((item) => item.id === id) || CONTENT[0];
+    }
+
+    function shelfSizeHelp(size) {
+      const guides = {
+        wide: "Recommended artwork: 1600 x 900 px. Best for landscape video, course, and teaching cards.",
+        square: "Recommended artwork: 1200 x 1200 px. Best for audio, books, and compact covers.",
+        poster: "Recommended artwork: 1200 x 1600 px. Best for tall series, books, and featured covers."
+      };
+      return guides[size || "wide"] || guides.wide;
+    }
+
+    function currentHero() {
+      return state.layout.heroSlides[state.heroIndex] || state.layout.heroSlides[0];
+    }
+
+    function currentShelf() {
+      return state.layout.shelves[state.shelfIndex] || state.layout.shelves[0];
+    }
+
+    function currentShelfItem() {
+      const shelf = currentShelf();
+      const items = shelf?.items || [];
+      state.shelfItemIndex = Math.max(0, Math.min(state.shelfItemIndex, Math.max(0, items.length - 1)));
+      return items[state.shelfItemIndex] || null;
+    }
+
+    function currentJourneySection() {
+      return state.journey.sections[state.journeySectionIndex] || state.journey.sections[0];
+    }
+
+    function currentJourneyUnit() {
+      const section = currentJourneySection();
+      return section?.units?.[state.journeyUnitIndex] || section?.units?.[0];
+    }
+
+    function currentJourneyNode() {
+      const unit = currentJourneyUnit();
+      return unit?.nodes?.[state.journeyNodeIndex] || unit?.nodes?.[0];
+    }
+
+    function normaliseJourneySelection() {
+      const sections = state.journey.sections || [];
+      state.journeySectionIndex = Math.max(0, Math.min(state.journeySectionIndex, sections.length - 1));
+      const units = currentJourneySection()?.units || [];
+      state.journeyUnitIndex = Math.max(0, Math.min(state.journeyUnitIndex, units.length - 1));
+      const nodes = currentJourneyUnit()?.nodes || [];
+      state.journeyNodeIndex = Math.max(0, Math.min(state.journeyNodeIndex, nodes.length - 1));
+    }
+
+    function render() {
+      document.querySelectorAll(".side-nav button").forEach((button) => button.classList.toggle("active", button.dataset.view === state.view));
+      document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === `${state.view}View`));
+      renderHeroes();
+      renderShelves();
+      renderJourney();
+      renderContent();
+    }
+
+    function renderHeroes() {
+      const hero = currentHero();
+      document.getElementById("heroCount").textContent = String(state.layout.heroSlides.length);
+      document.getElementById("heroList").innerHTML = state.layout.heroSlides.map((slide, index) => `
+        <button class="row${index === state.heroIndex ? " active" : ""}" type="button" data-hero-index="${index}">
+          <strong>${esc(slide.title || "Untitled hero")}</strong>
+          <span>${esc(slide.target || slide.contentId || "No link")}</span>
+        </button>
+      `).join("");
+      document.getElementById("heroPreview").innerHTML = `
+        <picture>
+          <source media="(min-width: 760px)" srcset="${esc(hero.desktopArtwork || hero.artwork || hero.mobileArtwork || "")}" />
+          <img src="${esc(hero.mobileArtwork || hero.artwork || hero.desktopArtwork || "")}" alt="${esc(hero.alt || "")}" />
+        </picture>
+        <span class="hero-copy">
+          <span class="kicker">${esc(hero.eyebrow || "")}</span>
+          <span class="title">${esc(hero.title || "")}</span>
+          <span class="desc">${esc(hero.description || "")}</span>
+          <span class="cta">${esc(hero.cta || "")} ›</span>
+        </span>
+        <span class="dots">${state.layout.heroSlides.map((_, index) => `<span class="${index === state.heroIndex ? "active" : ""}"></span>`).join("")}</span>
+      `;
+      document.getElementById("heroContent").innerHTML = contentOptions(hero.contentId || hero.target || "");
+      document.getElementById("heroMobile").value = hero.mobileArtwork || "";
+      document.getElementById("heroDesktop").value = hero.desktopArtwork || "";
+      document.getElementById("heroEyebrow").value = hero.eyebrow || "";
+      document.getElementById("heroTitle").value = hero.title || "";
+      document.getElementById("heroDescription").value = hero.description || "";
+      document.getElementById("heroCta").value = hero.cta || "";
+      document.getElementById("heroTargetType").value = hero.targetType || "discover";
+    }
+
+    function renderShelves() {
+      const shelf = currentShelf();
+      const shelfItem = currentShelfItem();
+      document.getElementById("shelfCount").textContent = String(state.layout.shelves.length);
+      document.getElementById("shelfList").innerHTML = state.layout.shelves.map((item, index) => `
+        <button class="row${index === state.shelfIndex ? " active" : ""}" type="button" data-shelf-index="${index}">
+          <strong>${esc(item.title || "Untitled shelf")}</strong>
+          <span>${esc((item.items || []).length)} cards · ${esc(item.mode || "discover")}</span>
+        </button>
+      `).join("");
+      document.getElementById("shelfPreviewTitle").textContent = shelf.title || "Shelf preview";
+      document.getElementById("shelfCards").innerHTML = (shelf.items || []).map((item, index) => `
+        <div class="card-preview ${esc(shelf.cardSize || "wide")}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(item.alt || selectedContent(item.contentId || item.target)?.title || "card")} artwork">
+          <img src="${esc(item.artwork || selectedContent(item.contentId || item.target)?.artwork || "")}" alt="${esc(item.alt || "")}" />
+          <button class="card-remove" type="button" data-remove-shelf-item="${index}" aria-label="Remove ${esc(item.alt || "card")}">Remove</button>
+        </div>
+      `).join("");
+      document.getElementById("shelfTitle").value = shelf.title || "";
+      document.getElementById("shelfMode").value = shelf.mode || "";
+      document.getElementById("shelfSize").value = shelf.cardSize || "wide";
+      document.getElementById("shelfSizeHelp").textContent = shelfSizeHelp(shelf.cardSize || "wide");
+      document.getElementById("shelfContent").innerHTML = contentOptions("");
+      document.getElementById("shelfCardContent").innerHTML = contentOptions(shelfItem?.contentId || shelfItem?.target || "");
+      document.getElementById("shelfCardArtwork").value = shelfItem?.artwork || "";
+      document.getElementById("shelfCardArtwork").disabled = !shelfItem;
+      document.getElementById("shelfCardAlt").value = shelfItem?.alt || "";
+      document.getElementById("shelfCardAlt").disabled = !shelfItem;
+      document.getElementById("shelfCardContent").disabled = !shelfItem;
+      document.getElementById("shelfCardLocked").checked = Boolean(shelfItem?.locked);
+      document.getElementById("shelfCardLocked").disabled = !shelfItem;
+    }
+
+    function renderContent() {
+      document.getElementById("contentGrid").innerHTML = CONTENT.map((item) => `
+        <article class="content-card">
+          <span class="pill">${esc(item.type)}</span>
+          <h3>${esc(item.title)}</h3>
+          <p>${esc(item.id)}</p>
+          <p>${esc(item.summary)}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderJourney() {
+      normaliseJourneySelection();
+      const section = currentJourneySection();
+      const unit = currentJourneyUnit();
+      const node = currentJourneyNode();
+      const map = document.getElementById("journeyMapContent");
+      if (!map) return;
+      if (!section) {
+        map.innerHTML = `<p class="journey-empty">No Journey sections yet.</p>`;
+        return;
+      }
+      map.innerHTML = state.journey.sections.map((journeySection, sectionIndex) => `
+        <div class="journey-section-block">
+          ${(journeySection.units || []).map((journeyUnit, unitIndex) => `
+            <button class="journey-unit-banner${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex ? " active" : ""}" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" style="background:${esc(journeySection.color || "#ee7326")}">
+              <span>Section ${esc(journeySection.number || sectionIndex + 1)} · ${esc(journeySection.title || "Untitled section")}</span>
+              <strong>${esc(journeyUnit.title || "Untitled unit")}</strong>
+              <em>≡</em>
+            </button>
+            <div class="journey-node-row">
+              ${(journeyUnit.nodes || []).map((journeyNode, nodeIndex) => `
+                <button class="journey-node${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex && nodeIndex === state.journeyNodeIndex ? " active" : ""}" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="${nodeIndex}" style="${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex && nodeIndex === state.journeyNodeIndex ? `background:${esc(journeySection.color || "#ee7326")};` : ""}">${nodeIndex + 1}</button>
+                <button class="journey-node-meta" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="${nodeIndex}">
+                  <strong>${esc(journeyNode.title || "Untitled node")}</strong>
+                  <span>${esc(journeyNode.type || "Lesson")} · ${esc(selectedContent(journeyNode.contentId)?.title || journeyNode.contentId || "No content")}</span>
+                </button>
+              `).join("")}
+            </div>
+          `).join("")}
+        </div>
+      `).join("");
+      document.getElementById("journeySection").innerHTML = state.journey.sections.map((item, index) => `<option value="${index}"${index === state.journeySectionIndex ? " selected" : ""}>Section ${esc(item.number || index + 1)} · ${esc(item.title)}</option>`).join("");
+      document.getElementById("journeyUnit").innerHTML = (section.units || []).map((item, index) => `<option value="${index}"${index === state.journeyUnitIndex ? " selected" : ""}>${esc(item.title || `Unit ${index + 1}`)}</option>`).join("");
+      document.getElementById("journeyNode").innerHTML = (unit?.nodes || []).map((item, index) => `<option value="${index}"${index === state.journeyNodeIndex ? " selected" : ""}>${index + 1}. ${esc(item.title || "Untitled node")}</option>`).join("");
+      document.getElementById("journeySectionTitle").value = section.title || "";
+      document.getElementById("journeySectionColor").value = section.color || "#ee7326";
+      document.getElementById("journeyUnitTitle").value = unit?.title || "";
+      document.getElementById("journeyUnitDescription").value = unit?.description || "";
+      document.getElementById("journeyNodeTitle").value = node?.title || "";
+      document.getElementById("journeyNodeType").value = node?.type || "Read";
+      document.getElementById("journeyNodeContent").innerHTML = contentOptions(node?.contentId || "");
+    }
+
+    function updateJourneyField(field, value) {
+      const section = currentJourneySection();
+      const unit = currentJourneyUnit();
+      const node = currentJourneyNode();
+      if (field === "sectionTitle" && section) section.title = value;
+      if (field === "sectionColor" && section) section.color = value;
+      if (field === "unitTitle" && unit) unit.title = value;
+      if (field === "unitDescription" && unit) unit.description = value;
+      if (field === "nodeTitle" && node) node.title = value;
+      if (field === "nodeType" && node) node.type = value;
+      if (field === "nodeContent" && node) node.contentId = value;
+      renderJourney();
+    }
+
+    function updateHeroField(field, value) {
+      const hero = currentHero();
+      if (!hero) return;
+      if (field === "content") {
+        const content = selectedContent(value);
+        hero.contentId = value;
+        hero.target = value;
+        if (!hero.title) hero.title = content.title;
+        if (!hero.mobileArtwork) hero.mobileArtwork = content.artwork;
+        if (!hero.desktopArtwork) hero.desktopArtwork = content.artwork;
+        if (!hero.artwork) hero.artwork = content.artwork;
+      } else {
+        hero[field] = value;
+        if (field === "mobileArtwork") hero.artwork = value;
+      }
+      renderHeroes();
+    }
+
+    function updateShelfItemField(field, value) {
+      const item = currentShelfItem();
+      if (!item) return;
+      if (field === "content") {
+        const content = selectedContent(value);
+        item.contentId = value;
+        item.target = value;
+        item.targetType = value === "stageDetailView" ? "journey" : "discover";
+        if (!item.artwork) item.artwork = content.artwork;
+        if (!item.alt) item.alt = content.title;
+      } else {
+        item[field] = value;
+      }
+      renderShelves();
+    }
+
+    function wire() {
+      document.querySelectorAll(".side-nav button").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.view = button.dataset.view;
+          render();
+        });
+      });
+      document.getElementById("heroList").addEventListener("click", (event) => {
+        const row = event.target.closest("[data-hero-index]");
+        if (!row) return;
+        state.heroIndex = Number(row.dataset.heroIndex);
+        renderHeroes();
+      });
+      document.getElementById("shelfList").addEventListener("click", (event) => {
+        const row = event.target.closest("[data-shelf-index]");
+        if (!row) return;
+        state.shelfIndex = Number(row.dataset.shelfIndex);
+        state.shelfItemIndex = 0;
+        renderShelves();
+      });
+      document.getElementById("shelfCards").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-remove-shelf-item]");
+        if (button) {
+          const shelf = currentShelf();
+          const index = Number(button.dataset.removeShelfItem);
+          shelf.items = (shelf.items || []).filter((_, itemIndex) => itemIndex !== index);
+          state.shelfItemIndex = Math.max(0, Math.min(state.shelfItemIndex, (shelf.items || []).length - 1));
+          renderShelves();
+          toast("Removed from shelf. Remember to save.");
+          return;
+        }
+        const card = event.target.closest("[data-shelf-item-index]");
+        if (!card) return;
+        state.shelfItemIndex = Number(card.dataset.shelfItemIndex);
+        renderShelves();
+      });
+      document.getElementById("shelfCards").addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        const card = event.target.closest("[data-shelf-item-index]");
+        if (!card) return;
+        event.preventDefault();
+        state.shelfItemIndex = Number(card.dataset.shelfItemIndex);
+        renderShelves();
+      });
+      document.getElementById("journeyMapContent").addEventListener("click", (event) => {
+        const target = event.target.closest("[data-journey-section]");
+        if (!target) return;
+        state.journeySectionIndex = Number(target.dataset.journeySection);
+        state.journeyUnitIndex = Number(target.dataset.journeyUnit || 0);
+        state.journeyNodeIndex = target.dataset.journeyNode ? Number(target.dataset.journeyNode) : 0;
+        renderJourney();
+      });
+      document.getElementById("heroContent").addEventListener("change", (event) => updateHeroField("content", event.target.value));
+      document.getElementById("heroMobile").addEventListener("input", (event) => updateHeroField("mobileArtwork", event.target.value));
+      document.getElementById("heroDesktop").addEventListener("input", (event) => updateHeroField("desktopArtwork", event.target.value));
+      document.getElementById("heroEyebrow").addEventListener("input", (event) => updateHeroField("eyebrow", event.target.value));
+      document.getElementById("heroTitle").addEventListener("input", (event) => updateHeroField("title", event.target.value));
+      document.getElementById("heroDescription").addEventListener("input", (event) => updateHeroField("description", event.target.value));
+      document.getElementById("heroCta").addEventListener("input", (event) => updateHeroField("cta", event.target.value));
+      document.getElementById("heroTargetType").addEventListener("change", (event) => updateHeroField("targetType", event.target.value));
+      document.getElementById("shelfTitle").addEventListener("input", (event) => { currentShelf().title = event.target.value; renderShelves(); });
+      document.getElementById("shelfMode").addEventListener("input", (event) => { currentShelf().mode = event.target.value; renderShelves(); });
+      document.getElementById("shelfSize").addEventListener("change", (event) => { currentShelf().cardSize = event.target.value; renderShelves(); });
+      document.getElementById("shelfCardContent").addEventListener("change", (event) => updateShelfItemField("content", event.target.value));
+      document.getElementById("shelfCardArtwork").addEventListener("input", (event) => updateShelfItemField("artwork", event.target.value));
+      document.getElementById("shelfCardAlt").addEventListener("input", (event) => updateShelfItemField("alt", event.target.value));
+      document.getElementById("shelfCardLocked").addEventListener("change", (event) => updateShelfItemField("locked", event.target.checked));
+      document.getElementById("journeySection").addEventListener("change", (event) => {
+        state.journeySectionIndex = Number(event.target.value);
+        state.journeyUnitIndex = 0;
+        state.journeyNodeIndex = 0;
+        renderJourney();
+      });
+      document.getElementById("journeyUnit").addEventListener("change", (event) => {
+        state.journeyUnitIndex = Number(event.target.value);
+        state.journeyNodeIndex = 0;
+        renderJourney();
+      });
+      document.getElementById("journeyNode").addEventListener("change", (event) => {
+        state.journeyNodeIndex = Number(event.target.value);
+        renderJourney();
+      });
+      document.getElementById("journeySectionTitle").addEventListener("input", (event) => updateJourneyField("sectionTitle", event.target.value));
+      document.getElementById("journeySectionColor").addEventListener("input", (event) => updateJourneyField("sectionColor", event.target.value));
+      document.getElementById("journeyUnitTitle").addEventListener("input", (event) => updateJourneyField("unitTitle", event.target.value));
+      document.getElementById("journeyUnitDescription").addEventListener("input", (event) => updateJourneyField("unitDescription", event.target.value));
+      document.getElementById("journeyNodeTitle").addEventListener("input", (event) => updateJourneyField("nodeTitle", event.target.value));
+      document.getElementById("journeyNodeType").addEventListener("change", (event) => updateJourneyField("nodeType", event.target.value));
+      document.getElementById("journeyNodeContent").addEventListener("change", (event) => updateJourneyField("nodeContent", event.target.value));
+      document.getElementById("addShelfItemButton").addEventListener("click", () => {
+        const content = selectedContent(document.getElementById("shelfContent").value);
+        currentShelf().items = currentShelf().items || [];
+        currentShelf().items.push({
+          id: `${content.id}_${Date.now()}`,
+          artwork: content.artwork,
+          targetType: content.id === "stageDetailView" ? "journey" : "discover",
+          target: content.id,
+          contentId: content.id,
+          alt: content.title
+        });
+        state.shelfItemIndex = currentShelf().items.length - 1;
+        renderShelves();
+      });
+      document.getElementById("addHeroButton").addEventListener("click", () => {
+        const content = CONTENT[0];
+        state.layout.heroSlides.push({
+          id: `hero_${Date.now()}`,
+          mode: "discover",
+          mobileArtwork: content.artwork,
+          artwork: content.artwork,
+          desktopArtwork: content.artwork,
+          targetType: "discover",
+          target: content.id,
+          contentId: content.id,
+          alt: content.title,
+          eyebrow: "Featured",
+          title: content.title,
+          description: content.summary,
+          cta: "Open"
+        });
+        state.heroIndex = state.layout.heroSlides.length - 1;
+        render();
+      });
+      document.getElementById("addShelfButton").addEventListener("click", () => {
+        state.layout.shelves.push({ id: `shelf_${Date.now()}`, title: "New shelf", mode: "discover", cardSize: "wide", items: [] });
+        state.shelfIndex = state.layout.shelves.length - 1;
+        render();
+      });
+      document.getElementById("addJourneySectionButton").addEventListener("click", () => {
+        state.journey.sections = state.journey.sections || [];
+        const nextNumber = state.journey.sections.length + 1;
+        state.journey.sections.push({
+          id: `stage_${nextNumber}_${Date.now()}`,
+          number: nextNumber,
+          title: "New section",
+          color: "#ee7326",
+          units: [
+            {
+              id: `unit_${Date.now()}`,
+              title: "New unit",
+              description: "Describe what this unit helps someone take hold of.",
+              nodes: [
+                { id: `node_${Date.now()}`, title: "New lesson node", type: "Read", contentId: CONTENT[0].id }
+              ]
+            }
+          ]
+        });
+        state.journeySectionIndex = state.journey.sections.length - 1;
+        state.journeyUnitIndex = 0;
+        state.journeyNodeIndex = 0;
+        renderJourney();
+      });
+      document.getElementById("addJourneyUnitButton").addEventListener("click", () => {
+        const section = currentJourneySection();
+        if (!section) return;
+        section.units = section.units || [];
+        section.units.push({
+          id: `unit_${Date.now()}`,
+          title: "New unit",
+          description: "Describe what this unit helps someone take hold of.",
+          nodes: [
+            { id: `node_${Date.now()}`, title: "New lesson node", type: "Read", contentId: CONTENT[0].id }
+          ]
+        });
+        state.journeyUnitIndex = section.units.length - 1;
+        state.journeyNodeIndex = 0;
+        renderJourney();
+      });
+      document.getElementById("addJourneyNodeButton").addEventListener("click", () => {
+        const unit = currentJourneyUnit();
+        if (!unit) return;
+        unit.nodes = unit.nodes || [];
+        unit.nodes.push({
+          id: `node_${Date.now()}`,
+          title: "New lesson node",
+          type: "Read",
+          contentId: CONTENT[0].id
+        });
+        state.journeyNodeIndex = unit.nodes.length - 1;
+        renderJourney();
+      });
+      document.getElementById("removeJourneyNodeButton").addEventListener("click", () => {
+        const unit = currentJourneyUnit();
+        if (!unit?.nodes?.length) return;
+        unit.nodes.splice(state.journeyNodeIndex, 1);
+        state.journeyNodeIndex = Math.max(0, state.journeyNodeIndex - 1);
+        renderJourney();
+        toast("Removed Journey node. Remember to save.");
+      });
+      ["saveButton", "saveButtonShelves", "saveButtonContent"].forEach((id) => document.getElementById(id).addEventListener("click", saveLayout));
+      document.getElementById("saveButtonJourney").addEventListener("click", saveJourney);
+      document.getElementById("exportButton").addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(state.layout, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "oneinhim_home_layout.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    function config() {
+      return window.ONEINHIM_TEAM_SYNC || window.OIH_TEAM_SYNC_CONFIG || {};
+    }
+
+    function authClient() {
+      const cfg = config();
+      if (!window.supabase?.createClient || !cfg.supabaseUrl || !cfg.supabaseAnonKey) return null;
+      return window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+    }
+
+    async function isApprovedAdmin(client) {
+      const { data: sessionData } = await client.auth.getSession();
+      if (!sessionData?.session) return false;
+      const { data: profile } = await client.from(ADMIN_TABLE).select("active").maybeSingle();
+      return Boolean(profile?.active);
+    }
+
+    async function boot() {
+      if (location.protocol === "file:") {
+        document.getElementById("authMessage").textContent = "Open this from http://localhost:8765/oneinhim_admin_workshop.html so Supabase Auth can work.";
+        return;
+      }
+      const client = authClient();
+      if (!client) {
+        document.getElementById("authMessage").textContent = "Supabase did not load. Check the local server and internet connection.";
+        return;
+      }
+      const showApp = async () => {
+        document.getElementById("authScreen").hidden = true;
+        document.getElementById("appShell").hidden = false;
+        wire();
+        render();
+      };
+      if (await isApprovedAdmin(client)) {
+        await showApp();
+      }
+      document.getElementById("signInButton").addEventListener("click", async () => {
+        const email = document.getElementById("adminEmail").value.trim();
+        const password = document.getElementById("adminPassword").value.trim();
+        document.getElementById("authMessage").textContent = "Signing in...";
+        const { error } = await client.auth.signInWithPassword({ email, password });
+        document.getElementById("adminPassword").value = "";
+        if (error) {
+          document.getElementById("authMessage").textContent = error.message;
+          return;
+        }
+        if (!(await isApprovedAdmin(client))) {
+          await client.auth.signOut();
+          document.getElementById("authMessage").textContent = "Signed in, but this account is not approved as an admin.";
+          return;
+        }
+        await showApp();
+      });
+      document.getElementById("signOutButton").addEventListener("click", async () => {
+        await client.auth.signOut();
+        location.reload();
+      });
+    }
+
+    boot();
+  </script>
+</body>
+</html>

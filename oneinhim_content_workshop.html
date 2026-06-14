@@ -8,6 +8,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="ONEapp Workshop" />
 <title>One In Him Content Workshop</title>
+<script>
+  (() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("legacy")) return;
+    const target = window.location.protocol === "file:"
+      ? "http://localhost:8765/oneinhim_admin_workshop.html"
+      : "oneinhim_admin_workshop.html";
+    window.location.replace(`${target}?v=137&from=legacy`);
+  })();
+</script>
 <link rel="manifest" href="oneinhim.webmanifest" />
 <link rel="icon" href="assets/oneinhim-logo-primary.jpg" />
 <link rel="apple-touch-icon" href="assets/oneinhim-logo-primary.jpg" />
@@ -3577,12 +3587,12 @@ body.workshop-locked .shell {
       </div>
 
       <nav class="tabs" aria-label="Workshop views">
-        <button class="tab-btn active" data-view="transcriptView">Transcript / text</button>
+        <button class="tab-btn active" data-view="homeLayoutView">Home layout</button>
         <button class="tab-btn" data-view="videoIntakeView">Video intake</button>
+        <button class="tab-btn" data-view="transcriptView">Transcript / text</button>
         <button class="tab-btn" data-view="clipsView">Clips and excerpts</button>
         <button class="tab-btn" data-view="packageView">Package builder</button>
         <button class="tab-btn" data-view="placementMapView">Placement map</button>
-        <button class="tab-btn" data-view="homeLayoutView">Home layout</button>
         <button class="tab-btn" data-view="packageFormatView">App package format</button>
         <button class="tab-btn" data-view="preparedView">Prepared app item</button>
         <button class="tab-btn" data-view="recommendView">Recommendation preview</button>
@@ -3597,7 +3607,7 @@ body.workshop-locked .shell {
       </div>
 
       <div class="stage-body">
-        <section class="view active" id="transcriptView">
+        <section class="view" id="transcriptView">
           <h3 class="section-title">Useful moments</h3>
           <div class="transcript-grid" id="transcriptList" data-testid="transcript-list"></div>
         </section>
@@ -3890,7 +3900,7 @@ body.workshop-locked .shell {
           <div class="package-flow-preview" id="packageFlowPreview"></div>
         </section>
 
-        <section class="view" id="homeLayoutView">
+        <section class="view active" id="homeLayoutView">
           <div class="package-header">
             <div>
               <h3 class="section-title">Home builder</h3>
@@ -4533,7 +4543,7 @@ const state = {
   sharedPackages: [],
   sources: [],
   activeId: null,
-  activeView: "transcriptView",
+  activeView: "homeLayoutView",
   placementOverrides: {},
   placementSelectedId: "",
   placementSearch: "",
@@ -4749,7 +4759,24 @@ const els = {
   jsonPreview: document.getElementById("jsonPreview")
 };
 
-const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v1";
+const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
+const HOME_CONTENT_TARGET_ALIASES = {
+  mux_one_basics_1_1_opening_clip: "mux_one_basics_1_1_full_video",
+  pathSelectView: "book_one_basics_1_1_eternal_life",
+  oneevent_ps_duane_friday: "mux_oneevent_ps_duane_friday",
+  out_of_the_shadows: "mux_out_of_shadows_documentary",
+  journey_start_here: "book_one_basics_1_1_eternal_life"
+};
+
+function resolveHomeContentTargetId(id) {
+  const requestedId = String(id || "").trim();
+  return HOME_CONTENT_TARGET_ALIASES[requestedId] || requestedId;
+}
+
+function homeTargetTypeForContentId(id) {
+  return id === "pathSelectView" || id === "stageDetailView" ? "journey" : "discover";
+}
+
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
     {
@@ -4760,6 +4787,7 @@ const DEFAULT_HOME_CONTENT = {
       desktopArtwork: "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
       targetType: "discover",
       target: "mux_one_basics_1_1_full_video",
+      contentId: "mux_one_basics_1_1_full_video",
       alt: "One Basics Eternal Life",
       eyebrow: "One Basics",
       title: "Start with Eternal Life",
@@ -4787,7 +4815,8 @@ const DEFAULT_HOME_CONTENT = {
       artwork: "assets/oneinhim-characters-international.png",
       desktopArtwork: "assets/oneinhim-characters-international.png",
       targetType: "journey",
-      target: "pathSelectView",
+      target: "stageDetailView",
+      contentId: "book_one_basics_1_1_eternal_life",
       alt: "One In Him discipleship journey",
       eyebrow: "Guided path",
       title: "Continue your journey",
@@ -4802,7 +4831,7 @@ const DEFAULT_HOME_CONTENT = {
       mode: "discover",
       cardSize: "wide",
       items: [
-        { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+        { id: "one_basics_course", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
         { id: "darkness_sonship", artwork: "assets/one-gospel-podcast-cover.png", targetType: "discover", target: "aud_darkness_sonship_004", alt: "From Darkness to Sonship" },
         { id: "out_of_the_shadows", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
         { id: "oneevent_duane", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
@@ -4824,7 +4853,7 @@ const DEFAULT_HOME_CONTENT = {
       mode: "discover watch",
       cardSize: "poster",
       items: [
-        { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
+        { id: "one_basics_watch", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", targetType: "discover", target: "mux_one_basics_1_1_full_video", contentId: "mux_one_basics_1_1_full_video", alt: "One Basics 1.1 Eternal Life" },
         { id: "out_of_the_shadows_watch", artwork: "assets/outoftheshadows-brenda-hero-v4.jpg", targetType: "discover", target: "mux_out_of_shadows_documentary", alt: "Out of the Shadows", locked: true },
         { id: "oneevent_watch", artwork: "assets/oneevent-ps-duane-friday-cover.png", targetType: "discover", target: "mux_oneevent_ps_duane_friday", alt: "ONEEVENT Friday teaching" }
       ]
@@ -4843,6 +4872,20 @@ const DEFAULT_HOME_CONTENT = {
 
 function normalizeHomeLayout(layout) {
   const defaultSlidesById = new Map(DEFAULT_HOME_CONTENT.heroSlides.map((slide) => [slide.id, slide]));
+  const normalizeHomeItemTarget = (item) => {
+    const shouldUpgradeOneBasicsWatchTarget = ["one_basics_hero", "one_basics_course", "one_basics_watch"].includes(item.id)
+      && (item.target === "book_one_basics_1_1_eternal_life" || item.contentId === "book_one_basics_1_1_eternal_life");
+    const rawTarget = shouldUpgradeOneBasicsWatchTarget ? "mux_one_basics_1_1_full_video" : (item.target || "");
+    if (item.targetType === "journey") {
+      const viewTarget = rawTarget === "moduleDetailView" || rawTarget === "stageDetailView" || rawTarget === "pathSelectView"
+        ? (rawTarget === "pathSelectView" ? "stageDetailView" : rawTarget)
+        : "stageDetailView";
+      const contentId = resolveHomeContentTargetId(item.contentId || rawTarget || "book_one_basics_1_1_eternal_life");
+      return { target: viewTarget, contentId };
+    }
+    const resolvedTarget = resolveHomeContentTargetId(shouldUpgradeOneBasicsWatchTarget ? rawTarget : (item.contentId || rawTarget));
+    return { target: resolvedTarget, contentId: shouldUpgradeOneBasicsWatchTarget ? resolvedTarget : (item.contentId || resolvedTarget) };
+  };
   return {
     ...DEFAULT_HOME_CONTENT,
     ...layout,
@@ -4853,14 +4896,24 @@ function normalizeHomeLayout(layout) {
       };
       const mobileArtwork = merged.mobileArtwork || merged.artwork || merged.desktopArtwork || "";
       const desktopArtwork = merged.desktopArtwork || merged.artwork || merged.mobileArtwork || "";
+      const resolvedTarget = normalizeHomeItemTarget(merged);
       return {
         ...merged,
+        ...resolvedTarget,
         mobileArtwork,
         artwork: mobileArtwork,
         desktopArtwork
       };
     }),
-    shelves: layout.shelves || DEFAULT_HOME_CONTENT.shelves
+    shelves: (layout.shelves || DEFAULT_HOME_CONTENT.shelves).map((shelf) => ({
+      ...shelf,
+      items: (shelf.items || []).map((item) => {
+        return {
+          ...item,
+          ...normalizeHomeItemTarget(item)
+        };
+      })
+    }))
   };
 }
 
@@ -5582,6 +5635,22 @@ function getTeamSyncConfig() {
   };
 }
 
+function getProjectTeamSyncConfig() {
+  const projectConfig = window.ONEINHIM_TEAM_SYNC || window.OIH_TEAM_SYNC_CONFIG || {};
+  return {
+    ...TEAM_SYNC_DEFAULT_CONFIG,
+    ...projectConfig,
+    supabaseUrl: cleanSupabaseUrl(projectConfig.supabaseUrl || TEAM_SYNC_DEFAULT_CONFIG.supabaseUrl),
+    supabaseAnonKey: String(projectConfig.supabaseAnonKey || TEAM_SYNC_DEFAULT_CONFIG.supabaseAnonKey || "").trim(),
+    tableName: String(projectConfig.tableName || TEAM_SYNC_DEFAULT_CONFIG.tableName || "oih_content_packages").trim()
+  };
+}
+
+function getAuthTeamSyncConfig() {
+  const projectConfig = getProjectTeamSyncConfig();
+  return teamSyncIsReady(projectConfig) ? projectConfig : getTeamSyncConfig();
+}
+
 function saveTeamSyncConfig(config) {
   return writeLocalJson(TEAM_SYNC_CONFIG_KEY, {
     enabled: Boolean(config.enabled),
@@ -5605,8 +5674,19 @@ let workshopAdminAuthState = {
   notApproved: false
 };
 
+function supabaseAuthDiagnostic(config = getAuthTeamSyncConfig()) {
+  if (!config.enabled) return "Admin login is not connected because Supabase sync is off.";
+  if (!config.supabaseUrl || !config.supabaseAnonKey || !config.tableName) {
+    return "Admin login needs the Supabase URL, public key, and content table in the project config.";
+  }
+  if (!window.supabase?.createClient) {
+    return "Supabase did not load. Open the workshop from the local server while online, then try again.";
+  }
+  return "";
+}
+
 function getSupabaseAuthClient() {
-  const config = getTeamSyncConfig();
+  const config = getAuthTeamSyncConfig();
   if (!teamSyncIsReady(config) || !window.supabase?.createClient) return null;
   const cacheKey = `${config.supabaseUrl}|${config.supabaseAnonKey}`;
   if (!supabaseAuthClient || supabaseAuthClientKey !== cacheKey) {
@@ -7431,7 +7511,7 @@ function updateHomeHeroDraftFromFields() {
   const contentId = els.homeHeroContentId?.value || slide.target || "";
   slide.contentId = contentId;
   slide.target = contentId;
-  slide.targetType = contentId === "pathSelectView" ? "journey" : "discover";
+  slide.targetType = homeTargetTypeForContentId(contentId);
   slide.mobileArtwork = els.homeHeroMobileArtwork?.value.trim() || "";
   slide.artwork = slide.mobileArtwork;
   slide.desktopArtwork = els.homeHeroDesktopArtwork?.value.trim() || "";
@@ -7623,7 +7703,7 @@ function addSelectedContentToShelf() {
   shelf.items.push({
     id: `${selectedId}_${Date.now()}`,
     artwork: option.artwork || "",
-    targetType: selectedId === "pathSelectView" ? "journey" : "discover",
+    targetType: homeTargetTypeForContentId(selectedId),
     target: selectedId,
     alt: option.title || selectedId
   });
@@ -8022,20 +8102,36 @@ async function startWorkshopApp() {
 }
 
 function registerAppInstallWorker() {
-  if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
-  navigator.serviceWorker.register("oneinhim_service_worker.js").catch(() => {
-    // Workshop still works in browser mode if install support is unavailable.
-  });
+  return;
 }
 
 async function boot() {
   registerAppInstallWorker();
   await loadWorkshopAdminAuthState();
   renderWorkshopAuthGate(Boolean(workshopAdminAuthState.profile));
+  if (!workshopAdminAuthState.profile) {
+    const diagnostic = supabaseAuthDiagnostic();
+    if (diagnostic) setWorkshopAuthMessage(diagnostic);
+  }
   const loginButton = document.getElementById("workshopAdminLogin");
   const emailInput = document.getElementById("workshopAdminEmail");
   const passwordInput = document.getElementById("workshopAdminPassword");
   const signOutButton = document.getElementById("workshopSignOut");
+
+  if (window.location.protocol === "file:") {
+    const localWorkshopUrl = "http://localhost:8765/oneinhim_content_workshop.html?v=" + Date.now();
+    renderWorkshopAuthGate(false);
+    setWorkshopAuthMessage("Open the workshop from the local server before signing in. The file version cannot reliably use Supabase Auth.");
+    if (emailInput) emailInput.disabled = true;
+    if (passwordInput) passwordInput.disabled = true;
+    if (loginButton) {
+      loginButton.textContent = "Open workshop";
+      loginButton.addEventListener("click", () => {
+        window.location.href = localWorkshopUrl;
+      });
+    }
+    return;
+  }
 
   const signIn = async () => {
     const email = (emailInput?.value || "").trim();
@@ -8046,14 +8142,14 @@ async function boot() {
     }
     const client = getSupabaseAuthClient();
     if (!client) {
-      setWorkshopAuthMessage("Supabase Auth is not connected yet.");
+      setWorkshopAuthMessage(supabaseAuthDiagnostic() || "Supabase Auth is not connected yet.");
       return;
     }
     setWorkshopAuthMessage("Signing in...");
     const { error } = await client.auth.signInWithPassword({ email, password });
     if (passwordInput) passwordInput.value = "";
     if (error) {
-      setWorkshopAuthMessage("Could not sign in. Check the email and password.");
+      setWorkshopAuthMessage(`Could not sign in: ${error.message}`);
       return;
     }
     await loadWorkshopAdminAuthState();
