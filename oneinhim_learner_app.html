@@ -14586,7 +14586,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 @media (max-width: 760px) {
   body.gateway-mode .home-hero,
   body.gateway-mode.dark-gateway-hero-active .home-hero {
-    --home-mobile-hero-height: clamp(590px, 74svh, 640px);
+    --home-mobile-hero-height: clamp(610px, 76svh, 660px);
     background: #111111 !important;
     height: var(--home-mobile-hero-height) !important;
     min-height: var(--home-mobile-hero-height) !important;
@@ -14618,8 +14618,9 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
     box-shadow: none !important;
     filter: none !important;
     object-fit: cover !important;
-    object-position: center top !important;
-    transform: none !important;
+    object-position: var(--home-mobile-artwork-position, center 38%) !important;
+    transform: scale(var(--home-mobile-artwork-scale, 1)) !important;
+    transform-origin: var(--home-mobile-artwork-origin, center 45%) !important;
     -webkit-mask-image: none !important;
     mask-image: none !important;
   }
@@ -14689,7 +14690,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   }
 
   body.gateway-mode .gateway-discover {
-    margin-top: -18px !important;
+    margin-top: -8px !important;
     padding-top: 0 !important;
   }
 }
@@ -14812,10 +14813,10 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
             </span>
           </button>
 
-          <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="2" data-hero-mode="discover" data-nav-jump="stageDetailView" data-linked-resource="book_one_basics_1_1_eternal_life" aria-label="One In Him discipleship journey">
+          <button class="gateway-slide home-hero-slide artwork-home-slide" type="button" data-gateway-hero-slide="2" data-hero-mode="discover" style="--home-mobile-artwork-position:center center;--home-mobile-artwork-scale:1.35;--home-mobile-artwork-origin:center 45%" data-nav-jump="stageDetailView" data-linked-resource="book_one_basics_1_1_eternal_life" aria-label="One In Him discipleship journey">
             <picture class="home-artwork-picture">
               <source media="(min-width: 761px)" srcset="assets/Journey hero_desktop.webp" />
-              <img class="home-artwork-image" src="assets/journey_discipleship-hero_mobile.webp" alt="One In Him discipleship journey" loading="lazy" />
+              <img class="home-artwork-image" src="assets/Journey hero_desktop.webp" alt="One In Him discipleship journey" loading="lazy" />
             </picture>
             <span class="home-hero-copy">
               <span class="home-hero-eyebrow">Guided path</span>
@@ -15929,8 +15930,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=156"></script>
-<script src="./oneinhim_journey_layout.js?v=156"></script>
+<script src="./oneinhim_home_layout.js?v=157"></script>
+<script src="./oneinhim_journey_layout.js?v=157"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -17367,7 +17368,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "156";
+const APP_RELEASE_VERSION = "157";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -17403,9 +17404,12 @@ const DEFAULT_HOME_CONTENT = {
     {
       id: "journey_hero",
       mode: "discover",
-      mobileArtwork: "assets/journey_discipleship-hero_mobile.webp",
-      artwork: "assets/journey_discipleship-hero_mobile.webp",
+      mobileArtwork: "assets/Journey hero_desktop.webp",
+      artwork: "assets/Journey hero_desktop.webp",
       desktopArtwork: "assets/Journey hero_desktop.webp",
+      mobileArtworkPosition: "center center",
+      mobileArtworkScale: "1.35",
+      mobileArtworkOrigin: "center 45%",
       targetType: "journey",
       target: "stageDetailView",
       contentId: "book_one_basics_1_1_eternal_life",
@@ -17589,6 +17593,14 @@ function homeActionAttributes(item) {
   return `data-discover-open="${esc(resolveContentTargetId(target))}"`;
 }
 
+function homeHeroArtworkStyle(slide) {
+  const declarations = [];
+  if (slide?.mobileArtworkPosition) declarations.push(`--home-mobile-artwork-position:${esc(String(slide.mobileArtworkPosition))}`);
+  if (slide?.mobileArtworkScale) declarations.push(`--home-mobile-artwork-scale:${esc(String(slide.mobileArtworkScale))}`);
+  if (slide?.mobileArtworkOrigin) declarations.push(`--home-mobile-artwork-origin:${esc(String(slide.mobileArtworkOrigin))}`);
+  return declarations.length ? `style="${declarations.join(";")}"` : "";
+}
+
 function homeLockBadge(item) {
   return homeItemIsLocked(item) ? contentLockBadgeMarkup() : "";
 }
@@ -17659,7 +17671,7 @@ function renderArtworkHome() {
   if (heroRoot && Array.isArray(content.heroSlides)) {
     heroRoot.innerHTML = `
       ${content.heroSlides.map((slide, index) => `
-        <button class="gateway-slide home-hero-slide artwork-home-slide${index === 0 ? " active" : ""}" type="button" data-gateway-hero-slide="${index}" data-hero-mode="${esc(slide.mode || "discover")}" ${homeActionAttributes(slide)} aria-label="${esc(slide.alt || `Home slide ${index + 1}`)}">
+        <button class="gateway-slide home-hero-slide artwork-home-slide${index === 0 ? " active" : ""}" type="button" data-gateway-hero-slide="${index}" data-hero-mode="${esc(slide.mode || "discover")}" ${homeHeroArtworkStyle(slide)} ${homeActionAttributes(slide)} aria-label="${esc(slide.alt || `Home slide ${index + 1}`)}">
           <picture class="home-artwork-picture">
             <source media="(min-width: 761px)" srcset="${esc(slide.desktopArtwork || slide.mobileArtwork || slide.artwork || "")}" />
             <img class="home-artwork-image" src="${esc(slide.mobileArtwork || slide.artwork || slide.desktopArtwork || "")}" alt="${esc(slide.alt || "")}" loading="${index === 0 ? "eager" : "lazy"}" />
