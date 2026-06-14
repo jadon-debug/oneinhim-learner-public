@@ -112,6 +112,16 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "targetType": "discover",
           "target": "mux_oneevent_ps_duane_friday",
           "alt": "ONEEVENT Friday teaching"
+        },
+        {
+          "id": "artwork_only_1781433446659",
+          "artwork": "assets/OE_May_JohanToet_friday.webp",
+          "targetType": "none",
+          "target": "",
+          "contentId": "",
+          "alt": "Coming soon",
+          "placeholder": true,
+          "locked": false
         }
       ]
     },
