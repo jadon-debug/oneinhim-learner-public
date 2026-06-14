@@ -1,4 +1,4 @@
-const ONEINHIM_CACHE = "oneinhim-app-v151";
+const ONEINHIM_CACHE = "oneinhim-app-v152";
 
 const APP_SHELL = [
   "./oneinhim.webmanifest",
@@ -12,15 +12,20 @@ const APP_SHELL = [
   "./assets/oih-logo-2023-orange.png",
   "./assets/oneinhim-characters-international.png",
   "./assets/oneinhim-characters-dutch.png",
-  "./assets/outoftheshadows-brenda-hero-v4.jpg",
-  "./assets/outoftheshadows-brenda-mobile-hero-fit-v8.jpg",
-  "./assets/one-basics-1-1-eternal-life-mobile-hero.png",
-  "./assets/one-basics-1-1-eternal-life-mobile-hero-v3.jpg",
+  "./assets/one-basics-1-1-eternal-life-desktop-hero-mobile.webp",
   "./assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
   "./assets/one-basics-1-1-eternal-life-course-cover.png",
+  "./assets/outoftheshadows_documentary_hero_mobile.webp",
+  "./assets/outoftheshadows_documentary-coverart_16x9.webp",
+  "./assets/outoftheshadows_documentary-coverart.webp",
+  "./assets/journey_discipleship-hero_mobile.webp",
+  "./assets/Journey hero_desktop.webp",
   "./assets/one-gospel-podcast-cover.png",
   "./assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg",
-  "./assets/oneevent-ps-duane-friday-cover.png"
+  "./assets/OE_May_PsDuaneS_friday.webp",
+  "./assets/OE_May_JohanToet_friday.webp",
+  "./assets/OE_May_JohanToet_saturday2.webp",
+  "./assets/OE_May_Duanesheriff_saturday2.webp"
 ];
 
 self.addEventListener("install", (event) => {
