@@ -34,7 +34,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "mode": "discover",
       "mobileArtwork": "assets/journey_discipleship-hero_mobile.webp",
       "artwork": "assets/journey_discipleship-hero_mobile.webp",
-      "desktopArtwork": "assets/Journey hero_desktop.webp",
+      "desktopArtwork": "assets/Hero_journey_desktop.webp",
       "targetType": "journey",
       "target": "stageDetailView",
       "contentId": "book_one_basics_1_1_eternal_life",
