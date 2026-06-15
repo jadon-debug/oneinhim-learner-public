@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
+<script>document.documentElement.classList.add("app-booting");</script>
 <style>
 :root {
   --oih-orange: #ee7326;
@@ -238,6 +239,19 @@ body.gateway-mode .main {
 
 body.discovery-detail-mode {
   background: #fff;
+}
+
+html.app-booting body {
+  background: #090a0a;
+}
+
+html.app-booting .app-shell {
+  opacity: 0;
+}
+
+html:not(.app-booting) .app-shell {
+  opacity: 1;
+  transition: opacity 120ms ease;
 }
 
 body.discovery-audio-detail-mode {
@@ -491,12 +505,13 @@ body.learning-mode .view.active {
 }
 
 .onboarding-choice {
+  position: relative;
   min-height: 82px;
   display: grid;
   grid-template-columns: 54px minmax(0, 1fr);
   gap: 16px;
   align-items: center;
-  padding: 14px 18px;
+  padding: 14px 54px 14px 18px;
   border: 3px solid #e3e3e3;
   border-radius: 16px;
   background: #fff;
@@ -505,10 +520,32 @@ body.learning-mode .view.active {
   box-shadow: inset 0 -4px 0 rgba(9,10,10,0.08);
 }
 
-.onboarding-choice:hover,
+.onboarding-choice:hover {
+  border-color: #cfcfcf;
+  background: #fff;
+  transform: translateY(-1px);
+}
+
 .onboarding-choice.selected {
-  border-color: var(--oih-orange);
-  background: #fff4ed;
+  border-color: var(--choice-color, var(--oih-orange));
+  background: color-mix(in srgb, var(--choice-color, var(--oih-orange)) 9%, #fff);
+  box-shadow: inset 0 -4px 0 rgba(9,10,10,0.08), 0 0 0 4px color-mix(in srgb, var(--choice-color, var(--oih-orange)) 14%, transparent);
+}
+
+.onboarding-choice.selected::after {
+  content: "✓";
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--choice-color, var(--oih-orange));
+  color: var(--choice-text, #fff);
+  font-size: 15px;
+  font-weight: 950;
 }
 
 .onboarding-choice-icon {
@@ -3740,14 +3777,19 @@ body.learning-mode .view.active {
   opacity: 0;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
-  transition: opacity 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
-  will-change: opacity;
+  transition: opacity 180ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 180ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
 }
 
 .gateway-slide.active {
   position: relative;
   opacity: 1;
   pointer-events: auto;
+}
+
+.gateway-landing.is-dragging .gateway-slide.active {
+  transform: translate3d(var(--gateway-hero-drag-x, 0px), 0, 0);
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -7187,7 +7229,7 @@ body.library-mode .library-topic-list {
     min-height: 68px;
     grid-template-columns: 42px minmax(0, 1fr);
     gap: 11px;
-    padding: 9px 11px;
+    padding: 9px 44px 9px 11px;
     border-width: 2px;
     border-radius: 14px;
   }
@@ -15940,8 +15982,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=162"></script>
-<script src="./oneinhim_journey_layout.js?v=162"></script>
+<script src="./oneinhim_home_layout.js?v=164"></script>
+<script src="./oneinhim_journey_layout.js?v=164"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -16433,9 +16475,9 @@ const state = {
   partnerAccess: false
 };
 
-const GATEWAY_HERO_AUTOPLAY_MS = 9000;
-const GATEWAY_HERO_SWIPE_MIN_PX = 34;
-const GATEWAY_HERO_SWIPE_AXIS_RATIO = 1.12;
+const GATEWAY_HERO_AUTOPLAY_MS = 6500;
+const GATEWAY_HERO_SWIPE_MIN_PX = 18;
+const GATEWAY_HERO_SWIPE_AXIS_RATIO = 0.72;
 const GATEWAY_HERO_TAP_MAX_PX = 12;
 const FEED_POSTS_STORAGE_KEY = "oneinhim.feed.posts.v2";
 const FEED_LIKES_STORAGE_KEY = "oneinhim.feed.likes.v2";
@@ -17378,7 +17420,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "162";
+const APP_RELEASE_VERSION = "164";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -17903,6 +17945,11 @@ function scheduleGatewayHeroAutoplay() {
 }
 
 function resetGatewayHeroSwipe() {
+  const hero = document.querySelector(".gateway-landing.home-hero");
+  if (hero) {
+    hero.classList.remove("is-dragging");
+    hero.style.removeProperty("--gateway-hero-drag-x");
+  }
   gatewayHeroSwipe.active = false;
   gatewayHeroSwipe.pointerId = null;
   gatewayHeroSwipe.startX = 0;
@@ -17926,6 +17973,8 @@ function handleGatewayHeroSwipeStart(event) {
   gatewayHeroSwipe.lastX = event.clientX;
   gatewayHeroSwipe.lastY = event.clientY;
   gatewayHeroSwipe.moved = false;
+  event.currentTarget?.classList.add("is-dragging");
+  event.currentTarget?.style.setProperty("--gateway-hero-drag-x", "0px");
   stopGatewayHeroAutoplay();
   if (event.currentTarget?.setPointerCapture && gatewayHeroSwipe.pointerId !== null) {
     try {
@@ -17945,6 +17994,11 @@ function handleGatewayHeroSwipeMove(event) {
   const deltaY = gatewayHeroSwipe.lastY - gatewayHeroSwipe.startY;
   if (Math.hypot(deltaX, deltaY) > GATEWAY_HERO_TAP_MAX_PX) {
     gatewayHeroSwipe.moved = true;
+  }
+  if (Math.abs(deltaX) > 2 && Math.abs(deltaX) > Math.abs(deltaY) * GATEWAY_HERO_SWIPE_AXIS_RATIO) {
+    const width = event.currentTarget?.clientWidth || window.innerWidth || 390;
+    const clampedDelta = Math.max(width * -0.18, Math.min(width * 0.18, deltaX));
+    event.currentTarget?.style.setProperty("--gateway-hero-drag-x", `${Math.round(clampedDelta)}px`);
   }
 }
 
@@ -23108,6 +23162,7 @@ async function boot() {
 	  if (!state.userNavigatedDuringBoot) {
 	    setView("gatewayView", { initial: true });
 	  }
+	  document.documentElement.classList.remove("app-booting");
 	  state.bootComplete = true;
 	}
 
