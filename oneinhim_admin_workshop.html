@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=180"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=180"></script>
+  <script src="./oneinhim_home_layout.js?v=181"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=181"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -714,6 +714,10 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
+    }
+
+    .asset-picker[hidden] {
+      display: none;
     }
 
     .asset-option {
@@ -1962,7 +1966,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v180.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v181.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1978,7 +1982,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v180.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v181.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2089,8 +2093,8 @@
                 <div class="selected-card-summary" id="selectedCardSummary"></div>
                 <div class="field"><label for="shelfCardContent">Selected card library item</label><select id="shelfCardContent"></select></div>
                 <div class="artwork-action-row">
-                  <div class="field"><label for="shelfCardArtwork">Selected card artwork</label><input id="shelfCardArtwork" placeholder="assets/my-cover.jpg" /></div>
-                  <button class="btn" id="focusShelfArtwork" type="button">Replace</button>
+                  <div class="field"><label for="shelfCardArtwork">Selected cover</label><input id="shelfCardArtwork" placeholder="Choose a cover below" readonly /></div>
+                  <button class="btn" id="focusShelfArtwork" type="button">Select cover</button>
                 </div>
                 <p class="artwork-status" id="shelfCardArtworkStatus"></p>
                 <p class="field-help" id="shelfCardArtworkHelp">Put artwork files in the assets folder, then use a path like assets/my-cover.jpg.</p>
@@ -2119,7 +2123,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v180.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v181.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -3868,6 +3872,7 @@
       importedMuxIds: readImportedMuxIds(),
       prepContext: "hero",
       muxContext: "hero",
+      showShelfCoverPicker: false,
       journey: readJourney(),
       layout: readLayout()
     };
@@ -4674,10 +4679,12 @@
       document.getElementById("shelfCardArtwork").value = shelfItem?.artwork || "";
       document.getElementById("shelfCardArtwork").disabled = !shelf;
       document.getElementById("shelfCardArtworkHelp").textContent = shelfItem
-        ? `Replace this card by entering an assets path. ${shelfSizeHelp(shelf.cardSize || "wide")}`
-        : `Enter an assets path to create an artwork-only placeholder. ${shelfSizeHelp(shelf.cardSize || "wide")}`;
+        ? `Use Select cover, then choose an artwork preset. ${shelfSizeHelp(shelf.cardSize || "wide")}`
+        : `Use Select cover to create an artwork-only placeholder. ${shelfSizeHelp(shelf.cardSize || "wide")}`;
       document.getElementById("shelfCardAlt").value = shelfItem?.alt || "";
       document.getElementById("shelfAssetPicker").innerHTML = shelf ? assetPickerOptions("shelf", shelfItem?.artwork || "", shelf.cardSize || "wide") : "";
+      document.getElementById("shelfAssetPicker").hidden = !state.showShelfCoverPicker;
+      document.getElementById("focusShelfArtwork").textContent = state.showShelfCoverPicker ? "Hide covers" : "Select cover";
       document.getElementById("shelfCardAlt").disabled = !shelf;
       document.getElementById("shelfCardContent").disabled = !shelf;
       document.getElementById("shelfCardLocked").checked = Boolean(shelfItem && shelfItemIsLocked(shelfItem));
@@ -5484,6 +5491,7 @@
       const item = ensureShelfItemForEdit({ artwork: path });
       if (!item) return;
       item.artwork = path;
+      state.showShelfCoverPicker = false;
       renderShelves();
       toast("Shelf card artwork replaced.");
     }
@@ -5668,7 +5676,10 @@
       });
       document.getElementById("shelfCardContent").addEventListener("change", (event) => updateShelfItemField("content", event.target.value));
       document.getElementById("shelfCardArtwork").addEventListener("input", (event) => updateShelfItemField("artwork", event.target.value));
-      document.getElementById("focusShelfArtwork").addEventListener("click", () => document.getElementById("shelfCardArtwork").focus());
+      document.getElementById("focusShelfArtwork").addEventListener("click", () => {
+        state.showShelfCoverPicker = !state.showShelfCoverPicker;
+        renderShelves();
+      });
       document.getElementById("shelfAssetPicker").addEventListener("click", (event) => {
         const option = event.target.closest("[data-artwork-preset]");
         if (!option) return;
