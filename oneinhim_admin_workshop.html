@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=173"></script>
+  <script src="./oneinhim_home_layout.js?v=174"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=174"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -920,6 +921,129 @@
       gap: 12px;
     }
 
+    .library-toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      gap: 12px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    .library-toolbar input,
+    .library-toolbar select {
+      min-height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0 13px;
+      background: var(--panel-deep);
+      color: var(--text);
+      outline: none;
+    }
+
+    .library-toolbar input:focus,
+    .library-toolbar select:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 4px rgba(238,115,38,.16);
+    }
+
+    .mux-inbox {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(63,56,40,.72);
+    }
+
+    .mux-inbox-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .mux-inbox-head h3,
+    .mux-inbox-head p {
+      margin: 0;
+    }
+
+    .mux-inbox-head h3 {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .mux-inbox-head p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .mux-inbox-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .mux-inbox-card {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      background: var(--panel-deep);
+    }
+
+    .mux-inbox-card img,
+    .mux-inbox-thumb {
+      width: 92px;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #16140b;
+    }
+
+    .mux-inbox-thumb {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .mux-inbox-body {
+      min-width: 0;
+      display: grid;
+      gap: 7px;
+    }
+
+    .mux-inbox-body strong,
+    .mux-inbox-body span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mux-inbox-body span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mux-inbox-empty {
+      margin: 0;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
     .content-prep-layout {
       display: grid;
       grid-template-columns: minmax(280px, 360px) minmax(0, 1fr) minmax(340px, 440px);
@@ -1634,7 +1758,7 @@
     <div class="auth-card">
       <p class="eyebrow">Admin</p>
       <h1>Home & Library Workshop</h1>
-      <p>Sign in to manage hero slides, library shelves, and the content links behind them.</p>
+          <p>Sign in to manage hero slides, library shelves, Journey content, and the app content library.</p>
       <div class="field">
         <label for="adminEmail">Admin email</label>
         <input id="adminEmail" type="email" autocomplete="username" value="admin@oneinhim.org" />
@@ -1645,7 +1769,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v173.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v174.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1657,11 +1781,11 @@
         <img src="assets/oih-logo-2023-orange.png" alt="" />
         <div>
           <h1>One In Him Admin</h1>
-          <p>Heroes, shelves, and content links.</p>
+          <p>Heroes, shelves, Journey, and content library.</p>
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v173.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v174.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -1674,7 +1798,7 @@
           <button class="active" type="button" data-view="heroes">Hero slides</button>
           <button type="button" data-view="shelves">Library shelves</button>
           <button type="button" data-view="journey">Journey workflow</button>
-          <button type="button" data-view="content">Content links</button>
+          <button type="button" data-view="content">Content library</button>
         </nav>
       </aside>
 
@@ -1806,7 +1930,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v173.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v174.html?auto=1&hash=journey">Preview Journey</a>
               <button class="btn green" type="button" data-open-prep="journey">Prep selected lesson</button>
             </div>
           </div>
@@ -1887,7 +2011,7 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_cache_reset_v173.html?auto=1&hash=journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_cache_reset_v174.html?auto=1&hash=journey">Preview Journey</a>
                 <button class="btn" type="button" data-open-mux="journey">Import Mux to lesson</button>
                 <button class="btn" type="button" data-open-prep="journey">Prep selected content</button>
               </div>
@@ -2016,13 +2140,35 @@
         <section class="view" id="contentView">
           <div class="section-head">
             <div>
-              <h2>Content Links</h2>
-              <p>These are the current link targets used by hero slides, shelves, and Journey nodes. Access settings apply everywhere the content appears.</p>
+              <h2>Content Library</h2>
+              <p>Manage app-ready video, audio, text, Journey, and placeholder content. Mux uploads appear here first, then become usable across heroes, shelves, and Journey.</p>
             </div>
             <div class="btn-row">
+              <button class="btn" type="button" data-open-mux="library">Add Mux item</button>
               <button class="btn" id="exportButton" type="button">Export JSON</button>
               <button class="btn green" id="saveButtonContent" type="button">Save</button>
             </div>
+          </div>
+          <section class="mux-inbox" aria-labelledby="muxInboxTitle">
+            <div class="mux-inbox-head">
+              <div>
+                <h3 id="muxInboxTitle">Mux Inbox</h3>
+                <p>New Mux uploads can land here as import-ready assets before they are placed in the app.</p>
+              </div>
+              <span class="pill" id="muxInboxCount">0 ready</span>
+            </div>
+            <div class="mux-inbox-list" id="muxInboxList"></div>
+          </section>
+          <div class="library-toolbar">
+            <input id="contentSearch" type="search" placeholder="Search title, ID, summary, type" />
+            <select id="contentTypeFilter">
+              <option value="all">All formats</option>
+              <option value="video">Video</option>
+              <option value="audio">Audio</option>
+              <option value="read">Read / text</option>
+              <option value="journey">Journey</option>
+              <option value="locked">Locked</option>
+            </select>
           </div>
           <div class="content-grid" id="contentGrid"></div>
         </section>
@@ -2034,6 +2180,7 @@
     const HOME_KEY = "oneinhim.homeContent.v2";
     const JOURNEY_KEY = "oneinhim.journeyFlow.v1";
     const CONTENT_PREP_KEY = "oneinhim.contentPrepPackages.v1";
+    const MUX_IMPORTED_KEY = "oneinhim.muxImportedIds.v1";
     const ADMIN_TABLE = "oih_admin_users";
     const DEFAULT_HOME = {
       heroSlides: [
@@ -3526,6 +3673,9 @@
       contentPackageMediumFilter: "all",
       contentPackages: [],
       contentPackageSource: "loading",
+      contentSearch: "",
+      contentTypeFilter: "all",
+      importedMuxIds: readImportedMuxIds(),
       prepContext: "hero",
       muxContext: "hero",
       journey: readJourney(),
@@ -3652,6 +3802,25 @@
 
     function selectedContent(id) {
       return CONTENT.find((item) => item.id === id) || CONTENT[0];
+    }
+
+    function readImportedMuxIds() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(MUX_IMPORTED_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveImportedMuxIds() {
+      localStorage.setItem(MUX_IMPORTED_KEY, JSON.stringify(state.importedMuxIds));
+    }
+
+    function muxQueueItems() {
+      const items = Array.isArray(window.ONEINHIM_MUX_IMPORT_QUEUE) ? window.ONEINHIM_MUX_IMPORT_QUEUE : [];
+      const imported = new Set(state.importedMuxIds);
+      return items.filter((item) => item?.playbackId && !imported.has(item.playbackId));
     }
 
     function contentAccess(id) {
@@ -3874,6 +4043,7 @@
       if (context === "hero") return currentHero()?.title || "selected hero";
       if (context === "shelf") return shelfItemLabel(currentShelfItem()) || "selected shelf card";
       if (context === "journey") return currentJourneyStep()?.title || currentJourneyNode()?.title || "selected lesson";
+      if (context === "library") return "content library";
       return "selected item";
     }
 
@@ -3881,7 +4051,8 @@
       return {
         hero: "Hero slide",
         shelf: "Shelf card",
-        journey: "Journey lesson"
+        journey: "Journey lesson",
+        library: "Content library"
       }[context] || "Selected item";
     }
 
@@ -3941,7 +4112,9 @@
     function updatePrepDrawerContext() {
       const title = document.getElementById("prepDrawerTitle");
       const context = document.getElementById("prepDrawerContext");
+      const libraryPackage = state.prepContext === "library" ? currentContentPackage() : null;
       if (title) title.textContent = `Prep ${contextTitle(state.prepContext)}`;
+      if (title && libraryPackage) title.textContent = `Prep ${libraryPackage.packageTitle || "library item"}`;
       if (context) context.textContent = `${contextLabel(state.prepContext)} prep. Edit metadata, Mux playback, placement, access, learner prompts, and readiness for this selected item.`;
     }
 
@@ -4021,6 +4194,9 @@
         }
         renderJourney();
       }
+      if (context === "library") {
+        renderContent();
+      }
     }
 
     function createContentPackageFromMux(content, playbackId, context) {
@@ -4047,7 +4223,7 @@
           completionMessage: ""
         },
         placement: {
-          showInDiscover: context !== "journey",
+          showInDiscover: context === "library" ? false : context !== "journey",
           discoverShelf: currentShelf()?.title || "",
           discoverCardLabel: content.title,
           showInJourney: context === "journey",
@@ -4101,8 +4277,52 @@
       attachContentToContext(state.muxContext, content);
       saveContentPrepDraft();
       closeMuxDialog();
-      openPrepDrawer(state.muxContext);
-      toast("Mux item imported and attached.");
+      if (state.muxContext === "library") {
+        renderContent();
+        toast("Mux item added to Content Library.");
+      } else {
+        openPrepDrawer(state.muxContext);
+        toast("Mux item imported and attached.");
+      }
+    }
+
+    function importMuxQueueItem(index) {
+      const item = muxQueueItems()[index];
+      if (!item) return;
+      const format = item.primaryMedium === "listen" || item.type === "audio" ? "listen" : "watch";
+      const title = item.title || `Mux ${format === "listen" ? "audio" : "video"}`;
+      const prefix = format === "listen" ? "aud" : "mux";
+      let id = item.contentId || `${prefix}_${slugifyId(title)}`;
+      if (CONTENT.some((content) => content.id === id)) id = `${id}_${Date.now()}`;
+      const content = {
+        id,
+        title,
+        type: format === "listen" ? "Audio" : "Video",
+        artwork: item.artwork || item.thumbnail || "",
+        summary: item.summary || `Imported from Mux playback ID ${item.playbackId}.`,
+        accessLevel: normalizedAccessLevel(item.accessLevel || "free")
+      };
+      CONTENT.unshift(content);
+      setContentAccess(content.id, content.accessLevel);
+      state.contentPackages.unshift(createContentPackageFromMux(content, item.playbackId, "library"));
+      state.contentPackageIndex = 0;
+      state.importedMuxIds.push(item.playbackId);
+      saveImportedMuxIds();
+      saveContentPrepDraft();
+      renderContent();
+      toast("Mux asset added to Content Library.");
+    }
+
+    function prepLibraryContent(contentId) {
+      state.prepContext = "library";
+      if (!selectContentPackageForContentId(contentId)) createPrepPackageForContentId(contentId, "library");
+      const content = selectedContent(contentId);
+      const title = document.getElementById("prepDrawerTitle");
+      const context = document.getElementById("prepDrawerContext");
+      if (title) title.textContent = `Prep ${content.title || contentId}`;
+      if (context) context.textContent = "Content Library prep. Edit metadata, Mux playback, access, learner prompts, readiness, and future placement.";
+      document.getElementById("prepDrawer").hidden = false;
+      renderContentPrep();
     }
 
     function normaliseJourneySelection() {
@@ -4227,22 +4447,77 @@
       refreshArtworkStatus();
     }
 
+    function contentLibraryFormat(item) {
+      const type = String(item?.type || "").toLowerCase();
+      if (type.includes("audio") || type.includes("podcast")) return "audio";
+      if (type.includes("video") || type.includes("documentary") || type.includes("event")) return "video";
+      if (type.includes("journey")) return "journey";
+      return "read";
+    }
+
+    function filteredLibraryContent() {
+      const query = state.contentSearch.trim().toLowerCase();
+      const filter = state.contentTypeFilter;
+      return CONTENT.filter((item) => {
+        const level = contentAccess(item.id).level;
+        const format = contentLibraryFormat(item);
+        const matchesFilter = filter === "all" || filter === format || (filter === "locked" && level !== "free");
+        const haystack = [item.title, item.id, item.type, item.summary, level].filter(Boolean).join(" ").toLowerCase();
+        return matchesFilter && (!query || haystack.includes(query));
+      });
+    }
+
+    function renderMuxInbox() {
+      const list = document.getElementById("muxInboxList");
+      const count = document.getElementById("muxInboxCount");
+      if (!list || !count) return;
+      const items = muxQueueItems();
+      count.textContent = `${items.length} ready`;
+      if (!items.length) {
+        list.innerHTML = `<p class="mux-inbox-empty">No Mux uploads are waiting. When the Mux queue feed receives a new upload, it will appear here ready to add to the Content Library.</p>`;
+        return;
+      }
+      list.innerHTML = items.map((item, index) => `
+        <article class="mux-inbox-card">
+          ${item.artwork || item.thumbnail ? `<img src="${esc(item.artwork || item.thumbnail)}" alt="" />` : `<div class="mux-inbox-thumb">${esc(item.primaryMedium || item.type || "Mux")}</div>`}
+          <div class="mux-inbox-body">
+            <strong>${esc(item.title || "Untitled Mux asset")}</strong>
+            <span>${esc(item.primaryMedium || item.type || "watch")} · ${esc(item.playbackId)}</span>
+            <button class="btn" type="button" data-import-mux-queue="${index}">Add to library</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
     function renderContent() {
-      document.getElementById("contentGrid").innerHTML = CONTENT.map((item) => `
+      renderMuxInbox();
+      const search = document.getElementById("contentSearch");
+      const filter = document.getElementById("contentTypeFilter");
+      if (search) search.value = state.contentSearch;
+      if (filter) filter.value = state.contentTypeFilter;
+      const items = filteredLibraryContent();
+      document.getElementById("contentGrid").innerHTML = items.map((item) => {
+        const level = contentAccess(item.id).level;
+        const format = contentLibraryFormat(item);
+        return `
         <article class="content-card">
-          <span class="pill">${esc(item.type)}</span>
+          <span class="pill">${esc(format)}</span>
           <h3>${esc(item.title)}</h3>
           <p>${esc(item.id)}</p>
           <p>${esc(item.summary)}</p>
           <div class="field">
             <label for="access_${esc(item.id)}">Access</label>
             <select id="access_${esc(item.id)}" data-content-access="${esc(item.id)}">
-              ${contentAccessOptions(contentAccess(item.id).level)}
+              ${contentAccessOptions(level)}
             </select>
           </div>
-          <p class="field-help">${esc(contentAccessLabel(contentAccess(item.id).level))} across mobile, desktop, heroes, shelves, and Library.</p>
+          <div class="btn-row">
+            <button class="btn" type="button" data-prep-library-content="${esc(item.id)}">Prep</button>
+          </div>
+          <p class="field-help">${esc(contentAccessLabel(level))} across mobile, desktop, heroes, shelves, Journey, and Library.</p>
         </article>
-      `).join("");
+      `;
+      }).join("") || `<p class="mux-inbox-empty">No library items match this view.</p>`;
     }
 
     function stageMetaForSlug(slug) {
@@ -4979,6 +5254,24 @@
         if (!select) return;
         setContentAccess(select.dataset.contentAccess, select.value);
         renderShelves();
+        renderContent();
+      });
+      document.getElementById("contentGrid").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-prep-library-content]");
+        if (!button) return;
+        prepLibraryContent(button.dataset.prepLibraryContent);
+      });
+      document.getElementById("muxInboxList").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-import-mux-queue]");
+        if (!button) return;
+        importMuxQueueItem(Number(button.dataset.importMuxQueue));
+      });
+      document.getElementById("contentSearch").addEventListener("input", (event) => {
+        state.contentSearch = event.target.value;
+        renderContent();
+      });
+      document.getElementById("contentTypeFilter").addEventListener("change", (event) => {
+        state.contentTypeFilter = event.target.value;
         renderContent();
       });
       document.getElementById("journeySection").addEventListener("change", (event) => {
