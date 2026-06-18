@@ -883,6 +883,123 @@
       gap: 12px;
     }
 
+    .content-prep-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr) minmax(340px, 440px);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .content-prep-layout > aside:last-child,
+    .content-prep-layout > aside:first-child {
+      position: sticky;
+      top: 92px;
+      max-height: calc(100vh - 112px);
+      overflow: auto;
+    }
+
+    .prep-search {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .prep-search input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0 12px;
+      background: var(--panel-deep);
+      color: #fff;
+      outline: none;
+    }
+
+    .prep-package-list {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .prep-package-row {
+      width: 100%;
+      display: grid;
+      gap: 5px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: var(--panel-deep);
+      color: #fff;
+      text-align: left;
+    }
+
+    .prep-package-row.active {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(238,115,38,.15);
+    }
+
+    .prep-package-row strong {
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    .prep-package-row span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .prep-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .prep-stat {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(40,38,21,.52);
+    }
+
+    .prep-stat strong,
+    .prep-stat span {
+      display: block;
+    }
+
+    .prep-stat strong {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .prep-stat span {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .prep-json {
+      min-height: 520px;
+      max-height: calc(100vh - 260px);
+      margin: 0;
+      overflow: auto;
+      padding: 14px;
+      background: #171509;
+      color: #f6f4ee;
+      font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+    }
+
+    .prep-status {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
     .journey-editor {
       display: grid;
       grid-template-columns: minmax(520px, 1fr) minmax(340px, 440px);
@@ -1240,7 +1357,8 @@
       .layout,
       .hero-grid,
       .shelf-layout,
-      .journey-editor {
+      .journey-editor,
+      .content-prep-layout {
         grid-template-columns: 1fr;
       }
 
@@ -1253,7 +1371,9 @@
 
       .hero-grid > aside:last-child,
       .shelf-layout > aside:last-child,
-      .journey-editor > aside:last-child {
+      .journey-editor > aside:last-child,
+      .content-prep-layout > aside:last-child,
+      .content-prep-layout > aside:first-child {
         position: static;
         max-height: none;
       }
@@ -1281,7 +1401,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v168.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v169.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1297,10 +1417,10 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v168.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v169.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
-        <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Content prep</a>
+        <button class="btn" type="button" data-open-view="contentPrep">Content prep</button>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
       </div>
     </header>
@@ -1311,6 +1431,7 @@
           <button class="active" type="button" data-view="heroes">Hero slides</button>
           <button type="button" data-view="shelves">Library shelves</button>
           <button type="button" data-view="journey">Journey workflow</button>
+          <button type="button" data-view="contentPrep">Content prep</button>
           <button type="button" data-view="content">Content links</button>
         </nav>
       </aside>
@@ -1434,8 +1555,8 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v168.html?auto=1&hash=journey">Preview Journey</a>
-              <a class="btn green" href="oneinhim_content_workshop.html?legacy=1">Edit lesson content</a>
+              <a class="btn" href="oneinhim_cache_reset_v169.html?auto=1&hash=journey">Preview Journey</a>
+              <button class="btn green" type="button" data-open-view="contentPrep">Edit lesson content</button>
             </div>
           </div>
           <div class="journey-editor">
@@ -1507,8 +1628,100 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_cache_reset_v168.html?auto=1&hash=journey">Preview Journey</a>
-                <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Open legacy prep</a>
+                <a class="btn" href="oneinhim_cache_reset_v169.html?auto=1&hash=journey">Preview Journey</a>
+                <button class="btn" type="button" data-open-view="contentPrep">Open content prep</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="contentPrepView">
+          <div class="section-head">
+            <div>
+              <h2>Content Prep</h2>
+              <p>Prepare app-ready packages here: lesson metadata, Journey placement, media delivery, learner prompts, status, and export JSON.</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn" id="newContentPackageButton" type="button">New package</button>
+              <button class="btn" id="exportContentPackageButton" type="button">Export package</button>
+              <button class="btn green" id="saveContentPrepButton" type="button">Save draft</button>
+            </div>
+          </div>
+          <div class="content-prep-layout">
+            <aside class="panel">
+              <div class="panel-head">
+                <h3>Packages</h3>
+                <span class="pill" id="contentPrepCount">0</span>
+              </div>
+              <div class="prep-search">
+                <input id="contentPrepSearch" type="search" placeholder="Search title, stage, shelf, status" />
+              </div>
+              <div class="prep-package-list" id="contentPrepList"></div>
+            </aside>
+            <section class="panel">
+              <div class="panel-head">
+                <h3 id="contentPrepTitle">Package preview</h3>
+                <span class="prep-status" id="contentPrepSource">Loading packages...</span>
+              </div>
+              <div class="prep-summary-grid" id="contentPrepSummary"></div>
+              <pre class="prep-json" id="contentPrepJson"></pre>
+            </section>
+            <aside class="panel">
+              <div class="panel-head">
+                <h3>Package editor</h3>
+                <button class="btn green" id="markContentReadyButton" type="button">Mark ready</button>
+              </div>
+              <div class="settings-stack">
+                <details class="settings-section" open>
+                  <summary>Identity</summary>
+                  <div class="form">
+                    <div class="field"><label for="prepPackageId">Package ID</label><input id="prepPackageId" /></div>
+                    <div class="field"><label for="prepPackageTitle">Title</label><input id="prepPackageTitle" /></div>
+                    <div class="field"><label for="prepPackageType">Package type</label><select id="prepPackageType"><option value="journey_lesson">Journey lesson</option><option value="discovery_feature">Discovery feature</option><option value="audio_lesson">Audio lesson</option><option value="video_lesson">Video lesson</option></select></div>
+                    <div class="field"><label for="prepPrimaryMedium">Primary medium</label><select id="prepPrimaryMedium"><option value="read">Read</option><option value="watch">Watch</option><option value="listen">Listen</option><option value="reflect">Reflect</option></select></div>
+                    <div class="field"><label for="prepContentType">Content type</label><input id="prepContentType" /></div>
+                    <div class="field"><label for="prepPackageGoal">Package goal</label><textarea id="prepPackageGoal"></textarea></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Placement</summary>
+                  <div class="form">
+                    <div class="field"><label for="prepStageSlug">Journey stage</label><select id="prepStageSlug"><option value="explore">Explore Jesus</option><option value="foundations">Start Following Jesus</option><option value="formation">Grow Deep Roots</option><option value="mission">Live on Mission</option><option value="multiply">Lead and Multiply</option></select></div>
+                    <div class="field"><label for="prepDiscoverShelf">Discover shelf</label><input id="prepDiscoverShelf" /></div>
+                    <div class="field"><label for="prepDiscoverCardLabel">Shelf card label</label><input id="prepDiscoverCardLabel" /></div>
+                    <div class="field"><label for="prepModuleId">Journey module ID</label><input id="prepModuleId" /></div>
+                    <div class="field"><label for="prepLessonOrder">Lesson order</label><input id="prepLessonOrder" type="number" /></div>
+                    <label class="check-row"><input id="prepShowInDiscover" type="checkbox" /> Show in Discover</label>
+                    <label class="check-row"><input id="prepShowInJourney" type="checkbox" /> Show in Journey</label>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Media and access</summary>
+                  <div class="form">
+                    <div class="field"><label for="prepPlaybackId">Mux playback ID</label><input id="prepPlaybackId" placeholder="Playback ID or empty for text-only" /></div>
+                    <div class="field"><label for="prepPoster">Poster / thumbnail</label><input id="prepPoster" placeholder="assets/cover.jpg or Mux thumbnail" /></div>
+                    <div class="field"><label for="prepAccessLevel">Access</label><select id="prepAccessLevel"><option value="free">Free</option><option value="seed_unlock">Seed unlock</option><option value="partner_access">Partner access</option></select></div>
+                    <div class="field"><label for="prepSeedCost">Seed cost</label><input id="prepSeedCost" type="number" min="1" /></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Learner session</summary>
+                  <div class="form">
+                    <div class="field"><label for="prepOpeningPrompt">Opening prompt</label><textarea id="prepOpeningPrompt"></textarea></div>
+                    <div class="field"><label for="prepContentSummary">Content summary</label><textarea id="prepContentSummary"></textarea></div>
+                    <div class="field"><label for="prepReflectionPrompt">Reflection prompt</label><textarea id="prepReflectionPrompt"></textarea></div>
+                    <div class="field"><label for="prepNotesPrompt">Notes prompt</label><textarea id="prepNotesPrompt"></textarea></div>
+                    <div class="field"><label for="prepShareText">Share text</label><textarea id="prepShareText"></textarea></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Admin status</summary>
+                  <div class="form">
+                    <div class="field"><label for="prepPackageStatus">Package status</label><select id="prepPackageStatus"><option value="draft">Draft</option><option value="prepared">Prepared</option><option value="needs_mux_playback">Needs Mux playback</option><option value="ready">Ready</option></select></div>
+                    <div class="field"><label for="prepOwner">Owner</label><input id="prepOwner" /></div>
+                    <div class="field"><label for="prepSourceRange">Source range</label><input id="prepSourceRange" /></div>
+                  </div>
+                </details>
               </div>
             </aside>
           </div>
@@ -1534,6 +1747,7 @@
   <script>
     const HOME_KEY = "oneinhim.homeContent.v2";
     const JOURNEY_KEY = "oneinhim.journeyFlow.v1";
+    const CONTENT_PREP_KEY = "oneinhim.contentPrepPackages.v1";
     const ADMIN_TABLE = "oih_admin_users";
     const DEFAULT_HOME = {
       heroSlides: [
@@ -3021,6 +3235,10 @@
       journeyUnitIndex: 0,
       journeyNodeIndex: 0,
       journeyStepIndex: 0,
+      contentPackageIndex: 0,
+      contentPackageSearch: "",
+      contentPackages: [],
+      contentPackageSource: "loading",
       journey: readJourney(),
       layout: readLayout()
     };
@@ -3337,6 +3555,7 @@
       renderHeroes();
       renderShelves();
       renderJourney();
+      renderContentPrep();
       renderContent();
     }
 
@@ -3452,6 +3671,280 @@
           <p class="field-help">${esc(contentAccessLabel(contentAccess(item.id).level))} across mobile, desktop, heroes, shelves, and Library.</p>
         </article>
       `).join("");
+    }
+
+    function stageMetaForSlug(slug) {
+      return {
+        explore: { stage: 1, name: "Explore Jesus", colour: "#ee7326", moduleId: "stage_1_explore_jesus" },
+        foundations: { stage: 2, name: "Start Following Jesus", colour: "#f6ca35", moduleId: "stage_2_start_following" },
+        formation: { stage: 3, name: "Grow Deep Roots", colour: "#446523", moduleId: "stage_3_grow_deep_roots" },
+        mission: { stage: 4, name: "Live on Mission", colour: "#8b2218", moduleId: "stage_4_live_on_mission" },
+        multiply: { stage: 5, name: "Lead and Multiply", colour: "#090a0a", moduleId: "stage_5_lead_and_multiply" }
+      }[slug] || { stage: 2, name: "Start Following Jesus", colour: "#f6ca35", moduleId: "stage_2_start_following" };
+    }
+
+    function defaultContentPackage() {
+      const slug = "foundations";
+      const stage = stageMetaForSlug(slug);
+      return {
+        packageId: `pkg_new_content_${Date.now()}`,
+        packageTitle: "New content package",
+        packageType: "journey_lesson",
+        packageGoal: "Prepare this content for the One In Him app.",
+        sourceItems: [],
+        primaryItemId: `content_${Date.now()}`,
+        primaryMedium: "read",
+        contentType: "study_guide",
+        length: { display: "Short session" },
+        journeyStage: { ...stage, slug },
+        learnerSession: {
+          openingPrompt: "",
+          contentSummary: "",
+          readBody: [],
+          reflectionPrompt: "",
+          notesPrompt: "",
+          completionMessage: ""
+        },
+        placement: {
+          showInDiscover: true,
+          discoverShelf: "One Basics",
+          discoverCardLabel: "New lesson",
+          showInJourney: true,
+          moduleId: stage.moduleId,
+          moduleTitle: stage.name,
+          lessonOrder: 1,
+          isCoreLesson: false
+        },
+        recommendedNextStep: { label: "Write one response and continue the path", type: "reflect", targetId: "" },
+        sharing: { shareText: "" },
+        access: { level: "free", seedCost: 5 },
+        videoHost: null,
+        admin: {
+          packageStatus: "draft",
+          sourcePreApproved: false,
+          owner: "One In Him content team",
+          lastUpdated: new Date().toISOString().slice(0, 10),
+          sourceRange: ""
+        }
+      };
+    }
+
+    function normalizeContentPackage(pkg) {
+      const base = defaultContentPackage();
+      const next = {
+        ...base,
+        ...pkg,
+        learnerSession: { ...base.learnerSession, ...(pkg.learnerSession || {}) },
+        placement: { ...base.placement, ...(pkg.placement || {}) },
+        sharing: { ...base.sharing, ...(pkg.sharing || {}) },
+        admin: { ...base.admin, ...(pkg.admin || {}) },
+        access: { ...base.access, ...(pkg.access || {}) }
+      };
+      const slug = next.journeyStage?.slug || "foundations";
+      next.journeyStage = { ...stageMetaForSlug(slug), ...(next.journeyStage || {}), slug };
+      if (!next.placement.moduleId) next.placement.moduleId = next.journeyStage.moduleId;
+      if (!next.placement.moduleTitle) next.placement.moduleTitle = next.journeyStage.name;
+      return next;
+    }
+
+    async function loadContentPrepPackages() {
+      try {
+        const saved = localStorage.getItem(CONTENT_PREP_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          const packages = Array.isArray(parsed.packages) ? parsed.packages : parsed;
+          state.contentPackages = packages.map(normalizeContentPackage);
+          state.contentPackageSource = "Saved browser draft";
+          renderContentPrep();
+          return;
+        }
+      } catch {
+        state.contentPackages = [];
+      }
+      try {
+        const response = await fetch("oneinhim_content_packages.json", { cache: "no-store" });
+        if (!response.ok) throw new Error("Package file unavailable");
+        const data = await response.json();
+        const packages = Array.isArray(data) ? data : (data.packages || []);
+        state.contentPackages = packages.map(normalizeContentPackage);
+        state.contentPackageSource = `Loaded ${state.contentPackages.length} packages from oneinhim_content_packages.json`;
+      } catch {
+        state.contentPackages = CONTENT.filter((item) => item.id.startsWith("pkg_")).map((item) => normalizeContentPackage({
+          packageId: item.id,
+          packageTitle: item.title,
+          packageType: "journey_lesson",
+          primaryItemId: item.id.replace(/^pkg_/, "book_"),
+          primaryMedium: "read",
+          contentType: item.type,
+          packageGoal: item.summary,
+          learnerSession: { contentSummary: item.summary },
+          admin: { packageStatus: "prepared" }
+        }));
+        state.contentPackageSource = "Fallback package list";
+      }
+      renderContentPrep();
+    }
+
+    function currentContentPackage() {
+      return state.contentPackages[state.contentPackageIndex] || state.contentPackages[0] || null;
+    }
+
+    function filteredContentPackages() {
+      const query = state.contentPackageSearch.trim().toLowerCase();
+      if (!query) return state.contentPackages.map((item, index) => ({ item, index }));
+      return state.contentPackages
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => [
+          item.packageId,
+          item.packageTitle,
+          item.packageType,
+          item.primaryMedium,
+          item.journeyStage?.name,
+          item.journeyStage?.slug,
+          item.placement?.discoverShelf,
+          item.admin?.packageStatus
+        ].filter(Boolean).join(" ").toLowerCase().includes(query));
+    }
+
+    function renderContentPrep() {
+      const list = document.getElementById("contentPrepList");
+      if (!list) return;
+      const packageEntries = filteredContentPackages();
+      const selected = currentContentPackage();
+      document.getElementById("contentPrepCount").textContent = String(state.contentPackages.length);
+      document.getElementById("contentPrepSearch").value = state.contentPackageSearch;
+      list.innerHTML = packageEntries.map(({ item, index }) => `
+        <button class="prep-package-row${index === state.contentPackageIndex ? " active" : ""}" type="button" data-content-package-index="${index}">
+          <strong>${esc(item.packageTitle || "Untitled package")}</strong>
+          <span>${esc(item.packageId || "")}</span>
+          <span>${esc(item.journeyStage?.name || "No stage")} · ${esc(item.primaryMedium || "read")} · ${esc(item.admin?.packageStatus || "draft")}</span>
+        </button>
+      `).join("") || `<p class="journey-empty">No packages match this search.</p>`;
+      document.getElementById("contentPrepSource").textContent = state.contentPackageSource;
+      if (!selected) {
+        document.getElementById("contentPrepTitle").textContent = "Package preview";
+        document.getElementById("contentPrepSummary").innerHTML = "";
+        document.getElementById("contentPrepJson").textContent = "No package selected.";
+        return;
+      }
+      document.getElementById("contentPrepTitle").textContent = selected.packageTitle || "Package preview";
+      document.getElementById("contentPrepSummary").innerHTML = `
+        <div class="prep-stat"><strong>${esc(selected.primaryMedium || "read")}</strong><span>Medium</span></div>
+        <div class="prep-stat"><strong>${esc(selected.journeyStage?.stage || "-")}</strong><span>Stage</span></div>
+        <div class="prep-stat"><strong>${esc(selected.admin?.packageStatus || "draft")}</strong><span>Status</span></div>
+      `;
+      document.getElementById("contentPrepJson").textContent = JSON.stringify(selected, null, 2);
+      fillContentPrepFields(selected);
+    }
+
+    function fillContentPrepFields(pkg) {
+      const set = (id, value) => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        if (field.type === "checkbox") field.checked = Boolean(value);
+        else field.value = value ?? "";
+      };
+      set("prepPackageId", pkg.packageId);
+      set("prepPackageTitle", pkg.packageTitle);
+      set("prepPackageType", pkg.packageType);
+      set("prepPrimaryMedium", pkg.primaryMedium);
+      set("prepContentType", pkg.contentType);
+      set("prepPackageGoal", pkg.packageGoal);
+      set("prepStageSlug", pkg.journeyStage?.slug);
+      set("prepDiscoverShelf", pkg.placement?.discoverShelf);
+      set("prepDiscoverCardLabel", pkg.placement?.discoverCardLabel);
+      set("prepModuleId", pkg.placement?.moduleId);
+      set("prepLessonOrder", pkg.placement?.lessonOrder);
+      set("prepShowInDiscover", pkg.placement?.showInDiscover !== false);
+      set("prepShowInJourney", pkg.placement?.showInJourney !== false);
+      set("prepPlaybackId", pkg.videoHost?.playbackId || pkg.muxVirtualClip?.playbackId || "");
+      set("prepPoster", pkg.videoHost?.thumbnail || pkg.poster || "");
+      set("prepAccessLevel", pkg.access?.level || "free");
+      set("prepSeedCost", pkg.access?.seedCost || "");
+      set("prepOpeningPrompt", pkg.learnerSession?.openingPrompt);
+      set("prepContentSummary", pkg.learnerSession?.contentSummary);
+      set("prepReflectionPrompt", pkg.learnerSession?.reflectionPrompt);
+      set("prepNotesPrompt", pkg.learnerSession?.notesPrompt);
+      set("prepShareText", pkg.sharing?.shareText);
+      set("prepPackageStatus", pkg.admin?.packageStatus);
+      set("prepOwner", pkg.admin?.owner);
+      set("prepSourceRange", pkg.admin?.sourceRange);
+    }
+
+    function updateContentPrepField(field, value, checked = false) {
+      const pkg = currentContentPackage();
+      if (!pkg) return;
+      pkg.learnerSession = pkg.learnerSession || {};
+      pkg.placement = pkg.placement || {};
+      pkg.admin = pkg.admin || {};
+      pkg.sharing = pkg.sharing || {};
+      pkg.access = pkg.access || {};
+      if (field === "packageId") pkg.packageId = value;
+      if (field === "packageTitle") pkg.packageTitle = value;
+      if (field === "packageType") pkg.packageType = value;
+      if (field === "primaryMedium") pkg.primaryMedium = value;
+      if (field === "contentType") pkg.contentType = value;
+      if (field === "packageGoal") pkg.packageGoal = value;
+      if (field === "stageSlug") {
+        const stage = stageMetaForSlug(value);
+        pkg.journeyStage = { ...pkg.journeyStage, ...stage, slug: value };
+        pkg.placement.moduleId = stage.moduleId;
+        pkg.placement.moduleTitle = stage.name;
+      }
+      if (field === "discoverShelf") pkg.placement.discoverShelf = value;
+      if (field === "discoverCardLabel") pkg.placement.discoverCardLabel = value;
+      if (field === "moduleId") pkg.placement.moduleId = value;
+      if (field === "lessonOrder") pkg.placement.lessonOrder = Number(value) || 0;
+      if (field === "showInDiscover") pkg.placement.showInDiscover = checked;
+      if (field === "showInJourney") pkg.placement.showInJourney = checked;
+      if (field === "playbackId") {
+        pkg.videoHost = value ? { ...(pkg.videoHost || {}), playbackId: value, provider: "mux", status: "ready" } : null;
+      }
+      if (field === "poster") pkg.poster = value;
+      if (field === "accessLevel") pkg.access.level = value;
+      if (field === "seedCost") pkg.access.seedCost = Number(value) || "";
+      if (field === "openingPrompt") pkg.learnerSession.openingPrompt = value;
+      if (field === "contentSummary") pkg.learnerSession.contentSummary = value;
+      if (field === "reflectionPrompt") pkg.learnerSession.reflectionPrompt = value;
+      if (field === "notesPrompt") pkg.learnerSession.notesPrompt = value;
+      if (field === "shareText") pkg.sharing.shareText = value;
+      if (field === "packageStatus") pkg.admin.packageStatus = value;
+      if (field === "owner") pkg.admin.owner = value;
+      if (field === "sourceRange") pkg.admin.sourceRange = value;
+      pkg.admin.lastUpdated = new Date().toISOString().slice(0, 10);
+      renderContentPrep();
+    }
+
+    function saveContentPrepDraft() {
+      localStorage.setItem(CONTENT_PREP_KEY, JSON.stringify({
+        version: 1,
+        updatedAt: new Date().toISOString(),
+        packages: state.contentPackages
+      }, null, 2));
+      state.contentPackageSource = "Saved browser draft";
+      toast("Content prep draft saved in this browser.");
+      renderContentPrep();
+    }
+
+    function exportContentPackage() {
+      const pkg = currentContentPackage();
+      if (!pkg) return;
+      const blob = new Blob([JSON.stringify(pkg, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${pkg.packageId || "content-package"}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      toast("Package JSON exported.");
+    }
+
+    function addContentPackage() {
+      state.contentPackages.unshift(defaultContentPackage());
+      state.contentPackageIndex = 0;
+      state.view = "contentPrep";
+      render();
+      toast("New content package draft created.");
     }
 
     function renderJourney() {
@@ -3639,6 +4132,61 @@
           render();
         });
       });
+      document.querySelectorAll("[data-open-view]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.view = button.dataset.openView;
+          render();
+        });
+      });
+      document.getElementById("contentPrepList").addEventListener("click", (event) => {
+        const row = event.target.closest("[data-content-package-index]");
+        if (!row) return;
+        state.contentPackageIndex = Number(row.dataset.contentPackageIndex);
+        renderContentPrep();
+      });
+      document.getElementById("contentPrepSearch").addEventListener("input", (event) => {
+        state.contentPackageSearch = event.target.value;
+        renderContentPrep();
+      });
+      document.getElementById("newContentPackageButton").addEventListener("click", addContentPackage);
+      document.getElementById("saveContentPrepButton").addEventListener("click", saveContentPrepDraft);
+      document.getElementById("exportContentPackageButton").addEventListener("click", exportContentPackage);
+      document.getElementById("markContentReadyButton").addEventListener("click", () => {
+        updateContentPrepField("packageStatus", "ready");
+        toast("Package marked ready.");
+      });
+      [
+        ["prepPackageId", "packageId"],
+        ["prepPackageTitle", "packageTitle"],
+        ["prepPackageType", "packageType"],
+        ["prepPrimaryMedium", "primaryMedium"],
+        ["prepContentType", "contentType"],
+        ["prepPackageGoal", "packageGoal"],
+        ["prepStageSlug", "stageSlug"],
+        ["prepDiscoverShelf", "discoverShelf"],
+        ["prepDiscoverCardLabel", "discoverCardLabel"],
+        ["prepModuleId", "moduleId"],
+        ["prepLessonOrder", "lessonOrder"],
+        ["prepPlaybackId", "playbackId"],
+        ["prepPoster", "poster"],
+        ["prepAccessLevel", "accessLevel"],
+        ["prepSeedCost", "seedCost"],
+        ["prepOpeningPrompt", "openingPrompt"],
+        ["prepContentSummary", "contentSummary"],
+        ["prepReflectionPrompt", "reflectionPrompt"],
+        ["prepNotesPrompt", "notesPrompt"],
+        ["prepShareText", "shareText"],
+        ["prepPackageStatus", "packageStatus"],
+        ["prepOwner", "owner"],
+        ["prepSourceRange", "sourceRange"]
+      ].forEach(([id, field]) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.addEventListener("input", (event) => updateContentPrepField(field, event.target.value, event.target.checked));
+        input.addEventListener("change", (event) => updateContentPrepField(field, event.target.value, event.target.checked));
+      });
+      document.getElementById("prepShowInDiscover").addEventListener("change", (event) => updateContentPrepField("showInDiscover", event.target.value, event.target.checked));
+      document.getElementById("prepShowInJourney").addEventListener("change", (event) => updateContentPrepField("showInJourney", event.target.value, event.target.checked));
       document.getElementById("heroList").addEventListener("click", (event) => {
         const row = event.target.closest("[data-hero-index]");
         if (!row) return;
@@ -3952,7 +4500,8 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             homeLayout: state.layout,
-            journeyLayout: state.journey
+            journeyLayout: state.journey,
+            contentPackages: state.contentPackages
           })
         });
         const data = await response.json().catch(() => ({}));
@@ -4001,6 +4550,7 @@
         document.getElementById("authScreen").hidden = true;
         document.getElementById("appShell").hidden = false;
         wire();
+        await loadContentPrepPackages();
         render();
       };
       if (await isApprovedAdmin(client)) {
