@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
+  <script src="./oneinhim_home_layout.js?v=171"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -804,10 +805,24 @@
       filter: brightness(.74);
     }
 
+    .card-preview.coming-soon img,
+    .card-preview.coming-soon .card-preview-placeholder {
+      filter: grayscale(.2) brightness(.62);
+    }
+
+    .card-preview.coming-soon::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(12, 13, 10, .34);
+      pointer-events: none;
+    }
+
     .card-lock {
       position: absolute;
       right: 10px;
       top: 10px;
+      z-index: 3;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -818,6 +833,28 @@
       color: #fff;
       font-size: 12px;
       font-weight: 900;
+    }
+
+    .card-coming-soon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 3;
+      transform: translate(-50%, -50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .88);
+      color: #11130f;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
     }
 
     .card-preview-placeholder {
@@ -1401,7 +1438,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v170.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v171.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1417,7 +1454,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v170.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v171.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" type="button" data-open-view="contentPrep">Content prep</button>
@@ -1534,6 +1571,7 @@
                 <div class="asset-picker" id="shelfAssetPicker"></div>
                 <div class="field"><label for="shelfCardAlt">Selected card description</label><input id="shelfCardAlt" /></div>
                 <label class="check-row"><input id="shelfCardLocked" type="checkbox" /> Lock selected card</label>
+                <label class="check-row"><input id="shelfCardComingSoon" type="checkbox" /> Show Coming soon overlay</label>
                 <div class="field">
                   <label for="shelfCardAccess">Selected content access</label>
                   <select id="shelfCardAccess">
@@ -1555,7 +1593,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v170.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v171.html?auto=1&hash=journey">Preview Journey</a>
               <button class="btn green" type="button" data-open-view="contentPrep">Edit lesson content</button>
             </div>
           </div>
@@ -1628,7 +1666,7 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_cache_reset_v170.html?auto=1&hash=journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_cache_reset_v171.html?auto=1&hash=journey">Preview Journey</a>
                 <button class="btn" type="button" data-open-view="contentPrep">Open content prep</button>
               </div>
             </aside>
@@ -3250,14 +3288,18 @@
     }
 
     function readLayout() {
+      const published = window.ONEINHIM_PUBLISHED_HOME_CONTENT;
+      const defaultLayout = published && Array.isArray(published.heroSlides) && Array.isArray(published.shelves)
+        ? published
+        : DEFAULT_HOME;
       try {
         const raw = localStorage.getItem(HOME_KEY);
-        if (!raw) return normalizeLayout(JSON.parse(JSON.stringify(DEFAULT_HOME)));
+        if (!raw) return normalizeLayout(JSON.parse(JSON.stringify(defaultLayout)));
         const parsed = JSON.parse(raw);
-        if (!Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) return normalizeLayout(JSON.parse(JSON.stringify(DEFAULT_HOME)));
+        if (!Array.isArray(parsed.heroSlides) || !Array.isArray(parsed.shelves)) return normalizeLayout(JSON.parse(JSON.stringify(defaultLayout)));
         return normalizeLayout(parsed);
       } catch {
-        return normalizeLayout(JSON.parse(JSON.stringify(DEFAULT_HOME)));
+        return normalizeLayout(JSON.parse(JSON.stringify(defaultLayout)));
       }
     }
 
@@ -3284,8 +3326,16 @@
       };
       next.shelves.forEach((shelf) => {
         (shelf.items || []).forEach((item) => {
+          if (item.targetType === "none" || item.placeholder || (!item.target && !item.contentId)) {
+            item.target = "";
+            item.contentId = "";
+            item.targetType = "none";
+            item.placeholder = true;
+            item.locked = item.locked !== false;
+            item.comingSoon = item.comingSoon !== false;
+          }
           const target = item.contentId || item.target || "";
-          if (target && item.locked && !layout.contentAccess?.[target]) {
+          if (target && item.locked && normalizedAccessLevel(next.contentAccess[target]?.level || next.contentAccess[target]) === "free") {
             next.contentAccess[target] = { level: "partner_access" };
           }
         });
@@ -3395,8 +3445,15 @@
       return Boolean(item?.targetType === "none" || item?.placeholder || (!item?.contentId && !item?.target));
     }
 
+    function shelfItemIsComingSoon(item) {
+      if (!item) return false;
+      if (item.comingSoon === false) return false;
+      return Boolean(item.comingSoon || shelfItemIsPlaceholder(item));
+    }
+
     function shelfItemIsLocked(item) {
       if (shelfItemIsPlaceholder(item)) return item?.locked !== false;
+      if (item?.locked) return true;
       const id = shelfItemContentId(item);
       if (!id) return false;
       return contentAccess(id).level !== "free";
@@ -3476,10 +3533,11 @@
       const shape = shelf?.cardSize || "wide";
       const linkLabel = shelfItemIsPlaceholder(item) ? "No content link · artwork-only placeholder" : `Linked to ${shelfItemContentId(item)}`;
       const lockLabel = shelfItemIsLocked(item) ? "Locked" : "Unlocked";
+      const comingSoonLabel = shelfItemIsComingSoon(item) ? "Coming soon overlay" : "No overlay";
       return `
         <strong>${esc(shelfItemLabel(item))}</strong>
         <span>${esc(linkLabel)}</span>
-        <span>${esc(lockLabel)} · ${esc(shape)} card · ${esc(shelfSizeHelp(shape))}</span>
+        <span>${esc(lockLabel)} · ${esc(comingSoonLabel)} · ${esc(shape)} card · ${esc(shelfSizeHelp(shape))}</span>
       `;
     }
 
@@ -3623,10 +3681,12 @@
         const linkedContent = linkedId ? selectedContent(linkedId) : null;
         const artwork = item.artwork || linkedContent?.artwork || "";
         const locked = shelfItemIsLocked(item);
+        const comingSoon = shelfItemIsComingSoon(item);
         return `
-        <div class="card-preview ${esc(shelf.cardSize || "wide")}${locked ? " locked" : ""}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(shelfItemLabel(item))} artwork">
+        <div class="card-preview ${esc(shelf.cardSize || "wide")}${locked ? " locked" : ""}${comingSoon ? " coming-soon" : ""}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(shelfItemLabel(item))} artwork">
           ${artwork ? `<img src="${esc(artwork)}" alt="${esc(item.alt || "")}" />` : `<div class="card-preview-placeholder">Add artwork path</div>`}
           ${locked ? `<span class="card-lock" aria-label="Locked content">Locked</span>` : ""}
+          ${comingSoon ? `<span class="card-coming-soon">Coming soon</span>` : ""}
           <button class="card-remove" type="button" data-remove-shelf-item="${index}" aria-label="Remove ${esc(shelfItemLabel(item))}">Remove</button>
         </div>
       `;
@@ -3649,6 +3709,8 @@
       document.getElementById("shelfCardContent").disabled = !shelfItem;
       document.getElementById("shelfCardLocked").checked = Boolean(shelfItem && shelfItemIsLocked(shelfItem));
       document.getElementById("shelfCardLocked").disabled = !shelfItem;
+      document.getElementById("shelfCardComingSoon").checked = Boolean(shelfItem && shelfItemIsComingSoon(shelfItem));
+      document.getElementById("shelfCardComingSoon").disabled = !shelfItem;
       const shelfContentId = shelfItemContentId(shelfItem);
       document.getElementById("shelfCardAccess").innerHTML = contentAccessOptions(contentAccess(shelfContentId).level);
       document.getElementById("shelfCardAccess").disabled = !shelfContentId;
@@ -4068,6 +4130,7 @@
           item.targetType = "none";
           item.placeholder = true;
           item.locked = true;
+          item.comingSoon = true;
           if (!item.alt) item.alt = "Coming soon";
           renderShelves();
           return;
@@ -4077,6 +4140,7 @@
         item.target = value;
         item.targetType = value === "stageDetailView" ? "journey" : "discover";
         item.placeholder = false;
+        item.comingSoon = false;
         item.locked = contentAccess(value).level !== "free";
         if (!item.artwork) item.artwork = content.artwork;
         if (!item.alt) item.alt = content.title;
@@ -4100,6 +4164,14 @@
       item.locked = Boolean(locked);
       renderShelves();
       renderContent();
+    }
+
+    function setShelfItemComingSoon(comingSoon) {
+      const item = currentShelfItem();
+      if (!item) return;
+      item.comingSoon = Boolean(comingSoon);
+      if (comingSoon && !item.alt) item.alt = "Coming soon";
+      renderShelves();
     }
 
     function applyArtworkPreset(kind, path) {
@@ -4263,6 +4335,7 @@
       });
       document.getElementById("shelfCardAlt").addEventListener("input", (event) => updateShelfItemField("alt", event.target.value));
       document.getElementById("shelfCardLocked").addEventListener("change", (event) => setShelfItemLocked(event.target.checked));
+      document.getElementById("shelfCardComingSoon").addEventListener("change", (event) => setShelfItemComingSoon(event.target.checked));
       document.getElementById("shelfCardAccess").addEventListener("change", (event) => {
         setContentAccess(shelfItemContentId(currentShelfItem()), event.target.value);
         const item = currentShelfItem();
@@ -4334,7 +4407,8 @@
           contentId: "",
           alt: "Coming soon",
           placeholder: true,
-          locked: true
+          locked: true,
+          comingSoon: true
         });
         state.shelfItemIndex = currentShelf().items.length - 1;
         renderShelves();
