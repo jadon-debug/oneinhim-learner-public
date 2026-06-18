@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=171"></script>
+  <script src="./oneinhim_home_layout.js?v=172"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -951,6 +951,30 @@
       outline: none;
     }
 
+    .prep-filter-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+      padding: 0 12px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .prep-filter-row button {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(40,38,21,.62);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 950;
+    }
+
+    .prep-filter-row button.active {
+      border-color: var(--orange);
+      background: rgba(238,115,38,.18);
+      color: #fff;
+    }
+
     .prep-package-list {
       display: grid;
       gap: 8px;
@@ -960,13 +984,20 @@
     .prep-package-row {
       width: 100%;
       display: grid;
-      gap: 5px;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px 10px;
       border: 1px solid var(--line);
       border-radius: 12px;
       padding: 12px;
       background: var(--panel-deep);
       color: #fff;
       text-align: left;
+    }
+
+    .prep-package-row-main {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
     }
 
     .prep-package-row.active {
@@ -984,6 +1015,34 @@
       font-size: 12px;
       line-height: 1.25;
       overflow-wrap: anywhere;
+    }
+
+    .prep-medium-badge,
+    .prep-status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      padding: 0 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .prep-medium-read { background: rgba(246,202,53,.18); color: #f6ca35; }
+    .prep-medium-watch { background: rgba(238,115,38,.18); color: #ff9a5c; }
+    .prep-medium-listen { background: rgba(120,214,168,.16); color: #78d6a8; }
+    .prep-medium-reflect { background: rgba(169,152,255,.16); color: #c7bdff; }
+
+    .prep-package-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .prep-summary-grid {
@@ -1019,9 +1078,81 @@
       text-transform: uppercase;
     }
 
+    .prep-overview {
+      display: grid;
+      gap: 14px;
+      padding: 0 14px 14px;
+    }
+
+    .prep-overview-card {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: rgba(40,38,21,.52);
+    }
+
+    .prep-overview-card h4 {
+      margin: 0;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .prep-overview-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .prep-check-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .prep-check-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .prep-check-list strong {
+      color: #fff;
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .prep-json-details {
+      border-top: 1px solid var(--line);
+    }
+
+    .prep-json-details summary {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 950;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
     .prep-json {
-      min-height: 520px;
-      max-height: calc(100vh - 260px);
+      min-height: 320px;
+      max-height: 420px;
       margin: 0;
       overflow: auto;
       padding: 14px;
@@ -1438,7 +1569,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v171.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v172.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1454,7 +1585,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v171.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v172.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" type="button" data-open-view="contentPrep">Content prep</button>
@@ -1593,7 +1724,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v171.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v172.html?auto=1&hash=journey">Preview Journey</a>
               <button class="btn green" type="button" data-open-view="contentPrep">Edit lesson content</button>
             </div>
           </div>
@@ -1666,7 +1797,7 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_cache_reset_v171.html?auto=1&hash=journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_cache_reset_v172.html?auto=1&hash=journey">Preview Journey</a>
                 <button class="btn" type="button" data-open-view="contentPrep">Open content prep</button>
               </div>
             </aside>
@@ -1692,8 +1823,9 @@
                 <span class="pill" id="contentPrepCount">0</span>
               </div>
               <div class="prep-search">
-                <input id="contentPrepSearch" type="search" placeholder="Search title, stage, shelf, status" />
+                <input id="contentPrepSearch" type="search" placeholder="Search title, stage, shelf, status, read, watch, listen" />
               </div>
+              <div class="prep-filter-row" id="contentPrepFilters"></div>
               <div class="prep-package-list" id="contentPrepList"></div>
             </aside>
             <section class="panel">
@@ -1702,7 +1834,11 @@
                 <span class="prep-status" id="contentPrepSource">Loading packages...</span>
               </div>
               <div class="prep-summary-grid" id="contentPrepSummary"></div>
-              <pre class="prep-json" id="contentPrepJson"></pre>
+              <div class="prep-overview" id="contentPrepOverview"></div>
+              <details class="prep-json-details">
+                <summary>Technical JSON</summary>
+                <pre class="prep-json" id="contentPrepJson"></pre>
+              </details>
             </section>
             <aside class="panel">
               <div class="panel-head">
@@ -1716,8 +1852,8 @@
                     <div class="field"><label for="prepPackageId">Package ID</label><input id="prepPackageId" /></div>
                     <div class="field"><label for="prepPackageTitle">Title</label><input id="prepPackageTitle" /></div>
                     <div class="field"><label for="prepPackageType">Package type</label><select id="prepPackageType"><option value="journey_lesson">Journey lesson</option><option value="discovery_feature">Discovery feature</option><option value="audio_lesson">Audio lesson</option><option value="video_lesson">Video lesson</option></select></div>
-                    <div class="field"><label for="prepPrimaryMedium">Primary medium</label><select id="prepPrimaryMedium"><option value="read">Read</option><option value="watch">Watch</option><option value="listen">Listen</option><option value="reflect">Reflect</option></select></div>
-                    <div class="field"><label for="prepContentType">Content type</label><input id="prepContentType" /></div>
+                    <div class="field"><label for="prepPrimaryMedium">Format</label><select id="prepPrimaryMedium"><option value="read">Read / text</option><option value="watch">Watch / video</option><option value="listen">Listen / audio</option><option value="reflect">Reflect / prompt</option></select></div>
+                    <div class="field"><label for="prepContentType">Kind</label><input id="prepContentType" placeholder="study_guide, podcast, video_lesson..." /></div>
                     <div class="field"><label for="prepPackageGoal">Package goal</label><textarea id="prepPackageGoal"></textarea></div>
                   </div>
                 </details>
@@ -1736,8 +1872,8 @@
                 <details class="settings-section">
                   <summary>Media and access</summary>
                   <div class="form">
-                    <div class="field"><label for="prepPlaybackId">Mux playback ID</label><input id="prepPlaybackId" placeholder="Playback ID or empty for text-only" /></div>
-                    <div class="field"><label for="prepPoster">Poster / thumbnail</label><input id="prepPoster" placeholder="assets/cover.jpg or Mux thumbnail" /></div>
+                    <div class="field"><label for="prepPlaybackId">Media playback ID</label><input id="prepPlaybackId" placeholder="Mux playback ID for video/audio, empty for text" /></div>
+                    <div class="field"><label for="prepPoster">Artwork / thumbnail</label><input id="prepPoster" placeholder="assets/cover.jpg or Mux thumbnail" /></div>
                     <div class="field"><label for="prepAccessLevel">Access</label><select id="prepAccessLevel"><option value="free">Free</option><option value="seed_unlock">Seed unlock</option><option value="partner_access">Partner access</option></select></div>
                     <div class="field"><label for="prepSeedCost">Seed cost</label><input id="prepSeedCost" type="number" min="1" /></div>
                   </div>
@@ -3275,6 +3411,7 @@
       journeyStepIndex: 0,
       contentPackageIndex: 0,
       contentPackageSearch: "",
+      contentPackageMediumFilter: "all",
       contentPackages: [],
       contentPackageSource: "loading",
       journey: readJourney(),
@@ -3851,49 +3988,148 @@
       return state.contentPackages[state.contentPackageIndex] || state.contentPackages[0] || null;
     }
 
+    function prepMedium(value) {
+      const medium = String(value || "read").toLowerCase();
+      return ["watch", "listen", "read", "reflect"].includes(medium) ? medium : "read";
+    }
+
+    function prepMediumLabel(value) {
+      return {
+        watch: "Watch",
+        listen: "Listen",
+        read: "Read",
+        reflect: "Reflect"
+      }[prepMedium(value)] || "Read";
+    }
+
+    function prepMediumBadge(value) {
+      const medium = prepMedium(value);
+      return `<span class="prep-medium-badge prep-medium-${esc(medium)}">${esc(prepMediumLabel(medium))}</span>`;
+    }
+
+    function prepMediumCounts() {
+      return state.contentPackages.reduce((counts, item) => {
+        const medium = prepMedium(item.primaryMedium);
+        counts.all += 1;
+        counts[medium] = (counts[medium] || 0) + 1;
+        return counts;
+      }, { all: 0, watch: 0, listen: 0, read: 0, reflect: 0 });
+    }
+
+    function prepAccessLabel(pkg) {
+      const level = normalizedAccessLevel(pkg?.access?.level || "free");
+      return {
+        free: "Free",
+        seed_unlock: `${Math.max(1, Number(pkg?.access?.seedCost || 5) || 5)} Seeds`,
+        partner_access: "Partner access"
+      }[level] || "Free";
+    }
+
+    function prepMediaStatus(pkg) {
+      const medium = prepMedium(pkg?.primaryMedium);
+      if (medium === "watch") return pkg?.videoHost?.playbackId || pkg?.muxVirtualClip?.playbackId ? "Mux video ready" : "Needs video";
+      if (medium === "listen") return pkg?.videoHost?.playbackId || pkg?.muxVirtualClip?.playbackId || pkg?.audioHost?.playbackId ? "Audio ready" : "Needs audio";
+      if (medium === "read") return pkg?.learnerSession?.readBody?.length || pkg?.learnerSession?.contentSummary ? "Text ready" : "Needs text";
+      return pkg?.learnerSession?.reflectionPrompt ? "Reflection ready" : "Needs prompt";
+    }
+
+    function prepPlacementLabel(pkg) {
+      const parts = [];
+      if (pkg?.placement?.showInJourney !== false) parts.push("Journey");
+      if (pkg?.placement?.showInDiscover) parts.push(pkg?.placement?.discoverShelf ? `Discover: ${pkg.placement.discoverShelf}` : "Discover");
+      return parts.join(" + ") || "Not placed";
+    }
+
     function filteredContentPackages() {
       const query = state.contentPackageSearch.trim().toLowerCase();
-      if (!query) return state.contentPackages.map((item, index) => ({ item, index }));
+      const mediumFilter = state.contentPackageMediumFilter;
       return state.contentPackages
         .map((item, index) => ({ item, index }))
-        .filter(({ item }) => [
-          item.packageId,
-          item.packageTitle,
-          item.packageType,
-          item.primaryMedium,
-          item.journeyStage?.name,
-          item.journeyStage?.slug,
-          item.placement?.discoverShelf,
-          item.admin?.packageStatus
-        ].filter(Boolean).join(" ").toLowerCase().includes(query));
+        .filter(({ item }) => mediumFilter === "all" || prepMedium(item.primaryMedium) === mediumFilter)
+        .filter(({ item }) => !query || [
+            item.packageId,
+            item.packageTitle,
+            item.packageType,
+            prepMediumLabel(item.primaryMedium),
+            item.primaryMedium,
+            item.contentType,
+            item.journeyStage?.name,
+            item.journeyStage?.slug,
+            item.placement?.discoverShelf,
+            item.admin?.packageStatus,
+            prepAccessLabel(item),
+            prepMediaStatus(item)
+          ].filter(Boolean).join(" ").toLowerCase().includes(query));
     }
 
     function renderContentPrep(options = {}) {
       const list = document.getElementById("contentPrepList");
       if (!list) return;
       const packageEntries = filteredContentPackages();
-      const selected = currentContentPackage();
+      const selectedEntry = packageEntries.find(({ index }) => index === state.contentPackageIndex) || packageEntries[0] || null;
+      const selected = selectedEntry?.item || null;
+      const counts = prepMediumCounts();
       document.getElementById("contentPrepCount").textContent = String(state.contentPackages.length);
       document.getElementById("contentPrepSearch").value = state.contentPackageSearch;
+      document.getElementById("contentPrepFilters").innerHTML = [
+        ["all", "All"],
+        ["watch", "Watch"],
+        ["listen", "Listen"],
+        ["read", "Read"],
+        ["reflect", "Reflect"]
+      ].map(([value, label]) => `<button class="${state.contentPackageMediumFilter === value ? "active" : ""}" type="button" data-content-medium-filter="${esc(value)}">${esc(label)} ${esc(counts[value] || 0)}</button>`).join("");
       list.innerHTML = packageEntries.map(({ item, index }) => `
         <button class="prep-package-row${index === state.contentPackageIndex ? " active" : ""}" type="button" data-content-package-index="${index}">
-          <strong>${esc(item.packageTitle || "Untitled package")}</strong>
-          <span>${esc(item.packageId || "")}</span>
-          <span>${esc(item.journeyStage?.name || "No stage")} · ${esc(item.primaryMedium || "read")} · ${esc(item.admin?.packageStatus || "draft")}</span>
+          ${prepMediumBadge(item.primaryMedium)}
+          <span class="prep-package-row-main">
+            <strong>${esc(item.packageTitle || "Untitled package")}</strong>
+            <span>${esc(item.journeyStage?.name || "No stage")} · ${esc(prepPlacementLabel(item))}</span>
+            <span class="prep-package-meta">
+              <span>${esc(prepMediaStatus(item))}</span>
+              <span>${esc(prepAccessLabel(item))}</span>
+              <span>${esc(item.admin?.packageStatus || "draft")}</span>
+            </span>
+          </span>
         </button>
       `).join("") || `<p class="journey-empty">No packages match this search.</p>`;
       document.getElementById("contentPrepSource").textContent = state.contentPackageSource;
       if (!selected) {
-        document.getElementById("contentPrepTitle").textContent = "Package preview";
+        const filterLabel = state.contentPackageMediumFilter === "all" ? "matching" : prepMediumLabel(state.contentPackageMediumFilter);
+        document.getElementById("contentPrepTitle").textContent = `No ${filterLabel} packages`;
         document.getElementById("contentPrepSummary").innerHTML = "";
+        document.getElementById("contentPrepOverview").innerHTML = "";
         document.getElementById("contentPrepJson").textContent = "No package selected.";
         return;
       }
       document.getElementById("contentPrepTitle").textContent = selected.packageTitle || "Package preview";
       document.getElementById("contentPrepSummary").innerHTML = `
-        <div class="prep-stat"><strong>${esc(selected.primaryMedium || "read")}</strong><span>Medium</span></div>
-        <div class="prep-stat"><strong>${esc(selected.journeyStage?.stage || "-")}</strong><span>Stage</span></div>
+        <div class="prep-stat"><strong>${esc(prepMediumLabel(selected.primaryMedium))}</strong><span>Format</span></div>
+        <div class="prep-stat"><strong>${esc(prepAccessLabel(selected))}</strong><span>Access</span></div>
         <div class="prep-stat"><strong>${esc(selected.admin?.packageStatus || "draft")}</strong><span>Status</span></div>
+      `;
+      document.getElementById("contentPrepOverview").innerHTML = `
+        <div class="prep-overview-card">
+          <h4>What this is</h4>
+          <p>${esc(selected.packageGoal || selected.learnerSession?.contentSummary || "No purpose or summary written yet.")}</p>
+        </div>
+        <div class="prep-overview-card">
+          <h4>Readiness</h4>
+          <ul class="prep-check-list">
+            <li><span>Media</span><strong>${esc(prepMediaStatus(selected))}</strong></li>
+            <li><span>Placement</span><strong>${esc(prepPlacementLabel(selected))}</strong></li>
+            <li><span>Stage</span><strong>${esc(selected.journeyStage?.name || "No stage")}</strong></li>
+            <li><span>Type</span><strong>${esc(selected.contentType || selected.packageType || "Not set")}</strong></li>
+          </ul>
+        </div>
+        <div class="prep-overview-card">
+          <h4>Learner flow</h4>
+          <ul class="prep-check-list">
+            <li><span>Opening</span><strong>${esc(selected.learnerSession?.openingPrompt ? "Ready" : "Missing")}</strong></li>
+            <li><span>Reflection</span><strong>${esc(selected.learnerSession?.reflectionPrompt ? "Ready" : "Missing")}</strong></li>
+            <li><span>Notes</span><strong>${esc(selected.learnerSession?.notesPrompt ? "Ready" : "Missing")}</strong></li>
+            <li><span>Share text</span><strong>${esc(selected.sharing?.shareText ? "Ready" : "Missing")}</strong></li>
+          </ul>
+        </div>
       `;
       document.getElementById("contentPrepJson").textContent = JSON.stringify(selected, null, 2);
       if (!options.skipFieldSync) fillContentPrepFields(selected);
@@ -4218,6 +4454,14 @@
       });
       document.getElementById("contentPrepSearch").addEventListener("input", (event) => {
         state.contentPackageSearch = event.target.value;
+        renderContentPrep();
+      });
+      document.getElementById("contentPrepFilters").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-content-medium-filter]");
+        if (!button) return;
+        state.contentPackageMediumFilter = button.dataset.contentMediumFilter || "all";
+        const firstMatch = filteredContentPackages()[0];
+        if (firstMatch) state.contentPackageIndex = firstMatch.index;
         renderContentPrep();
       });
       document.getElementById("newContentPackageButton").addEventListener("click", addContentPackage);
