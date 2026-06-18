@@ -195,8 +195,20 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "id": "shelf_1781437768568",
       "title": "Featured Audiobooks",
       "mode": "discover",
-      "cardSize": "wide",
-      "items": []
+      "cardSize": "poster",
+      "items": [
+        {
+          "id": "artwork_only_1781810091788",
+          "artwork": "assets/GoodEnough_front.webp",
+          "targetType": "none",
+          "target": "",
+          "contentId": "",
+          "alt": "Coming soon",
+          "placeholder": true,
+          "locked": true,
+          "comingSoon": true
+        }
+      ]
     }
   ],
   "contentAccess": {
