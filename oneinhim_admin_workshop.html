@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=175"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=175"></script>
+  <script src="./oneinhim_home_layout.js?v=176"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=176"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1260,6 +1260,184 @@
       text-align: right;
     }
 
+    .prep-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .prep-choice {
+      min-height: 74px;
+      display: grid;
+      gap: 3px;
+      align-content: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(40,38,21,.56);
+      cursor: pointer;
+    }
+
+    .prep-choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .prep-choice strong,
+    .prep-choice span {
+      display: block;
+    }
+
+    .prep-choice strong {
+      font-size: 15px;
+    }
+
+    .prep-choice span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .prep-choice:has(input:checked) {
+      border-color: var(--orange);
+      background: rgba(238,115,38,.16);
+      box-shadow: 0 0 0 3px rgba(238,115,38,.12);
+    }
+
+    .prep-clip-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .prep-clip-row {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(40,38,21,.56);
+    }
+
+    .prep-clip-row-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 92px 92px;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .prep-clip-row .field input,
+    .prep-clip-row .field textarea {
+      min-height: 38px;
+      padding: 8px 10px;
+    }
+
+    .prep-marker-preview {
+      display: grid;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .prep-media-surface,
+    .prep-reader-surface {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(16,15,8,.92), rgba(40,38,21,.92));
+    }
+
+    .prep-media-surface {
+      min-height: 250px;
+      display: grid;
+      align-content: end;
+      padding: 18px;
+    }
+
+    .prep-reader-surface {
+      display: grid;
+      gap: 12px;
+      padding: 18px 18px 18px 44px;
+      color: rgba(246,244,238,.78);
+      line-height: 1.5;
+    }
+
+    .prep-reader-rail {
+      position: absolute;
+      top: 18px;
+      bottom: 18px;
+      left: 20px;
+      width: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+    }
+
+    .prep-timeline {
+      position: relative;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+    }
+
+    .prep-marker {
+      position: absolute;
+      z-index: 2;
+      display: grid;
+      gap: 4px;
+      width: min(220px, 42vw);
+      transform: translateX(-50%);
+    }
+
+    .prep-media-surface .prep-marker {
+      bottom: 40px;
+    }
+
+    .prep-reader-surface .prep-marker {
+      left: 22px;
+      width: min(280px, calc(100% - 54px));
+      transform: translateY(-50%);
+    }
+
+    .prep-marker-pin {
+      width: 18px;
+      height: 18px;
+      border: 3px solid #fff;
+      border-radius: 999px;
+      background: var(--orange);
+      box-shadow: 0 0 0 4px rgba(238,115,38,.22);
+    }
+
+    .prep-media-surface .prep-marker-pin {
+      margin: 0 auto;
+    }
+
+    .prep-marker-label {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: rgba(17,15,8,.9);
+      box-shadow: 0 12px 28px rgba(0,0,0,.26);
+    }
+
+    .prep-marker-label strong,
+    .prep-marker-label span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .prep-marker-label strong {
+      font-size: 12px;
+    }
+
+    .prep-marker-label span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
     .prep-json-details {
       border-top: 1px solid var(--line);
     }
@@ -1771,7 +1949,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v175.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v176.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1787,7 +1965,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v175.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v176.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -1924,7 +2102,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v175.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v176.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -2030,62 +2208,79 @@
               </div>
               <div class="prep-summary-grid" id="contentPrepSummary"></div>
               <div class="prep-overview" id="contentPrepOverview"></div>
-              <details class="prep-json-details">
+              <details class="prep-json-details" hidden>
                 <summary>Technical JSON</summary>
                 <pre class="prep-json" id="contentPrepJson"></pre>
               </details>
             </section>
             <aside class="panel">
               <div class="panel-head">
-                <h3>Package editor</h3>
+                <h3>Content setup</h3>
                 <button class="btn green" id="markContentReadyButton" type="button">Mark ready</button>
               </div>
               <div class="settings-stack">
                 <details class="settings-section" open>
-                  <summary>Identity</summary>
+                  <summary>Name</summary>
                   <div class="form">
-                    <div class="field"><label for="prepPackageId">Package ID</label><input id="prepPackageId" /></div>
-                    <div class="field"><label for="prepPackageTitle">Title</label><input id="prepPackageTitle" /></div>
-                    <div class="field"><label for="prepPackageType">Package type</label><select id="prepPackageType"><option value="journey_lesson">Journey lesson</option><option value="discovery_feature">Discovery feature</option><option value="audio_lesson">Audio lesson</option><option value="video_lesson">Video lesson</option></select></div>
-                    <div class="field"><label for="prepPrimaryMedium">Format</label><select id="prepPrimaryMedium"><option value="read">Read / text</option><option value="watch">Watch / video</option><option value="listen">Listen / audio</option><option value="reflect">Reflect / prompt</option></select></div>
-                    <div class="field"><label for="prepContentType">Kind</label><input id="prepContentType" placeholder="study_guide, podcast, video_lesson..." /></div>
-                    <div class="field"><label for="prepPackageGoal">Package goal</label><textarea id="prepPackageGoal"></textarea></div>
+                    <div class="field"><label for="prepPackageTitle">Library title</label><input id="prepPackageTitle" /></div>
+                    <div class="field"><label for="prepPackageGoal">Short description</label><textarea id="prepPackageGoal"></textarea></div>
+                    <div class="field"><label for="prepContentSummary">Learner summary</label><textarea id="prepContentSummary"></textarea></div>
                   </div>
                 </details>
                 <details class="settings-section">
-                  <summary>Placement</summary>
+                  <summary>Experience</summary>
                   <div class="form">
-                    <div class="field"><label for="prepStageSlug">Journey stage</label><select id="prepStageSlug"><option value="explore">Explore Jesus</option><option value="foundations">Start Following Jesus</option><option value="formation">Grow Deep Roots</option><option value="mission">Live on Mission</option><option value="multiply">Lead and Multiply</option></select></div>
-                    <div class="field"><label for="prepDiscoverShelf">Discover shelf</label><input id="prepDiscoverShelf" /></div>
-                    <div class="field"><label for="prepDiscoverCardLabel">Shelf card label</label><input id="prepDiscoverCardLabel" /></div>
-                    <div class="field"><label for="prepModuleId">Journey module ID</label><input id="prepModuleId" /></div>
-                    <div class="field"><label for="prepLessonOrder">Lesson order</label><input id="prepLessonOrder" type="number" /></div>
-                    <label class="check-row"><input id="prepShowInDiscover" type="checkbox" /> Show in Discover</label>
-                    <label class="check-row"><input id="prepShowInJourney" type="checkbox" /> Show in Journey</label>
-                  </div>
-                </details>
-                <details class="settings-section">
-                  <summary>Media and access</summary>
-                  <div class="form">
-                    <div class="field"><label for="prepPlaybackId">Media playback ID</label><input id="prepPlaybackId" placeholder="Mux playback ID for video/audio, empty for text" /></div>
+                    <div class="prep-choice-grid" role="radiogroup" aria-label="Learner experience">
+                      <label class="prep-choice"><input name="prepExperienceChoice" type="radio" value="watch" /><strong>Watch</strong><span>Video player</span></label>
+                      <label class="prep-choice"><input name="prepExperienceChoice" type="radio" value="listen" /><strong>Listen</strong><span>Audio player</span></label>
+                      <label class="prep-choice"><input name="prepExperienceChoice" type="radio" value="read" /><strong>Read</strong><span>Reader view</span></label>
+                    </div>
+                    <div class="field"><label for="prepPrimaryMedium">Experience type</label><select id="prepPrimaryMedium"><option value="read">Read / reader</option><option value="watch">Watch / player</option><option value="listen">Listen / player</option><option value="reflect">Reflect / prompt</option></select></div>
+                    <div class="field"><label for="prepPlaybackId">Mux playback ID</label><input id="prepPlaybackId" placeholder="Mux playback ID for video/audio, empty for text" /></div>
                     <div class="field"><label for="prepPoster">Artwork / thumbnail</label><input id="prepPoster" placeholder="assets/cover.jpg or Mux thumbnail" /></div>
                     <div class="field"><label for="prepAccessLevel">Access</label><select id="prepAccessLevel"><option value="free">Free</option><option value="seed_unlock">Seed unlock</option><option value="partner_access">Partner access</option></select></div>
                     <div class="field"><label for="prepSeedCost">Seed cost</label><input id="prepSeedCost" type="number" min="1" /></div>
                   </div>
                 </details>
                 <details class="settings-section">
-                  <summary>Learner session</summary>
+                  <summary>Display</summary>
+                  <div class="form">
+                    <label class="check-row"><input id="prepShowInHero" type="checkbox" /> Available for hero</label>
+                    <label class="check-row"><input id="prepShowInDiscover" type="checkbox" /> Show in Discover shelves</label>
+                    <div class="field"><label for="prepDiscoverShelf">Shelf</label><input id="prepDiscoverShelf" placeholder="Start This Week, Listen This Week..." /></div>
+                    <div class="field"><label for="prepDiscoverCardLabel">Shelf card label</label><input id="prepDiscoverCardLabel" /></div>
+                    <label class="check-row"><input id="prepShowInJourney" type="checkbox" /> Use in Journey</label>
+                    <div class="field"><label for="prepStageSlug">Journey stage</label><select id="prepStageSlug"><option value="explore">Explore Jesus</option><option value="foundations">Start Following Jesus</option><option value="formation">Grow Deep Roots</option><option value="mission">Live on Mission</option><option value="multiply">Lead and Multiply</option></select></div>
+                    <div class="field"><label for="prepModuleId">Journey module</label><input id="prepModuleId" /></div>
+                    <div class="field"><label for="prepLessonOrder">Lesson order</label><input id="prepLessonOrder" type="number" /></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>AI markers</summary>
+                  <div class="form">
+                    <p class="field-help">Use this for text, audio, and video. The first pass chooses the sections and explains why; markers show on the reader/player and every timestamp or text anchor can be adjusted.</p>
+                    <div class="btn-row">
+                      <button class="btn" id="suggestJourneyClipsButton" type="button">AI suggest markers</button>
+                      <button class="btn" id="addJourneyClipButton" type="button">Add marker</button>
+                    </div>
+                    <div class="prep-clip-list" id="prepJourneyClipList"></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Learner prompts</summary>
                   <div class="form">
                     <div class="field"><label for="prepOpeningPrompt">Opening prompt</label><textarea id="prepOpeningPrompt"></textarea></div>
-                    <div class="field"><label for="prepContentSummary">Content summary</label><textarea id="prepContentSummary"></textarea></div>
                     <div class="field"><label for="prepReflectionPrompt">Reflection prompt</label><textarea id="prepReflectionPrompt"></textarea></div>
                     <div class="field"><label for="prepNotesPrompt">Notes prompt</label><textarea id="prepNotesPrompt"></textarea></div>
                     <div class="field"><label for="prepShareText">Share text</label><textarea id="prepShareText"></textarea></div>
                   </div>
                 </details>
                 <details class="settings-section">
-                  <summary>Admin status</summary>
+                  <summary>Advanced</summary>
                   <div class="form">
+                    <div class="field"><label for="prepPackageId">Package ID</label><input id="prepPackageId" /></div>
+                    <div class="field"><label for="prepPackageType">Package type</label><select id="prepPackageType"><option value="journey_lesson">Journey lesson</option><option value="discovery_feature">Discovery feature</option><option value="audio_lesson">Audio lesson</option><option value="video_lesson">Video lesson</option></select></div>
+                    <div class="field"><label for="prepContentType">Kind</label><input id="prepContentType" placeholder="study_guide, podcast, video_lesson..." /></div>
                     <div class="field"><label for="prepPackageStatus">Package status</label><select id="prepPackageStatus"><option value="draft">Draft</option><option value="prepared">Prepared</option><option value="needs_mux_playback">Needs Mux playback</option><option value="ready">Ready</option></select></div>
                     <div class="field"><label for="prepOwner">Owner</label><input id="prepOwner" /></div>
                     <div class="field"><label for="prepSourceRange">Source range</label><input id="prepSourceRange" /></div>
@@ -4670,6 +4865,166 @@
       return parts.join(" + ") || "Not placed";
     }
 
+    function parseClipTime(value) {
+      const text = String(value || "").trim();
+      if (!text) return 0;
+      const parts = text.split(":").map((part) => Number(part));
+      if (parts.some((part) => Number.isNaN(part))) return Number(text) || 0;
+      if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+      if (parts.length === 2) return parts[0] * 60 + parts[1];
+      return parts[0] || 0;
+    }
+
+    function formatClipTime(seconds) {
+      const total = Math.max(0, Math.round(Number(seconds) || 0));
+      const hrs = Math.floor(total / 3600);
+      const mins = Math.floor((total % 3600) / 60);
+      const secs = total % 60;
+      if (hrs) return `${hrs}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+      return `${mins}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function packageClips(pkg) {
+      pkg.journeyClips = Array.isArray(pkg.journeyClips) ? pkg.journeyClips : [];
+      return pkg.journeyClips;
+    }
+
+    function clipTimelineDuration(pkg) {
+      const clips = packageClips(pkg);
+      const fromPackage = Number(pkg?.length?.seconds || pkg?.seconds || 0);
+      const fromClips = clips.reduce((max, clip) => Math.max(max, parseClipTime(clip.end || clip.start)), 0);
+      return Math.max(fromPackage, fromClips, prepMedium(pkg?.primaryMedium) === "listen" ? 1800 : 600);
+    }
+
+    function clipPercent(pkg, clip, index, total) {
+      if (prepMedium(pkg?.primaryMedium) === "read") {
+        return Math.min(92, Math.max(8, Number(clip.anchorPercent || ((index + 1) / (total + 1)) * 100)));
+      }
+      return Math.min(94, Math.max(6, (parseClipTime(clip.start) / clipTimelineDuration(pkg)) * 100));
+    }
+
+    function defaultClipSuggestions(pkg) {
+      const medium = prepMedium(pkg?.primaryMedium);
+      const baseTitle = pkg?.packageTitle || "This content";
+      if (medium === "read") {
+        return [
+          { title: "Opening idea", anchor: "opening", anchorPercent: 18, reason: "Sets the learner's first question and gives the lesson a clear starting point." },
+          { title: "Core teaching", anchor: "middle", anchorPercent: 52, reason: "Carries the main truth that should become the Journey step." },
+          { title: "Response moment", anchor: "response", anchorPercent: 82, reason: "Invites reflection, prayer, or a next action." }
+        ];
+      }
+      return [
+        { title: "Hook", start: "0:00", end: "2:00", reason: `Opens ${baseTitle} with the clearest setup for the learner.` },
+        { title: "Core teaching", start: "4:00", end: "7:30", reason: "Likely contains the strongest teaching moment for a Journey lesson." },
+        { title: "Response", start: "10:00", end: "12:00", reason: "Good place to turn the content into a reflection or practice step." }
+      ];
+    }
+
+    function suggestJourneyClips() {
+      const pkg = currentContentPackage();
+      if (!pkg) return;
+      pkg.journeyClips = defaultClipSuggestions(pkg);
+      pkg.admin = pkg.admin || {};
+      pkg.admin.clipSuggestionStatus = "ai_first_pass";
+      pkg.admin.lastUpdated = new Date().toISOString().slice(0, 10);
+      renderContentPrep();
+      toast("Suggested Journey markers added.");
+    }
+
+    function addJourneyClip() {
+      const pkg = currentContentPackage();
+      if (!pkg) return;
+      packageClips(pkg).push(prepMedium(pkg.primaryMedium) === "read"
+        ? { title: "New marker", anchor: "section", anchorPercent: 50, reason: "Explain why this section should become a Journey step." }
+        : { title: "New clip", start: "0:00", end: "1:00", reason: "Explain why this clip should become a Journey step." });
+      renderContentPrep();
+    }
+
+    function updateJourneyClip(index, field, value) {
+      const pkg = currentContentPackage();
+      if (!pkg) return;
+      const clip = packageClips(pkg)[index];
+      if (!clip) return;
+      clip[field] = value;
+      if (field === "start" || field === "end") clip[field] = formatClipTime(parseClipTime(value));
+      if (field === "anchorPercent") clip[field] = Math.max(0, Math.min(100, Number(value) || 0));
+      pkg.admin = pkg.admin || {};
+      pkg.admin.lastUpdated = new Date().toISOString().slice(0, 10);
+      renderContentPrep({ skipFieldSync: true });
+    }
+
+    function removeJourneyClip(index) {
+      const pkg = currentContentPackage();
+      if (!pkg) return;
+      packageClips(pkg).splice(index, 1);
+      renderContentPrep();
+    }
+
+    function renderJourneyClipEditor(pkg) {
+      const list = document.getElementById("prepJourneyClipList");
+      if (!list) return;
+      const clips = packageClips(pkg);
+      const medium = prepMedium(pkg?.primaryMedium);
+      list.innerHTML = clips.map((clip, index) => medium === "read" ? `
+        <article class="prep-clip-row">
+          <div class="prep-clip-row-head">
+            <div class="field"><label>Marker title</label><input data-clip-index="${index}" data-clip-field="title" value="${esc(clip.title || "")}" /></div>
+            <div class="field"><label>Anchor</label><input data-clip-index="${index}" data-clip-field="anchor" value="${esc(clip.anchor || "")}" /></div>
+            <div class="field"><label>Position %</label><input type="number" min="0" max="100" data-clip-index="${index}" data-clip-field="anchorPercent" value="${esc(clip.anchorPercent ?? clipPercent(pkg, clip, index, clips.length))}" /></div>
+          </div>
+          <div class="field"><label>Reasoning</label><textarea data-clip-index="${index}" data-clip-field="reason">${esc(clip.reason || "")}</textarea></div>
+          <button class="btn" type="button" data-remove-clip="${index}">Remove marker</button>
+        </article>
+      ` : `
+        <article class="prep-clip-row">
+          <div class="prep-clip-row-head">
+            <div class="field"><label>Clip title</label><input data-clip-index="${index}" data-clip-field="title" value="${esc(clip.title || "")}" /></div>
+            <div class="field"><label>Start</label><input data-clip-index="${index}" data-clip-field="start" value="${esc(clip.start || "0:00")}" /></div>
+            <div class="field"><label>End</label><input data-clip-index="${index}" data-clip-field="end" value="${esc(clip.end || "1:00")}" /></div>
+          </div>
+          <div class="field"><label>Reasoning</label><textarea data-clip-index="${index}" data-clip-field="reason">${esc(clip.reason || "")}</textarea></div>
+          <button class="btn" type="button" data-remove-clip="${index}">Remove clip</button>
+        </article>
+      `).join("") || `<p class="field-help">No Journey markers yet. Use “Suggest clips” for a first pass, then adjust the markers.</p>`;
+    }
+
+    function renderMarkerPreview(pkg) {
+      const clips = packageClips(pkg);
+      const medium = prepMedium(pkg?.primaryMedium);
+      const markers = clips.map((clip, index) => {
+        const percent = clipPercent(pkg, clip, index, clips.length);
+        const timing = medium === "read" ? (clip.anchor || `${Math.round(percent)}%`) : `${clip.start || "0:00"}-${clip.end || ""}`;
+        const label = `
+          <span class="prep-marker-label">
+            <strong>${esc(clip.title || `Marker ${index + 1}`)}</strong>
+            <span>${esc(timing)} · ${esc(clip.reason || "No reasoning yet")}</span>
+          </span>`;
+        if (medium === "read") {
+          return `<span class="prep-marker" style="top:${esc(percent)}%"><span class="prep-marker-pin"></span>${label}</span>`;
+        }
+        return `<span class="prep-marker" style="left:${esc(percent)}%"><span class="prep-marker-pin"></span>${label}</span>`;
+      }).join("");
+      if (medium === "read") {
+        return `
+          <div class="prep-marker-preview">
+            <div class="prep-reader-surface">
+              <span class="prep-reader-rail"></span>
+              ${markers}
+              <p>${esc(pkg?.learnerSession?.contentSummary || pkg?.packageGoal || "Reader content preview.")}</p>
+              <p>${esc(pkg?.learnerSession?.reflectionPrompt || "Markers show where AI-selected sections sit in the reader flow.")}</p>
+              <p>${esc(pkg?.learnerSession?.notesPrompt || "Adjust the marker positions and reasoning on the right.")}</p>
+            </div>
+          </div>`;
+      }
+      return `
+        <div class="prep-marker-preview">
+          <div class="prep-media-surface">
+            ${markers}
+            <div class="prep-timeline"></div>
+          </div>
+        </div>`;
+    }
+
     function filteredContentPackages() {
       const query = state.contentPackageSearch.trim().toLowerCase();
       const mediumFilter = state.contentPackageMediumFilter;
@@ -4733,32 +5088,15 @@
       }
       document.getElementById("contentPrepTitle").textContent = selected.packageTitle || "Package preview";
       document.getElementById("contentPrepSummary").innerHTML = `
-        <div class="prep-stat"><strong>${esc(prepMediumLabel(selected.primaryMedium))}</strong><span>Format</span></div>
+        <div class="prep-stat"><strong>${esc(prepMediumLabel(selected.primaryMedium))}</strong><span>Experience</span></div>
         <div class="prep-stat"><strong>${esc(prepAccessLabel(selected))}</strong><span>Access</span></div>
-        <div class="prep-stat"><strong>${esc(selected.admin?.packageStatus || "draft")}</strong><span>Status</span></div>
+        <div class="prep-stat"><strong>${esc(packageClips(selected).length)}</strong><span>Markers</span></div>
       `;
       document.getElementById("contentPrepOverview").innerHTML = `
+        ${renderMarkerPreview(selected)}
         <div class="prep-overview-card">
-          <h4>What this is</h4>
-          <p>${esc(selected.packageGoal || selected.learnerSession?.contentSummary || "No purpose or summary written yet.")}</p>
-        </div>
-        <div class="prep-overview-card">
-          <h4>Readiness</h4>
-          <ul class="prep-check-list">
-            <li><span>Media</span><strong>${esc(prepMediaStatus(selected))}</strong></li>
-            <li><span>Placement</span><strong>${esc(prepPlacementLabel(selected))}</strong></li>
-            <li><span>Stage</span><strong>${esc(selected.journeyStage?.name || "No stage")}</strong></li>
-            <li><span>Type</span><strong>${esc(selected.contentType || selected.packageType || "Not set")}</strong></li>
-          </ul>
-        </div>
-        <div class="prep-overview-card">
-          <h4>Learner flow</h4>
-          <ul class="prep-check-list">
-            <li><span>Opening</span><strong>${esc(selected.learnerSession?.openingPrompt ? "Ready" : "Missing")}</strong></li>
-            <li><span>Reflection</span><strong>${esc(selected.learnerSession?.reflectionPrompt ? "Ready" : "Missing")}</strong></li>
-            <li><span>Notes</span><strong>${esc(selected.learnerSession?.notesPrompt ? "Ready" : "Missing")}</strong></li>
-            <li><span>Share text</span><strong>${esc(selected.sharing?.shareText ? "Ready" : "Missing")}</strong></li>
-          </ul>
+          <h4>AI section plan</h4>
+          <p>${packageClips(selected).length ? "Markers show the selected sections directly on the reader/player. Adjust the timestamps, text anchors, and reasoning on the right." : "No markers yet. Use Suggest clips to create a first pass, then adjust every marker."}</p>
         </div>
       `;
       document.getElementById("contentPrepJson").textContent = JSON.stringify(selected, null, 2);
@@ -4783,6 +5121,7 @@
       set("prepDiscoverCardLabel", pkg.placement?.discoverCardLabel);
       set("prepModuleId", pkg.placement?.moduleId);
       set("prepLessonOrder", pkg.placement?.lessonOrder);
+      set("prepShowInHero", pkg.placement?.showInHero);
       set("prepShowInDiscover", pkg.placement?.showInDiscover !== false);
       set("prepShowInJourney", pkg.placement?.showInJourney !== false);
       set("prepPlaybackId", pkg.videoHost?.playbackId || pkg.muxVirtualClip?.playbackId || "");
@@ -4797,6 +5136,10 @@
       set("prepPackageStatus", pkg.admin?.packageStatus);
       set("prepOwner", pkg.admin?.owner);
       set("prepSourceRange", pkg.admin?.sourceRange);
+      document.querySelectorAll("input[name='prepExperienceChoice']").forEach((input) => {
+        input.checked = input.value === prepMedium(pkg.primaryMedium);
+      });
+      renderJourneyClipEditor(pkg);
     }
 
     function updateContentPrepField(field, value, checked = false) {
@@ -4823,6 +5166,7 @@
       if (field === "discoverCardLabel") pkg.placement.discoverCardLabel = value;
       if (field === "moduleId") pkg.placement.moduleId = value;
       if (field === "lessonOrder") pkg.placement.lessonOrder = Number(value) || 0;
+      if (field === "showInHero") pkg.placement.showInHero = checked;
       if (field === "showInDiscover") pkg.placement.showInDiscover = checked;
       if (field === "showInJourney") pkg.placement.showInJourney = checked;
       if (field === "playbackId") {
@@ -4840,6 +5184,11 @@
       if (field === "owner") pkg.admin.owner = value;
       if (field === "sourceRange") pkg.admin.sourceRange = value;
       pkg.admin.lastUpdated = new Date().toISOString().slice(0, 10);
+      if (field === "primaryMedium") {
+        if (value === "watch") pkg.packageType = "video_lesson";
+        if (value === "listen") pkg.packageType = "audio_lesson";
+        if (value === "read") pkg.packageType = pkg.packageType === "discovery_feature" ? "discovery_feature" : "journey_lesson";
+      }
       renderContentPrep({ skipFieldSync: true });
     }
 
@@ -5147,6 +5496,32 @@
       });
       document.getElementById("prepShowInDiscover").addEventListener("change", (event) => updateContentPrepField("showInDiscover", event.target.value, event.target.checked));
       document.getElementById("prepShowInJourney").addEventListener("change", (event) => updateContentPrepField("showInJourney", event.target.value, event.target.checked));
+      document.getElementById("prepShowInHero").addEventListener("change", (event) => updateContentPrepField("showInHero", event.target.value, event.target.checked));
+      document.querySelectorAll("input[name='prepExperienceChoice']").forEach((input) => {
+        input.addEventListener("change", (event) => {
+          if (!event.target.checked) return;
+          updateContentPrepField("primaryMedium", event.target.value);
+          const select = document.getElementById("prepPrimaryMedium");
+          if (select) select.value = event.target.value;
+        });
+      });
+      document.getElementById("suggestJourneyClipsButton").addEventListener("click", suggestJourneyClips);
+      document.getElementById("addJourneyClipButton").addEventListener("click", addJourneyClip);
+      document.getElementById("prepJourneyClipList").addEventListener("input", (event) => {
+        const field = event.target.closest("[data-clip-field]");
+        if (!field) return;
+        updateJourneyClip(Number(field.dataset.clipIndex), field.dataset.clipField, field.value);
+      });
+      document.getElementById("prepJourneyClipList").addEventListener("change", (event) => {
+        const field = event.target.closest("[data-clip-field]");
+        if (!field) return;
+        updateJourneyClip(Number(field.dataset.clipIndex), field.dataset.clipField, field.value);
+      });
+      document.getElementById("prepJourneyClipList").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-remove-clip]");
+        if (!button) return;
+        removeJourneyClip(Number(button.dataset.removeClip));
+      });
       document.getElementById("heroList").addEventListener("click", (event) => {
         const row = event.target.closest("[data-hero-index]");
         if (!row) return;
