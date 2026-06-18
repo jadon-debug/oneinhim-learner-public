@@ -8,9 +8,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --bg: #0d0f0f;
-      --panel: #151818;
-      --panel-2: #1d2120;
+      --bg: #302c1a;
+      --panel: #3f3828;
+      --panel-2: #4a422f;
+      --panel-deep: #282615;
       --line: rgba(255,255,255,.11);
       --text: #f6f4ee;
       --muted: rgba(246,244,238,.62);
@@ -199,7 +200,7 @@
       gap: 18px;
       padding: 14px clamp(18px, 3vw, 42px);
       border-bottom: 1px solid var(--line);
-      background: rgba(13,15,15,.9);
+      background: rgba(48,44,26,.92);
       backdrop-filter: blur(16px);
       position: sticky;
       top: 0;
@@ -234,13 +235,18 @@
     .layout {
       display: grid;
       grid-template-columns: 240px minmax(0, 1fr);
+      align-items: start;
       min-height: 0;
     }
 
     .sidebar {
       border-right: 1px solid var(--line);
       padding: 18px;
-      background: #101212;
+      background: #302c1a;
+      position: sticky;
+      top: 72px;
+      height: calc(100vh - 72px);
+      overflow: auto;
     }
 
     .side-nav {
@@ -268,7 +274,7 @@
     .main {
       min-width: 0;
       padding: clamp(18px, 3vw, 34px);
-      overflow: auto;
+      overflow: visible;
     }
 
     .section-head {
@@ -309,6 +315,15 @@
       border-radius: var(--radius);
       background: var(--panel);
       overflow: hidden;
+    }
+
+    .hero-grid > aside:last-child,
+    .shelf-layout > aside:last-child,
+    .journey-editor > aside:last-child {
+      position: sticky;
+      top: 92px;
+      max-height: calc(100vh - 112px);
+      overflow: auto;
     }
 
     .panel-head {
@@ -455,6 +470,60 @@
       padding: 14px;
     }
 
+    .settings-stack {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .settings-section {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(40,38,21,.52);
+      overflow: hidden;
+    }
+
+    .settings-section summary {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 13px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .08em;
+      list-style: none;
+      text-transform: uppercase;
+    }
+
+    .settings-section summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .settings-section summary::after {
+      content: "+";
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .settings-section[open] summary {
+      border-bottom: 1px solid var(--line);
+      background: rgba(238,115,38,.1);
+    }
+
+    .settings-section[open] summary::after {
+      content: "−";
+      color: #fff;
+    }
+
+    .settings-section .form {
+      padding: 12px;
+    }
+
     .form-divider {
       width: 100%;
       height: 1px;
@@ -481,7 +550,7 @@
     .form .field input,
     .form .field select,
     .form .field textarea {
-      background: #0f1111;
+      background: var(--panel-deep);
       color: #fff;
       border-color: var(--line);
     }
@@ -523,7 +592,7 @@
       border: 1px solid var(--line);
       border-radius: 10px;
       padding: 7px;
-      background: #0f1111;
+      background: var(--panel-deep);
       color: #fff;
       text-align: left;
     }
@@ -1054,8 +1123,17 @@
       }
 
       .sidebar {
+        position: static;
+        height: auto;
         border-right: 0;
         border-bottom: 1px solid var(--line);
+      }
+
+      .hero-grid > aside:last-child,
+      .shelf-layout > aside:last-child,
+      .journey-editor > aside:last-child {
+        position: static;
+        max-height: none;
       }
 
       .side-nav {
@@ -1081,7 +1159,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v166.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v167.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1097,7 +1175,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v166.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v167.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Content prep</a>
@@ -1234,7 +1312,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v166.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v167.html?auto=1&hash=journey">Preview Journey</a>
               <a class="btn green" href="oneinhim_content_workshop.html?legacy=1">Edit lesson content</a>
             </div>
           </div>
@@ -1248,37 +1326,66 @@
                 <h3>Selected item</h3>
                 <button class="btn green" id="saveButtonJourney" type="button">Save</button>
               </div>
-              <div class="form">
-                <div class="field"><label for="journeySection">Section</label><select id="journeySection"></select></div>
-                <div class="field"><label for="journeyUnit">Unit</label><select id="journeyUnit"></select></div>
-                <div class="field"><label for="journeyNode">Node</label><select id="journeyNode"></select></div>
-                <div class="field"><label for="journeySectionTitle">Section title</label><input id="journeySectionTitle" /></div>
-                <div class="field"><label for="journeySectionColor">Section colour</label><input id="journeySectionColor" type="color" /></div>
-                <div class="field"><label for="journeyUnitTitle">Unit title</label><input id="journeyUnitTitle" /></div>
-                <div class="field"><label for="journeyUnitDescription">Unit description</label><textarea id="journeyUnitDescription"></textarea></div>
-                <div class="field"><label for="journeyNodeTitle">Node title</label><input id="journeyNodeTitle" /></div>
-                <div class="field"><label for="journeyNodeType">Node type</label><select id="journeyNodeType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option></select></div>
-                <div class="field"><label for="journeyNodeContent">Linked content</label><select id="journeyNodeContent"></select></div>
-                <hr class="form-divider" />
-                <div class="field"><label for="journeyStep">Lesson step</label><select id="journeyStep"></select></div>
-                <div class="field"><label for="journeyStepTitle">Step title</label><input id="journeyStepTitle" /></div>
-                <div class="field"><label for="journeyStepType">Step type</label><select id="journeyStepType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option><option>Prayer</option><option>Quiz</option></select></div>
-                <div class="field"><label for="journeyStepContent">Step content link</label><select id="journeyStepContent"></select></div>
-                <div class="field"><label for="journeyStepPrompt">Step prompt</label><textarea id="journeyStepPrompt"></textarea></div>
-                <div class="btn-row">
-                  <button class="btn" id="addJourneySectionButton" type="button">Add section</button>
-                  <button class="btn" id="addJourneyUnitButton" type="button">Add unit</button>
-                  <button class="btn" id="addJourneyNodeButton" type="button">Add node</button>
-                  <button class="btn" id="removeJourneyNodeButton" type="button">Remove node</button>
-                  <button class="btn" id="addJourneyStepButton" type="button">Add step</button>
-                  <button class="btn" id="removeJourneyStepButton" type="button">Remove step</button>
-                </div>
+              <div class="settings-stack">
+                <details class="settings-section" open>
+                  <summary>Choose item</summary>
+                  <div class="form">
+                    <div class="field"><label for="journeySection">Section</label><select id="journeySection"></select></div>
+                    <div class="field"><label for="journeyUnit">Unit</label><select id="journeyUnit"></select></div>
+                    <div class="field"><label for="journeyNode">Node</label><select id="journeyNode"></select></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Section</summary>
+                  <div class="form">
+                    <div class="field"><label for="journeySectionTitle">Section title</label><input id="journeySectionTitle" /></div>
+                    <div class="field"><label for="journeySectionColor">Section colour</label><input id="journeySectionColor" type="color" /></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Unit</summary>
+                  <div class="form">
+                    <div class="field"><label for="journeyUnitTitle">Unit title</label><input id="journeyUnitTitle" /></div>
+                    <div class="field"><label for="journeyUnitDescription">Unit description</label><textarea id="journeyUnitDescription"></textarea></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Node</summary>
+                  <div class="form">
+                    <div class="field"><label for="journeyNodeTitle">Node title</label><input id="journeyNodeTitle" /></div>
+                    <div class="field"><label for="journeyNodeType">Node type</label><select id="journeyNodeType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option><option>Explore</option></select></div>
+                    <div class="field"><label for="journeyNodeContent">Linked content</label><select id="journeyNodeContent"></select></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Lesson step</summary>
+                  <div class="form">
+                    <div class="field"><label for="journeyStep">Lesson step</label><select id="journeyStep"></select></div>
+                    <div class="field"><label for="journeyStepTitle">Step title</label><input id="journeyStepTitle" /></div>
+                    <div class="field"><label for="journeyStepType">Step type</label><select id="journeyStepType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option><option>Prayer</option><option>Quiz</option><option>Step</option></select></div>
+                    <div class="field"><label for="journeyStepContent">Step content link</label><select id="journeyStepContent"></select></div>
+                    <div class="field"><label for="journeyStepPrompt">Step prompt</label><textarea id="journeyStepPrompt"></textarea></div>
+                  </div>
+                </details>
+                <details class="settings-section">
+                  <summary>Actions</summary>
+                  <div class="form">
+                    <div class="btn-row">
+                      <button class="btn" id="addJourneySectionButton" type="button">Add section</button>
+                      <button class="btn" id="addJourneyUnitButton" type="button">Add unit</button>
+                      <button class="btn" id="addJourneyNodeButton" type="button">Add node</button>
+                      <button class="btn" id="removeJourneyNodeButton" type="button">Remove node</button>
+                      <button class="btn" id="addJourneyStepButton" type="button">Add step</button>
+                      <button class="btn" id="removeJourneyStepButton" type="button">Remove step</button>
+                    </div>
+                  </div>
+                </details>
               </div>
               <div class="panel-head">
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_cache_reset_v166.html?auto=1&hash=journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_cache_reset_v167.html?auto=1&hash=journey">Preview Journey</a>
                 <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Open legacy prep</a>
               </div>
             </aside>
