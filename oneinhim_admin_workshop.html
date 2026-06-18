@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=177"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=177"></script>
+  <script src="./oneinhim_home_layout.js?v=178"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=178"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1949,7 +1949,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v177.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v178.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1965,7 +1965,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v177.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v178.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2068,6 +2068,10 @@
                 <div class="field"><label for="shelfSize">Card size</label><select id="shelfSize"><option value="wide">Wide</option><option value="square">Square</option><option value="poster">Poster</option></select></div>
                 <p class="field-help" id="shelfSizeHelp"></p>
                 <div class="field"><label for="shelfContent">Add from Content Library</label><select id="shelfContent"></select></div>
+                <div class="btn-row">
+                  <button class="btn" id="addShelfContentFromSettings" type="button">Add library card</button>
+                  <button class="btn" id="addShelfPlaceholderFromSettings" type="button">Add placeholder card</button>
+                </div>
                 <hr class="form-divider" />
                 <div class="selected-card-summary" id="selectedCardSummary"></div>
                 <div class="field"><label for="shelfCardContent">Selected card library item</label><select id="shelfCardContent"></select></div>
@@ -2102,7 +2106,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v177.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v178.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -4126,7 +4130,7 @@
       if (!item) {
         return `
           <strong>No card selected</strong>
-          <span>Add content or an artwork-only card, then select it here.</span>
+          <span>Choose library content, enter artwork, or pick a preset to create a card.</span>
         `;
       }
       const shape = shelf?.cardSize || "wide";
@@ -4153,6 +4157,52 @@
       const items = shelf?.items || [];
       state.shelfItemIndex = Math.max(0, Math.min(state.shelfItemIndex, Math.max(0, items.length - 1)));
       return items[state.shelfItemIndex] || null;
+    }
+
+    function createShelfContentItem(contentId) {
+      const shelf = currentShelf();
+      const content = selectedContent(contentId || document.getElementById("shelfContent")?.value);
+      if (!shelf || !content) return null;
+      shelf.items = shelf.items || [];
+      const item = {
+        id: `${content.id}_${Date.now()}`,
+        artwork: content.artwork || "",
+        targetType: content.id === "stageDetailView" ? "journey" : "discover",
+        target: content.id,
+        contentId: content.id,
+        alt: content.title || "Library card",
+        locked: contentAccess(content.id).level !== "free",
+        comingSoon: false,
+        placeholder: false
+      };
+      shelf.items.push(item);
+      state.shelfItemIndex = shelf.items.length - 1;
+      return item;
+    }
+
+    function createShelfPlaceholderItem(overrides = {}) {
+      const shelf = currentShelf();
+      if (!shelf) return null;
+      shelf.items = shelf.items || [];
+      const item = {
+        id: `artwork_only_${Date.now()}`,
+        artwork: "",
+        targetType: "none",
+        target: "",
+        contentId: "",
+        alt: "Coming soon",
+        placeholder: true,
+        locked: true,
+        comingSoon: true,
+        ...overrides
+      };
+      shelf.items.push(item);
+      state.shelfItemIndex = shelf.items.length - 1;
+      return item;
+    }
+
+    function ensureShelfItemForEdit(overrides = {}) {
+      return currentShelfItem() || createShelfPlaceholderItem(overrides);
     }
 
     function currentJourneySection() {
@@ -4606,18 +4656,18 @@
       document.getElementById("selectedCardSummary").innerHTML = selectedCardSummary(shelfItem, shelf);
       document.getElementById("shelfCardContent").innerHTML = contentOptions(shelfItem?.contentId || shelfItem?.target || "", { allowNone: true });
       document.getElementById("shelfCardArtwork").value = shelfItem?.artwork || "";
-      document.getElementById("shelfCardArtwork").disabled = !shelfItem;
+      document.getElementById("shelfCardArtwork").disabled = !shelf;
       document.getElementById("shelfCardArtworkHelp").textContent = shelfItem
         ? `Replace this card by entering an assets path. ${shelfSizeHelp(shelf.cardSize || "wide")}`
-        : "Select a card first, then enter an assets path.";
+        : `Enter an assets path to create an artwork-only placeholder. ${shelfSizeHelp(shelf.cardSize || "wide")}`;
       document.getElementById("shelfCardAlt").value = shelfItem?.alt || "";
-      document.getElementById("shelfAssetPicker").innerHTML = shelfItem ? assetPickerOptions("shelf", shelfItem.artwork || "", shelf.cardSize || "wide") : "";
-      document.getElementById("shelfCardAlt").disabled = !shelfItem;
-      document.getElementById("shelfCardContent").disabled = !shelfItem;
+      document.getElementById("shelfAssetPicker").innerHTML = shelf ? assetPickerOptions("shelf", shelfItem?.artwork || "", shelf.cardSize || "wide") : "";
+      document.getElementById("shelfCardAlt").disabled = !shelf;
+      document.getElementById("shelfCardContent").disabled = !shelf;
       document.getElementById("shelfCardLocked").checked = Boolean(shelfItem && shelfItemIsLocked(shelfItem));
-      document.getElementById("shelfCardLocked").disabled = !shelfItem;
+      document.getElementById("shelfCardLocked").disabled = !shelf;
       document.getElementById("shelfCardComingSoon").checked = Boolean(shelfItem && shelfItemIsComingSoon(shelfItem));
-      document.getElementById("shelfCardComingSoon").disabled = !shelfItem;
+      document.getElementById("shelfCardComingSoon").disabled = !shelf;
       const shelfContentId = shelfItemContentId(shelfItem);
       document.getElementById("shelfCardAccess").innerHTML = contentAccessOptions(contentAccess(shelfContentId).level);
       document.getElementById("shelfCardAccess").disabled = !shelfContentId;
@@ -5337,7 +5387,9 @@
     }
 
     function updateShelfItemField(field, value) {
-      const item = currentShelfItem();
+      const item = field === "content" && value
+        ? (currentShelfItem() || createShelfContentItem(value))
+        : ensureShelfItemForEdit(field === "artwork" ? { artwork: value } : {});
       if (!item) return;
       if (field === "content") {
         if (!value) {
@@ -5362,12 +5414,19 @@
         if (!item.alt) item.alt = content.title;
       } else {
         item[field] = value;
+        if (field === "artwork" && value) {
+          item.targetType = item.targetType || "none";
+          item.placeholder = shelfItemIsPlaceholder(item);
+          item.locked = item.locked !== false;
+          item.comingSoon = item.comingSoon !== false;
+          if (!item.alt) item.alt = "Coming soon";
+        }
       }
       renderShelves();
     }
 
     function setShelfItemLocked(locked) {
-      const item = currentShelfItem();
+      const item = ensureShelfItemForEdit();
       if (!item) return;
       if (shelfItemIsPlaceholder(item)) {
         item.locked = Boolean(locked);
@@ -5383,7 +5442,7 @@
     }
 
     function setShelfItemComingSoon(comingSoon) {
-      const item = currentShelfItem();
+      const item = ensureShelfItemForEdit();
       if (!item) return;
       item.comingSoon = Boolean(comingSoon);
       if (comingSoon && !item.alt) item.alt = "Coming soon";
@@ -5406,7 +5465,7 @@
         renderHeroes();
         return;
       }
-      const item = currentShelfItem();
+      const item = ensureShelfItemForEdit({ artwork: path });
       if (!item) return;
       item.artwork = path;
       renderShelves();
@@ -5588,6 +5647,9 @@
       document.getElementById("shelfTitle").addEventListener("input", (event) => { currentShelf().title = event.target.value; renderShelves(); });
       document.getElementById("shelfMode").addEventListener("input", (event) => { currentShelf().mode = event.target.value; renderShelves(); });
       document.getElementById("shelfSize").addEventListener("change", (event) => { currentShelf().cardSize = event.target.value; renderShelves(); });
+      document.getElementById("shelfContent").addEventListener("change", (event) => {
+        if (currentShelfItem()) updateShelfItemField("content", event.target.value);
+      });
       document.getElementById("shelfCardContent").addEventListener("change", (event) => updateShelfItemField("content", event.target.value));
       document.getElementById("shelfCardArtwork").addEventListener("input", (event) => updateShelfItemField("artwork", event.target.value));
       document.getElementById("focusShelfArtwork").addEventListener("click", () => document.getElementById("shelfCardArtwork").focus());
@@ -5600,7 +5662,9 @@
       document.getElementById("shelfCardLocked").addEventListener("change", (event) => setShelfItemLocked(event.target.checked));
       document.getElementById("shelfCardComingSoon").addEventListener("change", (event) => setShelfItemComingSoon(event.target.checked));
       document.getElementById("shelfCardAccess").addEventListener("change", (event) => {
-        setContentAccess(shelfItemContentId(currentShelfItem()), event.target.value);
+        const contentId = shelfItemContentId(currentShelfItem());
+        if (!contentId) return;
+        setContentAccess(contentId, event.target.value);
         const item = currentShelfItem();
         if (item) item.locked = event.target.value !== "free";
         renderShelves();
@@ -5665,36 +5729,21 @@
       document.getElementById("journeyStepContent").addEventListener("change", (event) => updateJourneyField("stepContent", event.target.value));
       document.getElementById("journeyStepPrompt").addEventListener("input", (event) => updateJourneyField("stepPrompt", event.target.value));
       document.getElementById("addShelfItemButton").addEventListener("click", () => {
-        const content = selectedContent(document.getElementById("shelfContent").value);
-        currentShelf().items = currentShelf().items || [];
-        currentShelf().items.push({
-          id: `${content.id}_${Date.now()}`,
-          artwork: content.artwork,
-          targetType: content.id === "stageDetailView" ? "journey" : "discover",
-          target: content.id,
-          contentId: content.id,
-          alt: content.title
-        });
-        state.shelfItemIndex = currentShelf().items.length - 1;
+        createShelfContentItem(document.getElementById("shelfContent").value);
         renderShelves();
       });
-      document.getElementById("addComingSoonItemButton").addEventListener("click", () => {
-        currentShelf().items = currentShelf().items || [];
-        currentShelf().items.push({
-          id: `artwork_only_${Date.now()}`,
-          artwork: "",
-          targetType: "none",
-          target: "",
-          contentId: "",
-          alt: "Coming soon",
-          placeholder: true,
-          locked: true,
-          comingSoon: true
-        });
-        state.shelfItemIndex = currentShelf().items.length - 1;
+      document.getElementById("addShelfContentFromSettings").addEventListener("click", () => {
+        createShelfContentItem(document.getElementById("shelfContent").value);
+        renderShelves();
+        toast("Library card added. Remember to save.");
+      });
+      const addPlaceholderCard = () => {
+        createShelfPlaceholderItem({ artwork: document.getElementById("shelfCardArtwork").value.trim() });
         renderShelves();
         toast("Artwork-only card added. Add its artwork path on the right.");
-      });
+      };
+      document.getElementById("addComingSoonItemButton").addEventListener("click", addPlaceholderCard);
+      document.getElementById("addShelfPlaceholderFromSettings").addEventListener("click", addPlaceholderCard);
       document.getElementById("addHeroButton").addEventListener("click", () => {
         const content = CONTENT[0];
         state.layout.heroSlides.push({
