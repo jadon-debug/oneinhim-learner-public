@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=181"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=181"></script>
+  <script src="./oneinhim_home_layout.js?v=182"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=182"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1966,7 +1966,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v181.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v182.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1982,7 +1982,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v181.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v182.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2095,6 +2095,8 @@
                 <div class="artwork-action-row">
                   <div class="field"><label for="shelfCardArtwork">Selected cover</label><input id="shelfCardArtwork" placeholder="Choose a cover below" readonly /></div>
                   <button class="btn" id="focusShelfArtwork" type="button">Select cover</button>
+                  <button class="btn" id="uploadShelfCoverButton" type="button">Upload from computer</button>
+                  <input id="uploadShelfCoverInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif" hidden />
                 </div>
                 <p class="artwork-status" id="shelfCardArtworkStatus"></p>
                 <p class="field-help" id="shelfCardArtworkHelp">Put artwork files in the assets folder, then use a path like assets/my-cover.jpg.</p>
@@ -2123,7 +2125,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v181.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v182.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -5496,6 +5498,55 @@
       toast("Shelf card artwork replaced.");
     }
 
+    function uploadedAssetLabel(path) {
+      return String(path || "")
+        .replace(/^assets\//, "")
+        .replace(/\.[a-z0-9]+$/i, "")
+        .replace(/[-_]+/g, " ")
+        .trim()
+        .slice(0, 32) || "Uploaded cover";
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("Could not read that image."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadShelfCover(file) {
+      if (!file) return;
+      const button = document.getElementById("uploadShelfCoverButton");
+      const previousText = button.textContent;
+      button.disabled = true;
+      button.textContent = "Uploading...";
+      try {
+        const data = await readFileAsDataUrl(file);
+        const response = await fetch("http://localhost:8777/upload-asset", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename: file.name, type: file.type, data })
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok || !payload.ok || !payload.path) {
+          throw new Error(payload.error || "The cover could not be uploaded.");
+        }
+        if (!ASSET_LIBRARY.some((asset) => asset.path === payload.path)) {
+          ASSET_LIBRARY.unshift({ label: uploadedAssetLabel(payload.path), path: payload.path, use: currentShelf()?.cardSize || "poster" });
+        }
+        applyArtworkPreset("shelf", payload.path);
+        toast("Cover uploaded and selected.");
+      } catch (error) {
+        toast(error.message || "Could not upload cover.");
+      } finally {
+        button.disabled = false;
+        button.textContent = previousText;
+        document.getElementById("uploadShelfCoverInput").value = "";
+      }
+    }
+
     function wire() {
       document.querySelectorAll(".side-nav button").forEach((button) => {
         button.addEventListener("click", () => {
@@ -5679,6 +5730,12 @@
       document.getElementById("focusShelfArtwork").addEventListener("click", () => {
         state.showShelfCoverPicker = !state.showShelfCoverPicker;
         renderShelves();
+      });
+      document.getElementById("uploadShelfCoverButton").addEventListener("click", () => {
+        document.getElementById("uploadShelfCoverInput").click();
+      });
+      document.getElementById("uploadShelfCoverInput").addEventListener("change", (event) => {
+        uploadShelfCover(event.target.files?.[0]);
       });
       document.getElementById("shelfAssetPicker").addEventListener("click", (event) => {
         const option = event.target.closest("[data-artwork-preset]");
