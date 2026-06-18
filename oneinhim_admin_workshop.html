@@ -702,8 +702,9 @@
     .journey-map {
       min-height: 680px;
       position: relative;
-      padding: 18px;
-      overflow: hidden;
+      max-height: calc(100vh - 170px);
+      padding: 0;
+      overflow: auto;
       background:
         radial-gradient(circle at 50% 18%, rgba(255,255,255,.08), transparent 24%),
         linear-gradient(180deg, #f9f8f3, #f4f1e9);
@@ -713,20 +714,28 @@
     .journey-path {
       position: absolute;
       left: 50%;
-      top: 96px;
-      bottom: 26px;
+      top: 72px;
+      bottom: 46px;
       width: 12px;
       border-radius: 999px;
       background: linear-gradient(180deg, rgba(17,23,22,.08), rgba(17,23,22,.22), rgba(17,23,22,.08));
       transform: translateX(-50%);
     }
 
+    #journeyMapContent {
+      position: relative;
+      z-index: 1;
+      width: min(780px, 100%);
+      margin: 0 auto;
+      padding: 28px 20px 70px;
+    }
+
     .journey-section-block {
       position: relative;
       z-index: 1;
       display: grid;
-      gap: 18px;
-      margin-bottom: 28px;
+      gap: 22px;
+      margin-bottom: 42px;
     }
 
     .journey-section-title {
@@ -793,8 +802,8 @@
     .journey-node-row {
       display: grid;
       justify-items: center;
-      gap: 10px;
-      margin: 14px 0 22px;
+      gap: 12px;
+      margin: 10px 0 22px;
     }
 
     .journey-node {
@@ -809,6 +818,25 @@
       font-size: 28px;
       font-weight: 950;
       box-shadow: inset 0 -6px 0 rgba(0,0,0,.12), 0 10px 20px rgba(0,0,0,.14);
+    }
+
+    .journey-node.support {
+      width: 58px;
+      height: 58px;
+      border-width: 6px;
+      font-size: 18px;
+    }
+
+    .journey-node.support.reward {
+      transform: translateX(-120px);
+    }
+
+    .journey-node.support.practice {
+      transform: translateX(18px);
+    }
+
+    .journey-node.support.review {
+      transform: translateX(118px);
     }
 
     .journey-node.active {
@@ -826,6 +854,78 @@
       color: #111716;
       text-align: left;
       box-shadow: 0 8px 18px rgba(0,0,0,.08);
+    }
+
+    .journey-node-meta.unit-meta {
+      width: min(470px, 100%);
+      padding: 14px 16px;
+    }
+
+    .journey-node-meta.unit-meta strong {
+      font-size: 16px;
+    }
+
+    .journey-lesson-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .journey-lesson-chip {
+      display: grid;
+      grid-template-columns: 26px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid rgba(17,23,22,.08);
+      border-radius: 12px;
+      padding: 8px 9px;
+      background: rgba(255,255,255,.82);
+      color: #111716;
+      text-align: left;
+    }
+
+    .journey-lesson-chip.active {
+      border-color: rgba(238,115,38,.65);
+      box-shadow: 0 0 0 3px rgba(238,115,38,.13);
+    }
+
+    .journey-lesson-chip b {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: rgba(17,23,22,.08);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .journey-lesson-chip span {
+      display: block;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .journey-lesson-chip strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .journey-lesson-chip small,
+    .journey-lesson-chip em {
+      display: block;
+      color: #6b6761;
+      font-size: 11px;
+      font-style: normal;
+      font-weight: 850;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .journey-node-meta strong,
@@ -981,7 +1081,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v165.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v166.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -997,7 +1097,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v165.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v166.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Content prep</a>
@@ -1134,7 +1234,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v165.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v166.html?auto=1&hash=journey">Preview Journey</a>
               <a class="btn green" href="oneinhim_content_workshop.html?legacy=1">Edit lesson content</a>
             </div>
           </div>
@@ -1178,7 +1278,7 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_cache_reset_v165.html?auto=1&hash=journey">Preview Journey</a>
+                <a class="btn" href="oneinhim_cache_reset_v166.html?auto=1&hash=journey">Preview Journey</a>
                 <a class="btn" href="oneinhim_content_workshop.html?legacy=1">Open legacy prep</a>
               </div>
             </aside>
@@ -1323,71 +1423,1273 @@
     };
 
     const DEFAULT_JOURNEY = {
-      sections: [
-        {
-          id: "stage_1_explore_jesus",
-          number: 1,
-          title: "Explore Jesus",
-          color: "#ee7326",
-          units: [
+      "version": "166",
+      "source": "learner-package-mirror",
+      "sections": [
             {
-              id: "stage_1_unit_1",
-              title: "Explore Jesus",
-              description: "A first section for honest questions, curiosity, and meeting Jesus.",
-              nodes: [
-                { id: "why_jesus_came_near", title: "Why Jesus Came Near", type: "Watch", contentId: "pkg_why_jesus_came_near_discover" },
-                { id: "who_is_jesus", title: "Who is Jesus?", type: "Read", contentId: "pkg_why_jesus_came_near_discover" },
-                { id: "honest_question", title: "Ask one honest question", type: "Reflect", contentId: "pkg_why_jesus_came_near_discover" }
-              ]
-            }
-          ]
-        },
-        {
-          id: "stage_2_start_following",
-          number: 2,
-          title: "Start Following Jesus",
-          color: "#f6ca35",
-          units: [
-            {
-              id: "stage_2_unit_1",
-              title: "New Life in Jesus",
-              description: "A foundations section on eternal life, grace, righteousness, intimacy with God, and repentance.",
-              nodes: [
-                { id: "eternal_life_opening", title: "1.1: Eternal Life opening", type: "Watch", contentId: "mux_one_basics_1_1_full_video" },
-                { id: "eternal_life_read", title: "1.1: Eternal Life", type: "Read", contentId: "pkg_one_basics_1_1_eternal_life" },
-                { id: "saved_by_grace", title: "1.2: Saved by Grace", type: "Read", contentId: "pkg_one_basics_1_2_saved_by_grace" }
-              ]
+                  "id": "stage_1_explore_jesus",
+                  "number": 1,
+                  "title": "Explore Jesus",
+                  "color": "#ee7326",
+                  "units": [
+                        {
+                              "id": "stage_1_explore_jesus_unit_1",
+                              "title": "Who is Jesus?",
+                              "description": "Learner Journey section from the real path.",
+                              "nodes": [
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_1_node_1",
+                                          "title": "Who is Jesus?",
+                                          "type": "Explore",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_1_node_1_step_1",
+                                                      "title": "Who is Jesus?",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_1_node_2",
+                                          "title": "Why Jesus Came Near",
+                                          "type": "Reflect",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_1_node_2_step_1",
+                                                      "title": "Why Jesus Came Near",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_1_node_3",
+                                          "title": "Can I Trust Him?",
+                                          "type": "Reflect",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_1_node_3_step_1",
+                                                      "title": "Can I Trust Him?",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_1_explore_jesus_unit_2",
+                              "title": "Start Again",
+                              "description": "Learner Journey section from the real path.",
+                              "nodes": [
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_2_node_1",
+                                          "title": "I feel far from God",
+                                          "type": "Explore",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_2_node_1_step_1",
+                                                      "title": "I feel far from God",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_2_node_2",
+                                          "title": "Is church safe?",
+                                          "type": "Reflect",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_2_node_2_step_1",
+                                                      "title": "Is church safe?",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_2_node_3",
+                                          "title": "A simple prayer",
+                                          "type": "Reflect",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_2_node_3_step_1",
+                                                      "title": "A simple prayer",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_1_explore_jesus_unit_3",
+                              "title": "Questions That Matter",
+                              "description": "Learner Journey section from the real path.",
+                              "nodes": [
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_3_node_1",
+                                          "title": "Is God real?",
+                                          "type": "Explore",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_3_node_1_step_1",
+                                                      "title": "Is God real?",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_3_node_2",
+                                          "title": "Why suffering?",
+                                          "type": "Reflect",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_3_node_2_step_1",
+                                                      "title": "Why suffering?",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "stage_1_explore_jesus_unit_3_node_3",
+                                          "title": "Can I trust the Bible?",
+                                          "type": "Reflect",
+                                          "contentId": "stageDetailView",
+                                          "steps": [
+                                                {
+                                                      "id": "stage_1_explore_jesus_unit_3_node_3_step_1",
+                                                      "title": "Can I trust the Bible?",
+                                                      "type": "Step",
+                                                      "contentId": "stageDetailView",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        }
+                  ]
             },
             {
-              id: "stage_2_unit_2",
-              title: "First Foundations",
-              description: "Foundational steps for a new Christian or someone starting again.",
-              nodes: [
-                { id: "righteousness_by_grace", title: "1.3: Righteousness by Grace", type: "Read", contentId: "pkg_one_basics_1_3_righteousness_by_grace" },
-                { id: "daily_step", title: "One simple daily step", type: "Practice", contentId: "stageDetailView" }
-              ]
-            }
-          ]
-        },
-        {
-          id: "stage_3_grow_deep_roots",
-          number: 3,
-          title: "Grow Deep Roots",
-          color: "#446523",
-          units: [
+                  "id": "stage_2_start_following",
+                  "number": 2,
+                  "title": "Start Following Jesus",
+                  "color": "#f6ca35",
+                  "units": [
+                        {
+                              "id": "stage_2_start_following_unit_1",
+                              "title": "New Life in Jesus",
+                              "description": "5 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_1_1_eternal_life",
+                                          "title": "1.1: Eternal Life",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_1_eternal_life",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_1_eternal_life_step_1",
+                                                      "title": "1.1: Eternal Life",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_1_eternal_life",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_2_saved_by_grace",
+                                          "title": "1.2: Saved by Grace",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_2_saved_by_grace",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_2_saved_by_grace_step_1",
+                                                      "title": "1.2: Saved by Grace",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_2_saved_by_grace",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_3_righteousness_by_grace",
+                                          "title": "1.3: Righteousness by Grace",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_3_righteousness_by_grace",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_3_righteousness_by_grace_step_1",
+                                                      "title": "1.3: Righteousness by Grace",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_3_righteousness_by_grace",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_4_intimacy_with_god",
+                                          "title": "1.4: Intimacy with God",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_4_intimacy_with_god",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_4_intimacy_with_god_step_1",
+                                                      "title": "1.4: Intimacy with God",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_4_intimacy_with_god",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_5_repentance",
+                                          "title": "1.5: Repentance",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_5_repentance",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_5_repentance_step_1",
+                                                      "title": "1.5: Repentance",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_5_repentance",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_2_start_following_unit_2",
+                              "title": "First Foundations",
+                              "description": "5 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_1_6_water_baptism",
+                                          "title": "1.6: Water Baptism",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_6_water_baptism",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_6_water_baptism_step_1",
+                                                      "title": "1.6: Water Baptism",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_6_water_baptism",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_7_baptism_with_the_holy_spirit",
+                                          "title": "1.7: Baptism with the Holy Spirit",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_7_baptism_with_the_holy_spirit",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_7_baptism_with_the_holy_spirit_step_1",
+                                                      "title": "1.7: Baptism with the Holy Spirit",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_7_baptism_with_the_holy_spirit",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_8_speaking_in_tongues",
+                                          "title": "1.8: Speaking in Tongues",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_8_speaking_in_tongues",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_8_speaking_in_tongues_step_1",
+                                                      "title": "1.8: Speaking in Tongues",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_8_speaking_in_tongues",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_9_identity_in_christ",
+                                          "title": "1.9: Identity in Christ",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_9_identity_in_christ",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_9_identity_in_christ_step_1",
+                                                      "title": "1.9: Identity in Christ",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_9_identity_in_christ",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_10_dedication",
+                                          "title": "1.10: Dedication",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_10_dedication",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_10_dedication_step_1",
+                                                      "title": "1.10: Dedication",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_10_dedication",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_2_start_following_unit_3",
+                              "title": "Living as a Disciple",
+                              "description": "5 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_1_11_dead_to_sin",
+                                          "title": "1.11: Dead to Sin",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_11_dead_to_sin",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_11_dead_to_sin_step_1",
+                                                      "title": "1.11: Dead to Sin",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_11_dead_to_sin",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_12_the_importance_of_the_word",
+                                          "title": "1.12: The Importance of the Word",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_12_the_importance_of_the_word",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_12_the_importance_of_the_word_step_1",
+                                                      "title": "1.12: The Importance of the Word",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_12_the_importance_of_the_word",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_13_renewing_your_mind",
+                                          "title": "1.13: Renewing Your Mind",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_13_renewing_your_mind",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_13_renewing_your_mind_step_1",
+                                                      "title": "1.13: Renewing Your Mind",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_13_renewing_your_mind",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_14_effective_bible_reading",
+                                          "title": "1.14: Effective Bible Reading",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_14_effective_bible_reading",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_14_effective_bible_reading_step_1",
+                                                      "title": "1.14: Effective Bible Reading",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_14_effective_bible_reading",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_15_our_position_with_god",
+                                          "title": "1.15: Our Position with God",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_15_our_position_with_god",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_15_our_position_with_god_step_1",
+                                                      "title": "1.15: Our Position with God",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_15_our_position_with_god",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_2_start_following_unit_4",
+                              "title": "Daily Walk",
+                              "description": "2 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_1_16_praying_to_god",
+                                          "title": "1.16: Praying to God",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_16_praying_to_god",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_16_praying_to_god_step_1",
+                                                      "title": "1.16: Praying to God",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_16_praying_to_god",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_17_answered_prayer",
+                                          "title": "1.17: Answered Prayer",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_17_answered_prayer",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_17_answered_prayer_step_1",
+                                                      "title": "1.17: Answered Prayer",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_17_answered_prayer",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        }
+                  ]
+            },
             {
-              id: "stage_3_unit_1",
-              title: "Bring Honest Questions",
-              description: "Formation, prayer, anxiety, suffering, community, and growing deeper roots.",
-              nodes: [
-                { id: "life_feels_heavy", title: "Hard Questions: When Life Feels Heavy", type: "Read", contentId: "pkg_hard_questions_when_life_feels_heavy" },
-                { id: "pray_when_heavy", title: "Pray honestly", type: "Reflect", contentId: "pkg_hard_questions_when_life_feels_heavy" }
-              ]
+                  "id": "stage_3_grow_deep_roots",
+                  "number": 3,
+                  "title": "Grow Deep Roots",
+                  "color": "#446523",
+                  "units": [
+                        {
+                              "id": "stage_3_grow_deep_roots_unit_1",
+                              "title": "Knowing God Deeply",
+                              "description": "6 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "read_hard_questions_life_heavy",
+                                          "title": "Hard Questions: When Life Feels Heavy",
+                                          "type": "Read",
+                                          "contentId": "pkg_hard_questions_when_life_feels_heavy",
+                                          "steps": [
+                                                {
+                                                      "id": "read_hard_questions_life_heavy_step_1",
+                                                      "title": "Hard Questions: When Life Feels Heavy",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_hard_questions_when_life_feels_heavy",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_1_god_the_father_the_son_and_the_holy_spirit",
+                                          "title": "2.1: God the Father, the Son, and the Holy Spirit",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_1_god_the_father_the_son_and_the_holy_spirit",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_1_god_the_father_the_son_and_the_holy_spirit_step_1",
+                                                      "title": "2.1: God the Father, the Son, and the Holy Spirit",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_1_god_the_father_the_son_and_the_holy_spirit",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_2_once_saved_always_saved",
+                                          "title": "2.2: Once Saved, Always Saved?",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_2_once_saved_always_saved",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_2_once_saved_always_saved_step_1",
+                                                      "title": "2.2: Once Saved, Always Saved?",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_2_once_saved_always_saved",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_3_spirit_soul_and_body",
+                                          "title": "2.3: Spirit, Soul and Body",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_3_spirit_soul_and_body",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_3_spirit_soul_and_body_step_1",
+                                                      "title": "2.3: Spirit, Soul and Body",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_3_spirit_soul_and_body",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_4_the_law",
+                                          "title": "2.4: The Law",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_4_the_law",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_4_the_law_step_1",
+                                                      "title": "2.4: The Law",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_4_the_law",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_5_grace",
+                                          "title": "2.5: Grace",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_5_grace",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_5_grace_step_1",
+                                                      "title": "2.5: Grace",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_5_grace",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_3_grow_deep_roots_unit_2",
+                              "title": "Freedom and Character",
+                              "description": "6 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_2_6_entering_his_rest",
+                                          "title": "2.6: Entering His Rest",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_6_entering_his_rest",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_6_entering_his_rest_step_1",
+                                                      "title": "2.6: Entering His Rest",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_6_entering_his_rest",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_7_life_of_worship",
+                                          "title": "2.7: Life of Worship",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_7_life_of_worship",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_7_life_of_worship_step_1",
+                                                      "title": "2.7: Life of Worship",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_7_life_of_worship",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_8_the_joy_of_the_lord",
+                                          "title": "2.8: The Joy of the Lord",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_8_the_joy_of_the_lord",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_8_the_joy_of_the_lord_step_1",
+                                                      "title": "2.8: The Joy of the Lord",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_8_the_joy_of_the_lord",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_9_as_he_is",
+                                          "title": "2.9: As He Is",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_9_as_he_is",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_9_as_he_is_step_1",
+                                                      "title": "2.9: As He Is",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_9_as_he_is",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_10_rejection",
+                                          "title": "2.10: Rejection",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_10_rejection",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_10_rejection_step_1",
+                                                      "title": "2.10: Rejection",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_10_rejection",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_11_persecution",
+                                          "title": "2.11: Persecution",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_11_persecution",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_11_persecution_step_1",
+                                                      "title": "2.11: Persecution",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_11_persecution",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_3_grow_deep_roots_unit_3",
+                              "title": "Spirit-Led Life",
+                              "description": "6 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_2_12_believers_and_demons",
+                                          "title": "2.12: Believers and Demons",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_12_believers_and_demons",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_12_believers_and_demons_step_1",
+                                                      "title": "2.12: Believers and Demons",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_12_believers_and_demons",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_13_praying_and_fasting",
+                                          "title": "2.13: Praying and Fasting",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_13_praying_and_fasting",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_13_praying_and_fasting_step_1",
+                                                      "title": "2.13: Praying and Fasting",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_13_praying_and_fasting",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_14_faith_and_grace",
+                                          "title": "2.14: Faith and Grace",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_14_faith_and_grace",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_14_faith_and_grace_step_1",
+                                                      "title": "2.14: Faith and Grace",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_14_faith_and_grace",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_15_forgiven_and_healed",
+                                          "title": "2.15: Forgiven and Healed",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_15_forgiven_and_healed",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_15_forgiven_and_healed_step_1",
+                                                      "title": "2.15: Forgiven and Healed",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_15_forgiven_and_healed",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_18_fruit_of_the_spirit",
+                                          "title": "2.18: Fruit of the Spirit",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_18_fruit_of_the_spirit",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_18_fruit_of_the_spirit_step_1",
+                                                      "title": "2.18: Fruit of the Spirit",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_18_fruit_of_the_spirit",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_19_sinning_against_the_holy_spirit",
+                                          "title": "2.19: Sinning Against the Holy Spirit",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_19_sinning_against_the_holy_spirit",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_19_sinning_against_the_holy_spirit_step_1",
+                                                      "title": "2.19: Sinning Against the Holy Spirit",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_19_sinning_against_the_holy_spirit",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_3_grow_deep_roots_unit_4",
+                              "title": "Hard Questions",
+                              "description": "5 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_2_20_heirs",
+                                          "title": "2.20: Heirs",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_20_heirs",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_20_heirs_step_1",
+                                                      "title": "2.20: Heirs",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_20_heirs",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_21_blessing_of_abraham",
+                                          "title": "2.21: Blessing of Abraham",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_21_blessing_of_abraham",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_21_blessing_of_abraham_step_1",
+                                                      "title": "2.21: Blessing of Abraham",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_21_blessing_of_abraham",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_26_hell",
+                                          "title": "2.26: Hell",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_26_hell",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_26_hell_step_1",
+                                                      "title": "2.26: Hell",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_26_hell",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_27_heaven",
+                                          "title": "2.27: Heaven",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_27_heaven",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_27_heaven_step_1",
+                                                      "title": "2.27: Heaven",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_27_heaven",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_28_suicide",
+                                          "title": "2.28: Suicide",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_28_suicide",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_28_suicide_step_1",
+                                                      "title": "2.28: Suicide",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_28_suicide",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        }
+                  ]
+            },
+            {
+                  "id": "stage_4_live_on_mission",
+                  "number": 4,
+                  "title": "Live on Mission",
+                  "color": "#8b2218",
+                  "units": [
+                        {
+                              "id": "stage_4_live_on_mission_unit_1",
+                              "title": "Share Faith",
+                              "description": "6 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_1_18_being_witnesses",
+                                          "title": "1.18: Being Witnesses",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_18_being_witnesses",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_18_being_witnesses_step_1",
+                                                      "title": "1.18: Being Witnesses",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_18_being_witnesses",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_19_preaching_the_kingdom",
+                                          "title": "1.19: Preaching the Kingdom",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_19_preaching_the_kingdom",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_19_preaching_the_kingdom_step_1",
+                                                      "title": "1.19: Preaching the Kingdom",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_19_preaching_the_kingdom",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_20_the_power_of_words",
+                                          "title": "1.20: The Power of Words",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_20_the_power_of_words",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_20_the_power_of_words_step_1",
+                                                      "title": "1.20: The Power of Words",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_20_the_power_of_words",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_21_faith",
+                                          "title": "1.21: Faith",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_21_faith",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_21_faith_step_1",
+                                                      "title": "1.21: Faith",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_21_faith",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_22_the_name_of_jesus",
+                                          "title": "1.22: The Name of Jesus",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_22_the_name_of_jesus",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_22_the_name_of_jesus_step_1",
+                                                      "title": "1.22: The Name of Jesus",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_22_the_name_of_jesus",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_23_authority_in_christ",
+                                          "title": "1.23: Authority in Christ",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_23_authority_in_christ",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_23_authority_in_christ_step_1",
+                                                      "title": "1.23: Authority in Christ",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_23_authority_in_christ",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_4_live_on_mission_unit_2",
+                              "title": "Serve People",
+                              "description": "6 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_1_24_healing_is_god_s_will",
+                                          "title": "1.24: Healing is God's Will",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_24_healing_is_god_s_will",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_24_healing_is_god_s_will_step_1",
+                                                      "title": "1.24: Healing is God's Will",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_24_healing_is_god_s_will",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_25_prayer_ministry",
+                                          "title": "1.25: Prayer Ministry",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_25_prayer_ministry",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_25_prayer_ministry_step_1",
+                                                      "title": "1.25: Prayer Ministry",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_25_prayer_ministry",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_26_miracles_glorify_god",
+                                          "title": "1.26: Miracles Glorify God",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_26_miracles_glorify_god",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_26_miracles_glorify_god_step_1",
+                                                      "title": "1.26: Miracles Glorify God",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_26_miracles_glorify_god",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_27_forgive_each_other",
+                                          "title": "1.27: Forgive Each Other",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_27_forgive_each_other",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_27_forgive_each_other_step_1",
+                                                      "title": "1.27: Forgive Each Other",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_27_forgive_each_other",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_28_covenant_meal",
+                                          "title": "1.28: Covenant Meal",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_28_covenant_meal",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_28_covenant_meal_step_1",
+                                                      "title": "1.28: Covenant Meal",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_28_covenant_meal",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_29_divine_flow",
+                                          "title": "1.29: Divine Flow",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_29_divine_flow",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_29_divine_flow_step_1",
+                                                      "title": "1.29: Divine Flow",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_29_divine_flow",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_4_live_on_mission_unit_3",
+                              "title": "Make Disciples",
+                              "description": "6 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_1_30_using_gifts",
+                                          "title": "1.30: Using Gifts",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_30_using_gifts",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_30_using_gifts_step_1",
+                                                      "title": "1.30: Using Gifts",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_30_using_gifts",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_16_anointing",
+                                          "title": "2.16: Anointing",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_16_anointing",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_16_anointing_step_1",
+                                                      "title": "2.16: Anointing",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_16_anointing",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_17_gifts_of_the_spirit",
+                                          "title": "2.17: Gifts of the Spirit",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_17_gifts_of_the_spirit",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_17_gifts_of_the_spirit_step_1",
+                                                      "title": "2.17: Gifts of the Spirit",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_17_gifts_of_the_spirit",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_22_true_prosperity",
+                                          "title": "2.22: True Prosperity",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_22_true_prosperity",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_22_true_prosperity_step_1",
+                                                      "title": "2.22: True Prosperity",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_22_true_prosperity",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_23_kingdom_law_of_sowing",
+                                          "title": "2.23: Kingdom Law of Sowing",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_23_kingdom_law_of_sowing",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_23_kingdom_law_of_sowing_step_1",
+                                                      "title": "2.23: Kingdom Law of Sowing",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_23_kingdom_law_of_sowing",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_24_the_favor_of_god",
+                                          "title": "2.24: The Favor of God",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_24_the_favor_of_god",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_24_the_favor_of_god_step_1",
+                                                      "title": "2.24: The Favor of God",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_24_the_favor_of_god",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        }
+                  ]
+            },
+            {
+                  "id": "stage_5_lead_and_multiply",
+                  "number": 5,
+                  "title": "Lead and Multiply",
+                  "color": "#090a0a",
+                  "units": [
+                        {
+                              "id": "stage_5_lead_and_multiply_unit_1",
+                              "title": "Leadership Foundations",
+                              "description": "4 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_1_31_the_fivefold_ministry",
+                                          "title": "1.31: The Fivefold Ministry",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_31_the_fivefold_ministry",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_31_the_fivefold_ministry_step_1",
+                                                      "title": "1.31: The Fivefold Ministry",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_31_the_fivefold_ministry",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_1_32_prophets_and_prophecy",
+                                          "title": "1.32: Prophets and Prophecy",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_1_32_prophets_and_prophecy",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_1_32_prophets_and_prophecy_step_1",
+                                                      "title": "1.32: Prophets and Prophecy",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_1_32_prophets_and_prophecy",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_25_stewardship",
+                                          "title": "2.25: Stewardship",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_25_stewardship",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_25_stewardship_step_1",
+                                                      "title": "2.25: Stewardship",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_25_stewardship",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_29_the_marriage_covenant",
+                                          "title": "2.29: The Marriage Covenant",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_29_the_marriage_covenant",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_29_the_marriage_covenant_step_1",
+                                                      "title": "2.29: The Marriage Covenant",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_29_the_marriage_covenant",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        },
+                        {
+                              "id": "stage_5_lead_and_multiply_unit_2",
+                              "title": "Pastoral and Multiplying Callings",
+                              "description": "3 learner lessons from the real Journey package order.",
+                              "nodes": [
+                                    {
+                                          "id": "book_one_basics_2_30_leadership",
+                                          "title": "2.30: Leadership",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_30_leadership",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_30_leadership_step_1",
+                                                      "title": "2.30: Leadership",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_30_leadership",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_31_evangelism",
+                                          "title": "2.31: Evangelism",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_31_evangelism",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_31_evangelism_step_1",
+                                                      "title": "2.31: Evangelism",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_31_evangelism",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    },
+                                    {
+                                          "id": "book_one_basics_2_32_partnership",
+                                          "title": "2.32: Partnership",
+                                          "type": "Read",
+                                          "contentId": "pkg_one_basics_2_32_partnership",
+                                          "steps": [
+                                                {
+                                                      "id": "book_one_basics_2_32_partnership_step_1",
+                                                      "title": "2.32: Partnership",
+                                                      "type": "Read",
+                                                      "contentId": "pkg_one_basics_2_32_partnership",
+                                                      "prompt": ""
+                                                }
+                                          ]
+                                    }
+                              ]
+                        }
+                  ]
             }
-          ]
-        }
       ]
-    };
+};
 
     const CONTENT = [
       { id: "mux_one_basics_1_1_full_video", title: "One Basics 1.1: Eternal Life", type: "Video", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Full One Basics episode.", accessLevel: "free" },
@@ -1400,7 +2702,68 @@
       { id: "pkg_one_basics_1_3_righteousness_by_grace", title: "One Basics 1.3: Righteousness by Grace", type: "Journey Read", artwork: "assets/one-basics-1-1-eternal-life-course-cover.png", summary: "Core Journey read lesson.", accessLevel: "free" },
       { id: "pkg_why_jesus_came_near_discover", title: "Why Jesus Came Near", type: "Journey Start", artwork: "", summary: "Explore Jesus starter content.", accessLevel: "free" },
       { id: "pkg_hard_questions_when_life_feels_heavy", title: "Hard Questions: When Life Feels Heavy", type: "Journey Read", artwork: "", summary: "Grow Deep Roots lesson.", accessLevel: "free" },
-      { id: "stageDetailView", title: "Journey", type: "Journey", artwork: "assets/oneinhim-characters-international.png", summary: "Guided discipleship path.", accessLevel: "free" }
+      { id: "stageDetailView", title: "Journey", type: "Journey", artwork: "assets/oneinhim-characters-international.png", summary: "Guided discipleship path.", accessLevel: "free" },
+      {"id": "pkg_one_basics_1_4_intimacy_with_god", "title": "One Basics 1.4: Intimacy with God", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to talk about how God wants to have an intimate relationship with us. God is a God of relationships. When He created man, He did th", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_5_repentance", "title": "One Basics 1.5: Repentance", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In the previous lessons we have talked about how eternal life is knowing God, about how we are saved by grace and can be made righteous through God. We have tal", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_6_water_baptism", "title": "One Basics 1.6: Water Baptism", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In the previous lesson, we covered repentance and being born again. How we can be born again by the Spirit and become a new creation in Christ Jesus because of ", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_7_baptism_with_the_holy_spirit", "title": "One Basics 1.7: Baptism with the Holy Spirit", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we are going to discuss: the baptism in the Holy Spirit. There is a lack of knowledge when it comes to the baptism in the Holy Spirit. Many people think t", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_8_speaking_in_tongues", "title": "One Basics 1.8: Speaking in Tongues", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Speaking in tongues is a gift of the Holy Spirit. 1 Corinthians 12:10-11 It is mainly given to us to build ourselves up in the Holy Spirit in order to be spirit", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_9_identity_in_christ", "title": "One Basics 1.9: Identity in Christ", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Now that we have come into the ‘fullness’ through the rebirth, the baptism in water, and the baptism in the Holy Spirit, our identity is ‘completely’ changed. T", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_10_dedication", "title": "One Basics 1.10: Dedication", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In previous lessons, we talked about how you can come into the fullness of God. By repentance – rebirth, baptism in water, and the baptism with the Holy Spirit.", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_11_dead_to_sin", "title": "One Basics 1.11: Dead to Sin", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we are going to talk about sin. When we weren’t in Christ yet we had a ‘sinful nature’. We were born ‘naturally’ of blood, flesh, and the will of man. We ", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_12_the_importance_of_the_word", "title": "One Basics 1.12: The Importance of the Word", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we are going to be talking about the importance of the Word of God. The Word of God is God ‘Himself’ speaking to us. That is why it is very important that", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_13_renewing_your_mind", "title": "One Basics 1.13: Renewing Your Mind", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In the previous lesson, we talked about the importance of the Word. We have learned how the Word of God brings us all the answers we might need in this life. Ho", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_14_effective_bible_reading", "title": "One Basics 1.14: Effective Bible Reading", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at how we can take in the Word of God effectively. That is to say, how the Word can really stay inside of us and transform ", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_15_our_position_with_god", "title": "One Basics 1.15: Our Position with God", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we’re going to talk about our position with the Father. Many people who are a ‘child of God’ do not have a good idea or realization of what that means exa", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_16_praying_to_god", "title": "One Basics 1.16: Praying to God", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we’re going to talk about how we can ‘effectively’ pray to God. We will discover what ‘praying’ actually is. 1 Thessalonians 5:17 says, ‘Pray without ceas", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_17_answered_prayer", "title": "One Basics 1.17: Answered Prayer", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In lesson 1.16 we have been able to discover how we can draw near to God in prayer. How we can pray to Him in the right way in spirit and in truth. John 4: In t", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_18_being_witnesses", "title": "One Basics 1.18: Being Witnesses", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to talk about being ‘witnesses’. About ‘what’ a witness is. And ‘what’ we must witness about. Acts 1:8 ‘But you shall receive power", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_19_preaching_the_kingdom", "title": "One Basics 1.19: Preaching the Kingdom", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson we will talk about the ‘great commission’, about which message we should be preaching. If you read the New Testament, you only come across one me", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_20_the_power_of_words", "title": "One Basics 1.20: The Power of Words", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we are going to talk about the ‘power’ of our words. The words we utter and confess. Without realizing it, we speak many words each day. On average a pers", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_21_faith", "title": "One Basics 1.21: Faith", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we’re going to talk about ‘acting faith’. There are many people who ‘say’ they believe but if you look at their lives you often don’t or hardly see ‘any f", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_22_the_name_of_jesus", "title": "One Basics 1.22: The Name of Jesus", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we’re going to continue in a new phase of the study in which we will look at our ‘authority’ in Christ. When we do something for the Kingdom of God, we do", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_23_authority_in_christ", "title": "One Basics 1.23: Authority in Christ", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In the previous lesson, we talked about the mighty Name of Jesus and what this Name represents. Today we are going to talk about our ‘authority in Christ’ and h", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_24_healing_is_god_s_will", "title": "One Basics 1.24: Healing is God's Will", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In the previous two lessons we have talked about the ‘Name’ of Jesus and Who this Name ‘represents’. And we have talked about our ‘authority’ in Christ. Today w", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_25_prayer_ministry", "title": "One Basics 1.25: Prayer Ministry", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "We have talked about how healing is God’s will. Today we are going to talk about how we can ‘fight’ against the evil one in our lives and how we can fight for o", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_26_miracles_glorify_god", "title": "One Basics 1.26: Miracles Glorify God", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson we are going to talk about how God is glorified through signs and wonders in our lives. The Kingdom of God is a ‘Kingdom of signs and wonders’. I", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_27_forgive_each_other", "title": "One Basics 1.27: Forgive Each Other", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going talk about a difficult topic: ‘Forgiveness’. Many of us have dealt or had to deal with painful situations. Things that have been do", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_28_covenant_meal", "title": "One Basics 1.28: Covenant Meal", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at where Communion or the covenant meal comes from and how we can celebrate it in the right way. The covenant meal is deriv", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_29_divine_flow", "title": "One Basics 1.29: Divine Flow", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we are going to talk about how God’s Spirit Who flows ‘in you’ can come out and be a blessing to others. We have had multiple lessons now and by now you s", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_30_using_gifts", "title": "One Basics 1.30: Using Gifts", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In the previous lesson, we talked about the ‘Divine flow’. In this lesson, we are going to talk about the use of ‘Divine gifts’. We belong to the Kingdom of God", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_31_the_fivefold_ministry", "title": "One Basics 1.31: The Fivefold Ministry", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we’re going to talk about the ‘fivefold ministry’. Apostle, prophet, evangelist, pastor, teacher. Ephesians 4:11 ‘And He Himself gave some to be apostles,", "accessLevel": "free"},
+      {"id": "pkg_one_basics_1_32_prophets_and_prophecy", "title": "One Basics 1.32: Prophets and Prophecy", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we’re going to talk about prophets and prophecy. Prophet is one of the gifts of the fivefold ministry, which is supposed to serve and equip the body of Ch", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_1_god_the_father_the_son_and_the_holy_spirit", "title": "One Basics 2.1: God the Father, the Son, and the Holy Spirit", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to cover the Trinity. Matthew 28:19 ‘Go therefore and make disciples of all the nations, baptizing them in the name of the Father a", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_2_once_saved_always_saved", "title": "One Basics 2.2: Once Saved, Always Saved?", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the question that many believers have: ‘Am I saved once and for all or can I lose my salvation again?’ There are many be", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_3_spirit_soul_and_body", "title": "One Basics 2.3: Spirit, Soul and Body", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to discover how we are a threefold being and how we can learn to live out of our new man. We have a spirit, a soul, and a body. It ", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_4_the_law", "title": "One Basics 2.4: The Law", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the law of God. In the beginning of creation, there was no law. And because there was no law, there was also no violatio", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_5_grace", "title": "One Basics 2.5: Grace", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "‘For the grace of God that brings salvation has appeared to all men.’ Titus 2:11 Grace has appeared to everyone and has been made available to everyone, but not", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_6_entering_his_rest", "title": "One Basics 2.6: Entering His Rest", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at what it means to enter into the rest of God. On the seventh day God rested from all His works. We can read this in the b", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_7_life_of_worship", "title": "One Basics 2.7: Life of Worship", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "If there is anything that a believer should pursue in his walk with the Lord, it is a life of worship. Worship is much more than only singing songs. Worship is ", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_8_the_joy_of_the_lord", "title": "One Basics 2.8: The Joy of the Lord", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the joy of the Lord. The Bible teaches us that in His presence is fullness of joy. Psalm 16:11 ‘You will show me the pat", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_9_as_he_is", "title": "One Basics 2.9: As He Is", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "According to the Word of God, we have now received the Spirit of God and we have the exact same characteristics as God has. Because of our choice to receive Jes", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_10_rejection", "title": "One Basics 2.10: Rejection", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to talk about the theme: Rejection. A couple of definitions of rejection are: To discard, to disapprove, to cast off, to refuse to ", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_11_persecution", "title": "One Basics 2.11: Persecution", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to cover the topic of persecution. Persecution as a child of God is something quite ‘normal’. Jesus Himself says in John 15:20-21 ‘", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_12_believers_and_demons", "title": "One Basics 2.12: Believers and Demons", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Whether Christians can be possessed by a demon, is widely discussed in the body of Christ. In this lesson, we are going to try to find out the truth: what is tr", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_13_praying_and_fasting", "title": "One Basics 2.13: Praying and Fasting", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the phenomenon of praying and fasting. As has become well-known, there are always many special conferences and events in", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_14_faith_and_grace", "title": "One Basics 2.14: Faith and Grace", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at how faith and grace only work if you combine them. It is often assumed that if you just have enough faith, you can then ", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_15_forgiven_and_healed", "title": "One Basics 2.15: Forgiven and Healed", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In lesson 1.24 of One Basics, we have learned about how healing is God’s will. How sickness is not from God. In this lesson, we are going to talk about how heal", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_16_anointing", "title": "One Basics 2.16: Anointing", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to talk about God’s anointing in our lives. Every believer who wants to walk in the things of the Kingdom of God, whether it is in ", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_17_gifts_of_the_spirit", "title": "One Basics 2.17: Gifts of the Spirit", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the gifts of the Spirit. What exactly are the gifts of the Spirit? How many are there and what purpose do they serve? An", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_18_fruit_of_the_spirit", "title": "One Basics 2.18: Fruit of the Spirit", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to cover the nine ‘aspects’ that the fruit of the Spirit produces in our lives. For they are not nine ‘fruits’ as many are inclined", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_19_sinning_against_the_holy_spirit", "title": "One Basics 2.19: Sinning Against the Holy Spirit", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the ‘unforgivable’ sin. It is a topic that is explained in different ways by different denominations. Unfortunately, som", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_20_heirs", "title": "One Basics 2.20: Heirs", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we are going to talk about an important topic. Our ‘inheritance’. We will talk about what is rightfully ours now as His beloved child. When you accepted J", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_21_blessing_of_abraham", "title": "One Basics 2.21: Blessing of Abraham", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In the previous lesson, we talked about how we have now become heirs of God in Christ. We talked about all the promises and blessings that are ours in Christ an", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_22_true_prosperity", "title": "One Basics 2.22: True Prosperity", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In the previous lessons we talked about how we have now become heirs of God and His Kingdom. We talked about how all His promises and blessings in Him are ‘yes’", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_23_kingdom_law_of_sowing", "title": "One Basics 2.23: Kingdom Law of Sowing", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Today we are going to talk about how we can keep giving ‘more’ of the ‘blessing’ and ‘abundance’ in our lives. It is important that we put ourselves in the plac", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_24_the_favor_of_god", "title": "One Basics 2.24: The Favor of God", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "The favor of God is a Kingdom law. And this law applies to the righteous children of God. As soon as we are born again in Christ, we are transferred to the King", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_25_stewardship", "title": "One Basics 2.25: Stewardship", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the Biblical principle of stewardship. A steward is someone who manages the property of another. So it isn’t his own pro", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_26_hell", "title": "One Basics 2.26: Hell", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the raw reality of hell. We people don’t like talking about hell, it is a topic that we would rather avoid. Yet it is as", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_27_heaven", "title": "One Basics 2.27: Heaven", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to talk about heaven according to the Biblical perspective. Heaven is the place where the believers will go to after this earthly l", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_28_suicide", "title": "One Basics 2.28: Suicide", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "Suicide, there is a lot of confusion about this topic. A lot of people who have had to deal with this, live in fear and uncertainty that their loved one or frie", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_29_the_marriage_covenant", "title": "One Basics 2.29: The Marriage Covenant", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at the covenant between a man and a woman which is made before the face of God. A covenant that God has instituted and is t", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_30_leadership", "title": "One Basics 2.30: Leadership", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at what leadership means and how you can best function in it. Leadership is influence. And as children of God we are called", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_31_evangelism", "title": "One Basics 2.31: Evangelism", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to discover a few keys for evangelism. Everyone of course has received their own gift and way from God, but this can help you on yo", "accessLevel": "free"},
+      {"id": "pkg_one_basics_2_32_partnership", "title": "One Basics 2.32: Partnership", "type": "Journey Read", "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png", "summary": "In this lesson, we are going to look at what it means to be a partner with a ministry. Making a fixed monthly donation to a ministry is so much more than just f", "accessLevel": "free"}
     ];
 
     const ASSET_LIBRARY = [
@@ -1489,6 +2852,11 @@
         if (!raw) return JSON.parse(JSON.stringify(DEFAULT_JOURNEY));
         const parsed = JSON.parse(raw);
         if (!Array.isArray(parsed.sections)) return JSON.parse(JSON.stringify(DEFAULT_JOURNEY));
+        const parsedUnits = parsed.sections.reduce((total, section) => total + ((section.units || []).length), 0);
+        const defaultUnits = DEFAULT_JOURNEY.sections.reduce((total, section) => total + ((section.units || []).length), 0);
+        if (parsed.version !== DEFAULT_JOURNEY.version || parsed.sections.length < DEFAULT_JOURNEY.sections.length || parsedUnits < defaultUnits) {
+          return JSON.parse(JSON.stringify(DEFAULT_JOURNEY));
+        }
         return parsed;
       } catch {
         return JSON.parse(JSON.stringify(DEFAULT_JOURNEY));
@@ -1865,25 +3233,29 @@
               <em>≡</em>
             </button>
             <div class="journey-node-row">
-              ${(journeyUnit.nodes || []).map((journeyNode, nodeIndex) => `
-                <button class="journey-node${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex && nodeIndex === state.journeyNodeIndex ? " active" : ""}" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="${nodeIndex}" style="${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex && nodeIndex === state.journeyNodeIndex ? `background:${esc(journeySection.color || "#ee7326")};` : ""}">${nodeIndex + 1}</button>
-                <button class="journey-node-meta" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="${nodeIndex}">
-                  <strong>${esc(journeyNode.title || "Untitled node")}</strong>
-                  <span>${esc(journeyNode.type || "Lesson")} · ${esc(selectedContent(journeyNode.contentId)?.title || journeyNode.contentId || "No content")}</span>
-                </button>
-                <div class="journey-step-stack">
-                  ${journeyNodeSteps(journeyNode).map((journeyStep, stepIndex) => `
-                    <button class="journey-step-chip${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex && nodeIndex === state.journeyNodeIndex && stepIndex === state.journeyStepIndex ? " active" : ""}" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="${nodeIndex}" data-journey-step="${stepIndex}">
-                      <b>${stepIndex + 1}</b>
-                      <span>
-                        <strong>${esc(journeyStep.title || "Untitled step")}</strong>
-                        <span>${esc(journeyStep.type || journeyNode.type || "Step")} · ${esc(selectedContent(journeyStep.contentId || journeyNode.contentId)?.title || journeyStep.contentId || journeyNode.contentId || "No content")}</span>
-                      </span>
-                      <em>Step</em>
-                    </button>
-                  `).join("")}
+              <button class="journey-node${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex ? " active" : ""}" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="${Math.max(0, state.journeyNodeIndex)}" style="${sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex ? `background:${esc(journeySection.color || "#ee7326")};` : ""}">${unitIndex + 1}</button>
+              <div class="journey-node-meta unit-meta">
+                <strong>${esc(journeyUnit.title || "Untitled unit")}</strong>
+                <span>${esc((journeyUnit.nodes || []).length)} lessons · ${esc(journeyUnit.description || "Journey unit")}</span>
+                <div class="journey-lesson-list">
+                  ${(journeyUnit.nodes || []).map((journeyNode, nodeIndex) => {
+                    const activeNode = sectionIndex === state.journeySectionIndex && unitIndex === state.journeyUnitIndex && nodeIndex === state.journeyNodeIndex;
+                    return `
+                      <button class="journey-lesson-chip${activeNode ? " active" : ""}" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="${nodeIndex}">
+                        <b>${nodeIndex + 1}</b>
+                        <span>
+                          <strong>${esc(journeyNode.title || "Untitled node")}</strong>
+                          <small>${esc(journeyNode.type || "Lesson")} · ${esc(selectedContent(journeyNode.contentId)?.title || journeyNode.contentId || "No content")}</small>
+                        </span>
+                        <em>${esc((journeyNodeSteps(journeyNode) || []).length)} step</em>
+                      </button>
+                    `;
+                  }).join("")}
                 </div>
-              `).join("")}
+              </div>
+              <button class="journey-node support reward" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="0" aria-label="${esc(journeyUnit.title || "Unit")} reward">▣</button>
+              <button class="journey-node support practice" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="0" aria-label="${esc(journeyUnit.title || "Unit")} practice">↻</button>
+              <button class="journey-node support review" type="button" data-journey-section="${sectionIndex}" data-journey-unit="${unitIndex}" data-journey-node="0" aria-label="${esc(journeyUnit.title || "Unit")} review">★</button>
             </div>
           `).join("")}
         </div>
