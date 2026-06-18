@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=174"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=174"></script>
+  <script src="./oneinhim_home_layout.js?v=175"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=175"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1046,13 +1046,16 @@
 
     .content-prep-layout {
       display: grid;
-      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr) minmax(340px, 440px);
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 480px);
       gap: 16px;
       align-items: start;
     }
 
-    .content-prep-layout > aside:last-child,
-    .content-prep-layout > aside:first-child {
+    .prep-package-index {
+      display: none;
+    }
+
+    .content-prep-layout > aside:last-child {
       position: sticky;
       top: 92px;
       max-height: calc(100vh - 112px);
@@ -1336,8 +1339,7 @@
       padding: 18px;
     }
 
-    .prep-drawer-panel .content-prep-layout > aside:last-child,
-    .prep-drawer-panel .content-prep-layout > aside:first-child {
+    .prep-drawer-panel .content-prep-layout > aside:last-child {
       top: 0;
       max-height: calc(100vh - 170px);
     }
@@ -1769,7 +1771,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v174.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v175.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1785,7 +1787,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v174.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v175.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -1826,11 +1828,7 @@
             <aside class="panel">
               <div class="panel-head"><h3>Slide settings</h3></div>
               <div class="form">
-                <div class="field"><label for="heroContent">Linked content</label><select id="heroContent"></select></div>
-                <div class="btn-row">
-                  <button class="btn" type="button" data-open-mux="hero">Import Mux</button>
-                  <button class="btn" type="button" data-open-prep="hero">Prep linked content</button>
-                </div>
+                <div class="field"><label for="heroContent">Choose from Content Library</label><select id="heroContent"></select></div>
                 <div class="artwork-actions">
                   <div class="artwork-action-row">
                     <div class="field"><label for="heroMobile">Mobile artwork</label><input id="heroMobile" /></div>
@@ -1891,14 +1889,10 @@
                 <div class="field"><label for="shelfMode">Where it appears</label><input id="shelfMode" placeholder="discover listen watch" /></div>
                 <div class="field"><label for="shelfSize">Card size</label><select id="shelfSize"><option value="wide">Wide</option><option value="square">Square</option><option value="poster">Poster</option></select></div>
                 <p class="field-help" id="shelfSizeHelp"></p>
-                <div class="field"><label for="shelfContent">Add content</label><select id="shelfContent"></select></div>
+                <div class="field"><label for="shelfContent">Add from Content Library</label><select id="shelfContent"></select></div>
                 <hr class="form-divider" />
                 <div class="selected-card-summary" id="selectedCardSummary"></div>
-                <div class="field"><label for="shelfCardContent">Selected card link</label><select id="shelfCardContent"></select></div>
-                <div class="btn-row">
-                  <button class="btn" type="button" data-open-mux="shelf">Import Mux</button>
-                  <button class="btn" type="button" data-open-prep="shelf">Prep selected card</button>
-                </div>
+                <div class="field"><label for="shelfCardContent">Selected card library item</label><select id="shelfCardContent"></select></div>
                 <div class="artwork-action-row">
                   <div class="field"><label for="shelfCardArtwork">Selected card artwork</label><input id="shelfCardArtwork" placeholder="assets/my-cover.jpg" /></div>
                   <button class="btn" id="focusShelfArtwork" type="button">Replace</button>
@@ -1930,8 +1924,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v174.html?auto=1&hash=journey">Preview Journey</a>
-              <button class="btn green" type="button" data-open-prep="journey">Prep selected lesson</button>
+              <a class="btn" href="oneinhim_cache_reset_v175.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -1972,11 +1965,7 @@
                   <div class="form">
                     <div class="field"><label for="journeyNodeTitle">Node title</label><input id="journeyNodeTitle" /></div>
                     <div class="field"><label for="journeyNodeType">Node type</label><select id="journeyNodeType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option><option>Explore</option></select></div>
-                    <div class="field"><label for="journeyNodeContent">Linked content</label><select id="journeyNodeContent"></select></div>
-                    <div class="btn-row">
-                      <button class="btn" type="button" data-open-mux="journey">Import Mux</button>
-                      <button class="btn" type="button" data-open-prep="journey">Prep node content</button>
-                    </div>
+                    <div class="field"><label for="journeyNodeContent">Choose from Content Library</label><select id="journeyNodeContent"></select></div>
                   </div>
                 </details>
                 <details class="settings-section">
@@ -1985,11 +1974,7 @@
                     <div class="field"><label for="journeyStep">Lesson step</label><select id="journeyStep"></select></div>
                     <div class="field"><label for="journeyStepTitle">Step title</label><input id="journeyStepTitle" /></div>
                     <div class="field"><label for="journeyStepType">Step type</label><select id="journeyStepType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option><option>Prayer</option><option>Quiz</option><option>Step</option></select></div>
-                    <div class="field"><label for="journeyStepContent">Step content link</label><select id="journeyStepContent"></select></div>
-                    <div class="btn-row">
-                      <button class="btn" type="button" data-open-mux="journey">Import Mux</button>
-                      <button class="btn" type="button" data-open-prep="journey">Prep step content</button>
-                    </div>
+                    <div class="field"><label for="journeyStepContent">Step library item</label><select id="journeyStepContent"></select></div>
                     <div class="field"><label for="journeyStepPrompt">Step prompt</label><textarea id="journeyStepPrompt"></textarea></div>
                   </div>
                 </details>
@@ -2007,14 +1992,6 @@
                   </div>
                 </details>
               </div>
-              <div class="panel-head">
-                <h3>Workflow links</h3>
-              </div>
-              <div class="form">
-                <a class="btn" href="oneinhim_cache_reset_v174.html?auto=1&hash=journey">Preview Journey</a>
-                <button class="btn" type="button" data-open-mux="journey">Import Mux to lesson</button>
-                <button class="btn" type="button" data-open-prep="journey">Prep selected content</button>
-              </div>
             </aside>
           </div>
         </section>
@@ -2028,14 +2005,14 @@
               <p id="prepDrawerContext">Prepare this selected item: metadata, placement, media, learner prompts, status, and export JSON.</p>
             </div>
             <div class="btn-row">
-              <button class="btn" id="newContentPackageButton" type="button">New package</button>
-              <button class="btn" id="exportContentPackageButton" type="button">Export package</button>
+              <button class="btn" id="newContentPackageButton" type="button" hidden>New package</button>
+              <button class="btn" id="exportContentPackageButton" type="button" hidden>Export package</button>
               <button class="btn green" id="saveContentPrepButton" type="button">Save draft</button>
               <button class="btn" type="button" data-close-prep>Close</button>
             </div>
           </div>
           <div class="content-prep-layout">
-            <aside class="panel">
+            <aside class="panel prep-package-index" aria-hidden="true">
               <div class="panel-head">
                 <h3>Packages</h3>
                 <span class="pill" id="contentPrepCount">0</span>
@@ -4136,11 +4113,16 @@
       const content = selectedContent(selectedContextContentId(context));
       document.getElementById("muxDialogTitle").textContent = `Import Mux to ${contextLabel(context).toLowerCase()}`;
       document.getElementById("muxDialogContext").textContent = `This will create content and attach it to ${contextTitle(context)}.`;
+      if (context === "library") {
+        document.getElementById("muxDialogTitle").textContent = "Add Mux to Content Library";
+        document.getElementById("muxDialogContext").textContent = "This creates an app-ready library item. Choose where it appears later in Hero, Shelves, or Journey.";
+      }
       document.getElementById("muxTitle").value = content?.title && content.id !== CONTENT[0]?.id ? content.title : contextTitle(context);
       document.getElementById("muxPlaybackId").value = "";
       document.getElementById("muxFormat").value = context === "journey" && currentJourneyNode()?.type === "Listen" ? "listen" : "watch";
       document.getElementById("muxArtwork").value = content?.artwork || "";
       document.getElementById("muxAccess").value = normalizedAccessLevel(contentAccess(content?.id).level);
+      document.getElementById("muxImportButton").textContent = context === "library" ? "Add to library" : "Import and attach";
       document.getElementById("muxDialog").hidden = false;
       document.getElementById("muxPlaybackId").focus();
     }
