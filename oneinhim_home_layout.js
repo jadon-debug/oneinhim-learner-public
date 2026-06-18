@@ -193,7 +193,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     },
     {
       "id": "shelf_1781437768568",
-      "title": "New shelf",
+      "title": "Featured Audiobooks",
       "mode": "discover",
       "cardSize": "wide",
       "items": []
@@ -204,7 +204,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "level": "free"
     },
     "mux_out_of_shadows_documentary": {
-      "level": "free"
+      "level": "partner_access"
     },
     "aud_darkness_sonship_004": {
       "level": "free"
@@ -231,6 +231,189 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "level": "free"
     },
     "stageDetailView": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_4_intimacy_with_god": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_5_repentance": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_6_water_baptism": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_7_baptism_with_the_holy_spirit": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_8_speaking_in_tongues": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_9_identity_in_christ": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_10_dedication": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_11_dead_to_sin": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_12_the_importance_of_the_word": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_13_renewing_your_mind": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_14_effective_bible_reading": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_15_our_position_with_god": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_16_praying_to_god": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_17_answered_prayer": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_18_being_witnesses": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_19_preaching_the_kingdom": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_20_the_power_of_words": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_21_faith": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_22_the_name_of_jesus": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_23_authority_in_christ": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_24_healing_is_god_s_will": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_25_prayer_ministry": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_26_miracles_glorify_god": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_27_forgive_each_other": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_28_covenant_meal": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_29_divine_flow": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_30_using_gifts": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_31_the_fivefold_ministry": {
+      "level": "free"
+    },
+    "pkg_one_basics_1_32_prophets_and_prophecy": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_1_god_the_father_the_son_and_the_holy_spirit": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_2_once_saved_always_saved": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_3_spirit_soul_and_body": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_4_the_law": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_5_grace": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_6_entering_his_rest": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_7_life_of_worship": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_8_the_joy_of_the_lord": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_9_as_he_is": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_10_rejection": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_11_persecution": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_12_believers_and_demons": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_13_praying_and_fasting": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_14_faith_and_grace": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_15_forgiven_and_healed": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_16_anointing": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_17_gifts_of_the_spirit": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_18_fruit_of_the_spirit": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_19_sinning_against_the_holy_spirit": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_20_heirs": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_21_blessing_of_abraham": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_22_true_prosperity": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_23_kingdom_law_of_sowing": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_24_the_favor_of_god": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_25_stewardship": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_26_hell": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_27_heaven": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_28_suicide": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_29_the_marriage_covenant": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_30_leadership": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_31_evangelism": {
+      "level": "free"
+    },
+    "pkg_one_basics_2_32_partnership": {
       "level": "free"
     },
     "book_one_basics_1_1_eternal_life": {
