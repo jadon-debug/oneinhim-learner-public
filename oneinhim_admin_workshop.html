@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=178"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=178"></script>
+  <script src="./oneinhim_home_layout.js?v=179"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=179"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -31,6 +31,7 @@
       min-height: 100vh;
       background: var(--bg);
       color: var(--text);
+      overflow-x: hidden;
     }
 
     button,
@@ -192,6 +193,8 @@
       min-height: 100vh;
       display: grid;
       grid-template-rows: auto 1fr;
+      width: 100%;
+      max-width: 100vw;
     }
 
     .topbar {
@@ -207,6 +210,7 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      max-width: 100vw;
     }
 
     .brand {
@@ -236,9 +240,12 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 240px minmax(0, 1fr);
+      grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
       align-items: start;
       min-height: 0;
+      width: 100%;
+      max-width: 100vw;
+      overflow: hidden;
     }
 
     .sidebar {
@@ -276,7 +283,7 @@
     .main {
       min-width: 0;
       padding: clamp(18px, 3vw, 34px);
-      overflow: visible;
+      overflow: hidden;
     }
 
     .section-head {
@@ -746,18 +753,20 @@
 
     .shelf-layout {
       display: grid;
-      grid-template-columns: 280px minmax(0, 1fr) 340px;
+      grid-template-columns: minmax(180px, 250px) minmax(320px, 1fr) minmax(300px, 340px);
       gap: 16px;
       align-items: start;
+      min-width: 0;
     }
 
     .cards {
       display: grid;
       grid-auto-flow: column;
-      grid-auto-columns: 260px;
+      grid-auto-columns: minmax(180px, 240px);
       gap: 14px;
       padding: 16px;
       overflow-x: auto;
+      min-width: 0;
     }
 
     .card-preview {
@@ -800,6 +809,10 @@
       height: 100%;
       display: block;
       object-fit: cover;
+    }
+
+    .card-preview img.is-missing {
+      display: none;
     }
 
     .card-preview.locked img {
@@ -1949,7 +1962,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v178.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v179.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1965,7 +1978,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v178.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v179.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2106,7 +2119,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v178.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v179.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -4637,11 +4650,13 @@
         const linkedId = item.contentId || item.target || "";
         const linkedContent = linkedId ? selectedContent(linkedId) : null;
         const artwork = item.artwork || linkedContent?.artwork || "";
+        const missingLabel = item.artwork ? "Artwork not found" : "Add artwork path";
         const locked = shelfItemIsLocked(item);
         const comingSoon = shelfItemIsComingSoon(item);
         return `
         <div class="card-preview ${esc(shelf.cardSize || "wide")}${locked ? " locked" : ""}${comingSoon ? " coming-soon" : ""}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(shelfItemLabel(item))} artwork">
-          ${artwork ? `<img src="${esc(artwork)}" alt="${esc(item.alt || "")}" />` : `<div class="card-preview-placeholder">Add artwork path</div>`}
+          ${artwork ? `<img src="${esc(artwork)}" alt="${esc(item.alt || "")}" onerror="this.classList.add('is-missing'); this.nextElementSibling.hidden = false;" />` : ""}
+          <div class="card-preview-placeholder"${artwork ? " hidden" : ""}>${esc(missingLabel)}</div>
           ${locked ? `<span class="card-lock" aria-label="Locked content">Locked</span>` : ""}
           ${comingSoon ? `<span class="card-coming-soon">Coming soon</span>` : ""}
           <button class="card-remove" type="button" data-remove-shelf-item="${index}" aria-label="Remove ${esc(shelfItemLabel(item))}">Remove</button>
