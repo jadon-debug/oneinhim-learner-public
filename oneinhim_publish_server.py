@@ -23,13 +23,70 @@ STATIC_FILES = [
     "oneinhim_content_packages.json",
     "oneinhim_home_layout.js",
     "oneinhim_journey_layout.js",
+    "oneinhim_publish_server.py",
 ]
+
+VERSIONED_FILE_RE = re.compile(r"oneinhim_(?:cache_reset|learner_app)_v\d+\.html")
 
 
 def write_layout_file(filename, global_name, payload):
     target = ROOT / filename
     body = json.dumps(payload, ensure_ascii=False, indent=2)
     target.write_text(f"window.{global_name} = {body};\n", encoding="utf-8")
+
+
+def read_release_version():
+    html = (ROOT / "oneinhim_learner_app.html").read_text(encoding="utf-8")
+    match = re.search(r'APP_RELEASE_VERSION\s*=\s*"(\d+)"', html)
+    if not match:
+        raise RuntimeError("Could not find app release version.")
+    return int(match.group(1))
+
+
+def replace_text(path, replacements):
+    if not path.exists():
+        return
+    text = path.read_text(encoding="utf-8")
+    for pattern, value in replacements:
+        text = re.sub(pattern, value, text)
+    path.write_text(text, encoding="utf-8")
+
+
+def bump_release_version():
+    next_version = read_release_version() + 1
+    next_text = str(next_version)
+    previous_reset_files = sorted(ROOT.glob("oneinhim_cache_reset_v*.html"))
+    reset_template = previous_reset_files[-1] if previous_reset_files else None
+
+    html_replacements = [
+        (r'APP_RELEASE_VERSION\s*=\s*"\d+"', f'APP_RELEASE_VERSION = "{next_text}"'),
+        (r'oneinhim_home_layout\.js\?v=\d+', f'oneinhim_home_layout.js?v={next_text}'),
+        (r'oneinhim_journey_layout\.js\?v=\d+', f'oneinhim_journey_layout.js?v={next_text}'),
+    ]
+    admin_replacements = [
+        (r'oneinhim_home_layout\.js\?v=\d+', f'oneinhim_home_layout.js?v={next_text}'),
+        (r'oneinhim_mux_import_queue\.js\?v=\d+', f'oneinhim_mux_import_queue.js?v={next_text}'),
+        (r'oneinhim_cache_reset_v\d+\.html', f'oneinhim_cache_reset_v{next_text}.html'),
+    ]
+    replace_text(ROOT / "oneinhim_learner_app.html", html_replacements)
+    replace_text(ROOT / "oneinhim_admin_workshop.html", admin_replacements)
+    replace_text(ROOT / "oneinhim_service_worker.js", [
+        (r'oneinhim-app-v\d+', f'oneinhim-app-v{next_text}'),
+        (r'oneinhim_cache_reset_v\d+\.html', f'oneinhim_cache_reset_v{next_text}.html'),
+    ])
+    replace_text(ROOT / "oneinhim.webmanifest", [
+        (r'oneinhim_cache_reset_v\d+\.html', f'oneinhim_cache_reset_v{next_text}.html'),
+    ])
+
+    if reset_template:
+        next_reset = ROOT / f"oneinhim_cache_reset_v{next_text}.html"
+        shutil.copy2(reset_template, next_reset)
+        replace_text(next_reset, [
+            (r'v=\d+', f'v={next_text}'),
+            (r'oneinhim_cache_reset_v\d+\.html', f'oneinhim_cache_reset_v{next_text}.html'),
+        ])
+    shutil.copy2(ROOT / "oneinhim_learner_app.html", ROOT / f"oneinhim_learner_app_v{next_text}.html")
+    return next_text
 
 
 def safe_asset_name(filename):
@@ -76,6 +133,10 @@ def copy_to_public_repo():
       source = ROOT / name
       if source.exists():
           shutil.copy2(source, PUBLIC_REPO / name)
+    for source in ROOT.glob("oneinhim_cache_reset_v*.html"):
+        shutil.copy2(source, PUBLIC_REPO / source.name)
+    for source in ROOT.glob("oneinhim_learner_app_v*.html"):
+        shutil.copy2(source, PUBLIC_REPO / source.name)
     assets_source = ROOT / "assets"
     assets_target = PUBLIC_REPO / "assets"
     if assets_source.exists():
@@ -102,24 +163,34 @@ def git(args):
 def publish(payload):
     home_layout = payload.get("homeLayout")
     journey_layout = payload.get("journeyLayout")
+    content_packages = payload.get("contentPackages")
     if not isinstance(home_layout, dict) or not isinstance(home_layout.get("heroSlides"), list):
         raise RuntimeError("Home layout is missing hero slides.")
     if not isinstance(home_layout.get("shelves"), list):
         raise RuntimeError("Home layout is missing shelves.")
     if not isinstance(journey_layout, dict) or not isinstance(journey_layout.get("sections"), list):
         raise RuntimeError("Journey layout is missing sections.")
+    if content_packages is not None and not isinstance(content_packages, list):
+        raise RuntimeError("Content packages must be a list.")
 
     write_layout_file("oneinhim_home_layout.js", "ONEINHIM_PUBLISHED_HOME_CONTENT", home_layout)
     write_layout_file("oneinhim_journey_layout.js", "ONEINHIM_PUBLISHED_JOURNEY_WORKFLOW", journey_layout)
+    if isinstance(content_packages, list):
+        (ROOT / "oneinhim_content_packages.json").write_text(
+            json.dumps(content_packages, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    next_version = bump_release_version()
     copy_to_public_repo()
 
-    git(["add", *STATIC_FILES, "assets"])
+    versioned_files = [path.name for path in PUBLIC_REPO.iterdir() if VERSIONED_FILE_RE.fullmatch(path.name)]
+    git(["add", *STATIC_FILES, *versioned_files, "assets"])
     status = git(["status", "--porcelain"])
     if not status:
         return "Nothing changed; GitHub is already up to date."
     git(["commit", "-m", "Publish admin workspace update"])
     git(["push", "origin", "main"])
-    return "Published to GitHub. Refresh the phone link in a minute."
+    return f"Published v{next_version} to GitHub. Refresh the phone link in a minute."
 
 
 class PublishHandler(BaseHTTPRequestHandler):
