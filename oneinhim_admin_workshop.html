@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=172"></script>
+  <script src="./oneinhim_home_layout.js?v=173"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1168,6 +1168,82 @@
       font-weight: 850;
     }
 
+    .prep-drawer,
+    .mux-dialog {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+    }
+
+    .prep-drawer[hidden],
+    .mux-dialog[hidden] {
+      display: none;
+    }
+
+    .prep-drawer-backdrop,
+    .mux-dialog-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(5px);
+    }
+
+    .prep-drawer-panel {
+      position: absolute;
+      inset: 22px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--bg);
+      box-shadow: 0 32px 80px rgba(0,0,0,.42);
+    }
+
+    .prep-drawer-panel > .section-head {
+      margin: 0;
+      padding: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .prep-drawer-panel .content-prep-layout {
+      height: 100%;
+      overflow: auto;
+      padding: 18px;
+    }
+
+    .prep-drawer-panel .content-prep-layout > aside:last-child,
+    .prep-drawer-panel .content-prep-layout > aside:first-child {
+      top: 0;
+      max-height: calc(100vh - 170px);
+    }
+
+    .mux-dialog-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: min(520px, calc(100vw - 32px));
+      display: grid;
+      gap: 16px;
+      transform: translate(-50%, -50%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      background: var(--panel);
+      box-shadow: 0 30px 80px rgba(0,0,0,.44);
+    }
+
+    .mux-dialog-card h3,
+    .mux-dialog-card p {
+      margin: 0;
+    }
+
+    .mux-dialog-card p {
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
     .journey-editor {
       display: grid;
       grid-template-columns: minmax(520px, 1fr) minmax(340px, 440px);
@@ -1569,7 +1645,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v172.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v173.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -1585,10 +1661,9 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v172.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v173.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
-        <button class="btn" type="button" data-open-view="contentPrep">Content prep</button>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
       </div>
     </header>
@@ -1599,7 +1674,6 @@
           <button class="active" type="button" data-view="heroes">Hero slides</button>
           <button type="button" data-view="shelves">Library shelves</button>
           <button type="button" data-view="journey">Journey workflow</button>
-          <button type="button" data-view="contentPrep">Content prep</button>
           <button type="button" data-view="content">Content links</button>
         </nav>
       </aside>
@@ -1629,6 +1703,10 @@
               <div class="panel-head"><h3>Slide settings</h3></div>
               <div class="form">
                 <div class="field"><label for="heroContent">Linked content</label><select id="heroContent"></select></div>
+                <div class="btn-row">
+                  <button class="btn" type="button" data-open-mux="hero">Import Mux</button>
+                  <button class="btn" type="button" data-open-prep="hero">Prep linked content</button>
+                </div>
                 <div class="artwork-actions">
                   <div class="artwork-action-row">
                     <div class="field"><label for="heroMobile">Mobile artwork</label><input id="heroMobile" /></div>
@@ -1693,6 +1771,10 @@
                 <hr class="form-divider" />
                 <div class="selected-card-summary" id="selectedCardSummary"></div>
                 <div class="field"><label for="shelfCardContent">Selected card link</label><select id="shelfCardContent"></select></div>
+                <div class="btn-row">
+                  <button class="btn" type="button" data-open-mux="shelf">Import Mux</button>
+                  <button class="btn" type="button" data-open-prep="shelf">Prep selected card</button>
+                </div>
                 <div class="artwork-action-row">
                   <div class="field"><label for="shelfCardArtwork">Selected card artwork</label><input id="shelfCardArtwork" placeholder="assets/my-cover.jpg" /></div>
                   <button class="btn" id="focusShelfArtwork" type="button">Replace</button>
@@ -1724,8 +1806,8 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v172.html?auto=1&hash=journey">Preview Journey</a>
-              <button class="btn green" type="button" data-open-view="contentPrep">Edit lesson content</button>
+              <a class="btn" href="oneinhim_cache_reset_v173.html?auto=1&hash=journey">Preview Journey</a>
+              <button class="btn green" type="button" data-open-prep="journey">Prep selected lesson</button>
             </div>
           </div>
           <div class="journey-editor">
@@ -1767,6 +1849,10 @@
                     <div class="field"><label for="journeyNodeTitle">Node title</label><input id="journeyNodeTitle" /></div>
                     <div class="field"><label for="journeyNodeType">Node type</label><select id="journeyNodeType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option><option>Explore</option></select></div>
                     <div class="field"><label for="journeyNodeContent">Linked content</label><select id="journeyNodeContent"></select></div>
+                    <div class="btn-row">
+                      <button class="btn" type="button" data-open-mux="journey">Import Mux</button>
+                      <button class="btn" type="button" data-open-prep="journey">Prep node content</button>
+                    </div>
                   </div>
                 </details>
                 <details class="settings-section">
@@ -1776,6 +1862,10 @@
                     <div class="field"><label for="journeyStepTitle">Step title</label><input id="journeyStepTitle" /></div>
                     <div class="field"><label for="journeyStepType">Step type</label><select id="journeyStepType"><option>Watch</option><option>Read</option><option>Reflect</option><option>Practice</option><option>Share</option><option>Prayer</option><option>Quiz</option><option>Step</option></select></div>
                     <div class="field"><label for="journeyStepContent">Step content link</label><select id="journeyStepContent"></select></div>
+                    <div class="btn-row">
+                      <button class="btn" type="button" data-open-mux="journey">Import Mux</button>
+                      <button class="btn" type="button" data-open-prep="journey">Prep step content</button>
+                    </div>
                     <div class="field"><label for="journeyStepPrompt">Step prompt</label><textarea id="journeyStepPrompt"></textarea></div>
                   </div>
                 </details>
@@ -1797,23 +1887,27 @@
                 <h3>Workflow links</h3>
               </div>
               <div class="form">
-                <a class="btn" href="oneinhim_cache_reset_v172.html?auto=1&hash=journey">Preview Journey</a>
-                <button class="btn" type="button" data-open-view="contentPrep">Open content prep</button>
+                <a class="btn" href="oneinhim_cache_reset_v173.html?auto=1&hash=journey">Preview Journey</a>
+                <button class="btn" type="button" data-open-mux="journey">Import Mux to lesson</button>
+                <button class="btn" type="button" data-open-prep="journey">Prep selected content</button>
               </div>
             </aside>
           </div>
         </section>
 
-        <section class="view" id="contentPrepView">
+        <section class="prep-drawer" id="prepDrawer" hidden>
+          <div class="prep-drawer-backdrop" data-close-prep></div>
+          <div class="prep-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="prepDrawerTitle">
           <div class="section-head">
             <div>
-              <h2>Content Prep</h2>
-              <p>Prepare app-ready packages here: lesson metadata, Journey placement, media delivery, learner prompts, status, and export JSON.</p>
+              <h2 id="prepDrawerTitle">Prep item</h2>
+              <p id="prepDrawerContext">Prepare this selected item: metadata, placement, media, learner prompts, status, and export JSON.</p>
             </div>
             <div class="btn-row">
               <button class="btn" id="newContentPackageButton" type="button">New package</button>
               <button class="btn" id="exportContentPackageButton" type="button">Export package</button>
               <button class="btn green" id="saveContentPrepButton" type="button">Save draft</button>
+              <button class="btn" type="button" data-close-prep>Close</button>
             </div>
           </div>
           <div class="content-prep-layout">
@@ -1899,7 +1993,25 @@
               </div>
             </aside>
           </div>
+          </div>
         </section>
+
+        <div class="mux-dialog" id="muxDialog" hidden>
+          <div class="mux-dialog-backdrop" data-close-mux></div>
+          <section class="mux-dialog-card" role="dialog" aria-modal="true" aria-labelledby="muxDialogTitle">
+            <h3 id="muxDialogTitle">Import Mux item</h3>
+            <p id="muxDialogContext">Paste a Mux playback ID and attach it to the selected item.</p>
+            <div class="field"><label for="muxTitle">Title</label><input id="muxTitle" placeholder="Episode or lesson title" /></div>
+            <div class="field"><label for="muxPlaybackId">Mux playback ID</label><input id="muxPlaybackId" placeholder="Paste the playback ID from Mux" /></div>
+            <div class="field"><label for="muxFormat">Format</label><select id="muxFormat"><option value="watch">Watch / video</option><option value="listen">Listen / audio</option></select></div>
+            <div class="field"><label for="muxArtwork">Artwork / thumbnail</label><input id="muxArtwork" placeholder="assets/cover.jpg or leave blank" /></div>
+            <div class="field"><label for="muxAccess">Access</label><select id="muxAccess"><option value="free">Free / unlocked</option><option value="seed_unlock">Unlock with Seeds</option><option value="partner_access">Partner / supporter only</option></select></div>
+            <div class="btn-row">
+              <button class="btn green" id="muxImportButton" type="button">Import and attach</button>
+              <button class="btn" type="button" data-close-mux>Cancel</button>
+            </div>
+          </section>
+        </div>
 
         <section class="view" id="contentView">
           <div class="section-head">
@@ -3414,6 +3526,8 @@
       contentPackageMediumFilter: "all",
       contentPackages: [],
       contentPackageSource: "loading",
+      prepContext: "hero",
+      muxContext: "hero",
       journey: readJourney(),
       layout: readLayout()
     };
@@ -3554,6 +3668,13 @@
       if (!target) return;
       const access = contentAccess(target);
       access.level = normalizedAccessLevel(level);
+    }
+
+    function slugifyId(value) {
+      return String(value || "mux_item").toLowerCase().trim()
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .slice(0, 72) || "mux_item";
     }
 
     function contentAccessLabel(level) {
@@ -3733,6 +3854,257 @@
       return steps[state.journeyStepIndex] || steps[0] || null;
     }
 
+    function selectedContextContentId(context = state.prepContext) {
+      if (context === "hero") {
+        const hero = currentHero();
+        return hero?.contentId || hero?.target || "";
+      }
+      if (context === "shelf") {
+        return shelfItemContentId(currentShelfItem());
+      }
+      if (context === "journey") {
+        const step = currentJourneyStep();
+        const node = currentJourneyNode();
+        return step?.contentId || node?.contentId || "";
+      }
+      return "";
+    }
+
+    function contextTitle(context = state.prepContext) {
+      if (context === "hero") return currentHero()?.title || "selected hero";
+      if (context === "shelf") return shelfItemLabel(currentShelfItem()) || "selected shelf card";
+      if (context === "journey") return currentJourneyStep()?.title || currentJourneyNode()?.title || "selected lesson";
+      return "selected item";
+    }
+
+    function contextLabel(context = state.prepContext) {
+      return {
+        hero: "Hero slide",
+        shelf: "Shelf card",
+        journey: "Journey lesson"
+      }[context] || "Selected item";
+    }
+
+    function selectContentPackageForContentId(contentId) {
+      const id = String(contentId || "").trim();
+      if (!id) return false;
+      const index = state.contentPackages.findIndex((pkg) => [
+        pkg.packageId,
+        pkg.primaryItemId,
+        pkg.videoHost?.playbackId,
+        pkg.audioHost?.playbackId,
+        pkg.muxVirtualClip?.playbackId
+      ].filter(Boolean).includes(id) || id === String(pkg.packageId || "").replace(/^pkg_/, "book_"));
+      if (index >= 0) {
+        state.contentPackageIndex = index;
+        return true;
+      }
+      return false;
+    }
+
+    function createPrepPackageForContentId(contentId, context = state.prepContext) {
+      const id = String(contentId || "").trim();
+      if (!id) return;
+      const content = selectedContent(id);
+      const pkg = normalizeContentPackage({
+        packageId: `pkg_${id}`,
+        packageTitle: content.title || contextTitle(context),
+        packageType: context === "journey" ? "journey_lesson" : "discovery_feature",
+        packageGoal: content.summary || `Prepare ${content.title || contextTitle(context)} for the One In Him app.`,
+        primaryItemId: id,
+        primaryMedium: content.type === "Audio" || content.type === "Audiobook" ? "listen" : content.type === "Video" || content.type === "Documentary" || content.type === "Event" ? "watch" : "read",
+        contentType: String(content.type || "content").toLowerCase().replace(/\s+/g, "_"),
+        learnerSession: { contentSummary: content.summary || "" },
+        placement: {
+          showInDiscover: context !== "journey",
+          discoverShelf: currentShelf()?.title || "",
+          discoverCardLabel: content.title || contextTitle(context),
+          showInJourney: context === "journey",
+          moduleId: currentJourneySection()?.id || "",
+          moduleTitle: currentJourneySection()?.title || "",
+          lessonOrder: state.journeyNodeIndex + 1,
+          isCoreLesson: false
+        },
+        access: { level: normalizedAccessLevel(contentAccess(id).level), seedCost: 5 },
+        admin: {
+          packageStatus: "draft",
+          sourcePreApproved: false,
+          owner: "One In Him content team",
+          lastUpdated: new Date().toISOString().slice(0, 10),
+          sourceRange: `${contextLabel(context)} link`
+        }
+      });
+      state.contentPackages.unshift(pkg);
+      state.contentPackageIndex = 0;
+    }
+
+    function updatePrepDrawerContext() {
+      const title = document.getElementById("prepDrawerTitle");
+      const context = document.getElementById("prepDrawerContext");
+      if (title) title.textContent = `Prep ${contextTitle(state.prepContext)}`;
+      if (context) context.textContent = `${contextLabel(state.prepContext)} prep. Edit metadata, Mux playback, placement, access, learner prompts, and readiness for this selected item.`;
+    }
+
+    function openPrepDrawer(context = "hero") {
+      state.prepContext = context;
+      const contentId = selectedContextContentId(context);
+      if (!selectContentPackageForContentId(contentId)) createPrepPackageForContentId(contentId, context);
+      updatePrepDrawerContext();
+      document.getElementById("prepDrawer").hidden = false;
+      renderContentPrep();
+    }
+
+    function closePrepDrawer() {
+      document.getElementById("prepDrawer").hidden = true;
+    }
+
+    function openMuxDialog(context = "hero") {
+      state.muxContext = context;
+      const content = selectedContent(selectedContextContentId(context));
+      document.getElementById("muxDialogTitle").textContent = `Import Mux to ${contextLabel(context).toLowerCase()}`;
+      document.getElementById("muxDialogContext").textContent = `This will create content and attach it to ${contextTitle(context)}.`;
+      document.getElementById("muxTitle").value = content?.title && content.id !== CONTENT[0]?.id ? content.title : contextTitle(context);
+      document.getElementById("muxPlaybackId").value = "";
+      document.getElementById("muxFormat").value = context === "journey" && currentJourneyNode()?.type === "Listen" ? "listen" : "watch";
+      document.getElementById("muxArtwork").value = content?.artwork || "";
+      document.getElementById("muxAccess").value = normalizedAccessLevel(contentAccess(content?.id).level);
+      document.getElementById("muxDialog").hidden = false;
+      document.getElementById("muxPlaybackId").focus();
+    }
+
+    function closeMuxDialog() {
+      document.getElementById("muxDialog").hidden = true;
+    }
+
+    function attachContentToContext(context, content) {
+      if (!content?.id) return;
+      if (context === "hero") {
+        updateHeroField("content", content.id);
+        const hero = currentHero();
+        if (hero && content.artwork) {
+          hero.mobileArtwork = hero.mobileArtwork || content.artwork;
+          hero.desktopArtwork = hero.desktopArtwork || content.artwork;
+          hero.artwork = hero.artwork || content.artwork;
+        }
+        renderHeroes();
+        return;
+      }
+      if (context === "shelf") {
+        let item = currentShelfItem();
+        const shelf = currentShelf();
+        if (!item && shelf) {
+          shelf.items = shelf.items || [];
+          shelf.items.push({ id: `${content.id}_${Date.now()}`, artwork: content.artwork, alt: content.title });
+          state.shelfItemIndex = shelf.items.length - 1;
+          item = currentShelfItem();
+        }
+        if (!item) return;
+        updateShelfItemField("content", content.id);
+        item.artwork = item.artwork || content.artwork;
+        item.alt = item.alt || content.title;
+        renderShelves();
+        return;
+      }
+      if (context === "journey") {
+        const mediumType = content.type === "Audio" ? "Listen" : "Watch";
+        const node = currentJourneyNode();
+        const step = currentJourneyStep();
+        if (node) {
+          node.contentId = content.id;
+          node.type = mediumType;
+          if (!node.title || node.title === "New lesson node") node.title = content.title;
+        }
+        if (step) {
+          journeyNodeSteps(node, { materialize: true })[state.journeyStepIndex].contentId = content.id;
+          journeyNodeSteps(node, { materialize: true })[state.journeyStepIndex].type = mediumType;
+          if (!step.title || step.title === "Open lesson") journeyNodeSteps(node, { materialize: true })[state.journeyStepIndex].title = content.title;
+        }
+        renderJourney();
+      }
+    }
+
+    function createContentPackageFromMux(content, playbackId, context) {
+      const medium = content.type === "Audio" ? "listen" : "watch";
+      const stage = currentJourneySection()
+        ? { stage: currentJourneySection().number || state.journeySectionIndex + 1, name: currentJourneySection().title || "Journey", colour: currentJourneySection().color || "#ee7326", moduleId: currentJourneySection().id || "", slug: currentJourneySection().id || "journey" }
+        : stageMetaForSlug("foundations");
+      return normalizeContentPackage({
+        packageId: `pkg_${content.id}`,
+        packageTitle: content.title,
+        packageType: medium === "listen" ? "audio_lesson" : "video_lesson",
+        packageGoal: `Prepare ${content.title} for the One In Him app.`,
+        sourceItems: [{ provider: "mux", playbackId }],
+        primaryItemId: content.id,
+        primaryMedium: medium,
+        contentType: medium === "listen" ? "podcast" : "video_lesson",
+        journeyStage: stage,
+        learnerSession: {
+          openingPrompt: "",
+          contentSummary: content.summary || "",
+          readBody: [],
+          reflectionPrompt: "",
+          notesPrompt: "",
+          completionMessage: ""
+        },
+        placement: {
+          showInDiscover: context !== "journey",
+          discoverShelf: currentShelf()?.title || "",
+          discoverCardLabel: content.title,
+          showInJourney: context === "journey",
+          moduleId: currentJourneySection()?.id || stage.moduleId || "",
+          moduleTitle: currentJourneySection()?.title || stage.name || "",
+          lessonOrder: state.journeyNodeIndex + 1,
+          isCoreLesson: false
+        },
+        sharing: { shareText: "" },
+        access: { level: content.accessLevel || "free", seedCost: 5 },
+        videoHost: { provider: "mux", playbackId, status: "ready", thumbnail: content.artwork || "" },
+        admin: {
+          packageStatus: "prepared",
+          sourcePreApproved: true,
+          owner: "One In Him content team",
+          lastUpdated: new Date().toISOString().slice(0, 10),
+          sourceRange: "Mux import"
+        }
+      });
+    }
+
+    function importMuxToContext() {
+      const playbackId = document.getElementById("muxPlaybackId").value.trim();
+      const title = document.getElementById("muxTitle").value.trim();
+      const format = document.getElementById("muxFormat").value;
+      const artwork = document.getElementById("muxArtwork").value.trim();
+      const accessLevel = normalizedAccessLevel(document.getElementById("muxAccess").value);
+      if (!playbackId) {
+        toast("Paste a Mux playback ID first.");
+        return;
+      }
+      const safeTitle = title || `Mux ${format === "listen" ? "audio" : "video"}`;
+      const prefix = format === "listen" ? "aud" : "mux";
+      let id = `${prefix}_${slugifyId(safeTitle)}`;
+      if (CONTENT.some((item) => item.id === id)) id = `${id}_${Date.now()}`;
+      const content = {
+        id,
+        title: safeTitle,
+        type: format === "listen" ? "Audio" : "Video",
+        artwork,
+        summary: `Mux ${format === "listen" ? "audio" : "video"} imported from playback ID ${playbackId}.`,
+        accessLevel
+      };
+      CONTENT.unshift(content);
+      setContentAccess(content.id, accessLevel);
+      const pkg = createContentPackageFromMux(content, playbackId, state.muxContext);
+      const existingIndex = state.contentPackages.findIndex((item) => item.packageId === pkg.packageId);
+      if (existingIndex >= 0) state.contentPackages[existingIndex] = pkg;
+      else state.contentPackages.unshift(pkg);
+      state.contentPackageIndex = 0;
+      attachContentToContext(state.muxContext, content);
+      saveContentPrepDraft();
+      closeMuxDialog();
+      openPrepDrawer(state.muxContext);
+      toast("Mux item imported and attached.");
+    }
+
     function normaliseJourneySelection() {
       const sections = state.journey.sections || [];
       state.journeySectionIndex = Math.max(0, Math.min(state.journeySectionIndex, sections.length - 1));
@@ -3747,6 +4119,7 @@
     function render() {
       document.querySelectorAll(".side-nav button").forEach((button) => button.classList.toggle("active", button.dataset.view === state.view));
       document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === `${state.view}View`));
+      if (!document.getElementById("prepDrawer")?.hidden) updatePrepDrawerContext();
       renderHeroes();
       renderShelves();
       renderJourney();
@@ -4240,7 +4613,8 @@
     function addContentPackage() {
       state.contentPackages.unshift(defaultContentPackage());
       state.contentPackageIndex = 0;
-      state.view = "contentPrep";
+      updatePrepDrawerContext();
+      document.getElementById("prepDrawer").hidden = false;
       render();
       toast("New content package draft created.");
     }
@@ -4446,6 +4820,19 @@
           render();
         });
       });
+      document.querySelectorAll("[data-open-prep]").forEach((button) => {
+        button.addEventListener("click", () => openPrepDrawer(button.dataset.openPrep || "hero"));
+      });
+      document.querySelectorAll("[data-close-prep]").forEach((button) => {
+        button.addEventListener("click", closePrepDrawer);
+      });
+      document.querySelectorAll("[data-open-mux]").forEach((button) => {
+        button.addEventListener("click", () => openMuxDialog(button.dataset.openMux || "hero"));
+      });
+      document.querySelectorAll("[data-close-mux]").forEach((button) => {
+        button.addEventListener("click", closeMuxDialog);
+      });
+      document.getElementById("muxImportButton").addEventListener("click", importMuxToContext);
       document.getElementById("contentPrepList").addEventListener("click", (event) => {
         const row = event.target.closest("[data-content-package-index]");
         if (!row) return;
