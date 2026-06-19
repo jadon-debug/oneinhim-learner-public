@@ -729,6 +729,7 @@
       padding: 7px;
       background: var(--panel-deep);
       color: #fff;
+      position: relative;
       text-align: left;
     }
 
@@ -744,6 +745,26 @@
       border-radius: 7px;
       object-fit: cover;
       background: #050606;
+    }
+
+    .asset-option.is-missing img {
+      display: none;
+    }
+
+    .asset-option.is-missing::before {
+      content: "Missing cover";
+      width: 100%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      background: #050606;
+      color: #ffc46d;
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 1.15;
+      text-align: center;
+      padding: 8px;
     }
 
     .asset-option span {
@@ -3845,6 +3866,7 @@
       { label: "Shadows hero", path: "assets/outoftheshadows_documentary_hero_mobile.webp", use: "hero mobile" },
       { label: "Shadows wide", path: "assets/outoftheshadows_documentary-coverart_16x9.webp", use: "wide" },
       { label: "Shadows poster", path: "assets/outoftheshadows_documentary-coverart.webp", use: "poster" },
+      { label: "Out of the shadows front", path: "assets/Out-of-the-shadows.front.jpg", use: "poster" },
       { label: "One Basics cover", path: "assets/one-basics-1-1-eternal-life-course-cover.png", use: "wide" },
       { label: "Podcast cover", path: "assets/one-gospel-podcast-cover.png", use: "square" },
       { label: "Classics cover", path: "assets/death-of-ivan-ilyich-classics-audiobook-cover.jpg", use: "square" },
@@ -3922,8 +3944,14 @@
           ...(layout.contentAccess || {})
         }
       };
+      next.heroSlides.forEach((hero) => {
+        hero.artwork = normalizeAssetPath(hero.artwork);
+        hero.mobileArtwork = normalizeAssetPath(hero.mobileArtwork);
+        hero.desktopArtwork = normalizeAssetPath(hero.desktopArtwork);
+      });
       next.shelves.forEach((shelf) => {
         (shelf.items || []).forEach((item) => {
+          item.artwork = normalizeAssetPath(item.artwork);
           if (item.targetType === "none" || item.placeholder || (!item.target && !item.contentId)) {
             item.target = "";
             item.contentId = "";
@@ -4102,15 +4130,28 @@
       return String(path || "").split("/").pop() || "asset";
     }
 
+    function normalizeAssetPath(path) {
+      const value = String(path || "").trim();
+      const aliases = {
+        "assets/Out of the shadows.front.jpg": "assets/Out-of-the-shadows.front.jpg"
+      };
+      return aliases[value] || value;
+    }
+
+    function imageMissingHandler() {
+      return "this.closest('.asset-option')?.classList.add('is-missing'); this.hidden = true;";
+    }
+
     function assetPickerOptions(kind, currentPath = "", cardSize = "wide") {
+      const normalizedCurrentPath = normalizeAssetPath(currentPath);
       const preferred = ASSET_LIBRARY.filter((asset) => {
         if (kind === "hero") return asset.use.includes("hero");
         return asset.use === cardSize || asset.use === "wide";
       });
       const options = preferred.length ? preferred : ASSET_LIBRARY;
       return options.map((asset) => `
-        <button class="asset-option${asset.path === currentPath ? " active" : ""}" type="button" data-artwork-preset="${esc(asset.path)}" data-artwork-kind="${esc(kind)}" title="${esc(asset.path)}">
-          <img src="${esc(asset.path)}" alt="" loading="lazy" />
+        <button class="asset-option${asset.path === normalizedCurrentPath ? " active" : ""}" type="button" data-artwork-preset="${esc(asset.path)}" data-artwork-kind="${esc(kind)}" title="${esc(asset.path)}">
+          <img src="${esc(asset.path)}" alt="" loading="lazy" onerror="${imageMissingHandler()}" />
           <span>${esc(asset.label)}</span>
         </button>
       `).join("");
