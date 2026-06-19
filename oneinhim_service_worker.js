@@ -1,4 +1,4 @@
-const ONEINHIM_CACHE = "oneinhim-app-v191";
+const ONEINHIM_CACHE = "oneinhim-app-v192";
 
 const APP_SHELL = [
   "./oneinhim.webmanifest",
@@ -66,8 +66,8 @@ self.addEventListener("fetch", (event) => {
     url.pathname.endsWith("oneinhim_admin_workshop.html") ||
     url.pathname.endsWith("/oneinhim_cache_reset.html") ||
     url.pathname.endsWith("oneinhim_cache_reset.html") ||
-    url.pathname.endsWith("/oneinhim_cache_reset_v191.html") ||
-    url.pathname.endsWith("oneinhim_cache_reset_v191.html");
+    url.pathname.endsWith("/oneinhim_cache_reset_v192.html") ||
+    url.pathname.endsWith("oneinhim_cache_reset_v192.html");
 
   if (isWorkshopDocument) {
     event.respondWith(fetch(request, { cache: "no-store" }));
