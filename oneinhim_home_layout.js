@@ -207,6 +207,17 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "placeholder": true,
           "locked": true,
           "comingSoon": true
+        },
+        {
+          "id": "artwork_only_1781850753761",
+          "artwork": "assets/Out-of-the-shadows.front.jpg",
+          "targetType": "none",
+          "target": "",
+          "contentId": "",
+          "alt": "Coming soon",
+          "placeholder": true,
+          "locked": true,
+          "comingSoon": true
         }
       ]
     }
