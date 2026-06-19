@@ -14425,10 +14425,6 @@ body.gateway-mode .home-shelf-see-all {
   color: #f7f4ee !important;
 }
 
-body.shelf-detail-mode #shelfDetailView.view.active {
-  padding-top: 0 !important;
-}
-
 .shelf-detail-shell {
   min-height: 100svh;
   padding: calc(var(--app-top-chrome-space, 92px) + 10px) clamp(18px, 4vw, 62px) calc(var(--app-bottom-chrome-space, 84px) + 32px);
@@ -14682,22 +14678,13 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
     grid-auto-columns: 64vw !important;
   }
 
-  body.shelf-detail-mode .app-top-chrome {
-    display: none !important;
-  }
-
-  body.shelf-detail-mode .app-bottom-nav {
-    display: none !important;
-  }
-
   .shelf-detail-shell {
-    padding: max(76px, calc(42px + env(safe-area-inset-top))) 24px 44px;
+    padding: calc(var(--app-top-chrome-space, 92px) + 8px) 24px calc(var(--app-bottom-chrome-space, 84px) + 28px);
   }
 
   .shelf-detail-topbar {
     grid-template-columns: 38px 1fr 38px;
-    margin-bottom: 28px;
-    max-width: none;
+    margin-bottom: 34px;
   }
 
   .shelf-detail-icon {
@@ -14715,7 +14702,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   }
 
   .shelf-detail-grid {
-    gap: 42px 40px;
+    gap: 56px 28px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -14725,11 +14712,11 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   }
 
   .shelf-detail-card-title {
-    display: none;
+    font-size: 20px;
   }
 
   .shelf-detail-card-copy {
-    display: none;
+    font-size: 14px;
   }
 }
 
