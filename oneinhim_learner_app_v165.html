@@ -517,7 +517,6 @@ body.learning-mode .view.active {
   background: #fff;
   color: var(--ink);
   text-align: left;
-  cursor: pointer;
   box-shadow: inset 0 -4px 0 rgba(9,10,10,0.08);
 }
 
@@ -4655,41 +4654,6 @@ body.gateway-filter-listen [data-content-kind]:not([data-content-kind~="audio"])
   color: #fff;
   box-shadow: 0 8px 20px rgba(9, 10, 10, 0.26);
   pointer-events: none;
-}
-
-.home-card-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  display: grid;
-  place-items: center;
-  background: rgba(12, 13, 10, .42);
-  color: #11130f;
-  pointer-events: none;
-}
-
-.home-card-overlay span {
-  min-height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 16px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .9);
-  color: #11130f;
-  font-size: 12px;
-  font-weight: 950;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, .24);
-}
-
-.artwork-home-card.is-coming-soon .home-card-art img {
-  filter: grayscale(.25) brightness(.64);
-}
-
-.artwork-home-card.is-content-locked:not(.is-coming-soon) .home-card-art img {
-  filter: saturate(.9) brightness(.78);
 }
 
 .content-lock-badge::before {
@@ -12055,15 +12019,11 @@ body.gateway-mode.gateway-filter-listen [data-content-kind]:not([data-content-ki
   display: none !important;
 }
 
-body.gateway-mode.gateway-filter-watch .gateway-landing.home-hero,
 body.gateway-mode.gateway-filter-listen .gateway-landing.home-hero {
-  display: none !important;
-  height: 0 !important;
-  min-height: 0 !important;
+  display: none;
 }
 
 @media (min-width: 761px) {
-  body.gateway-mode.gateway-filter-watch .gateway-discover,
   body.gateway-mode.gateway-filter-listen .gateway-discover {
     padding-top: 112px !important;
   }
@@ -14411,22 +14371,10 @@ body.gateway-mode .home-hero .gateway-hero-controls [data-hero-dot] {
   pointer-events: auto !important;
 }
 
-body.gateway-mode.gateway-filter-watch .gateway-landing.home-hero,
-body.gateway-mode.gateway-filter-listen .gateway-landing.home-hero {
-  display: none !important;
-  height: 0 !important;
-  min-height: 0 !important;
-}
-
 body.gateway-mode .gateway-discover {
   background: #111111 !important;
   color: #f7f4ee !important;
   padding-top: clamp(12px, 2vw, 26px) !important;
-}
-
-body.gateway-mode.gateway-filter-watch .gateway-discover,
-body.gateway-mode.gateway-filter-listen .gateway-discover {
-  min-height: 100svh !important;
 }
 
 body.gateway-mode .artwork-home-shelf {
@@ -14503,9 +14451,8 @@ body.gateway-mode .home-card-art img {
 }
 
 body.gateway-mode .artwork-home-card .content-lock-badge {
-  bottom: auto !important;
+  bottom: 12px !important;
   right: 12px !important;
-  top: 12px !important;
 }
 
 @media (max-width: 760px) {
@@ -14529,11 +14476,6 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   body.gateway-mode .gateway-discover {
     padding-bottom: calc(var(--app-bottom-chrome-space) + 18px) !important;
     padding-top: 12px !important;
-  }
-
-  body.gateway-mode.gateway-filter-watch .gateway-discover,
-  body.gateway-mode.gateway-filter-listen .gateway-discover {
-    padding-top: calc(var(--app-top-chrome-space, 92px) + 8px) !important;
   }
 
   body.gateway-mode .artwork-home-shelf {
@@ -16040,8 +15982,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 <div class="toast" id="toast">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=185"></script>
-<script src="./oneinhim_journey_layout.js?v=185"></script>
+<script src="./oneinhim_home_layout.js?v=165"></script>
+<script src="./oneinhim_journey_layout.js?v=165"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const embeddedSchema = {
@@ -16539,7 +16481,6 @@ const GATEWAY_HERO_SWIPE_AXIS_RATIO = 0.38;
 const GATEWAY_HERO_TAP_MAX_PX = 8;
 const FEED_POSTS_STORAGE_KEY = "oneinhim.feed.posts.v2";
 const FEED_LIKES_STORAGE_KEY = "oneinhim.feed.likes.v2";
-const ONBOARDING_PATH_STORAGE_KEY = "oneinhim.onboarding.path.v1";
 const LIBRARY_SEEDS_STORAGE_KEY = "oneinhim.library.seeds.v1";
 const LIBRARY_SEED_SHARES_STORAGE_KEY = "oneinhim.library.seedShares.v1";
 const LIBRARY_SEED_UNLOCKS_STORAGE_KEY = "oneinhim.library.seedUnlocks.v1";
@@ -17480,7 +17421,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "185";
+const APP_RELEASE_VERSION = "165";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const DEFAULT_HOME_CONTENT = {
   heroSlides: [
@@ -17605,14 +17546,7 @@ function normalizeHomeContent(layout) {
   };
   const normalizeHomeItemTarget = (item) => {
     if (item.targetType === "none" || item.placeholder || (!item.target && !item.contentId)) {
-      return {
-        target: "",
-        contentId: "",
-        targetType: "none",
-        placeholder: true,
-        locked: item.locked !== false,
-        comingSoon: item.comingSoon !== false
-      };
+      return { target: "", contentId: "", targetType: "none", placeholder: true };
     }
     const shouldUpgradeOneBasicsWatchTarget = ["one_basics_hero", "one_basics_course", "one_basics_watch"].includes(item.id)
       && (item.target === "book_one_basics_1_1_eternal_life" || item.contentId === "book_one_basics_1_1_eternal_life");
@@ -17636,7 +17570,7 @@ function normalizeHomeContent(layout) {
   (layout.shelves || []).forEach((shelf) => {
     (shelf.items || []).forEach((item) => {
       const target = item.contentId || item.target || "";
-      if (target && item.locked && normalizedAccessLevel(contentAccess[target]?.level || contentAccess[target]) === "free") {
+      if (target && item.locked && !layout.contentAccess?.[target]) {
         contentAccess[target] = { level: "partner_access" };
       }
     });
@@ -17729,16 +17663,10 @@ function homeContentAccessLevel(content, id) {
 function homeItemIsLocked(item, content = readHomeContent()) {
   if (!item) return false;
   if (item.targetType === "none" || item.placeholder) return item.locked !== false;
-  if (item.locked) return true;
   const target = item.contentId || item.target || "";
   if (!target) return true;
+  if (item.locked && !content?.contentAccess?.[target]) return true;
   return homeContentAccessLevel(content, target) !== "free";
-}
-
-function homeItemIsComingSoon(item) {
-  if (!item) return false;
-  if (item.comingSoon === false) return false;
-  return Boolean(item.comingSoon || item.placeholder || item.targetType === "none");
 }
 
 function normalizeGatewayContentMode(mode) {
@@ -17828,14 +17756,11 @@ function renderArtworkHome() {
           ${items.map((item) => {
             const mediaKind = homeItemMediaKind(item);
             const contentKind = mediaKind === "other" && currentMode === "watch" ? "video" : (mediaKind === "other" && currentMode === "listen" ? "audio" : mediaKind);
-            const locked = homeItemIsLocked(item, content);
-            const comingSoon = homeItemIsComingSoon(item);
             return `
-            <button class="weekly-media-card artwork-home-card artwork-card-${esc(shelf.cardSize || "wide")}${locked ? " is-content-locked" : ""}${comingSoon ? " is-coming-soon" : ""}" type="button" data-content-kind="${esc(contentKind)}" ${homeActionAttributes(item)} aria-label="${esc(item.alt || item.id || "Open item")}">
+            <button class="weekly-media-card artwork-home-card artwork-card-${esc(shelf.cardSize || "wide")}${homeItemIsLocked(item, content) ? " is-content-locked" : ""}" type="button" data-content-kind="${esc(contentKind)}" ${homeActionAttributes(item)} aria-label="${esc(item.alt || item.id || "Open item")}">
               <span class="home-card-art">
                 ${item.artwork ? `<img src="${esc(item.artwork)}" alt="${esc(item.alt || "")}" loading="lazy" />` : ""}
-                ${comingSoon ? `<span class="home-card-overlay"><span>${esc(item.comingSoonLabel || "Coming soon")}</span></span>` : ""}
-                ${locked ? contentLockBadgeMarkup() : ""}
+                ${homeItemIsLocked(item, content) ? contentLockBadgeMarkup() : ""}
               </span>
             </button>
           `;
@@ -17991,18 +17916,11 @@ function updateGatewayNavScrollState() {
   setGatewayChromeColor(document.body.classList.contains("dark-gateway-hero-active"));
 }
 
-function scrollGatewayToTop() {
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  updateGatewayNavScrollState();
-}
-
 function setGatewayHero(index, options = {}) {
   const slides = Array.from(document.querySelectorAll("[data-gateway-hero-slide]"));
   if (!slides.length) return;
   if (options.scrollToHeroTop && window.innerWidth <= 760 && state.activeView === "gatewayView") {
-    scrollGatewayToTop();
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
   state.gatewayHeroIndex = normalizeGatewayHeroIndex(index, slides);
   renderGatewayHeroSlider();
@@ -18193,18 +18111,6 @@ function scrollHomeSection(target) {
   section.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function openGatewayFilteredMode(target) {
-  setGatewayNavActive(target);
-  setGatewayContentMode(target);
-  if (state.activeView !== "gatewayView") {
-    setView("gatewayView");
-  }
-  window.requestAnimationFrame(() => {
-    scrollGatewayToTop();
-    window.requestAnimationFrame(scrollGatewayToTop);
-  });
-}
-
 function getSupabaseAuthClient() {
   const config = getTeamSyncConfig();
   if (!teamSyncIsReady(config) || !window.supabase?.createClient) return null;
@@ -18341,11 +18247,25 @@ async function handleAdminLogout() {
 	    return;
   }
   if (target === "watch") {
-    openGatewayFilteredMode("watch");
+    setGatewayNavActive(target);
+    setGatewayContentMode("watch");
+    if (state.activeView !== "gatewayView") {
+      setView("gatewayView");
+    }
+    window.requestAnimationFrame(() => {
+      document.querySelector(".gateway-landing")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
     return;
   }
   if (target === "listen") {
-    openGatewayFilteredMode("listen");
+    setGatewayNavActive(target);
+    setGatewayContentMode("listen");
+    if (state.activeView !== "gatewayView") {
+      setView("gatewayView");
+    }
+    window.requestAnimationFrame(() => {
+      document.querySelector(".gateway-discover")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
     return;
   }
   if (target === "discover") {
@@ -18354,7 +18274,9 @@ async function handleAdminLogout() {
     if (state.activeView !== "gatewayView") {
       setView("gatewayView");
     }
-    window.requestAnimationFrame(scrollGatewayToTop);
+    window.requestAnimationFrame(() => {
+      document.querySelector(".gateway-landing")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
     return;
   }
   setGatewayContentMode("discover");
@@ -18535,26 +18457,6 @@ function onboardingStageChoices() {
   ];
 }
 
-function applyOnboardingStageChoice(stageChoice, options = {}) {
-  const { persist = true, rerender = true } = options;
-  const stage = stageForChoice(stageChoice || "exploreJesus");
-  state.onboardingStage = stage.choice;
-  state.activeStageId = stage.choice;
-  state.pathPreviewStageId = stage.choice;
-  state.selectedSectionIndex = 0;
-  state.selectedPathNode = "";
-  state.guidedPathNode = "";
-  if (persist) writeLocalJson(ONBOARDING_PATH_STORAGE_KEY, stage.choice);
-  if (rerender) renderOnboarding();
-  return stage;
-}
-
-function loadOnboardingStageChoice() {
-  const storedChoice = readLocalJson(ONBOARDING_PATH_STORAGE_KEY, "");
-  if (!storedChoice) return;
-  applyOnboardingStageChoice(storedChoice, { persist: false, rerender: false });
-}
-
 function renderOnboarding() {
   if (!els.onboardingContent) return;
   const step = 0;
@@ -18609,7 +18511,9 @@ function renderOnboarding() {
 }
 
 function finishOnboarding() {
-  const stage = applyOnboardingStageChoice(state.onboardingStage || "exploreJesus", { persist: true, rerender: false });
+  const stage = stageForChoice(state.onboardingStage || "exploreJesus");
+  state.activeStageId = stage.choice;
+  state.pathPreviewStageId = stage.choice;
   state.selectedSectionIndex = 0;
   state.selectedPathNode = "";
   state.guidedPathNode = "";
@@ -22908,6 +22812,20 @@ function bindDynamicActions() {
       bindDynamicActions();
     };
   }
+  document.querySelectorAll("[data-onboarding-stage]").forEach((button) => {
+    button.onclick = () => {
+      state.onboardingStage = button.dataset.onboardingStage || "exploreJesus";
+      renderOnboarding();
+      bindDynamicActions();
+    };
+  });
+  document.querySelectorAll("[data-onboarding-mode]").forEach((button) => {
+    button.onclick = () => {
+      state.onboardingStartMode = button.dataset.onboardingMode || "find";
+      renderOnboarding();
+      bindDynamicActions();
+    };
+  });
   if (els.moduleSaveNotes) {
     els.moduleSaveNotes.onclick = () => {
       const saved = saveModuleNote(activeStage(), state.activeModuleIndex, els.moduleNotes.value);
@@ -23103,18 +23021,6 @@ function wireStaticActions() {
     });
   }
   els.onboardingBack.addEventListener("click", () => setView("gatewayView"));
-  els.onboardingContent.addEventListener("click", (event) => {
-    const stageButton = event.target.closest("[data-onboarding-stage]");
-    if (stageButton) {
-      applyOnboardingStageChoice(stageButton.dataset.onboardingStage || "exploreJesus");
-      return;
-    }
-    const modeButton = event.target.closest("[data-onboarding-mode]");
-    if (modeButton) {
-      state.onboardingStartMode = modeButton.dataset.onboardingMode || "find";
-      renderOnboarding();
-    }
-  });
   els.onboardingContinue.addEventListener("click", () => {
     finishOnboarding();
   });
@@ -23266,7 +23172,6 @@ async function boot() {
   await loadContentPackages();
   loadFeedState();
   loadLibraryAccessState();
-  loadOnboardingStageChoice();
   wireStaticActions();
   applyLanguage("en");
 	  renderAll();

@@ -73,7 +73,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
           "targetType": "discover",
           "target": "mux_out_of_shadows_documentary",
           "alt": "Out of the Shadows",
-          "locked": true
+          "locked": false
         }
       ]
     },
@@ -216,7 +216,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "level": "free"
     },
     "mux_out_of_shadows_documentary": {
-      "level": "partner_access"
+      "level": "free"
     },
     "aud_darkness_sonship_004": {
       "level": "free"
