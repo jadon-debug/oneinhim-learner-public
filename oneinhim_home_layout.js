@@ -254,14 +254,24 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "filter": "audiobook classics listen"
     },
     {
-      "key": "articles",
-      "category": "Type",
-      "icon": "article",
-      "title": "Articles",
-      "copy": "Written content and commentary",
-      "detailTitle": "Articles",
-      "cardSize": "poster",
-      "filter": "read article book study guide"
+      "key": "topics",
+      "category": "Topic",
+      "icon": "topic",
+      "title": "Topics",
+      "copy": "Browse by themes and questions",
+      "detailTitle": "Topics",
+      "cardSize": "wide",
+      "filter": "jesus gospel salvation eternal life disciple discipleship foundation prayer scripture bible healing hope restoration anxiety peace anger lust politics christianity hard questions grace freedom leadership mission partnership"
+    },
+    {
+      "key": "people",
+      "category": "People",
+      "icon": "people",
+      "title": "People",
+      "copy": "Browse teachers and voices",
+      "detailTitle": "People",
+      "cardSize": "wide",
+      "filter": "johan toet duane sheriff ps duane brenda one in him oneinhim_team team speaker author pastor teacher"
     },
     {
       "key": "livestream",
@@ -273,76 +283,6 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "cardSize": "wide",
       "filter": "live event livestream",
       "live": true
-    },
-    {
-      "key": "topic-jesus",
-      "category": "Topic",
-      "icon": "topic",
-      "title": "Jesus",
-      "copy": "Start with the gospel and who Jesus is",
-      "detailTitle": "Jesus",
-      "cardSize": "wide",
-      "filter": "jesus gospel salvation eternal life"
-    },
-    {
-      "key": "topic-discipleship",
-      "category": "Topic",
-      "icon": "topic",
-      "title": "Discipleship",
-      "copy": "Foundations, habits, prayer, and Scripture",
-      "detailTitle": "Discipleship",
-      "cardSize": "wide",
-      "filter": "disciple discipleship foundation prayer scripture bible"
-    },
-    {
-      "key": "topic-healing",
-      "category": "Topic",
-      "icon": "topic",
-      "title": "Healing and Freedom",
-      "copy": "Hope, restoration, and honest next steps",
-      "detailTitle": "Healing and Freedom",
-      "cardSize": "wide",
-      "filter": "healing hope restore restoration anxiety peace"
-    },
-    {
-      "key": "topic-leadership",
-      "category": "Topic",
-      "icon": "topic",
-      "title": "Leadership",
-      "copy": "Calling, mission, and discipling others",
-      "detailTitle": "Leadership",
-      "cardSize": "wide",
-      "filter": "lead leadership mission multiply partnership"
-    },
-    {
-      "key": "person-johan",
-      "category": "People",
-      "icon": "people",
-      "title": "Johan Toet",
-      "copy": "One Basics, One Gospel, and discipleship teaching",
-      "detailTitle": "Johan Toet",
-      "cardSize": "wide",
-      "filter": "johan toet one basics one gospel"
-    },
-    {
-      "key": "person-duane",
-      "category": "People",
-      "icon": "people",
-      "title": "Ps Duane Sheriff",
-      "copy": "Conference teachings and special sessions",
-      "detailTitle": "Ps Duane Sheriff",
-      "cardSize": "poster",
-      "filter": "duane sheriff ps duane conference oneevent"
-    },
-    {
-      "key": "person-team",
-      "category": "People",
-      "icon": "people",
-      "title": "One In Him Team",
-      "copy": "Guides, articles, and journey lessons",
-      "detailTitle": "One In Him Team",
-      "cardSize": "wide",
-      "filter": "one in him oneinhim_team team journey guide article"
     }
   ],
   "contentAccess": {
