@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=205"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=205"></script>
+  <script src="./oneinhim_home_layout.js?v=206"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=206"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1987,7 +1987,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v205.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v206.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2003,7 +2003,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v205.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v206.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2015,6 +2015,7 @@
         <nav class="side-nav" aria-label="Admin sections">
           <button class="active" type="button" data-view="heroes">Hero slides</button>
           <button type="button" data-view="shelves">Library shelves</button>
+          <button type="button" data-view="browse">Browse</button>
           <button type="button" data-view="journey">Journey workflow</button>
           <button type="button" data-view="content">Content library</button>
         </nav>
@@ -2139,6 +2140,50 @@
           </div>
         </section>
 
+        <section class="view" id="browseView">
+          <div class="section-head">
+            <div>
+              <h2>Browse</h2>
+              <p>These cards appear after Conferences on Discover. Each card opens a shelf-style page using the filter terms below.</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn" id="addBrowseButton" type="button">Add browse card</button>
+              <button class="btn green" id="saveButtonBrowse" type="button">Save</button>
+            </div>
+          </div>
+          <div class="shelf-layout">
+            <aside class="panel">
+              <div class="panel-head">
+                <h3>Cards</h3>
+                <span class="pill" id="browseCount">0</span>
+              </div>
+              <div class="list" id="browseList"></div>
+            </aside>
+            <section class="panel">
+              <div class="panel-head"><h3>Browse preview</h3></div>
+              <div class="list" id="browsePreview"></div>
+            </section>
+            <aside class="panel">
+              <div class="panel-head"><h3>Card settings</h3></div>
+              <div class="form">
+                <div class="field"><label for="browseCategory">Label</label><input id="browseCategory" placeholder="Type, Topic, People" /></div>
+                <div class="field"><label for="browseTitle">Card title</label><input id="browseTitle" /></div>
+                <div class="field"><label for="browseCopy">Card description</label><textarea id="browseCopy"></textarea></div>
+                <div class="field"><label for="browseIcon">Icon</label><select id="browseIcon"><option value="shows">Shows</option><option value="series">Series</option><option value="book">Book</option><option value="article">Article</option><option value="live">Live</option><option value="topic">Topic</option><option value="people">People</option></select></div>
+                <label class="check-row"><input id="browseLive" type="checkbox" /> Show live badge</label>
+                <div class="field"><label for="browseDetailTitle">Opened page title</label><input id="browseDetailTitle" /></div>
+                <div class="field"><label for="browseCardSize">Opened page card size</label><select id="browseCardSize"><option value="wide">Wide</option><option value="square">Square</option><option value="poster">Poster</option></select></div>
+                <div class="field"><label for="browseFilter">Filter terms</label><textarea id="browseFilter" placeholder="jesus gospel salvation"></textarea></div>
+                <p class="field-help">The opened page includes Content Library items whose title, topic, speaker, type, series, or summary contains these terms. Separate precise phrases with commas.</p>
+                <div class="btn-row">
+                  <button class="btn" id="duplicateBrowseButton" type="button">Duplicate</button>
+                  <button class="btn" id="removeBrowseButton" type="button">Remove</button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
         <section class="view" id="journeyView">
           <div class="section-head">
             <div>
@@ -2146,7 +2191,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v205.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v206.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -3882,6 +3927,7 @@
       heroIndex: 0,
       shelfIndex: 0,
       shelfItemIndex: 0,
+      browseIndex: 0,
       journeySectionIndex: 0,
       journeyUnitIndex: 0,
       journeyNodeIndex: 0,
@@ -3934,11 +3980,33 @@
       }, {});
     }
 
+    function defaultBrowseSections() {
+      const published = window.ONEINHIM_PUBLISHED_HOME_CONTENT;
+      if (Array.isArray(published?.browseSections) && published.browseSections.length) {
+        return JSON.parse(JSON.stringify(published.browseSections));
+      }
+      return [
+        { key: "podcast-shows", category: "Type", icon: "shows", title: "Podcast Shows", copy: "Video podcasts and series", detailTitle: "Podcast Shows", cardSize: "wide", filter: "video watch podcast series" },
+        { key: "podcast-series", category: "Type", icon: "series", title: "Podcast Series", copy: "Browse by series and collections", detailTitle: "Podcast Series", cardSize: "wide", filter: "series podcast audio video" },
+        { key: "audiobooks", category: "Type", icon: "book", title: "Audiobooks", copy: "Full-length audio books", detailTitle: "Audiobooks", cardSize: "poster", filter: "audiobook classics listen" },
+        { key: "articles", category: "Type", icon: "article", title: "Articles", copy: "Written content and commentary", detailTitle: "Articles", cardSize: "poster", filter: "read article book study guide" },
+        { key: "livestream", category: "Type", icon: "live", title: "Livestream Schedule", copy: "Upcoming live broadcasts", detailTitle: "Livestream Schedule", cardSize: "wide", filter: "live event livestream", live: true },
+        { key: "topic-jesus", category: "Topic", icon: "topic", title: "Jesus", copy: "Start with the gospel and who Jesus is", detailTitle: "Jesus", cardSize: "wide", filter: "jesus gospel salvation eternal life" },
+        { key: "topic-discipleship", category: "Topic", icon: "topic", title: "Discipleship", copy: "Foundations, habits, prayer, and Scripture", detailTitle: "Discipleship", cardSize: "wide", filter: "disciple discipleship foundation prayer scripture bible" },
+        { key: "topic-healing", category: "Topic", icon: "topic", title: "Healing and Freedom", copy: "Hope, restoration, and honest next steps", detailTitle: "Healing and Freedom", cardSize: "wide", filter: "healing hope restore restoration anxiety peace" },
+        { key: "topic-leadership", category: "Topic", icon: "topic", title: "Leadership", copy: "Calling, mission, and discipling others", detailTitle: "Leadership", cardSize: "wide", filter: "lead leadership mission multiply partnership" },
+        { key: "person-johan", category: "People", icon: "people", title: "Johan Toet", copy: "One Basics, One Gospel, and discipleship teaching", detailTitle: "Johan Toet", cardSize: "wide", filter: "johan toet one basics one gospel" },
+        { key: "person-duane", category: "People", icon: "people", title: "Ps Duane Sheriff", copy: "Conference teachings and special sessions", detailTitle: "Ps Duane Sheriff", cardSize: "poster", filter: "duane sheriff ps duane conference oneevent" },
+        { key: "person-team", category: "People", icon: "people", title: "One In Him Team", copy: "Guides, articles, and journey lessons", detailTitle: "One In Him Team", cardSize: "wide", filter: "one in him oneinhim_team team journey guide article" }
+      ];
+    }
+
     function normalizeLayout(layout) {
       const next = {
         ...layout,
         heroSlides: Array.isArray(layout.heroSlides) ? layout.heroSlides : [],
         shelves: Array.isArray(layout.shelves) ? layout.shelves : [],
+        browseSections: Array.isArray(layout.browseSections) && layout.browseSections.length ? layout.browseSections : defaultBrowseSections(),
         contentAccess: {
           ...defaultContentAccessMap(),
           ...(layout.contentAccess || {})
@@ -3966,6 +4034,17 @@
           }
         });
       });
+      next.browseSections = next.browseSections.map((item, index) => ({
+        key: item.key || `browse_${Date.now()}_${index}`,
+        category: item.category || "Type",
+        icon: ["shows", "series", "book", "article", "live", "topic", "people"].includes(item.icon) ? item.icon : "topic",
+        title: item.title || "Browse card",
+        copy: item.copy || "",
+        detailTitle: item.detailTitle || item.title || "Browse",
+        cardSize: ["wide", "square", "poster"].includes(item.cardSize) ? item.cardSize : "wide",
+        filter: item.filter || "",
+        live: Boolean(item.live)
+      }));
       return next;
     }
 
@@ -4212,6 +4291,12 @@
 
     function currentShelf() {
       return state.layout.shelves[state.shelfIndex] || state.layout.shelves[0];
+    }
+
+    function currentBrowseSection() {
+      const sections = state.layout.browseSections || [];
+      state.browseIndex = Math.max(0, Math.min(state.browseIndex, Math.max(0, sections.length - 1)));
+      return sections[state.browseIndex] || null;
     }
 
     function currentShelfItem() {
@@ -4631,6 +4716,7 @@
       if (!document.getElementById("prepDrawer")?.hidden) updatePrepDrawerContext();
       renderHeroes();
       renderShelves();
+      renderBrowse();
       renderJourney();
       renderContentPrep();
       renderContent();
@@ -4738,6 +4824,45 @@
       document.getElementById("shelfCardAccess").innerHTML = contentAccessOptions(contentAccess(shelfContentId).level);
       document.getElementById("shelfCardAccess").disabled = !shelfContentId;
       refreshArtworkStatus();
+    }
+
+    function browsePreviewCount(section) {
+      const filter = String(section?.filter || "").toLowerCase().trim();
+      if (!filter) return CONTENT.length;
+      const phraseTerms = filter.split(/[,;\n]+/).map((term) => term.trim()).filter(Boolean);
+      const wordTerms = filter.split(/\s+/).map((term) => term.trim()).filter((term) => term.length > 2);
+      const terms = [...phraseTerms, ...wordTerms];
+      return CONTENT.filter((item) => {
+        const haystack = [item.title, item.id, item.type, item.summary].filter(Boolean).join(" ").toLowerCase();
+        return terms.some((term) => haystack.includes(term));
+      }).length;
+    }
+
+    function renderBrowse() {
+      state.layout.browseSections = Array.isArray(state.layout.browseSections) ? state.layout.browseSections : defaultBrowseSections();
+      const section = currentBrowseSection();
+      document.getElementById("browseCount").textContent = String(state.layout.browseSections.length);
+      document.getElementById("browseList").innerHTML = state.layout.browseSections.map((item, index) => `
+        <button class="row${index === state.browseIndex ? " active" : ""}" type="button" data-browse-index="${index}">
+          <strong>${esc(item.title || "Browse card")}</strong>
+          <span>${esc(item.category || "Type")} · ${esc(item.detailTitle || item.title || "Browse")} · ${browsePreviewCount(item)} matches</span>
+        </button>
+      `).join("");
+      document.getElementById("browsePreview").innerHTML = state.layout.browseSections.map((item, index) => `
+        <button class="row${index === state.browseIndex ? " active" : ""}" type="button" data-browse-index="${index}">
+          <strong>${esc(item.title || "Browse card")}</strong>
+          <span>${esc(item.category || "Type")} · ${esc(item.copy || "")}</span>
+        </button>
+      `).join("");
+      if (!section) return;
+      document.getElementById("browseCategory").value = section.category || "";
+      document.getElementById("browseTitle").value = section.title || "";
+      document.getElementById("browseCopy").value = section.copy || "";
+      document.getElementById("browseIcon").value = section.icon || "topic";
+      document.getElementById("browseLive").checked = Boolean(section.live);
+      document.getElementById("browseDetailTitle").value = section.detailTitle || section.title || "";
+      document.getElementById("browseCardSize").value = section.cardSize || "wide";
+      document.getElementById("browseFilter").value = section.filter || "";
     }
 
     function contentLibraryFormat(item) {
@@ -5710,6 +5835,18 @@
         state.shelfItemIndex = 0;
         renderShelves();
       });
+      document.getElementById("browseList").addEventListener("click", (event) => {
+        const row = event.target.closest("[data-browse-index]");
+        if (!row) return;
+        state.browseIndex = Number(row.dataset.browseIndex);
+        renderBrowse();
+      });
+      document.getElementById("browsePreview").addEventListener("click", (event) => {
+        const row = event.target.closest("[data-browse-index]");
+        if (!row) return;
+        state.browseIndex = Number(row.dataset.browseIndex);
+        renderBrowse();
+      });
       document.getElementById("shelfCards").addEventListener("click", (event) => {
         const button = event.target.closest("[data-remove-shelf-item]");
         if (button) {
@@ -5794,6 +5931,56 @@
         if (item) item.locked = event.target.value !== "free";
         renderShelves();
         renderContent();
+      });
+      const updateBrowseField = (field, value) => {
+        const section = currentBrowseSection();
+        if (!section) return;
+        section[field] = value;
+        if (field === "title" && !section.detailTitle) section.detailTitle = value;
+        renderBrowse();
+      };
+      document.getElementById("browseCategory").addEventListener("input", (event) => updateBrowseField("category", event.target.value));
+      document.getElementById("browseTitle").addEventListener("input", (event) => updateBrowseField("title", event.target.value));
+      document.getElementById("browseCopy").addEventListener("input", (event) => updateBrowseField("copy", event.target.value));
+      document.getElementById("browseIcon").addEventListener("change", (event) => updateBrowseField("icon", event.target.value));
+      document.getElementById("browseLive").addEventListener("change", (event) => updateBrowseField("live", event.target.checked));
+      document.getElementById("browseDetailTitle").addEventListener("input", (event) => updateBrowseField("detailTitle", event.target.value));
+      document.getElementById("browseCardSize").addEventListener("change", (event) => updateBrowseField("cardSize", event.target.value));
+      document.getElementById("browseFilter").addEventListener("input", (event) => updateBrowseField("filter", event.target.value));
+      document.getElementById("addBrowseButton").addEventListener("click", () => {
+        state.layout.browseSections = state.layout.browseSections || [];
+        state.layout.browseSections.push({
+          key: `browse_${Date.now()}`,
+          category: "Topic",
+          icon: "topic",
+          title: "New browse card",
+          copy: "Describe this collection",
+          detailTitle: "New browse page",
+          cardSize: "wide",
+          filter: ""
+        });
+        state.browseIndex = state.layout.browseSections.length - 1;
+        render();
+      });
+      document.getElementById("duplicateBrowseButton").addEventListener("click", () => {
+        const section = currentBrowseSection();
+        if (!section) return;
+        state.layout.browseSections.splice(state.browseIndex + 1, 0, {
+          ...JSON.parse(JSON.stringify(section)),
+          key: `${section.key || "browse"}_${Date.now()}`,
+          title: `${section.title || "Browse card"} copy`
+        });
+        state.browseIndex += 1;
+        render();
+      });
+      document.getElementById("removeBrowseButton").addEventListener("click", () => {
+        if ((state.layout.browseSections || []).length <= 1) {
+          toast("Keep at least one Browse card.");
+          return;
+        }
+        state.layout.browseSections.splice(state.browseIndex, 1);
+        state.browseIndex = Math.max(0, state.browseIndex - 1);
+        render();
       });
       document.getElementById("contentGrid").addEventListener("change", (event) => {
         const select = event.target.closest("[data-content-access]");
@@ -6003,7 +6190,7 @@
         renderJourney();
         toast("Removed Journey step. Remember to save.");
       });
-      ["saveButton", "saveButtonShelves", "saveButtonContent"].forEach((id) => document.getElementById(id).addEventListener("click", saveLayout));
+      ["saveButton", "saveButtonShelves", "saveButtonBrowse", "saveButtonContent"].forEach((id) => document.getElementById(id).addEventListener("click", saveLayout));
       document.getElementById("saveButtonJourney").addEventListener("click", saveJourney);
       document.getElementById("publishButton").addEventListener("click", publishToGithub);
       document.getElementById("exportButton").addEventListener("click", () => {

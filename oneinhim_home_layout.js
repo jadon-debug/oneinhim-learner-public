@@ -222,6 +222,129 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       ]
     }
   ],
+  "browseSections": [
+    {
+      "key": "podcast-shows",
+      "category": "Type",
+      "icon": "shows",
+      "title": "Podcast Shows",
+      "copy": "Video podcasts and series",
+      "detailTitle": "Podcast Shows",
+      "cardSize": "wide",
+      "filter": "video watch podcast series"
+    },
+    {
+      "key": "podcast-series",
+      "category": "Type",
+      "icon": "series",
+      "title": "Podcast Series",
+      "copy": "Browse by series and collections",
+      "detailTitle": "Podcast Series",
+      "cardSize": "wide",
+      "filter": "series podcast audio video"
+    },
+    {
+      "key": "audiobooks",
+      "category": "Type",
+      "icon": "book",
+      "title": "Audiobooks",
+      "copy": "Full-length audio books",
+      "detailTitle": "Audiobooks",
+      "cardSize": "poster",
+      "filter": "audiobook classics listen"
+    },
+    {
+      "key": "articles",
+      "category": "Type",
+      "icon": "article",
+      "title": "Articles",
+      "copy": "Written content and commentary",
+      "detailTitle": "Articles",
+      "cardSize": "poster",
+      "filter": "read article book study guide"
+    },
+    {
+      "key": "livestream",
+      "category": "Type",
+      "icon": "live",
+      "title": "Livestream Schedule",
+      "copy": "Upcoming live broadcasts",
+      "detailTitle": "Livestream Schedule",
+      "cardSize": "wide",
+      "filter": "live event livestream",
+      "live": true
+    },
+    {
+      "key": "topic-jesus",
+      "category": "Topic",
+      "icon": "topic",
+      "title": "Jesus",
+      "copy": "Start with the gospel and who Jesus is",
+      "detailTitle": "Jesus",
+      "cardSize": "wide",
+      "filter": "jesus gospel salvation eternal life"
+    },
+    {
+      "key": "topic-discipleship",
+      "category": "Topic",
+      "icon": "topic",
+      "title": "Discipleship",
+      "copy": "Foundations, habits, prayer, and Scripture",
+      "detailTitle": "Discipleship",
+      "cardSize": "wide",
+      "filter": "disciple discipleship foundation prayer scripture bible"
+    },
+    {
+      "key": "topic-healing",
+      "category": "Topic",
+      "icon": "topic",
+      "title": "Healing and Freedom",
+      "copy": "Hope, restoration, and honest next steps",
+      "detailTitle": "Healing and Freedom",
+      "cardSize": "wide",
+      "filter": "healing hope restore restoration anxiety peace"
+    },
+    {
+      "key": "topic-leadership",
+      "category": "Topic",
+      "icon": "topic",
+      "title": "Leadership",
+      "copy": "Calling, mission, and discipling others",
+      "detailTitle": "Leadership",
+      "cardSize": "wide",
+      "filter": "lead leadership mission multiply partnership"
+    },
+    {
+      "key": "person-johan",
+      "category": "People",
+      "icon": "people",
+      "title": "Johan Toet",
+      "copy": "One Basics, One Gospel, and discipleship teaching",
+      "detailTitle": "Johan Toet",
+      "cardSize": "wide",
+      "filter": "johan toet one basics one gospel"
+    },
+    {
+      "key": "person-duane",
+      "category": "People",
+      "icon": "people",
+      "title": "Ps Duane Sheriff",
+      "copy": "Conference teachings and special sessions",
+      "detailTitle": "Ps Duane Sheriff",
+      "cardSize": "poster",
+      "filter": "duane sheriff ps duane conference oneevent"
+    },
+    {
+      "key": "person-team",
+      "category": "People",
+      "icon": "people",
+      "title": "One In Him Team",
+      "copy": "Guides, articles, and journey lessons",
+      "detailTitle": "One In Him Team",
+      "cardSize": "wide",
+      "filter": "one in him oneinhim_team team journey guide article"
+    }
+  ],
   "contentAccess": {
     "mux_one_basics_1_1_full_video": {
       "level": "free"
