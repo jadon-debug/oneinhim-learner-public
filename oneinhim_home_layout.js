@@ -248,7 +248,25 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "copy": "Browse by themes and questions",
       "detailTitle": "Topics",
       "cardSize": "wide",
-      "filter": "jesus gospel salvation eternal life disciple discipleship foundation prayer scripture bible healing hope restoration anxiety peace anger lust politics christianity hard questions grace freedom leadership mission partnership"
+      "filter": "anger conflict anxiety fear grief loss prayer bible scripture family marriage identity purpose money generosity forgiveness holy spirit mission calling spiritual growth depression hope community church gospel faith trials",
+      "topicThemes": [
+        "Anger & Conflict",
+        "Anxiety & Fear",
+        "Grief & Loss",
+        "Prayer",
+        "Bible & Scripture",
+        "Family & Marriage",
+        "Identity & Purpose",
+        "Money & Generosity",
+        "Forgiveness",
+        "Holy Spirit",
+        "Mission & Calling",
+        "Spiritual Growth",
+        "Depression & Hope",
+        "Community & Church",
+        "The Gospel",
+        "Faith in Trials"
+      ]
     },
     {
       "key": "people",

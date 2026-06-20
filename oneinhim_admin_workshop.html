@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=209"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=209"></script>
+  <script src="./oneinhim_home_layout.js?v=210"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=210"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1987,7 +1987,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v209.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v210.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2003,7 +2003,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v209.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v210.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2173,6 +2173,7 @@
                 <div class="field"><label for="browseDetailTitle">Opened page title</label><input id="browseDetailTitle" /></div>
                 <div class="field"><label for="browseCardSize">Opened page card size</label><select id="browseCardSize"><option value="wide">Wide</option><option value="square">Square</option><option value="poster">Poster</option></select></div>
                 <div class="field"><label for="browseFilter">Filter terms</label><textarea id="browseFilter" placeholder="jesus gospel salvation"></textarea></div>
+                <div class="field"><label for="browseTopicThemes">Topic themes</label><textarea id="browseTopicThemes" placeholder="Anger & Conflict&#10;Anxiety & Fear"></textarea></div>
                 <p class="field-help">The opened page includes Content Library items whose title, topic, speaker, type, series, or summary contains these terms. Separate precise phrases with commas.</p>
                 <div class="btn-row">
                   <button class="btn" id="duplicateBrowseButton" type="button">Duplicate</button>
@@ -2190,7 +2191,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v209.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v210.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -3987,7 +3988,7 @@
       return [
         { key: "podcast-shows", icon: "shows", title: "Podcast Shows", copy: "Video podcasts and series", detailTitle: "Podcast Shows", cardSize: "wide", filter: "video watch podcast series" },
         { key: "podcast-series", icon: "series", title: "Podcast Series", copy: "Browse by series and collections", detailTitle: "Podcast Series", cardSize: "wide", filter: "series podcast audio video" },
-        { key: "topics", icon: "topic", title: "Topics", copy: "Browse by themes and questions", detailTitle: "Topics", cardSize: "wide", filter: "jesus gospel salvation eternal life disciple discipleship foundation prayer scripture bible healing hope restoration anxiety peace anger lust politics christianity hard questions grace freedom leadership mission partnership" },
+        { key: "topics", icon: "topic", title: "Topics", copy: "Browse by themes and questions", detailTitle: "Topics", cardSize: "wide", filter: "anger conflict anxiety fear grief loss prayer bible scripture family marriage identity purpose money generosity forgiveness holy spirit mission calling spiritual growth depression hope community church gospel faith trials", topicThemes: ["Anger & Conflict", "Anxiety & Fear", "Grief & Loss", "Prayer", "Bible & Scripture", "Family & Marriage", "Identity & Purpose", "Money & Generosity", "Forgiveness", "Holy Spirit", "Mission & Calling", "Spiritual Growth", "Depression & Hope", "Community & Church", "The Gospel", "Faith in Trials"] },
         { key: "people", icon: "people", title: "People", copy: "Browse teachers and voices", detailTitle: "People", cardSize: "wide", filter: "johan toet duane sheriff ps duane brenda one in him oneinhim_team team speaker author pastor teacher" },
         { key: "livestream", icon: "live", title: "Livestream Schedule", copy: "Upcoming live broadcasts", detailTitle: "Livestream Schedule", cardSize: "wide", filter: "live event livestream", live: true }
       ];
@@ -4035,6 +4036,7 @@
         detailTitle: item.detailTitle || item.title || "Browse",
         cardSize: ["wide", "square", "poster"].includes(item.cardSize) ? item.cardSize : "wide",
         filter: item.filter || "",
+        topicThemes: Array.isArray(item.topicThemes) ? item.topicThemes : [],
         live: Boolean(item.live)
       }));
       return next;
@@ -4854,6 +4856,7 @@
       document.getElementById("browseDetailTitle").value = section.detailTitle || section.title || "";
       document.getElementById("browseCardSize").value = section.cardSize || "wide";
       document.getElementById("browseFilter").value = section.filter || "";
+      document.getElementById("browseTopicThemes").value = Array.isArray(section.topicThemes) ? section.topicThemes.join("\n") : "";
     }
 
     function contentLibraryFormat(item) {
@@ -5937,6 +5940,7 @@
       document.getElementById("browseDetailTitle").addEventListener("input", (event) => updateBrowseField("detailTitle", event.target.value));
       document.getElementById("browseCardSize").addEventListener("change", (event) => updateBrowseField("cardSize", event.target.value));
       document.getElementById("browseFilter").addEventListener("input", (event) => updateBrowseField("filter", event.target.value));
+      document.getElementById("browseTopicThemes").addEventListener("input", (event) => updateBrowseField("topicThemes", event.target.value.split(/\n+/).map((item) => item.trim()).filter(Boolean)));
       document.getElementById("addBrowseButton").addEventListener("click", () => {
         state.layout.browseSections = state.layout.browseSections || [];
         state.layout.browseSections.push({
