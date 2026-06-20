@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=211"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=211"></script>
+  <script src="./oneinhim_home_layout.js?v=212"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=212"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -782,6 +782,88 @@
       gap: 16px;
       align-items: start;
       min-width: 0;
+    }
+
+    .supporter-preview {
+      padding: 16px;
+    }
+
+    .supporter-preview-card {
+      align-items: center;
+      background: linear-gradient(135deg, #171714, #090a08);
+      border: 1px solid rgba(247, 244, 238, .12);
+      border-radius: 14px;
+      color: #f7f4ee;
+      display: grid;
+      gap: 18px;
+      grid-template-columns: minmax(0, 1.1fr) minmax(180px, .9fr) auto;
+      padding: clamp(22px, 3vw, 36px);
+    }
+
+    .supporter-preview-card .eyebrow {
+      color: var(--orange);
+      display: block;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .14em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .supporter-preview-card h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 3vw, 48px);
+      line-height: .96;
+      margin: 0;
+    }
+
+    .supporter-preview-card p {
+      color: rgba(247, 244, 238, .7);
+      font-weight: 650;
+      line-height: 1.35;
+      margin: 10px 0 0;
+    }
+
+    .supporter-preview-benefits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .supporter-preview-benefits span {
+      border: 1px solid rgba(247, 244, 238, .12);
+      border-radius: 999px;
+      color: rgba(247, 244, 238, .86);
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1;
+      padding: 9px 11px;
+    }
+
+    .supporter-preview-actions {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+    }
+
+    .supporter-preview-actions button {
+      background: var(--orange);
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 950;
+      padding: 13px 15px;
+      white-space: nowrap;
+    }
+
+    .supporter-preview-actions small {
+      color: rgba(247, 244, 238, .54);
+      font-weight: 750;
+      line-height: 1.25;
+      max-width: 220px;
+      text-align: right;
     }
 
     .cards {
@@ -1968,6 +2050,19 @@
         display: flex;
         overflow-x: auto;
       }
+
+      .supporter-preview-card {
+        grid-template-columns: 1fr;
+      }
+
+      .supporter-preview-actions {
+        justify-items: start;
+      }
+
+      .supporter-preview-actions small {
+        max-width: none;
+        text-align: left;
+      }
     }
   </style>
 </head>
@@ -1987,7 +2082,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v211.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v212.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2003,7 +2098,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v211.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v212.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2016,6 +2111,7 @@
           <button class="active" type="button" data-view="heroes">Hero slides</button>
           <button type="button" data-view="shelves">Library shelves</button>
           <button type="button" data-view="browse">Browse</button>
+          <button type="button" data-view="supporter">Go deeper</button>
           <button type="button" data-view="journey">Journey workflow</button>
           <button type="button" data-view="content">Content library</button>
         </nav>
@@ -2184,6 +2280,49 @@
           </div>
         </section>
 
+        <section class="view" id="supporterView">
+          <div class="section-head">
+            <div>
+              <h2>Go Deeper</h2>
+              <p>This compact supporter band appears at the bottom of Discover. Edit the copy, benefits, CTA, and whether it is visible.</p>
+            </div>
+            <div class="btn-row">
+              <button class="btn green" id="saveButtonSupporter" type="button">Save</button>
+            </div>
+          </div>
+          <div class="shelf-layout">
+            <aside class="panel">
+              <div class="panel-head">
+                <h3>Placement</h3>
+              </div>
+              <div class="list">
+                <button class="row active" type="button">
+                  <strong>Bottom of Discover</strong>
+                  <span>After the current shelves.</span>
+                </button>
+              </div>
+            </aside>
+            <section class="panel">
+              <div class="panel-head"><h3>Band preview</h3></div>
+              <div class="supporter-preview" id="supporterPreview"></div>
+            </section>
+            <aside class="panel">
+              <div class="panel-head"><h3>Band settings</h3></div>
+              <div class="form">
+                <label class="check-row"><input id="supporterEnabled" type="checkbox" /> Show on Discover</label>
+                <div class="field"><label for="supporterEyebrow">Eyebrow</label><input id="supporterEyebrow" /></div>
+                <div class="field"><label for="supporterTitle">Title</label><input id="supporterTitle" /></div>
+                <div class="field"><label for="supporterCopy">Copy</label><textarea id="supporterCopy"></textarea></div>
+                <div class="field"><label for="supporterBenefits">Benefit chips</label><textarea id="supporterBenefits" placeholder="Core Journey stays free&#10;Support new content"></textarea></div>
+                <div class="field"><label for="supporterCta">Button text</label><input id="supporterCta" /></div>
+                <div class="field"><label for="supporterCtaTarget">Button target view</label><input id="supporterCtaTarget" placeholder="libraryView" /></div>
+                <div class="field"><label for="supporterSecondary">Small note</label><textarea id="supporterSecondary"></textarea></div>
+                <p class="field-help">Button target uses the app view id, for example libraryView or accountView. Leave the band enabled to show it on Discover.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
         <section class="view" id="journeyView">
           <div class="section-head">
             <div>
@@ -2191,7 +2330,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v211.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v212.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -3994,12 +4133,41 @@
       ];
     }
 
+    function defaultSupporterBand() {
+      const published = window.ONEINHIM_PUBLISHED_HOME_CONTENT;
+      if (published?.supporterBand && typeof published.supporterBand === "object") {
+        return JSON.parse(JSON.stringify(published.supporterBand));
+      }
+      return {
+        enabled: true,
+        eyebrow: "Go deeper",
+        title: "Become a supporter",
+        copy: "Keep the core Journey free and unlock deeper teaching, partner updates, and new discipleship resources.",
+        benefits: [
+          "Journey stays free",
+          "New content",
+          "Library access"
+        ],
+        cta: "Explore supporter access",
+        ctaTarget: "libraryView",
+        secondary: "Partner access can unlock the full Library."
+      };
+    }
+
     function normalizeLayout(layout) {
+      const defaultBand = defaultSupporterBand();
+      const layoutBand = layout.supporterBand || {};
       const next = {
         ...layout,
         heroSlides: Array.isArray(layout.heroSlides) ? layout.heroSlides : [],
         shelves: Array.isArray(layout.shelves) ? layout.shelves : [],
         browseSections: Array.isArray(layout.browseSections) && layout.browseSections.length ? layout.browseSections : defaultBrowseSections(),
+        supporterBand: {
+          ...defaultBand,
+          ...layoutBand,
+          enabled: layoutBand.enabled !== false,
+          benefits: Array.isArray(layoutBand.benefits) ? layoutBand.benefits : defaultBand.benefits
+        },
         contentAccess: {
           ...defaultContentAccessMap(),
           ...(layout.contentAccess || {})
@@ -4711,6 +4879,7 @@
       renderHeroes();
       renderShelves();
       renderBrowse();
+      renderSupporter();
       renderJourney();
       renderContentPrep();
       renderContent();
@@ -4857,6 +5026,58 @@
       document.getElementById("browseCardSize").value = section.cardSize || "wide";
       document.getElementById("browseFilter").value = section.filter || "";
       document.getElementById("browseTopicThemes").value = Array.isArray(section.topicThemes) ? section.topicThemes.join("\n") : "";
+    }
+
+    function currentSupporterBand() {
+      state.layout.supporterBand = {
+        ...defaultSupporterBand(),
+        ...(state.layout.supporterBand || {})
+      };
+      if (!Array.isArray(state.layout.supporterBand.benefits)) {
+        state.layout.supporterBand.benefits = defaultSupporterBand().benefits;
+      }
+      return state.layout.supporterBand;
+    }
+
+    function renderSupporter() {
+      const band = currentSupporterBand();
+      const benefits = Array.isArray(band.benefits) ? band.benefits.map((item) => String(item || "").trim()).filter(Boolean) : [];
+      const preview = document.getElementById("supporterPreview");
+      if (preview) {
+        preview.innerHTML = band.enabled === false
+          ? `<div class="supporter-preview-card"><div><span class="eyebrow">Hidden</span><h3>Go Deeper is off</h3><p>Turn it on to show this band at the bottom of Discover.</p></div></div>`
+          : `
+            <article class="supporter-preview-card">
+              <div>
+                ${band.eyebrow ? `<span class="eyebrow">${esc(band.eyebrow)}</span>` : ""}
+                <h3>${esc(band.title || "Go deeper")}</h3>
+                ${band.copy ? `<p>${esc(band.copy)}</p>` : ""}
+              </div>
+              ${benefits.length ? `<div class="supporter-preview-benefits">${benefits.map((item) => `<span>${esc(item)}</span>`).join("")}</div>` : ""}
+              <div class="supporter-preview-actions">
+                ${band.cta ? `<button type="button">${esc(band.cta)}</button>` : ""}
+                ${band.secondary ? `<small>${esc(band.secondary)}</small>` : ""}
+              </div>
+            </article>
+          `;
+      }
+      const fields = {
+        supporterEnabled: "enabled",
+        supporterEyebrow: "eyebrow",
+        supporterTitle: "title",
+        supporterCopy: "copy",
+        supporterCta: "cta",
+        supporterCtaTarget: "ctaTarget",
+        supporterSecondary: "secondary"
+      };
+      Object.entries(fields).forEach(([id, key]) => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        if (field.type === "checkbox") field.checked = band[key] !== false;
+        else field.value = band[key] || "";
+      });
+      const benefitsField = document.getElementById("supporterBenefits");
+      if (benefitsField) benefitsField.value = benefits.join("\n");
     }
 
     function contentLibraryFormat(item) {
@@ -5975,6 +6196,19 @@
         state.browseIndex = Math.max(0, state.browseIndex - 1);
         render();
       });
+      const updateSupporterField = (field, value) => {
+        const band = currentSupporterBand();
+        band[field] = value;
+        renderSupporter();
+      };
+      document.getElementById("supporterEnabled").addEventListener("change", (event) => updateSupporterField("enabled", event.target.checked));
+      document.getElementById("supporterEyebrow").addEventListener("input", (event) => updateSupporterField("eyebrow", event.target.value));
+      document.getElementById("supporterTitle").addEventListener("input", (event) => updateSupporterField("title", event.target.value));
+      document.getElementById("supporterCopy").addEventListener("input", (event) => updateSupporterField("copy", event.target.value));
+      document.getElementById("supporterBenefits").addEventListener("input", (event) => updateSupporterField("benefits", event.target.value.split(/\n+/).map((item) => item.trim()).filter(Boolean)));
+      document.getElementById("supporterCta").addEventListener("input", (event) => updateSupporterField("cta", event.target.value));
+      document.getElementById("supporterCtaTarget").addEventListener("input", (event) => updateSupporterField("ctaTarget", event.target.value));
+      document.getElementById("supporterSecondary").addEventListener("input", (event) => updateSupporterField("secondary", event.target.value));
       document.getElementById("contentGrid").addEventListener("change", (event) => {
         const select = event.target.closest("[data-content-access]");
         if (!select) return;
@@ -6183,7 +6417,7 @@
         renderJourney();
         toast("Removed Journey step. Remember to save.");
       });
-      ["saveButton", "saveButtonShelves", "saveButtonBrowse", "saveButtonContent"].forEach((id) => document.getElementById(id).addEventListener("click", saveLayout));
+      ["saveButton", "saveButtonShelves", "saveButtonBrowse", "saveButtonSupporter", "saveButtonContent"].forEach((id) => document.getElementById(id).addEventListener("click", saveLayout));
       document.getElementById("saveButtonJourney").addEventListener("click", saveJourney);
       document.getElementById("publishButton").addEventListener("click", publishToGithub);
       document.getElementById("exportButton").addEventListener("click", () => {

@@ -288,6 +288,20 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "live": true
     }
   ],
+  "supporterBand": {
+    "enabled": true,
+    "eyebrow": "Go deeper",
+    "title": "Become a supporter",
+    "copy": "Keep the core Journey free and unlock deeper teaching, partner updates, and new discipleship resources.",
+    "benefits": [
+      "Journey stays free",
+      "New content",
+      "Library access"
+    ],
+    "cta": "Explore supporter access",
+    "ctaTarget": "libraryView",
+    "secondary": "Partner access can unlock the full Library."
+  },
   "contentAccess": {
     "mux_one_basics_1_1_full_video": {
       "level": "free"
