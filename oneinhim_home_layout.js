@@ -225,7 +225,6 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
   "browseSections": [
     {
       "key": "podcast-shows",
-      "category": "Type",
       "icon": "shows",
       "title": "Podcast Shows",
       "copy": "Video podcasts and series",
@@ -235,7 +234,6 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     },
     {
       "key": "podcast-series",
-      "category": "Type",
       "icon": "series",
       "title": "Podcast Series",
       "copy": "Browse by series and collections",
@@ -244,18 +242,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "filter": "series podcast audio video"
     },
     {
-      "key": "audiobooks",
-      "category": "Type",
-      "icon": "book",
-      "title": "Audiobooks",
-      "copy": "Full-length audio books",
-      "detailTitle": "Audiobooks",
-      "cardSize": "poster",
-      "filter": "audiobook classics listen"
-    },
-    {
       "key": "topics",
-      "category": "Topic",
       "icon": "topic",
       "title": "Topics",
       "copy": "Browse by themes and questions",
@@ -265,7 +252,6 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     },
     {
       "key": "people",
-      "category": "People",
       "icon": "people",
       "title": "People",
       "copy": "Browse teachers and voices",
@@ -275,7 +261,6 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
     },
     {
       "key": "livestream",
-      "category": "Type",
       "icon": "live",
       "title": "Livestream Schedule",
       "copy": "Upcoming live broadcasts",

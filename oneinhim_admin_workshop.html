@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=207"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=207"></script>
+  <script src="./oneinhim_home_layout.js?v=208"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=208"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1987,7 +1987,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v207.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v208.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2003,7 +2003,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v207.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v208.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2166,7 +2166,6 @@
             <aside class="panel">
               <div class="panel-head"><h3>Card settings</h3></div>
               <div class="form">
-                <div class="field"><label for="browseCategory">Label</label><input id="browseCategory" placeholder="Type, Topic, People" /></div>
                 <div class="field"><label for="browseTitle">Card title</label><input id="browseTitle" /></div>
                 <div class="field"><label for="browseCopy">Card description</label><textarea id="browseCopy"></textarea></div>
                 <div class="field"><label for="browseIcon">Icon</label><select id="browseIcon"><option value="shows">Shows</option><option value="series">Series</option><option value="book">Book</option><option value="article">Article</option><option value="live">Live</option><option value="topic">Topic</option><option value="people">People</option></select></div>
@@ -2191,7 +2190,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v207.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v208.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -3986,12 +3985,11 @@
         return JSON.parse(JSON.stringify(published.browseSections));
       }
       return [
-        { key: "podcast-shows", category: "Type", icon: "shows", title: "Podcast Shows", copy: "Video podcasts and series", detailTitle: "Podcast Shows", cardSize: "wide", filter: "video watch podcast series" },
-        { key: "podcast-series", category: "Type", icon: "series", title: "Podcast Series", copy: "Browse by series and collections", detailTitle: "Podcast Series", cardSize: "wide", filter: "series podcast audio video" },
-        { key: "audiobooks", category: "Type", icon: "book", title: "Audiobooks", copy: "Full-length audio books", detailTitle: "Audiobooks", cardSize: "poster", filter: "audiobook classics listen" },
-        { key: "topics", category: "Topic", icon: "topic", title: "Topics", copy: "Browse by themes and questions", detailTitle: "Topics", cardSize: "wide", filter: "jesus gospel salvation eternal life disciple discipleship foundation prayer scripture bible healing hope restoration anxiety peace anger lust politics christianity hard questions grace freedom leadership mission partnership" },
-        { key: "people", category: "People", icon: "people", title: "People", copy: "Browse teachers and voices", detailTitle: "People", cardSize: "wide", filter: "johan toet duane sheriff ps duane brenda one in him oneinhim_team team speaker author pastor teacher" },
-        { key: "livestream", category: "Type", icon: "live", title: "Livestream Schedule", copy: "Upcoming live broadcasts", detailTitle: "Livestream Schedule", cardSize: "wide", filter: "live event livestream", live: true }
+        { key: "podcast-shows", icon: "shows", title: "Podcast Shows", copy: "Video podcasts and series", detailTitle: "Podcast Shows", cardSize: "wide", filter: "video watch podcast series" },
+        { key: "podcast-series", icon: "series", title: "Podcast Series", copy: "Browse by series and collections", detailTitle: "Podcast Series", cardSize: "wide", filter: "series podcast audio video" },
+        { key: "topics", icon: "topic", title: "Topics", copy: "Browse by themes and questions", detailTitle: "Topics", cardSize: "wide", filter: "jesus gospel salvation eternal life disciple discipleship foundation prayer scripture bible healing hope restoration anxiety peace anger lust politics christianity hard questions grace freedom leadership mission partnership" },
+        { key: "people", icon: "people", title: "People", copy: "Browse teachers and voices", detailTitle: "People", cardSize: "wide", filter: "johan toet duane sheriff ps duane brenda one in him oneinhim_team team speaker author pastor teacher" },
+        { key: "livestream", icon: "live", title: "Livestream Schedule", copy: "Upcoming live broadcasts", detailTitle: "Livestream Schedule", cardSize: "wide", filter: "live event livestream", live: true }
       ];
     }
 
@@ -4030,7 +4028,7 @@
       });
       next.browseSections = next.browseSections.map((item, index) => ({
         key: item.key || `browse_${Date.now()}_${index}`,
-        category: item.category || "Type",
+        category: item.category || "",
         icon: ["shows", "series", "book", "article", "live", "topic", "people"].includes(item.icon) ? item.icon : "topic",
         title: item.title || "Browse card",
         copy: item.copy || "",
@@ -4839,17 +4837,16 @@
       document.getElementById("browseList").innerHTML = state.layout.browseSections.map((item, index) => `
         <button class="row${index === state.browseIndex ? " active" : ""}" type="button" data-browse-index="${index}">
           <strong>${esc(item.title || "Browse card")}</strong>
-          <span>${esc(item.category || "Type")} · ${esc(item.detailTitle || item.title || "Browse")} · ${browsePreviewCount(item)} matches</span>
+          <span>${esc(item.detailTitle || item.title || "Browse")} · ${browsePreviewCount(item)} matches</span>
         </button>
       `).join("");
       document.getElementById("browsePreview").innerHTML = state.layout.browseSections.map((item, index) => `
         <button class="row${index === state.browseIndex ? " active" : ""}" type="button" data-browse-index="${index}">
           <strong>${esc(item.title || "Browse card")}</strong>
-          <span>${esc(item.category || "Type")} · ${esc(item.copy || "")}</span>
+          <span>${esc(item.copy || "")}</span>
         </button>
       `).join("");
       if (!section) return;
-      document.getElementById("browseCategory").value = section.category || "";
       document.getElementById("browseTitle").value = section.title || "";
       document.getElementById("browseCopy").value = section.copy || "";
       document.getElementById("browseIcon").value = section.icon || "topic";
@@ -5933,7 +5930,6 @@
         if (field === "title" && !section.detailTitle) section.detailTitle = value;
         renderBrowse();
       };
-      document.getElementById("browseCategory").addEventListener("input", (event) => updateBrowseField("category", event.target.value));
       document.getElementById("browseTitle").addEventListener("input", (event) => updateBrowseField("title", event.target.value));
       document.getElementById("browseCopy").addEventListener("input", (event) => updateBrowseField("copy", event.target.value));
       document.getElementById("browseIcon").addEventListener("change", (event) => updateBrowseField("icon", event.target.value));
@@ -5945,7 +5941,6 @@
         state.layout.browseSections = state.layout.browseSections || [];
         state.layout.browseSections.push({
           key: `browse_${Date.now()}`,
-          category: "Topic",
           icon: "topic",
           title: "New browse card",
           copy: "Describe this collection",
