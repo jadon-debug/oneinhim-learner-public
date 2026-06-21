@@ -5545,7 +5545,7 @@ body.gateway-filter-listen [data-content-kind]:not([data-content-kind~="audio"])
 @media (max-width: 760px) {
   .discover-watch-shell.audio-detail {
     width: min(100% - 32px, 520px);
-    padding: calc(var(--app-top-chrome-height) + 28px) 0 calc(var(--app-bottom-nav-height) + 32px);
+    padding: 12px 0 calc(var(--app-bottom-nav-height) + 32px);
     display: block;
   }
 
@@ -15517,27 +15517,40 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 }
 
 @media (max-width: 760px) {
+  :root {
+    --oih-mobile-chrome-logo-size: 82px;
+  }
+
   body.gateway-mode .app-top-chrome .gateway-logo {
-    left: 50vw !important;
-    position: fixed !important;
-    top: max(38px, calc(env(safe-area-inset-top, 0px) - 18px)) !important;
-    transform: translateX(-50%) !important;
+    grid-area: brand !important;
+    justify-self: center !important;
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    width: var(--oih-mobile-chrome-logo-size) !important;
+    max-width: var(--oih-mobile-chrome-logo-size) !important;
+    min-width: var(--oih-mobile-chrome-logo-size) !important;
+    height: var(--oih-mobile-chrome-logo-size) !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    z-index: auto !important;
   }
 
   body:not(.gateway-mode) .app-top-chrome .gateway-logo {
     grid-area: brand !important;
-    left: 50vw !important;
-    position: fixed !important;
-    top: max(34px, calc(env(safe-area-inset-top, 0px) + 8px)) !important;
-    transform: translateX(-50%) !important;
-    width: 72px !important;
-    max-width: 72px !important;
-    min-width: 72px !important;
-    height: 72px !important;
+    justify-self: center !important;
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    width: var(--oih-mobile-chrome-logo-size) !important;
+    max-width: var(--oih-mobile-chrome-logo-size) !important;
+    min-width: var(--oih-mobile-chrome-logo-size) !important;
+    height: var(--oih-mobile-chrome-logo-size) !important;
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
-    z-index: 195 !important;
+    z-index: auto !important;
   }
 
   .app-top-chrome .gateway-logo span {
@@ -15547,8 +15560,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   body.gateway-mode .app-top-chrome .gateway-logo-img {
     border-radius: 0 !important;
     box-shadow: none !important;
-    height: 126px !important;
-    width: 126px !important;
+    height: var(--oih-mobile-chrome-logo-size) !important;
+    width: var(--oih-mobile-chrome-logo-size) !important;
     object-fit: contain !important;
     object-position: top center !important;
   }
@@ -15556,8 +15569,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   body:not(.gateway-mode) .app-top-chrome .gateway-logo-img {
     border-radius: 0 !important;
     box-shadow: none !important;
-    height: 72px !important;
-    width: 72px !important;
+    height: var(--oih-mobile-chrome-logo-size) !important;
+    width: var(--oih-mobile-chrome-logo-size) !important;
     object-fit: contain !important;
     object-position: top center !important;
   }
@@ -18286,7 +18299,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "216";
+const APP_RELEASE_VERSION = "217";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
