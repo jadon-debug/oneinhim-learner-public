@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=218"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=218"></script>
+  <script src="./oneinhim_home_layout.js?v=219"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=219"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -173,6 +173,12 @@
       border-color: transparent;
       background: var(--green);
       color: #fff;
+    }
+
+    .btn.helper-start.running {
+      border-color: rgba(45,148,101,.45);
+      background: rgba(45,148,101,.18);
+      color: #c9f2dd;
     }
 
     .btn:disabled {
@@ -2109,7 +2115,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v218.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v219.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2125,7 +2131,8 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v218.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v219.html?auto=1">Preview current app</a>
+        <a class="btn helper-start" id="publishHelperStart" href="./start_oneinhim_publish_helper.command">Start helper</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2357,7 +2364,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v218.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v219.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -6469,6 +6476,10 @@
       ["saveButton", "saveButtonShelves", "saveButtonBrowse", "saveButtonSupporter", "saveButtonContent"].forEach((id) => document.getElementById(id).addEventListener("click", saveLayout));
       document.getElementById("saveButtonJourney").addEventListener("click", saveJourney);
       document.getElementById("publishButton").addEventListener("click", publishToGithub);
+      document.getElementById("publishHelperStart").addEventListener("click", () => {
+        const status = document.getElementById("publishStatus");
+        status.textContent = "Opening helper. If macOS asks, choose Open, then leave the Terminal window running.";
+      });
       document.getElementById("exportButton").addEventListener("click", () => {
         const blob = new Blob([JSON.stringify(state.layout, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
@@ -6478,6 +6489,26 @@
         a.click();
         URL.revokeObjectURL(url);
       });
+    }
+
+    async function refreshPublishHelperStatus() {
+      const start = document.getElementById("publishHelperStart");
+      const status = document.getElementById("publishStatus");
+      if (!start || !status) return;
+      try {
+        const response = await fetch("http://localhost:8777/", { cache: "no-store" });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.ok) throw new Error("Helper unavailable");
+        start.classList.add("running");
+        start.textContent = "Helper running";
+        status.textContent = "Publish helper is running.";
+      } catch {
+        start.classList.remove("running");
+        start.textContent = "Start helper";
+        if (!status.textContent || status.textContent === "Publish helper is running.") {
+          status.textContent = "Start helper before publishing.";
+        }
+      }
     }
 
     async function publishToGithub() {
@@ -6507,7 +6538,7 @@
         toast(status.textContent);
       } catch (error) {
         console.warn("Publish failed", error);
-        status.textContent = "Publish helper is not running. Ask Codex to start it.";
+        status.textContent = "Publish helper is not running. Click Start helper, then publish again.";
         toast("Could not publish yet.");
       } finally {
         button.disabled = false;
@@ -6547,6 +6578,10 @@
         wire();
         await loadContentPrepPackages();
         render();
+        refreshPublishHelperStatus();
+        if (!window.oneInHimPublishHelperStatusTimer) {
+          window.oneInHimPublishHelperStatusTimer = window.setInterval(refreshPublishHelperStatus, 8000);
+        }
       };
       if (await isApprovedAdmin(client)) {
         await showApp();

@@ -10,7 +10,14 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
-PUBLIC_REPO = Path(os.environ.get("ONEINHIM_PUBLIC_REPO", "/tmp/oneinhim-learner-public-update"))
+PUBLIC_REPO = Path(os.environ.get(
+    "ONEINHIM_PUBLIC_REPO",
+    str(Path.home() / ".oneinhim" / "oneinhim-learner-public-update"),
+))
+PUBLIC_REMOTE = os.environ.get(
+    "ONEINHIM_PUBLIC_REMOTE",
+    "https://github.com/jadon-debug/oneinhim-learner-public.git",
+)
 PORT = int(os.environ.get("ONEINHIM_PUBLISH_PORT", "8777"))
 ASSET_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"}
 
@@ -23,7 +30,9 @@ STATIC_FILES = [
     "oneinhim_content_packages.json",
     "oneinhim_home_layout.js",
     "oneinhim_journey_layout.js",
+    "oneinhim_mux_import_queue.js",
     "oneinhim_publish_server.py",
+    "start_oneinhim_publish_helper.command",
 ]
 
 VERSIONED_FILE_RE = re.compile(r"oneinhim_(?:cache_reset|learner_app)_v\d+\.html")
@@ -126,9 +135,35 @@ def write_uploaded_asset(payload):
     return f"assets/{target.name}"
 
 
+def run_command(args, cwd=None):
+    result = subprocess.run(
+        args,
+        cwd=cwd,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        message = (result.stderr or result.stdout or "Command failed.").strip()
+        raise RuntimeError(message)
+    return result.stdout.strip()
+
+
+def ensure_public_repo():
+    git_dir = PUBLIC_REPO / ".git"
+    if not git_dir.exists():
+        if PUBLIC_REPO.exists():
+            shutil.rmtree(PUBLIC_REPO)
+        PUBLIC_REPO.parent.mkdir(parents=True, exist_ok=True)
+        run_command(["git", "clone", PUBLIC_REMOTE, str(PUBLIC_REPO)])
+    else:
+        run_command(["git", "fetch", "origin", "main"], cwd=PUBLIC_REPO)
+        run_command(["git", "checkout", "main"], cwd=PUBLIC_REPO)
+        run_command(["git", "pull", "--ff-only", "origin", "main"], cwd=PUBLIC_REPO)
+
+
 def copy_to_public_repo():
-    if not PUBLIC_REPO.exists():
-        raise RuntimeError(f"Public repo was not found at {PUBLIC_REPO}")
+    ensure_public_repo()
     for name in STATIC_FILES:
       source = ROOT / name
       if source.exists():
@@ -147,17 +182,7 @@ def copy_to_public_repo():
 
 
 def git(args):
-    result = subprocess.run(
-        ["git", *args],
-        cwd=PUBLIC_REPO,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        message = (result.stderr or result.stdout or "Git command failed.").strip()
-        raise RuntimeError(message)
-    return result.stdout.strip()
+    return run_command(["git", *args], cwd=PUBLIC_REPO)
 
 
 def publish(payload):
