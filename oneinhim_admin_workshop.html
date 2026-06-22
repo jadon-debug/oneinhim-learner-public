@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=216"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=216"></script>
+  <script src="./oneinhim_home_layout.js?v=218"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=218"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -1164,6 +1164,33 @@
       line-height: 1.4;
     }
 
+    .mux-inbox-empty strong,
+    .mux-inbox-empty span,
+    .mux-inbox-empty small {
+      display: block;
+    }
+
+    .mux-inbox-empty strong {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .mux-inbox-empty span {
+      margin-top: 8px;
+    }
+
+    .mux-inbox-empty small {
+      margin-top: 8px;
+      color: rgba(246,244,238,.48);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .mux-inbox-empty .btn {
+      margin-top: 12px;
+    }
+
     .content-prep-layout {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(340px, 480px);
@@ -2082,7 +2109,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v216.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v218.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2098,7 +2125,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v216.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v218.html?auto=1">Preview current app</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
@@ -2330,7 +2357,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v216.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v218.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -4289,6 +4316,15 @@
       return items.filter((item) => item?.playbackId && !imported.has(item.playbackId));
     }
 
+    function muxQueueStatus() {
+      const status = window.ONEINHIM_MUX_IMPORT_QUEUE_STATUS || {};
+      return {
+        connected: Boolean(status.connected),
+        source: status.source || "local queue file",
+        note: status.note || ""
+      };
+    }
+
     function contentAccess(id) {
       const target = String(id || "").trim();
       if (!target) return { level: "free" };
@@ -5107,7 +5143,15 @@
       const items = muxQueueItems();
       count.textContent = `${items.length} ready`;
       if (!items.length) {
-        list.innerHTML = `<p class="mux-inbox-empty">No Mux uploads are waiting. When the Mux queue feed receives a new upload, it will appear here ready to add to the Content Library.</p>`;
+        const status = muxQueueStatus();
+        count.textContent = status.connected ? "0 ready" : "manual import";
+        list.innerHTML = `
+          <div class="mux-inbox-empty">
+            <strong>${status.connected ? "No Mux uploads are waiting." : "Mux live inbox is not connected yet."}</strong>
+            <span>${status.connected ? "When the Mux queue feed receives a new upload, it will appear here ready to add to the Content Library." : "Uploads made in Mux will not automatically appear until the queue feed is wired. Paste the new playback ID now and add it to the Content Library manually."}</span>
+            ${status.note ? `<small>${esc(status.note)}</small>` : ""}
+            <button class="btn" type="button" data-empty-mux-import>Add Mux item by playback ID</button>
+          </div>`;
         return;
       }
       list.innerHTML = items.map((item, index) => `
@@ -6222,6 +6266,11 @@
         prepLibraryContent(button.dataset.prepLibraryContent);
       });
       document.getElementById("muxInboxList").addEventListener("click", (event) => {
+        const emptyImportButton = event.target.closest("[data-empty-mux-import]");
+        if (emptyImportButton) {
+          openMuxDialog("library");
+          return;
+        }
         const button = event.target.closest("[data-import-mux-queue]");
         if (!button) return;
         importMuxQueueItem(Number(button.dataset.importMuxQueue));
