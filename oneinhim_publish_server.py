@@ -5,6 +5,9 @@ import base64
 import re
 import shutil
 import subprocess
+import time
+import urllib.error
+import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -18,6 +21,10 @@ PUBLIC_REMOTE = os.environ.get(
     "ONEINHIM_PUBLIC_REMOTE",
     "https://github.com/jadon-debug/oneinhim-learner-public.git",
 )
+PUBLIC_BASE_URL = os.environ.get(
+    "ONEINHIM_PUBLIC_BASE_URL",
+    "https://jadon-debug.github.io/oneinhim-learner-public",
+).rstrip("/")
 PORT = int(os.environ.get("ONEINHIM_PUBLISH_PORT", "8777"))
 ASSET_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"}
 
@@ -185,6 +192,40 @@ def git(args):
     return run_command(["git", *args], cwd=PUBLIC_REPO)
 
 
+def public_app_url(version):
+    return f"{PUBLIC_BASE_URL}/oneinhim_cache_reset_v{version}.html?auto=1&v={version}"
+
+
+def public_learner_url(version):
+    return f"{PUBLIC_BASE_URL}/oneinhim_learner_app.html?v={version}&verify={int(time.time())}"
+
+
+def verify_live_version(version, attempts=9, delay=2.0):
+    expected = f'APP_RELEASE_VERSION = "{version}"'
+    url = public_learner_url(version)
+    last_error = ""
+    for attempt in range(attempts):
+        try:
+            request = urllib.request.Request(
+                url,
+                headers={
+                    "Cache-Control": "no-cache",
+                    "Pragma": "no-cache",
+                    "User-Agent": "OneInHimPublisher/1.0",
+                },
+            )
+            with urllib.request.urlopen(request, timeout=8) as response:
+                body = response.read().decode("utf-8", errors="replace")
+            if expected in body:
+                return {"ok": True, "url": public_app_url(version), "attempts": attempt + 1}
+            last_error = f"GitHub Pages answered, but not with v{version} yet."
+        except (urllib.error.URLError, TimeoutError, OSError) as error:
+            last_error = str(error)
+        if attempt < attempts - 1:
+            time.sleep(delay)
+    return {"ok": False, "url": public_app_url(version), "error": last_error}
+
+
 def publish(payload):
     home_layout = payload.get("homeLayout")
     journey_layout = payload.get("journeyLayout")
@@ -212,10 +253,31 @@ def publish(payload):
     git(["add", *STATIC_FILES, *versioned_files, "assets"])
     status = git(["status", "--porcelain"])
     if not status:
-        return "Nothing changed; GitHub is already up to date."
+        live = verify_live_version(next_version, attempts=3, delay=1.0)
+        return {
+            "version": next_version,
+            "url": public_app_url(next_version),
+            "commit": git(["rev-parse", "--short", "HEAD"]),
+            "verified": live["ok"],
+            "verifyError": live.get("error", ""),
+            "message": "Nothing changed; GitHub is already up to date.",
+        }
     git(["commit", "-m", "Publish admin workspace update"])
+    commit = git(["rev-parse", "--short", "HEAD"])
     git(["push", "origin", "main"])
-    return f"Published v{next_version} to GitHub. Refresh the phone link in a minute."
+    live = verify_live_version(next_version)
+    return {
+        "version": next_version,
+        "url": public_app_url(next_version),
+        "commit": commit,
+        "verified": live["ok"],
+        "verifyError": live.get("error", ""),
+        "message": (
+            f"Published v{next_version} and verified live."
+            if live["ok"]
+            else f"Published v{next_version}; GitHub Pages is still updating."
+        ),
+    }
 
 
 class PublishHandler(BaseHTTPRequestHandler):
@@ -234,7 +296,13 @@ class PublishHandler(BaseHTTPRequestHandler):
         self.send_json(200, {"ok": True})
 
     def do_GET(self):
-        self.send_json(200, {"ok": True, "message": "One In Him publisher is running."})
+        self.send_json(200, {
+            "ok": True,
+            "message": "One In Him publisher is running.",
+            "version": read_release_version(),
+            "publicBaseUrl": PUBLIC_BASE_URL,
+            "publicRepo": str(PUBLIC_REPO),
+        })
 
     def do_POST(self):
         if self.path not in {"/publish", "/upload-asset"}:
@@ -247,8 +315,8 @@ class PublishHandler(BaseHTTPRequestHandler):
                 path = write_uploaded_asset(payload)
                 self.send_json(200, {"ok": True, "path": path, "message": "Cover uploaded."})
             else:
-                message = publish(payload)
-                self.send_json(200, {"ok": True, "message": message})
+                result = publish(payload)
+                self.send_json(200, {"ok": True, **result})
         except Exception as error:
             self.send_json(500, {"ok": False, "error": str(error)})
 

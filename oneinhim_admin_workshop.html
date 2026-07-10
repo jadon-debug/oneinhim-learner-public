@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=219"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=219"></script>
+  <script src="./oneinhim_home_layout.js?v=220"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=220"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -188,11 +188,17 @@
 
     .publish-status {
       align-self: center;
-      max-width: 320px;
+      max-width: 460px;
       color: var(--muted);
       font-size: 13px;
       font-weight: 800;
       line-height: 1.25;
+    }
+
+    .publish-status a {
+      color: #ffd0aa;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     .app {
@@ -2115,7 +2121,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v219.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v220.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2131,7 +2137,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v219.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v220.html?auto=1">Preview current app</a>
         <a class="btn helper-start" id="publishHelperStart" href="./start_oneinhim_publish_helper.command">Start helper</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
@@ -2364,7 +2370,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v219.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v220.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -6501,23 +6507,39 @@
         if (!response.ok || !data.ok) throw new Error("Helper unavailable");
         start.classList.add("running");
         start.textContent = "Helper running";
-        status.textContent = "Publish helper is running.";
+        status.textContent = `Helper running · local v${data.version || "?"}`;
       } catch {
         start.classList.remove("running");
         start.textContent = "Start helper";
-        if (!status.textContent || status.textContent === "Publish helper is running.") {
+        if (!status.textContent || status.textContent.startsWith("Helper running")) {
           status.textContent = "Start helper before publishing.";
         }
       }
     }
 
+    function setPublishStatus(message, url = "") {
+      const status = document.getElementById("publishStatus");
+      if (!status) return;
+      status.textContent = message;
+      if (url) {
+        status.append(" ");
+        const link = document.createElement("a");
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "Open live";
+        status.append(link);
+      }
+    }
+
     async function publishToGithub() {
       const button = document.getElementById("publishButton");
-      const status = document.getElementById("publishStatus");
       persistWorkspace();
       button.disabled = true;
-      status.textContent = "Publishing...";
+      setPublishStatus("Saved locally. Checking helper...");
       try {
+        await refreshPublishHelperStatus();
+        setPublishStatus("Helper running. Publishing to GitHub...");
         const response = await fetch("http://localhost:8777/publish", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -6531,14 +6553,21 @@
         if (!response.ok || !data.ok) {
           throw new Error(data.error || "Publish failed.");
         }
-        localStorage.removeItem(HOME_KEY);
-        localStorage.removeItem(JOURNEY_KEY);
-        localStorage.removeItem(CONTENT_PREP_KEY);
-        status.textContent = data.message || "Published to GitHub.";
-        toast(status.textContent);
+        if (data.verified) {
+          localStorage.removeItem(HOME_KEY);
+          localStorage.removeItem(JOURNEY_KEY);
+          localStorage.removeItem(CONTENT_PREP_KEY);
+          setPublishStatus(`Published to GitHub and live verified · v${data.version} · ${data.commit || ""}`.trim(), data.url);
+          toast(`Live version verified: v${data.version}.`);
+        } else {
+          setPublishStatus(`Published to GitHub as v${data.version}, but GitHub Pages is still updating. Your local draft is kept.`, data.url);
+          toast("Published. Waiting on GitHub Pages.");
+        }
       } catch (error) {
         console.warn("Publish failed", error);
-        status.textContent = "Publish helper is not running. Click Start helper, then publish again.";
+        setPublishStatus(error.message && !/Failed to fetch/i.test(error.message)
+          ? `Could not publish: ${error.message}`
+          : "Publish helper is not running. Click Start helper, then publish again.");
         toast("Could not publish yet.");
       } finally {
         button.disabled = false;

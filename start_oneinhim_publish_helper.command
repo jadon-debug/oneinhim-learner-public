@@ -1,5 +1,5 @@
 #!/bin/zsh
-cd "/Users/jadoncalvert/Documents/New project" || exit 1
+cd "/Users/jadoncalvert/Documents/New project/oneinhim-app" || exit 1
 
 mkdir -p "$HOME/.oneinhim" "$HOME/Library/Logs/OneInHim"
 

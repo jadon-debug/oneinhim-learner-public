@@ -1,4 +1,4 @@
-const ONEINHIM_CACHE = "oneinhim-app-v219";
+const ONEINHIM_CACHE = "oneinhim-app-v220";
 
 const APP_SHELL = [
   "./oneinhim.webmanifest",
@@ -61,15 +61,27 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  const isWorkshopDocument =
+  const isFreshAppFile =
+    url.pathname.endsWith("/oneinhim_learner_app.html") ||
+    url.pathname.endsWith("oneinhim_learner_app.html") ||
     url.pathname.endsWith("/oneinhim_admin_workshop.html") ||
     url.pathname.endsWith("oneinhim_admin_workshop.html") ||
     url.pathname.endsWith("/oneinhim_cache_reset.html") ||
     url.pathname.endsWith("oneinhim_cache_reset.html") ||
-    url.pathname.endsWith("/oneinhim_cache_reset_v219.html") ||
-    url.pathname.endsWith("oneinhim_cache_reset_v219.html");
+    url.pathname.endsWith("/oneinhim_cache_reset_v220.html") ||
+    url.pathname.endsWith("oneinhim_cache_reset_v220.html") ||
+    url.pathname.endsWith("/oneinhim_home_layout.js") ||
+    url.pathname.endsWith("oneinhim_home_layout.js") ||
+    url.pathname.endsWith("/oneinhim_journey_layout.js") ||
+    url.pathname.endsWith("oneinhim_journey_layout.js") ||
+    url.pathname.endsWith("/oneinhim_mux_import_queue.js") ||
+    url.pathname.endsWith("oneinhim_mux_import_queue.js") ||
+    url.pathname.endsWith("/oneinhim_service_worker.js") ||
+    url.pathname.endsWith("oneinhim_service_worker.js") ||
+    url.pathname.endsWith("/oneinhim.webmanifest") ||
+    url.pathname.endsWith("oneinhim.webmanifest");
 
-  if (isWorkshopDocument) {
+  if (isFreshAppFile) {
     event.respondWith(fetch(request, { cache: "no-store" }));
     return;
   }
