@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=223"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=223"></script>
+  <script src="./oneinhim_home_layout.js?v=224"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=224"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -199,6 +199,77 @@
       color: #ffd0aa;
       text-decoration: underline;
       text-underline-offset: 3px;
+    }
+
+    .publish-tools {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: min(980px, 100%);
+    }
+
+    .publish-flow {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .publish-flow span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+      padding: 0 9px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      background: rgba(0,0,0,.14);
+    }
+
+    .publish-flow span::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.28);
+    }
+
+    .publish-flow span.active {
+      color: #ffe1c8;
+      border-color: rgba(238,115,38,.55);
+      background: rgba(238,115,38,.12);
+    }
+
+    .publish-flow span.active::before {
+      background: var(--orange);
+    }
+
+    .publish-flow span.done {
+      color: #c9f2dd;
+      border-color: rgba(45,148,101,.42);
+      background: rgba(45,148,101,.13);
+    }
+
+    .publish-flow span.done::before {
+      background: var(--green);
+    }
+
+    .publish-flow span.error {
+      color: #ffd2c8;
+      border-color: rgba(255,94,66,.5);
+      background: rgba(255,94,66,.12);
+    }
+
+    .publish-flow span.error::before {
+      background: #ff6b4a;
     }
 
     .app {
@@ -2121,7 +2192,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v223.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v224.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2136,12 +2207,18 @@
           <p>Heroes, shelves, Journey, and content library.</p>
         </div>
       </div>
-      <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v223.html?auto=1">Preview current app</a>
+      <div class="publish-tools">
+        <a class="btn" href="oneinhim_cache_reset_v224.html?auto=1">Preview current app</a>
         <a class="btn helper-start" id="publishHelperStart" href="./start_oneinhim_publish_helper.command">Start helper</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
         <button class="btn" id="signOutButton" type="button">Sign out</button>
+        <div class="publish-flow" id="publishFlow" aria-label="Publish progress">
+          <span data-publish-step="helper">Helper</span>
+          <span data-publish-step="draft">Draft saved</span>
+          <span data-publish-step="github">GitHub</span>
+          <span data-publish-step="live">Live verified</span>
+        </div>
       </div>
     </header>
 
@@ -2166,7 +2243,7 @@
             </div>
             <div class="btn-row">
               <button class="btn" id="addHeroButton" type="button">Add hero</button>
-              <button class="btn green" id="saveButton" type="button">Save</button>
+              <button class="btn green" id="saveButton" type="button">Save draft</button>
             </div>
           </div>
           <div class="hero-grid">
@@ -2214,7 +2291,7 @@
             </div>
             <div class="btn-row">
               <button class="btn" id="addShelfButton" type="button">Add shelf</button>
-              <button class="btn green" id="saveButtonShelves" type="button">Save</button>
+              <button class="btn green" id="saveButtonShelves" type="button">Save draft</button>
             </div>
           </div>
           <div class="shelf-layout">
@@ -2284,7 +2361,7 @@
             </div>
             <div class="btn-row">
               <button class="btn" id="addBrowseButton" type="button">Add browse card</button>
-              <button class="btn green" id="saveButtonBrowse" type="button">Save</button>
+              <button class="btn green" id="saveButtonBrowse" type="button">Save draft</button>
             </div>
           </div>
           <div class="shelf-layout">
@@ -2327,7 +2404,7 @@
               <p>This compact supporter band appears at the bottom of Discover. Edit the copy, benefits, CTA, and whether it is visible.</p>
             </div>
             <div class="btn-row">
-              <button class="btn green" id="saveButtonSupporter" type="button">Save</button>
+              <button class="btn green" id="saveButtonSupporter" type="button">Save draft</button>
             </div>
           </div>
           <div class="shelf-layout">
@@ -2370,7 +2447,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v223.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v224.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -2381,7 +2458,7 @@
             <aside class="panel">
               <div class="panel-head">
                 <h3>Selected item</h3>
-                <button class="btn green" id="saveButtonJourney" type="button">Save</button>
+                <button class="btn green" id="saveButtonJourney" type="button">Save draft</button>
               </div>
               <div class="settings-stack">
                 <details class="settings-section" open>
@@ -2586,7 +2663,7 @@
             <div class="btn-row">
               <button class="btn" type="button" data-open-mux="library">Add Mux item</button>
               <button class="btn" id="exportButton" type="button">Export JSON</button>
-              <button class="btn green" id="saveButtonContent" type="button">Save</button>
+              <button class="btn green" id="saveButtonContent" type="button">Save draft</button>
             </div>
           </div>
           <section class="mux-inbox" aria-labelledby="muxInboxTitle">
@@ -2620,6 +2697,7 @@
     const HOME_KEY = "oneinhim.homeContent.v2";
     const JOURNEY_KEY = "oneinhim.journeyFlow.v1";
     const CONTENT_PREP_KEY = "oneinhim.contentPrepPackages.v1";
+    const PUBLISH_FLOW_KEY = "oneinhim.publishFlow.v1";
     const MUX_IMPORTED_KEY = "oneinhim.muxImportedIds.v1";
     const ADMIN_TABLE = "oih_admin_users";
     const DEFAULT_HOME = {
@@ -4270,17 +4348,29 @@
     function saveLayout() {
       state.layout = normalizeLayout(state.layout);
       localStorage.setItem(HOME_KEY, JSON.stringify(state.layout, null, 2));
-      toast("Saved. Preview the app to see it.");
+      markDraftSaved("Layout draft saved in this browser.");
     }
 
     function saveJourney() {
       localStorage.setItem(JOURNEY_KEY, JSON.stringify(state.journey, null, 2));
-      toast("Journey saved. Preview the app to see it.");
+      markDraftSaved("Journey draft saved in this browser.");
     }
 
-    function persistWorkspace() {
+    function persistContentPackages() {
+      localStorage.setItem(CONTENT_PREP_KEY, JSON.stringify({
+        version: 1,
+        updatedAt: new Date().toISOString(),
+        packages: state.contentPackages
+      }, null, 2));
+      state.contentPackageSource = "Saved browser draft";
+    }
+
+    function persistWorkspace(options = {}) {
+      state.layout = normalizeLayout(state.layout);
       localStorage.setItem(HOME_KEY, JSON.stringify(state.layout, null, 2));
       localStorage.setItem(JOURNEY_KEY, JSON.stringify(state.journey, null, 2));
+      persistContentPackages();
+      if (!options.silent) markDraftSaved("Full workspace draft saved in this browser.");
     }
 
     function toast(message) {
@@ -5785,13 +5875,8 @@
     }
 
     function saveContentPrepDraft() {
-      localStorage.setItem(CONTENT_PREP_KEY, JSON.stringify({
-        version: 1,
-        updatedAt: new Date().toISOString(),
-        packages: state.contentPackages
-      }, null, 2));
-      state.contentPackageSource = "Saved browser draft";
-      toast("Content prep draft saved in this browser.");
+      persistContentPackages();
+      markDraftSaved("Content Library draft saved in this browser.");
       renderContentPrep();
     }
 
@@ -6586,10 +6671,14 @@
         if (!response.ok || !data.ok) throw new Error("Helper unavailable");
         start.classList.add("running");
         start.textContent = "Helper running";
-        status.textContent = `Helper running · local v${data.version || "?"}`;
+        const flow = writePublishFlow({ helper: "done" });
+        if (!flow.message || flow.message.startsWith("Start helper") || flow.message.startsWith("Helper running")) {
+          setPublishStatus(`Helper running · local v${data.version || "?"}`);
+        }
       } catch {
         start.classList.remove("running");
         start.textContent = "Start helper";
+        writePublishFlow({ helper: "pending" });
         if (!status.textContent || status.textContent.startsWith("Helper running")) {
           status.textContent = "Start helper before publishing.";
         }
@@ -6611,14 +6700,107 @@
       }
     }
 
+    function readPublishFlow() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(PUBLISH_FLOW_KEY) || "{}");
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function writePublishFlow(patch = {}) {
+      const next = {
+        helper: "pending",
+        draft: "pending",
+        github: "pending",
+        live: "pending",
+        message: "",
+        url: "",
+        version: "",
+        commit: "",
+        updatedAt: "",
+        ...readPublishFlow(),
+        ...patch
+      };
+      localStorage.setItem(PUBLISH_FLOW_KEY, JSON.stringify(next));
+      renderPublishFlow(next);
+      return next;
+    }
+
+    function renderPublishFlow(flow = readPublishFlow()) {
+      const steps = ["helper", "draft", "github", "live"];
+      steps.forEach((step) => {
+        const node = document.querySelector(`[data-publish-step="${step}"]`);
+        if (!node) return;
+        node.classList.remove("pending", "active", "done", "error");
+        node.classList.add(flow[step] || "pending");
+      });
+      if (flow.message) setPublishStatus(flow.message, flow.url || "");
+    }
+
+    function markDraftSaved(message = "Draft saved in this browser.") {
+      writePublishFlow({
+        draft: "done",
+        github: "pending",
+        live: "pending",
+        message: `${message} Publish to GitHub when you want it live.`,
+        updatedAt: new Date().toISOString()
+      });
+      toast(message);
+    }
+
+    function publicRuntimeUrlFor(version, fallbackUrl = "") {
+      try {
+        const url = new URL(fallbackUrl || window.location.href);
+        url.pathname = url.pathname.replace(/oneinhim_cache_reset_v\d+\.html|oneinhim_learner_app\.html|oneinhim_admin_workshop\.html$/, "oneinhim_learner_runtime.js");
+        url.search = `?v=${encodeURIComponent(version)}`;
+        url.hash = "";
+        return url.toString();
+      } catch {
+        return `https://jadon-debug.github.io/oneinhim-learner-public/oneinhim_learner_runtime.js?v=${encodeURIComponent(version)}`;
+      }
+    }
+
+    async function verifyLiveFromBrowser(version, liveUrl) {
+      const expected = `APP_RELEASE_VERSION = "${version}"`;
+      const runtimeUrl = publicRuntimeUrlFor(version, liveUrl);
+      let lastError = "";
+      for (let attempt = 0; attempt < 10; attempt += 1) {
+        try {
+          const response = await fetch(`${runtimeUrl}${runtimeUrl.includes("?") ? "&" : "?"}check=${Date.now()}`, {
+            cache: "no-store",
+            headers: { "Cache-Control": "no-cache" }
+          });
+          const body = await response.text();
+          if (response.ok && body.includes(expected)) return true;
+          lastError = "GitHub Pages has not served the new version yet.";
+        } catch (error) {
+          lastError = error.message || "Could not check GitHub Pages yet.";
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2500));
+      }
+      throw new Error(lastError || "Live verification timed out.");
+    }
+
     async function publishToGithub() {
       const button = document.getElementById("publishButton");
-      persistWorkspace();
+      persistWorkspace({ silent: true });
       button.disabled = true;
-      setPublishStatus("Saved locally. Checking helper...");
+      writePublishFlow({
+        draft: "done",
+        github: "pending",
+        live: "pending",
+        message: "Draft saved locally. Checking helper..."
+      });
       try {
         await refreshPublishHelperStatus();
-        setPublishStatus("Helper running. Publishing to GitHub...");
+        writePublishFlow({
+          helper: "done",
+          github: "active",
+          live: "pending",
+          message: "Helper running. Publishing to GitHub..."
+        });
         const response = await fetch("http://localhost:8777/publish", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -6632,21 +6814,64 @@
         if (!response.ok || !data.ok) {
           throw new Error(data.error || "Publish failed.");
         }
-        if (data.verified) {
-          localStorage.removeItem(HOME_KEY);
-          localStorage.removeItem(JOURNEY_KEY);
-          localStorage.removeItem(CONTENT_PREP_KEY);
-          setPublishStatus(`Published to GitHub and live verified · v${data.version} · ${data.commit || ""}`.trim(), data.url);
-          toast(`Live version verified: v${data.version}.`);
-        } else {
-          setPublishStatus(`Published to GitHub as v${data.version}, but GitHub Pages is still updating. Your local draft is kept.`, data.url);
-          toast("Published. Waiting on GitHub Pages.");
+        writePublishFlow({
+          helper: "done",
+          draft: "done",
+          github: "done",
+          live: data.verified ? "done" : "active",
+          version: data.version || "",
+          commit: data.commit || "",
+          url: data.url || "",
+          message: data.verified
+            ? `Published to GitHub and live verified · v${data.version} · ${data.commit || ""}`.trim()
+            : `Published to GitHub as v${data.version}. Checking live version...`
+        });
+        let liveVerified = Boolean(data.verified);
+        if (!liveVerified) {
+          try {
+            await verifyLiveFromBrowser(data.version, data.url);
+            liveVerified = true;
+          } catch (verifyError) {
+            writePublishFlow({
+              helper: "done",
+              draft: "done",
+              github: "done",
+              live: "active",
+              version: data.version || "",
+              commit: data.commit || "",
+              url: data.url || "",
+              message: `Published to GitHub as v${data.version}. GitHub Pages is still updating, so this browser draft is kept.`
+            });
+            toast("Published. Live page is still updating.");
+            return;
+          }
         }
+        if (!liveVerified) return;
+        localStorage.removeItem(HOME_KEY);
+        localStorage.removeItem(JOURNEY_KEY);
+        localStorage.removeItem(CONTENT_PREP_KEY);
+        writePublishFlow({
+          helper: "done",
+          draft: "done",
+          github: "done",
+          live: "done",
+          version: data.version || "",
+          commit: data.commit || "",
+          url: data.url || "",
+          message: `Published to GitHub and live verified · v${data.version} · ${data.commit || ""}`.trim()
+        });
+        toast(`Live version verified: v${data.version}.`);
       } catch (error) {
         console.warn("Publish failed", error);
-        setPublishStatus(error.message && !/Failed to fetch/i.test(error.message)
-          ? `Could not publish: ${error.message}`
-          : "Publish helper is not running. Click Start helper, then publish again.");
+        const helperMissing = !error.message || /Failed to fetch/i.test(error.message);
+        writePublishFlow({
+          helper: helperMissing ? "error" : "done",
+          github: "error",
+          live: "pending",
+          message: helperMissing
+            ? "Publish helper is not running. Click Start helper, then publish again."
+            : `Could not publish: ${error.message}`
+        });
         toast("Could not publish yet.");
       } finally {
         button.disabled = false;
@@ -6686,6 +6911,7 @@
         wire();
         await loadContentPrepPackages();
         render();
+        renderPublishFlow();
         refreshPublishHelperStatus();
         if (!window.oneInHimPublishHelperStatusTimer) {
           window.oneInHimPublishHelperStatusTimer = window.setInterval(refreshPublishHelperStatus, 8000);
