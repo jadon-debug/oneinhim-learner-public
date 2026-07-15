@@ -1438,7 +1438,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "221";
+const APP_RELEASE_VERSION = "223";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
@@ -1895,6 +1895,18 @@ function homeItemMatchesGatewayMode(item, shelf, mode = state.gatewayContentMode
   return true;
 }
 
+function homeResolvedItemDisplay(item) {
+  const linkedResource = homeResourceForItem(item);
+  const isPlaceholder = item?.targetType === "none" || item?.placeholder || !(item?.target || item?.contentId);
+  const artwork = isPlaceholder
+    ? (item?.artwork || "")
+    : (item?.artworkOverride || item?.placementArtwork || homeResourceArtwork(linkedResource) || item?.artwork || "");
+  const title = item?.titleOverride || linkedResource?.title || item?.alt || item?.id || "Untitled";
+  const copy = item?.descriptionOverride || linkedResource?.summary || linkedResource?.shareLine || item?.description || "";
+  const alt = item?.alt || linkedResource?.title || title;
+  return { linkedResource, artwork, title, copy, alt };
+}
+
 function visibleHomeShelves(mode = state.gatewayContentMode) {
   const content = readHomeContent();
   const currentMode = normalizeGatewayContentMode(mode);
@@ -1913,27 +1925,25 @@ function homeShelfCardMarkup(item, shelf, content, options = {}) {
   const locked = homeItemIsLocked(item, content);
   const comingSoon = homeItemIsComingSoon(item);
   const shape = shelf.cardSize || "wide";
-  const label = item.alt || item.id || "Open item";
+  const display = homeResolvedItemDisplay(item);
+  const label = display.alt || item.id || "Open item";
   if (options.detail) {
-    const linkedResource = homeResourceForItem(item);
-    const title = item.alt || linkedResource?.title || item.id || "Untitled";
-    const copy = item.description || linkedResource?.summary || linkedResource?.shareLine || "";
     return `
       <button class="shelf-detail-card ${esc(shape)}${locked ? " locked" : ""}${comingSoon ? " coming-soon" : ""}" type="button" data-content-kind="${esc(contentKind)}" ${homeActionAttributes(item)} aria-label="${esc(label)}">
         <span class="shelf-detail-art">
-          ${item.artwork ? `<img src="${esc(item.artwork)}" alt="${esc(item.alt || "")}" loading="lazy" />` : ""}
+          ${display.artwork ? `<img src="${esc(display.artwork)}" alt="${esc(display.alt || "")}" loading="lazy" />` : ""}
           ${comingSoon ? `<span class="home-card-overlay"><span>${esc(item.comingSoonLabel || homeCommonText("comingSoon", "Coming soon"))}</span></span>` : ""}
           ${locked ? contentLockBadgeMarkup() : ""}
         </span>
-        <span class="shelf-detail-card-title">${esc(title)}</span>
-        ${copy ? `<span class="shelf-detail-card-copy">${esc(copy)}</span>` : ""}
+        <span class="shelf-detail-card-title">${esc(display.title)}</span>
+        ${display.copy ? `<span class="shelf-detail-card-copy">${esc(display.copy)}</span>` : ""}
       </button>
     `;
   }
   return `
     <button class="weekly-media-card artwork-home-card artwork-card-${esc(shape)}${locked ? " is-content-locked" : ""}${comingSoon ? " is-coming-soon" : ""}" type="button" data-content-kind="${esc(contentKind)}" ${homeActionAttributes(item)} aria-label="${esc(label)}">
       <span class="home-card-art">
-        ${item.artwork ? `<img src="${esc(item.artwork)}" alt="${esc(item.alt || "")}" loading="lazy" />` : ""}
+        ${display.artwork ? `<img src="${esc(display.artwork)}" alt="${esc(display.alt || "")}" loading="lazy" />` : ""}
         ${comingSoon ? `<span class="home-card-overlay"><span>${esc(item.comingSoonLabel || homeCommonText("comingSoon", "Coming soon"))}</span></span>` : ""}
         ${locked ? contentLockBadgeMarkup() : ""}
       </span>
@@ -2010,8 +2020,13 @@ function homeSupporterBandMarkup(band) {
 function homeResourceArtwork(resource) {
   if (!resource) return "";
   if (resource.posterUrl) return resource.posterUrl;
+  if (resource.thumbnailUrl) return resource.thumbnailUrl;
+  if (resource.artwork) return resource.artwork;
   if (resource.videoHost?.thumbnailUrl && !String(resource.videoHost.thumbnailUrl).startsWith("https://image.mux.com/")) {
     return resource.videoHost.thumbnailUrl;
+  }
+  if (resource.videoHost?.thumbnail && !String(resource.videoHost.thumbnail).startsWith("https://image.mux.com/")) {
+    return resource.videoHost.thumbnail;
   }
   const mediaKind = homeResourceMediaKind(resource, resource.id);
   if (mediaKind === "audio") return "assets/one-gospel-podcast-cover.png";
@@ -4422,7 +4437,7 @@ function isAudioResource(resource) {
 }
 
 function resourceArtwork(resource) {
-  return resource?.posterUrl || resource?.thumbnailUrl || resource?.videoHost?.thumbnailUrl || "";
+  return resource?.posterUrl || resource?.thumbnailUrl || resource?.artwork || resource?.videoHost?.thumbnailUrl || resource?.videoHost?.thumbnail || homeResourceArtwork(resource) || "";
 }
 
 function formatClock(seconds) {

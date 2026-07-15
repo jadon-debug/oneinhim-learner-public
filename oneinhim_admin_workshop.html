@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=221"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=221"></script>
+  <script src="./oneinhim_home_layout.js?v=223"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=223"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -2121,7 +2121,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v221.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v223.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2137,7 +2137,7 @@
         </div>
       </div>
       <div class="btn-row">
-        <a class="btn" href="oneinhim_cache_reset_v221.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v223.html?auto=1">Preview current app</a>
         <a class="btn helper-start" id="publishHelperStart" href="./start_oneinhim_publish_helper.command">Start helper</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
@@ -2370,7 +2370,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v221.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v223.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -4153,7 +4153,7 @@
     }
 
     function defaultContentAccessMap() {
-      return CONTENT.reduce((map, item) => {
+      return contentLibraryItems().reduce((map, item) => {
         map[item.id] = { level: normalizedAccessLevel(item.accessLevel) };
         return map;
       }, {});
@@ -4300,14 +4300,22 @@
 
     function contentOptions(current = "", options = {}) {
       const allowNone = Boolean(options.allowNone);
-      const ids = new Set(CONTENT.map((item) => item.id));
-      if (current && !ids.has(current)) CONTENT.push({ id: current, title: current, type: "Custom", artwork: "", summary: "" });
+      const libraryItems = contentLibraryItems();
+      const ids = new Set(libraryItems.flatMap((item) => [item.id, ...(item.aliases || [])]));
+      if (current && !ids.has(current)) {
+        libraryItems.push({ id: current, title: current, type: "Custom", artwork: "", summary: "", accessLevel: "free", aliases: [] });
+      }
       const noneOption = allowNone ? `<option value=""${!current ? " selected" : ""}>No link yet · artwork only</option>` : "";
-      return `${noneOption}${CONTENT.map((item) => `<option value="${esc(item.id)}"${item.id === current ? " selected" : ""}>${esc(item.title)} · ${esc(item.type)}</option>`).join("")}`;
+      return `${noneOption}${libraryItems.map((item) => {
+        const selected = item.id === current || (item.aliases || []).includes(current);
+        return `<option value="${esc(item.id)}"${selected ? " selected" : ""}>${esc(item.title)} · ${esc(item.type)}</option>`;
+      }).join("")}`;
     }
 
     function selectedContent(id) {
-      return CONTENT.find((item) => item.id === id) || CONTENT[0];
+      const target = String(id || "").trim();
+      const items = contentLibraryItems();
+      return items.find((item) => item.id === target || (item.aliases || []).includes(target)) || items[0] || CONTENT[0];
     }
 
     function readImportedMuxIds() {
@@ -4843,7 +4851,7 @@
       const safeTitle = title || `Mux ${format === "listen" ? "audio" : "video"}`;
       const prefix = format === "listen" ? "aud" : "mux";
       let id = `${prefix}_${slugifyId(safeTitle)}`;
-      if (CONTENT.some((item) => item.id === id)) id = `${id}_${Date.now()}`;
+      if (contentLibraryItems().some((item) => item.id === id || (item.aliases || []).includes(id))) id = `${id}_${Date.now()}`;
       const content = {
         id,
         title: safeTitle,
@@ -4852,7 +4860,6 @@
         summary: `Mux ${format === "listen" ? "audio" : "video"} imported from playback ID ${playbackId}.`,
         accessLevel
       };
-      CONTENT.unshift(content);
       setContentAccess(content.id, accessLevel);
       const pkg = createContentPackageFromMux(content, playbackId, state.muxContext);
       const existingIndex = state.contentPackages.findIndex((item) => item.packageId === pkg.packageId);
@@ -4878,7 +4885,7 @@
       const title = item.title || `Mux ${format === "listen" ? "audio" : "video"}`;
       const prefix = format === "listen" ? "aud" : "mux";
       let id = item.contentId || `${prefix}_${slugifyId(title)}`;
-      if (CONTENT.some((content) => content.id === id)) id = `${id}_${Date.now()}`;
+      if (contentLibraryItems().some((content) => content.id === id || (content.aliases || []).includes(id))) id = `${id}_${Date.now()}`;
       const content = {
         id,
         title,
@@ -4887,7 +4894,6 @@
         summary: item.summary || `Imported from Mux playback ID ${item.playbackId}.`,
         accessLevel: normalizedAccessLevel(item.accessLevel || "free")
       };
-      CONTENT.unshift(content);
       setContentAccess(content.id, content.accessLevel);
       state.contentPackages.unshift(createContentPackageFromMux(content, item.playbackId, "library"));
       state.contentPackageIndex = 0;
@@ -5131,20 +5137,91 @@
 
     function contentLibraryFormat(item) {
       const type = String(item?.type || "").toLowerCase();
+      const medium = String(item?.primaryMedium || "").toLowerCase();
+      if (medium === "listen") return "audio";
+      if (medium === "watch") return "video";
+      if (medium === "read") return item?.source === "content_package" ? "journey" : "read";
       if (type.includes("audio") || type.includes("podcast")) return "audio";
       if (type.includes("video") || type.includes("documentary") || type.includes("event")) return "video";
       if (type.includes("journey")) return "journey";
       return "read";
     }
 
+    function libraryArtworkFromPackage(pkg) {
+      return pkg.posterUrl
+        || pkg.thumbnailUrl
+        || pkg.artwork
+        || pkg.videoHost?.thumbnailUrl
+        || pkg.videoHost?.thumbnail
+        || pkg.audioHost?.thumbnailUrl
+        || pkg.placement?.artwork
+        || "";
+    }
+
+    function libraryTypeFromPackage(pkg) {
+      const medium = String(pkg.primaryMedium || pkg.placement?.primaryMedium || pkg.placement?.lessonMedium || "").toLowerCase();
+      const packageType = String(pkg.packageType || pkg.contentType || "").toLowerCase();
+      if (medium === "listen" || packageType.includes("audio") || packageType.includes("podcast")) return "Audio";
+      if (medium === "watch" || packageType.includes("video") || packageType.includes("documentary") || packageType.includes("event")) return "Video";
+      if (packageType.includes("journey") || pkg.placement?.showInJourney) return "Journey Read";
+      return "Read";
+    }
+
+    function activeContentPackages() {
+      try {
+        return Array.isArray(state?.contentPackages) ? state.contentPackages : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function contentPackageToLibraryItem(pkg) {
+      const packageId = String(pkg.packageId || pkg.id || "").trim();
+      const primaryItemId = String(pkg.primaryItemId || "").trim();
+      if (!packageId && !primaryItemId) return null;
+      const packageType = String(pkg.packageType || "").toLowerCase();
+      const id = primaryItemId && !primaryItemId.startsWith("book_") ? primaryItemId : (packageId || primaryItemId);
+      const aliases = [
+        packageId,
+        primaryItemId,
+        packageId ? packageId.replace(/^pkg_/, "book_") : "",
+        pkg.videoHost?.playbackId,
+        pkg.audioHost?.playbackId,
+        pkg.muxVirtualClip?.playbackId
+      ].filter(Boolean).filter((value) => value !== id);
+      const summary = pkg.learnerSession?.contentSummary || pkg.packageGoal || pkg.summary || "";
+      return {
+        id,
+        aliases: Array.from(new Set(aliases)),
+        packageId: packageId || id,
+        title: pkg.packageTitle || pkg.title || id,
+        type: libraryTypeFromPackage(pkg),
+        primaryMedium: pkg.primaryMedium || pkg.placement?.primaryMedium || pkg.placement?.lessonMedium || (packageType.includes("audio") ? "listen" : packageType.includes("video") ? "watch" : "read"),
+        artwork: libraryArtworkFromPackage(pkg),
+        summary,
+        accessLevel: normalizedAccessLevel(pkg.access?.level || pkg.placement?.accessLevel || pkg.admin?.accessLevel),
+        source: "content_package",
+        package: pkg
+      };
+    }
+
+    function contentLibraryItems() {
+      const byId = new Map(CONTENT.map((item) => [item.id, { ...item, aliases: [], source: "seed" }]));
+      activeContentPackages().map(contentPackageToLibraryItem).filter(Boolean).forEach((item) => {
+        const existing = byId.get(item.id) || {};
+        byId.set(item.id, { ...existing, ...item });
+      });
+      return Array.from(byId.values());
+    }
+
     function filteredLibraryContent() {
       const query = state.contentSearch.trim().toLowerCase();
       const filter = state.contentTypeFilter;
-      return CONTENT.filter((item) => {
+      return contentLibraryItems().filter((item) => {
         const level = contentAccess(item.id).level;
         const format = contentLibraryFormat(item);
         const matchesFilter = filter === "all" || filter === format || (filter === "locked" && level !== "free");
-        const haystack = [item.title, item.id, item.type, item.summary, level].filter(Boolean).join(" ").toLowerCase();
+        const haystack = [item.title, item.id, item.packageId, item.type, item.summary, level, ...(item.aliases || [])].filter(Boolean).join(" ").toLowerCase();
         return matchesFilter && (!query || haystack.includes(query));
       });
     }
@@ -5293,6 +5370,7 @@
           state.contentPackages = packages.map(normalizeContentPackage);
           state.contentPackageSource = "Saved browser draft";
           renderContentPrep();
+          renderContent();
           return;
         }
       } catch {
@@ -5320,6 +5398,7 @@
         state.contentPackageSource = "Fallback package list";
       }
       renderContentPrep();
+      renderContent();
     }
 
     function currentContentPackage() {
