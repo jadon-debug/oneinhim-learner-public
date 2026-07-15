@@ -1,8 +1,10 @@
-const ONEINHIM_CACHE = "oneinhim-app-v220";
+const ONEINHIM_CACHE = "oneinhim-app-v221";
 
 const APP_SHELL = [
   "./oneinhim.webmanifest",
   "./oneinhim_team_sync_config.js",
+  "./oneinhim_learner_styles.css",
+  "./oneinhim_learner_runtime.js",
   "./oneinhim_home_layout.js",
   "./oneinhim_journey_layout.js",
   "./oneinhim_mux_import_queue.js",
@@ -68,10 +70,14 @@ self.addEventListener("fetch", (event) => {
     url.pathname.endsWith("oneinhim_admin_workshop.html") ||
     url.pathname.endsWith("/oneinhim_cache_reset.html") ||
     url.pathname.endsWith("oneinhim_cache_reset.html") ||
-    url.pathname.endsWith("/oneinhim_cache_reset_v220.html") ||
-    url.pathname.endsWith("oneinhim_cache_reset_v220.html") ||
+    url.pathname.endsWith("/oneinhim_cache_reset_v221.html") ||
+    url.pathname.endsWith("oneinhim_cache_reset_v221.html") ||
     url.pathname.endsWith("/oneinhim_home_layout.js") ||
     url.pathname.endsWith("oneinhim_home_layout.js") ||
+    url.pathname.endsWith("/oneinhim_learner_styles.css") ||
+    url.pathname.endsWith("oneinhim_learner_styles.css") ||
+    url.pathname.endsWith("/oneinhim_learner_runtime.js") ||
+    url.pathname.endsWith("oneinhim_learner_runtime.js") ||
     url.pathname.endsWith("/oneinhim_journey_layout.js") ||
     url.pathname.endsWith("oneinhim_journey_layout.js") ||
     url.pathname.endsWith("/oneinhim_mux_import_queue.js") ||

@@ -30,6 +30,8 @@ ASSET_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"}
 
 STATIC_FILES = [
     "oneinhim_learner_app.html",
+    "oneinhim_learner_styles.css",
+    "oneinhim_learner_runtime.js",
     "oneinhim_admin_workshop.html",
     "oneinhim_service_worker.js",
     "oneinhim.webmanifest",
@@ -52,11 +54,15 @@ def write_layout_file(filename, global_name, payload):
 
 
 def read_release_version():
-    html = (ROOT / "oneinhim_learner_app.html").read_text(encoding="utf-8")
-    match = re.search(r'APP_RELEASE_VERSION\s*=\s*"(\d+)"', html)
-    if not match:
-        raise RuntimeError("Could not find app release version.")
-    return int(match.group(1))
+    for filename in ("oneinhim_learner_runtime.js", "oneinhim_learner_app.html"):
+        path = ROOT / filename
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        match = re.search(r'APP_RELEASE_VERSION\s*=\s*"(\d+)"', text)
+        if match:
+            return int(match.group(1))
+    raise RuntimeError("Could not find app release version.")
 
 
 def replace_text(path, replacements):
@@ -75,9 +81,13 @@ def bump_release_version():
     reset_template = previous_reset_files[-1] if previous_reset_files else None
 
     html_replacements = [
-        (r'APP_RELEASE_VERSION\s*=\s*"\d+"', f'APP_RELEASE_VERSION = "{next_text}"'),
+        (r'oneinhim_learner_styles\.css\?v=\d+', f'oneinhim_learner_styles.css?v={next_text}'),
+        (r'oneinhim_learner_runtime\.js\?v=\d+', f'oneinhim_learner_runtime.js?v={next_text}'),
         (r'oneinhim_home_layout\.js\?v=\d+', f'oneinhim_home_layout.js?v={next_text}'),
         (r'oneinhim_journey_layout\.js\?v=\d+', f'oneinhim_journey_layout.js?v={next_text}'),
+    ]
+    runtime_replacements = [
+        (r'APP_RELEASE_VERSION\s*=\s*"\d+"', f'APP_RELEASE_VERSION = "{next_text}"'),
     ]
     admin_replacements = [
         (r'oneinhim_home_layout\.js\?v=\d+', f'oneinhim_home_layout.js?v={next_text}'),
@@ -85,6 +95,7 @@ def bump_release_version():
         (r'oneinhim_cache_reset_v\d+\.html', f'oneinhim_cache_reset_v{next_text}.html'),
     ]
     replace_text(ROOT / "oneinhim_learner_app.html", html_replacements)
+    replace_text(ROOT / "oneinhim_learner_runtime.js", runtime_replacements)
     replace_text(ROOT / "oneinhim_admin_workshop.html", admin_replacements)
     replace_text(ROOT / "oneinhim_service_worker.js", [
         (r'oneinhim-app-v\d+', f'oneinhim-app-v{next_text}'),
@@ -200,9 +211,13 @@ def public_learner_url(version):
     return f"{PUBLIC_BASE_URL}/oneinhim_learner_app.html?v={version}&verify={int(time.time())}"
 
 
+def public_runtime_url(version):
+    return f"{PUBLIC_BASE_URL}/oneinhim_learner_runtime.js?v={version}&verify={int(time.time())}"
+
+
 def verify_live_version(version, attempts=9, delay=2.0):
     expected = f'APP_RELEASE_VERSION = "{version}"'
-    url = public_learner_url(version)
+    url = public_runtime_url(version)
     last_error = ""
     for attempt in range(attempts):
         try:
