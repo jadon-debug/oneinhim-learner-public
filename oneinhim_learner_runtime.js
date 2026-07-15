@@ -456,6 +456,8 @@ const state = {
   gatewayContentMode: "discover",
   activeShelfIndex: 0,
   activeBrowseShelfKey: "",
+  searchQuery: "",
+  searchFilter: "all",
   onboardingStep: 0,
   onboardingStartMode: "find",
   onboardingStage: "exploreJesus",
@@ -1438,7 +1440,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "225";
+const APP_RELEASE_VERSION = "227";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
@@ -1683,10 +1685,41 @@ function homeCommonText(key, fallback = "") {
   return HOME_LANGUAGE_OVERRIDES[state.language]?.common?.[key] || fallback || key;
 }
 
+function localizedField(value, fallback = "") {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value[state.language] || value.en || Object.values(value).find((item) => typeof item === "string") || fallback || "";
+  }
+  return value === undefined || value === null ? (fallback || "") : value;
+}
+
+function localizedArray(value) {
+  const localized = localizedField(value, value);
+  if (Array.isArray(localized)) return localized;
+  return Array.isArray(value) ? value : [];
+}
+
+function resourceTitle(resource, fallback = "") {
+  return String(localizedField(resource?.title, localizedField(resource?.packageTitle, fallback)) || fallback || "");
+}
+
+function resourceSummary(resource, fallback = "") {
+  return String(localizedField(resource?.summary, localizedField(resource?.shareLine, localizedField(resource?.packageGoal, fallback))) || fallback || "");
+}
+
+function resourceSpeakerName(resource) {
+  return String(localizedField(resource?.speaker, localizedField(resource?.speakerOrAuthor?.name, "")) || "");
+}
+
 function homeLocalizedBrowseSection(section) {
   if (!section) return section;
   const translated = HOME_LANGUAGE_OVERRIDES[state.language]?.browseSections?.[section.key] || {};
-  return { ...section, ...translated };
+  return {
+    ...section,
+    ...translated,
+    title: translated.title || localizedField(section.title, section.title),
+    copy: translated.copy || localizedField(section.copy, section.copy),
+    detailTitle: translated.detailTitle || localizedField(section.detailTitle, localizedField(section.title, section.title))
+  };
 }
 
 function homeLocalizedTopicTheme(theme) {
@@ -1901,9 +1934,9 @@ function homeResolvedItemDisplay(item) {
   const artwork = isPlaceholder
     ? (item?.artwork || "")
     : (item?.artworkOverride || item?.placementArtwork || homeResourceArtwork(linkedResource) || item?.artwork || "");
-  const title = item?.titleOverride || linkedResource?.title || item?.alt || item?.id || "Untitled";
-  const copy = item?.descriptionOverride || linkedResource?.summary || linkedResource?.shareLine || item?.description || "";
-  const alt = item?.alt || linkedResource?.title || title;
+  const title = localizedField(item?.titleOverride, resourceTitle(linkedResource, localizedField(item?.alt, item?.id || "Untitled")));
+  const copy = localizedField(item?.descriptionOverride, resourceSummary(linkedResource, localizedField(item?.description, "")));
+  const alt = localizedField(item?.alt, resourceTitle(linkedResource, title));
   return { linkedResource, artwork, title, copy, alt };
 }
 
@@ -2045,8 +2078,8 @@ function homeResourceToShelfItem(resource) {
     targetType: "discover",
     target: resource.id,
     contentId: resource.id,
-    alt: resource.title || "Content",
-    description: resource.summary || resource.shareLine || ""
+    alt: resourceTitle(resource, "Content"),
+    description: resourceSummary(resource, "")
   };
 }
 
@@ -2067,16 +2100,16 @@ function homeBrowseTopicFilter(title) {
 
 function homeBrowseResourceText(resource) {
   return [
-    resource?.title,
-    resource?.summary,
-    resource?.topic,
-    resource?.stage,
-    resource?.speaker,
+    resourceTitle(resource),
+    resourceSummary(resource),
+    localizedField(resource?.topic, ""),
+    localizedField(resource?.stage, ""),
+    resourceSpeakerName(resource),
     resource?.speakerId,
     resource?.contentType,
     resource?.seriesId,
-    ...(Array.isArray(resource?.topics) ? resource.topics : []),
-    ...(Array.isArray(resource?.questions) ? resource.questions : []),
+    ...(localizedArray(resource?.topics)),
+    ...(localizedArray(resource?.questions)),
     ...(Array.isArray(resource?.format) ? resource.format : [])
   ].join(" ").toLowerCase();
 }
@@ -2091,10 +2124,19 @@ function homeBrowseFilterMatches(resource, filter) {
 }
 
 function homeBrowseTopicThemes(section) {
-  const themes = Array.isArray(section?.topicThemes) && section.topicThemes.length
+  const configured = Array.isArray(section?.topicThemes) && section.topicThemes.length
     ? section.topicThemes
     : BROWSE_TOPIC_THEMES;
-  return themes.map((theme) => String(theme || "").trim()).filter(Boolean);
+  const generated = resources.flatMap((resource) => localizedArray(resource?.topics))
+    .map((theme) => String(theme || "").trim())
+    .filter(Boolean);
+  const seen = new Set();
+  return [...configured, ...generated].map((theme) => String(theme || "").trim()).filter((theme) => {
+    const key = homeBrowseSlug(theme);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function homeBrowseTopicCardMarkup(theme) {
@@ -2106,6 +2148,38 @@ function homeBrowseTopicCardMarkup(theme) {
       <span>
         <strong>${esc(label)}</strong>
         <span>${esc(homeCommonText("browseTopic", "Browse topic"))}</span>
+      </span>
+      <span class="browse-topic-arrow" aria-hidden="true">&rsaquo;</span>
+    </button>
+  `;
+}
+
+function homeBrowsePeople() {
+  const seen = new Set();
+  return resources.map((resource) => {
+    const name = resourceSpeakerName(resource);
+    return {
+      id: resource?.speakerId || resource?.speakerOrAuthor?.id || homeBrowseSlug(name),
+      name,
+      role: localizedField(resource?.speakerOrAuthor?.role, "")
+    };
+  }).filter((person) => {
+    const key = homeBrowseSlug(person.name || person.id);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function homeBrowsePersonCardMarkup(person) {
+  const name = person?.name || "Person";
+  const slug = homeBrowseSlug(person?.id || name);
+  return `
+    <button class="browse-topic-card" type="button" data-open-browse-person="${esc(slug)}">
+      <span class="browse-topic-icon">${homeBrowseIcon("people")}</span>
+      <span>
+        <strong>${esc(name)}</strong>
+        <span>${esc(person?.role ? labelize(person.role) : homeCommonText("browsePerson", "Browse person"))}</span>
       </span>
       <span class="browse-topic-arrow" aria-hidden="true">&rsaquo;</span>
     </button>
@@ -2150,6 +2224,14 @@ function homeBrowseShelfForKey(key) {
       items: []
     };
   }
+  if (key === "people") {
+    return {
+      shelf: { id: "browse_people", title: config.detailTitle || config.title || homeLocalized("browseSections", "people", "title", "People"), mode: "discover", cardSize: "topic-list" },
+      index: -1,
+      people: homeBrowsePeople(),
+      items: []
+    };
+  }
   if (key.startsWith("topic:")) {
     const topicSection = (content.browseSections || []).find((item) => item.key === "topics");
     const themes = homeBrowseTopicThemes(topicSection);
@@ -2173,6 +2255,35 @@ function homeBrowseShelfForKey(key) {
       items
     };
   }
+  if (key.startsWith("person:")) {
+    const slug = key.slice("person:".length);
+    const person = homeBrowsePeople().find((item) => homeBrowseSlug(item.id || item.name) === slug || homeBrowseSlug(item.name) === slug);
+    const title = person?.name || "Person";
+    const items = resources
+      .filter((resource) => {
+        const speaker = homeBrowseSlug(resourceSpeakerName(resource));
+        const id = homeBrowseSlug(resource?.speakerId || resource?.speakerOrAuthor?.id || "");
+        return speaker === slug || id === slug;
+      })
+      .map(homeResourceToShelfItem);
+    return {
+      shelf: { id: `browse_person_${slug}`, title, mode: "discover", cardSize: "wide" },
+      index: -1,
+      items
+    };
+  }
+  if (key.startsWith("series:")) {
+    const seriesId = key.slice("series:".length);
+    const series = homeBrowseSeries().find((item) => item.id === seriesId);
+    const items = resources
+      .filter((resource) => String(resource?.seriesId || "") === seriesId)
+      .map(homeResourceToShelfItem);
+    return {
+      shelf: { id: `browse_series_${seriesId}`, title: series?.title || labelize(seriesId), mode: "discover", cardSize: "wide" },
+      index: -1,
+      items
+    };
+  }
   const seen = new Set();
   const items = resources
     .filter((resource) => homeBrowseResourceMatches(resource, key))
@@ -2188,6 +2299,113 @@ function homeBrowseShelfForKey(key) {
     index: -1,
     items
   };
+}
+
+function searchFilterMatchesResource(resource, filter) {
+  const mediaKind = homeResourceMediaKind(resource, resource?.id);
+  const formats = Array.isArray(resource?.format) ? resource.format.map((item) => String(item).toLowerCase()) : [];
+  if (filter === "watch") return mediaKind === "video";
+  if (filter === "listen") return mediaKind === "audio";
+  if (filter === "read") return resource?.primaryMedium === "read" || formats.includes("read") || resource?.contentType === "study_guide";
+  return true;
+}
+
+function searchQueryMatchesText(text, query) {
+  const cleanQuery = String(query || "").trim().toLowerCase();
+  if (!cleanQuery) return true;
+  return cleanQuery.split(/\s+/).filter(Boolean).every((term) => String(text || "").toLowerCase().includes(term));
+}
+
+function homeBrowseSeries() {
+  const seen = new Map();
+  resources.forEach((resource) => {
+    const id = String(resource?.seriesId || "").trim();
+    if (!id) return;
+    const title = localizedField(resource?.seriesTitle, labelize(id));
+    const current = seen.get(id) || { id, title, count: 0 };
+    current.count += 1;
+    seen.set(id, current);
+  });
+  return [...seen.values()].sort((a, b) => a.title.localeCompare(b.title));
+}
+
+function homeBrowseSeriesCardMarkup(series) {
+  return `
+    <button class="browse-topic-card" type="button" data-open-browse-series="${esc(series.id)}">
+      <span class="browse-topic-icon">${homeBrowseIcon("series")}</span>
+      <span>
+        <strong>${esc(series.title)}</strong>
+        <span>${esc(`${series.count} item${series.count === 1 ? "" : "s"}`)}</span>
+      </span>
+      <span class="browse-topic-arrow" aria-hidden="true">&rsaquo;</span>
+    </button>
+  `;
+}
+
+function searchSpecialResults(filter, query) {
+  if (filter === "topics") {
+    const topicSection = (readHomeContent().browseSections || []).find((item) => item.key === "topics");
+    return homeBrowseTopicThemes(topicSection)
+      .filter((theme) => searchQueryMatchesText(`${theme} ${homeLocalizedTopicTheme(theme)}`, query))
+      .map(homeBrowseTopicCardMarkup)
+      .join("");
+  }
+  if (filter === "people") {
+    return homeBrowsePeople()
+      .filter((person) => searchQueryMatchesText(`${person.name} ${person.role || ""}`, query))
+      .map(homeBrowsePersonCardMarkup)
+      .join("");
+  }
+  if (filter === "series") {
+    return homeBrowseSeries()
+      .filter((series) => searchQueryMatchesText(`${series.id} ${series.title}`, query))
+      .map(homeBrowseSeriesCardMarkup)
+      .join("");
+  }
+  return "";
+}
+
+function renderShelfSearchResults() {
+  const panel = document.querySelector(".shelf-search-panel");
+  const results = document.getElementById("shelfSearchResults");
+  const empty = panel?.querySelector(".shelf-search-empty");
+  if (!results) return;
+  const filter = state.searchFilter || "all";
+  const query = state.searchQuery || "";
+  document.querySelectorAll("[data-search-filter]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.searchFilter === filter);
+  });
+  if (["topics", "people", "series"].includes(filter)) {
+    results.className = "shelf-search-results topic-list";
+    results.innerHTML = searchSpecialResults(filter, query);
+  } else {
+    const content = readHomeContent();
+    const shelf = { id: "search_results", title: "Search", mode: "discover", cardSize: "wide" };
+    const items = resources
+      .filter((resource) => searchFilterMatchesResource(resource, filter))
+      .filter((resource) => searchQueryMatchesText(homeBrowseResourceText(resource), query))
+      .map(homeResourceToShelfItem);
+    results.className = "shelf-search-results wide";
+    results.innerHTML = items.map((item) => homeShelfCardMarkup(item, shelf, content, {
+      mode: state.gatewayContentMode,
+      detail: true
+    })).join("");
+  }
+  const hasResults = Boolean(results.innerHTML.trim());
+  if (empty) empty.hidden = hasResults;
+  results.hidden = !hasResults;
+  results.querySelectorAll("[data-discover-open]").forEach((button) => {
+    button.onclick = () => setDiscoveryResource(button.dataset.discoverOpen);
+  });
+  results.querySelectorAll("[data-open-browse-topic]").forEach((button) => {
+    button.onclick = () => openBrowseShelf(`topic:${button.dataset.openBrowseTopic}`);
+  });
+  results.querySelectorAll("[data-open-browse-person]").forEach((button) => {
+    button.onclick = () => openBrowseShelf(`person:${button.dataset.openBrowsePerson}`);
+  });
+  results.querySelectorAll("[data-open-browse-series]").forEach((button) => {
+    button.onclick = () => openBrowseShelf(`series:${button.dataset.openBrowseSeries}`);
+  });
 }
 
 function renderArtworkHome() {
@@ -2262,14 +2480,47 @@ function renderShelfDetail() {
     const shape = normalizeShelfCardShape(selected.shelf.cardSize);
     els.shelfDetailGrid.className = `shelf-detail-grid ${shape}`;
     if (shape === "topic-list") {
-      els.shelfDetailGrid.innerHTML = (selected.topicThemes || []).map(homeBrowseTopicCardMarkup).join("");
+      els.shelfDetailGrid.innerHTML = selected.people
+        ? selected.people.map(homeBrowsePersonCardMarkup).join("")
+        : (selected.topicThemes || []).map(homeBrowseTopicCardMarkup).join("");
     } else {
       els.shelfDetailGrid.innerHTML = selected.items.map((item) => homeShelfCardMarkup(item, selected.shelf, content, {
         mode: state.gatewayContentMode,
         detail: true
-      })).join("");
+      })).join("") || `
+        <div class="shelf-detail-empty">
+          <strong>${esc(homeCommonText("comingSoon", "Coming soon"))}</strong>
+          <span>${esc("No content has been added here yet.")}</span>
+        </div>
+      `;
     }
+    bindShelfDetailActions();
   }
+}
+
+function bindShelfDetailActions() {
+  const root = els.shelfDetailGrid;
+  if (!root) return;
+  root.querySelectorAll("[data-discover-open]").forEach((button) => {
+    button.onclick = () => setDiscoveryResource(button.dataset.discoverOpen);
+  });
+  root.querySelectorAll("[data-open-browse-topic]").forEach((button) => {
+    button.onclick = () => openBrowseShelf(`topic:${button.dataset.openBrowseTopic}`);
+  });
+  root.querySelectorAll("[data-open-browse-person]").forEach((button) => {
+    button.onclick = () => openBrowseShelf(`person:${button.dataset.openBrowsePerson}`);
+  });
+  root.querySelectorAll("[data-open-browse-series]").forEach((button) => {
+    button.onclick = () => openBrowseShelf(`series:${button.dataset.openBrowseSeries}`);
+  });
+  root.querySelectorAll("[data-nav-jump]").forEach((button) => {
+    button.onclick = () => {
+      const target = button.dataset.navJump;
+      const linkedResource = button.dataset.linkedResource;
+      if (linkedResource) state.activeResourceId = linkedResource;
+      if (target) setView(target);
+    };
+  });
 }
 
 function labelize(value) {
@@ -2661,6 +2912,7 @@ function openBrowseShelf(key) {
 
 function openShelfSearch() {
   document.body.classList.add("shelf-search-mode");
+  renderShelfSearchResults();
   window.requestAnimationFrame(() => {
     const input = document.getElementById("shelfSearchInput");
     input?.focus({ preventScroll: true });
@@ -2671,6 +2923,9 @@ function closeShelfSearch() {
   document.body.classList.remove("shelf-search-mode");
   const input = document.getElementById("shelfSearchInput");
   if (input) input.value = "";
+  state.searchQuery = "";
+  state.searchFilter = "all";
+  renderShelfSearchResults();
 }
 
 function getSupabaseAuthClient() {
@@ -4443,6 +4698,22 @@ function isAudioResource(resource) {
     || (formats.includes("listen") && !formats.includes("watch"));
 }
 
+function resourceHasPlayableAudio(resource) {
+  if (!isAudioResource(resource)) return false;
+  const statusText = [
+    resource?.status,
+    resource?.admin?.packageStatus,
+    resource?.contentStatus
+  ].map((value) => String(value || "").toLowerCase()).join(" ");
+  if (statusText.includes("placeholder") || statusText.includes("coming soon")) return false;
+  return Boolean(
+    resourceMuxPlaybackId(resource)
+    || resource?.audioUrl
+    || resource?.audioHost?.url
+    || resource?.audioHost?.playbackId
+  );
+}
+
 function resourceArtwork(resource) {
   return resource?.posterUrl || resource?.thumbnailUrl || resource?.artwork || resource?.videoHost?.thumbnailUrl || resource?.videoHost?.thumbnail || homeResourceArtwork(resource) || "";
 }
@@ -4457,9 +4728,10 @@ function formatClock(seconds) {
 }
 
 function audioMuxPlayerElementHtml(resource) {
+  if (!resourceHasPlayableAudio(resource)) return "";
   const playbackId = resourceMuxPlaybackId(resource);
   if (!playbackId) return "";
-  const title = resource?.title || "One In Him audio";
+  const title = resourceTitle(resource, "One In Him audio");
   const poster = resourceArtwork(resource);
   const attrs = [
     `id="discoverAudioPlayer"`,
@@ -4608,6 +4880,7 @@ function renderDiscoveryAudioDetail(item) {
   const related = discoveryRelatedItems(item);
   const nextEpisode = discoverAudioNextEpisode(item);
   const artwork = resourceArtwork(item);
+  const playableAudio = resourceHasPlayableAudio(item);
   const playerMarkup = audioMuxPlayerElementHtml(item);
 
   shell?.classList.add("audio-detail");
@@ -4621,15 +4894,15 @@ function renderDiscoveryAudioDetail(item) {
   if (buttons) {
     buttons.innerHTML = `
       <button class="primary-btn" type="button" id="discoverJoinJourney">Open journey step</button>
-      ${nextEpisode ? `<button class="soft-btn" type="button" data-audio-next>Next episode</button>` : ""}
+      ${playableAudio && nextEpisode ? `<button class="soft-btn" type="button" data-audio-next>Next episode</button>` : ""}
       <button class="soft-btn" type="button" data-nav-jump="gatewayView">Share</button>
     `;
     els.discoverJoinJourney = document.getElementById("discoverJoinJourney");
   }
 
-  els.discoverDetailTitle.textContent = item.title;
-  els.discoverDetailMeta.textContent = `${labelize(item.contentType)} · ${item.length} · ${item.speaker}`;
-  els.discoverDetailSummary.textContent = item.summary;
+  els.discoverDetailTitle.textContent = resourceTitle(item, item.title);
+  els.discoverDetailMeta.textContent = `${labelize(item.contentType)} · ${localizedField(item.length, item.length)} · ${resourceSpeakerName(item)}`;
+  els.discoverDetailSummary.textContent = resourceSummary(item, item.summary);
   els.discoverRelatedTitle.textContent = related.title;
   els.discoverJoinJourney.onclick = () => {
     state.activeStageId = target.stageId;
@@ -4647,8 +4920,8 @@ function renderDiscoveryAudioDetail(item) {
   const duration = Number(item.seconds) || 0;
   const details = document.querySelector(".discover-watch-details");
   if (details) {
-    details.innerHTML = `
-      <p class="discover-watch-meta" id="discoverDetailMeta">${esc(labelize(item.contentType))} · ${esc(item.length)} · ${esc(item.speaker)}</p>
+    details.innerHTML = playableAudio ? `
+      <p class="discover-watch-meta" id="discoverDetailMeta">${esc(labelize(item.contentType))} · ${esc(localizedField(item.length, item.length))} · ${esc(resourceSpeakerName(item))}</p>
       <div class="discover-audio-progress" aria-label="Audio progress">
         <input class="discover-audio-range" id="discoverAudioRange" type="range" min="0" max="${esc(String(Math.max(duration, 1)))}" value="0" step="1" />
         <div class="discover-audio-time">
@@ -4669,7 +4942,14 @@ function renderDiscoveryAudioDetail(item) {
           <option value="30">30 min</option>
         </select>
       </div>
-      <p class="discover-watch-summary" id="discoverDetailSummary">${esc(item.summary)}</p>
+      <p class="discover-watch-summary" id="discoverDetailSummary">${esc(resourceSummary(item, item.summary))}</p>
+    ` : `
+      <p class="discover-watch-meta" id="discoverDetailMeta">${esc(labelize(item.contentType))} · ${esc(localizedField(item.length, item.length))} · ${esc(resourceSpeakerName(item))}</p>
+      <div class="discover-audio-unavailable">
+        <strong>${esc(homeCommonText("comingSoon", "Coming soon"))}</strong>
+        <span>${esc("Audio is not available yet.")}</span>
+      </div>
+      <p class="discover-watch-summary" id="discoverDetailSummary">${esc(resourceSummary(item, item.summary))}</p>
     `;
     els.discoverDetailMeta = document.getElementById("discoverDetailMeta");
     els.discoverDetailSummary = document.getElementById("discoverDetailSummary");
@@ -4679,12 +4959,12 @@ function renderDiscoveryAudioDetail(item) {
     <button class="discover-related-card" type="button" data-discover-open="${esc(resource.id)}">
       <span class="discover-related-thumb">${esc(isAudioResource(resource) ? "♪" : resource.format.includes("read") && !resource.format.includes("watch") ? "“" : "▶")}</span>
       <span>
-        <strong>${esc(resource.title)}</strong>
-        <span>${esc(resource.length)} · ${esc(resource.topic)}</span>
+        <strong>${esc(resourceTitle(resource, resource.title))}</strong>
+        <span>${esc(localizedField(resource.length, resource.length))} · ${esc(localizedField(resource.topic, resource.topic))}</span>
       </span>
     </button>
   `).join("");
-  bindDiscoveryAudioControls(item);
+  if (playableAudio) bindDiscoveryAudioControls(item);
 }
 
 function renderDiscoveryMedia(item, options = {}) {
@@ -4752,9 +5032,9 @@ function renderDiscoveryDetail() {
   const target = moduleTargetForResource(item.id);
   const related = discoveryRelatedItems(item);
   renderDiscoveryMedia(item);
-  els.discoverDetailTitle.textContent = item.title;
-  els.discoverDetailMeta.textContent = `${labelize(item.contentType)} · ${item.length} · ${item.speaker}`;
-  els.discoverDetailSummary.textContent = item.summary;
+  els.discoverDetailTitle.textContent = resourceTitle(item, item.title);
+  els.discoverDetailMeta.textContent = `${labelize(item.contentType)} · ${localizedField(item.length, item.length)} · ${resourceSpeakerName(item)}`;
+  els.discoverDetailSummary.textContent = resourceSummary(item, item.summary);
   els.discoverRelatedTitle.textContent = related.title;
   els.discoverJoinJourney.onclick = () => {
     state.activeStageId = target.stageId;
@@ -4772,8 +5052,8 @@ function renderDiscoveryDetail() {
     <button class="discover-related-card" type="button" data-discover-open="${esc(resource.id)}">
       <span class="discover-related-thumb">${esc(resource.format.includes("listen") ? "♪" : resource.format.includes("read") && !resource.format.includes("watch") ? "“" : "▶")}</span>
       <span>
-        <strong>${esc(resource.title)}</strong>
-        <span>${esc(resource.length)} · ${esc(resource.topic)}</span>
+        <strong>${esc(resourceTitle(resource, resource.title))}</strong>
+        <span>${esc(localizedField(resource.length, resource.length))} · ${esc(localizedField(resource.topic, resource.topic))}</span>
       </span>
     </button>
   `).join("");
@@ -7062,6 +7342,12 @@ function bindDynamicActions() {
   document.querySelectorAll("[data-open-browse-topic]").forEach((button) => {
     button.onclick = () => openBrowseShelf(`topic:${button.dataset.openBrowseTopic}`);
   });
+  document.querySelectorAll("[data-open-browse-person]").forEach((button) => {
+    button.onclick = () => openBrowseShelf(`person:${button.dataset.openBrowsePerson}`);
+  });
+  document.querySelectorAll("[data-open-browse-series]").forEach((button) => {
+    button.onclick = () => openBrowseShelf(`series:${button.dataset.openBrowseSeries}`);
+  });
   document.querySelectorAll("[data-shelf-back]").forEach((button) => {
     button.onclick = () => {
       if (document.body.classList.contains("shelf-search-mode")) {
@@ -7070,6 +7356,10 @@ function bindDynamicActions() {
       }
       if (String(state.activeBrowseShelfKey || "").startsWith("topic:")) {
         openBrowseShelf("topics");
+        return;
+      }
+      if (String(state.activeBrowseShelfKey || "").startsWith("person:")) {
+        openBrowseShelf("people");
         return;
       }
       setView("gatewayView");
@@ -7093,6 +7383,19 @@ function bindDynamicActions() {
       }
     };
   });
+  document.querySelectorAll("[data-search-filter]").forEach((button) => {
+    button.onclick = () => {
+      state.searchFilter = button.dataset.searchFilter || "all";
+      renderShelfSearchResults();
+    };
+  });
+  const shelfSearchInput = document.getElementById("shelfSearchInput");
+  if (shelfSearchInput) {
+    shelfSearchInput.oninput = () => {
+      state.searchQuery = shelfSearchInput.value || "";
+      renderShelfSearchResults();
+    };
+  }
   document.querySelectorAll("[data-nav-jump]").forEach((button) => {
     if (button.closest(".home-hero-slide")) return;
     button.onclick = () => {
