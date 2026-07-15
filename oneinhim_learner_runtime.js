@@ -1438,7 +1438,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "224";
+const APP_RELEASE_VERSION = "225";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
@@ -1924,7 +1924,7 @@ function homeShelfCardMarkup(item, shelf, content, options = {}) {
   const contentKind = mediaKind === "other" && currentMode === "watch" ? "video" : (mediaKind === "other" && currentMode === "listen" ? "audio" : mediaKind);
   const locked = homeItemIsLocked(item, content);
   const comingSoon = homeItemIsComingSoon(item);
-  const shape = shelf.cardSize || "wide";
+  const shape = normalizeShelfCardShape(shelf.cardSize);
   const display = homeResolvedItemDisplay(item);
   const label = display.alt || item.id || "Open item";
   if (options.detail) {
@@ -1994,6 +1994,10 @@ function homeBrowseMarkup() {
       </div>
     </section>
   `;
+}
+
+function normalizeShelfCardShape(shape) {
+  return ["wide", "square", "poster", "topic-list"].includes(shape) ? shape : "wide";
 }
 
 function homeSupporterBandMarkup(band) {
@@ -2180,7 +2184,7 @@ function homeBrowseShelfForKey(key) {
       return true;
     });
   return {
-    shelf: { id: `browse_${key}`, title: config.detailTitle || config.title, mode: "discover", cardSize: config.cardSize || "wide" },
+    shelf: { id: `browse_${key}`, title: config.detailTitle || config.title, mode: "discover", cardSize: normalizeShelfCardShape(config.cardSize) },
     index: -1,
     items
   };
@@ -2230,7 +2234,7 @@ function renderArtworkHome() {
           <h2>${esc(shelfTitle)}</h2>
           <button class="home-shelf-see-all" type="button" data-open-shelf="${index}">${esc(homeCommonText("seeAll", "See all"))}</button>
         </div>
-        <div class="weekly-media-shelf artwork-card-shelf" aria-label="${esc(shelfTitle)}">
+        <div class="weekly-media-shelf artwork-card-shelf artwork-card-shelf-${esc(normalizeShelfCardShape(shelf.cardSize))}" aria-label="${esc(shelfTitle)}">
           ${items.map((item) => homeShelfCardMarkup(item, shelf, content, { mode: currentMode })).join("")}
         </div>
       </section>
@@ -2255,7 +2259,7 @@ function renderShelfDetail() {
   if (!browseShelf) state.activeShelfIndex = selected.index;
   if (els.shelfDetailTitle) els.shelfDetailTitle.textContent = selected.shelf.title || "Shelf";
   if (els.shelfDetailGrid) {
-    const shape = selected.shelf.cardSize || "wide";
+    const shape = normalizeShelfCardShape(selected.shelf.cardSize);
     els.shelfDetailGrid.className = `shelf-detail-grid ${shape}`;
     if (shape === "topic-list") {
       els.shelfDetailGrid.innerHTML = (selected.topicThemes || []).map(homeBrowseTopicCardMarkup).join("");
@@ -2299,7 +2303,10 @@ function t(key) {
 }
 
 function currentViewText(viewId) {
-  return (viewText[state.language] && viewText[state.language][viewId]) || viewText.en[viewId];
+  return (viewText[state.language] && viewText[state.language][viewId])
+    || viewText.en[viewId]
+    || viewText.en.discoverView
+    || ["One In Him", ""];
 }
 
 function activeStage() {

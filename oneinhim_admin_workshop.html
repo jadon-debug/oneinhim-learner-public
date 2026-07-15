@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>One In Him Admin</title>
   <script src="./oneinhim_team_sync_config.js"></script>
-  <script src="./oneinhim_home_layout.js?v=224"></script>
-  <script src="./oneinhim_mux_import_queue.js?v=224"></script>
+  <script src="./oneinhim_home_layout.js?v=225"></script>
+  <script src="./oneinhim_mux_import_queue.js?v=225"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -961,7 +961,7 @@
 
     .card-preview {
       position: relative;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: var(--card-preview-ratio, 16 / 9);
       border: 1px solid var(--line);
       border-radius: 10px;
       overflow: hidden;
@@ -991,8 +991,8 @@
       font-weight: 900;
     }
 
-    .card-preview.square { aspect-ratio: 1; }
-    .card-preview.poster { aspect-ratio: 3 / 4; }
+    .card-preview.square { --card-preview-ratio: 1 / 1; }
+    .card-preview.poster { --card-preview-ratio: 3 / 4; }
 
     .card-preview img {
       width: 100%;
@@ -2192,7 +2192,7 @@
       </div>
       <div class="btn-row">
         <button class="btn primary" id="signInButton" type="button">Sign in</button>
-        <a class="btn" href="oneinhim_cache_reset_v224.html?auto=1">Open published app</a>
+        <a class="btn" href="oneinhim_cache_reset_v225.html?auto=1">Open published app</a>
       </div>
       <p id="authMessage">Only approved One In Him admins can edit this workshop.</p>
     </div>
@@ -2208,7 +2208,7 @@
         </div>
       </div>
       <div class="publish-tools">
-        <a class="btn" href="oneinhim_cache_reset_v224.html?auto=1">Preview current app</a>
+        <a class="btn" href="oneinhim_cache_reset_v225.html?auto=1">Preview current app</a>
         <a class="btn helper-start" id="publishHelperStart" href="./start_oneinhim_publish_helper.command">Start helper</a>
         <button class="btn green" id="publishButton" type="button">Publish to GitHub</button>
         <span class="publish-status" id="publishStatus" role="status"></span>
@@ -2447,7 +2447,7 @@
               <p>Journey is the guided discipleship path. It should be managed separately from Discover heroes and Library shelves.</p>
             </div>
             <div class="btn-row">
-              <a class="btn" href="oneinhim_cache_reset_v224.html?auto=1&hash=journey">Preview Journey</a>
+              <a class="btn" href="oneinhim_cache_reset_v225.html?auto=1&hash=journey">Preview Journey</a>
             </div>
           </div>
           <div class="journey-editor">
@@ -4179,6 +4179,35 @@
       { label: "OE Duane Sat", path: "assets/OE_May_Duanesheriff_saturday2.webp", use: "poster" }
     ];
 
+    const CARD_SHAPES = {
+      wide: {
+        label: "Wide",
+        ratio: "16 / 9",
+        artwork: "1600 x 900 px",
+        help: "Best for landscape video, course, and teaching cards."
+      },
+      square: {
+        label: "Square",
+        ratio: "1 / 1",
+        artwork: "1200 x 1200 px",
+        help: "Best for audio, books, and compact covers."
+      },
+      poster: {
+        label: "Poster",
+        ratio: "3 / 4",
+        artwork: "1200 x 1600 px",
+        help: "Best for tall series, books, and featured covers."
+      }
+    };
+
+    function cardShapeConfig(size) {
+      return CARD_SHAPES[size] || CARD_SHAPES.wide;
+    }
+
+    function normalizeCardShape(size) {
+      return CARD_SHAPES[size] ? size : "wide";
+    }
+
     const state = {
       view: "heroes",
       heroIndex: 0,
@@ -4320,7 +4349,7 @@
         title: item.title || "Browse card",
         copy: item.copy || "",
         detailTitle: item.detailTitle || item.title || "Browse",
-        cardSize: ["wide", "square", "poster"].includes(item.cardSize) ? item.cardSize : "wide",
+        cardSize: normalizeCardShape(item.cardSize),
         filter: item.filter || "",
         topicThemes: Array.isArray(item.topicThemes) ? item.topicThemes : [],
         live: Boolean(item.live)
@@ -4506,12 +4535,8 @@
     }
 
     function shelfSizeHelp(size) {
-      const guides = {
-        wide: "Recommended artwork: 1600 x 900 px. Best for landscape video, course, and teaching cards.",
-        square: "Recommended artwork: 1200 x 1200 px. Best for audio, books, and compact covers.",
-        poster: "Recommended artwork: 1200 x 1600 px. Best for tall series, books, and featured covers."
-      };
-      return guides[size || "wide"] || guides.wide;
+      const shape = cardShapeConfig(size);
+      return `Recommended artwork: ${shape.artwork}. ${shape.label} frame ${shape.ratio}. ${shape.help}`;
     }
 
     function assetFileName(path) {
@@ -4583,7 +4608,7 @@
           <span>Choose library content, enter artwork, or pick a preset to create a card.</span>
         `;
       }
-      const shape = shelf?.cardSize || "wide";
+      const shape = normalizeCardShape(shelf?.cardSize);
       const linkLabel = shelfItemIsPlaceholder(item) ? "No content link · artwork-only placeholder" : `Linked to ${shelfItemContentId(item)}`;
       const lockLabel = shelfItemIsLocked(item) ? "Locked" : "Unlocked";
       const comingSoonLabel = shelfItemIsComingSoon(item) ? "Coming soon overlay" : "No overlay";
@@ -5096,8 +5121,10 @@
         const missingLabel = item.artwork ? "Artwork not found" : "Add artwork path";
         const locked = shelfItemIsLocked(item);
         const comingSoon = shelfItemIsComingSoon(item);
+        const shape = normalizeCardShape(shelf.cardSize);
+        const shapeConfig = cardShapeConfig(shape);
         return `
-        <div class="card-preview ${esc(shelf.cardSize || "wide")}${locked ? " locked" : ""}${comingSoon ? " coming-soon" : ""}${index === state.shelfItemIndex ? " active" : ""}" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(shelfItemLabel(item))} artwork">
+        <div class="card-preview ${esc(shape)}${locked ? " locked" : ""}${comingSoon ? " coming-soon" : ""}${index === state.shelfItemIndex ? " active" : ""}" style="--card-preview-ratio: ${esc(shapeConfig.ratio)};" role="button" tabindex="0" data-shelf-item-index="${index}" aria-label="Edit ${esc(shelfItemLabel(item))} artwork">
           ${artwork ? `<img src="${esc(artwork)}" alt="${esc(item.alt || "")}" onerror="this.classList.add('is-missing'); this.nextElementSibling.hidden = false;" />` : ""}
           <div class="card-preview-placeholder"${artwork ? " hidden" : ""}>${esc(missingLabel)}</div>
           ${locked ? `<span class="card-lock" aria-label="Locked content">Locked</span>` : ""}
@@ -5108,18 +5135,19 @@
       }).join("");
       document.getElementById("shelfTitle").value = shelf.title || "";
       document.getElementById("shelfMode").value = shelf.mode || "";
-      document.getElementById("shelfSize").value = shelf.cardSize || "wide";
-      document.getElementById("shelfSizeHelp").textContent = shelfSizeHelp(shelf.cardSize || "wide");
+      shelf.cardSize = normalizeCardShape(shelf.cardSize);
+      document.getElementById("shelfSize").value = shelf.cardSize;
+      document.getElementById("shelfSizeHelp").textContent = shelfSizeHelp(shelf.cardSize);
       document.getElementById("shelfContent").innerHTML = contentOptions("");
       document.getElementById("selectedCardSummary").innerHTML = selectedCardSummary(shelfItem, shelf);
       document.getElementById("shelfCardContent").innerHTML = contentOptions(shelfItem?.contentId || shelfItem?.target || "", { allowNone: true });
       document.getElementById("shelfCardArtwork").value = shelfItem?.artwork || "";
       document.getElementById("shelfCardArtwork").disabled = !shelf;
       document.getElementById("shelfCardArtworkHelp").textContent = shelfItem
-        ? `Use Select cover, then choose an artwork preset. ${shelfSizeHelp(shelf.cardSize || "wide")}`
-        : `Use Select cover to create an artwork-only placeholder. ${shelfSizeHelp(shelf.cardSize || "wide")}`;
+        ? `Use Select cover, then choose an artwork preset. ${shelfSizeHelp(shelf.cardSize)}`
+        : `Use Select cover to create an artwork-only placeholder. ${shelfSizeHelp(shelf.cardSize)}`;
       document.getElementById("shelfCardAlt").value = shelfItem?.alt || "";
-      document.getElementById("shelfAssetPicker").innerHTML = shelf ? assetPickerOptions("shelf", shelfItem?.artwork || "", shelf.cardSize || "wide") : "";
+      document.getElementById("shelfAssetPicker").innerHTML = shelf ? assetPickerOptions("shelf", shelfItem?.artwork || "", shelf.cardSize) : "";
       document.getElementById("shelfAssetPicker").hidden = !state.showShelfCoverPicker;
       document.getElementById("focusShelfArtwork").textContent = state.showShelfCoverPicker ? "Hide covers" : "Select cover";
       document.getElementById("shelfCardAlt").disabled = !shelf;
@@ -5168,7 +5196,8 @@
       document.getElementById("browseIcon").value = section.icon || "topic";
       document.getElementById("browseLive").checked = Boolean(section.live);
       document.getElementById("browseDetailTitle").value = section.detailTitle || section.title || "";
-      document.getElementById("browseCardSize").value = section.cardSize || "wide";
+      section.cardSize = normalizeCardShape(section.cardSize);
+      document.getElementById("browseCardSize").value = section.cardSize;
       document.getElementById("browseFilter").value = section.filter || "";
       document.getElementById("browseTopicThemes").value = Array.isArray(section.topicThemes) ? section.topicThemes.join("\n") : "";
     }
@@ -6335,7 +6364,7 @@
       document.getElementById("heroTargetType").addEventListener("change", (event) => updateHeroField("targetType", event.target.value));
       document.getElementById("shelfTitle").addEventListener("input", (event) => { currentShelf().title = event.target.value; renderShelves(); });
       document.getElementById("shelfMode").addEventListener("input", (event) => { currentShelf().mode = event.target.value; renderShelves(); });
-      document.getElementById("shelfSize").addEventListener("change", (event) => { currentShelf().cardSize = event.target.value; renderShelves(); });
+      document.getElementById("shelfSize").addEventListener("change", (event) => { currentShelf().cardSize = normalizeCardShape(event.target.value); renderShelves(); });
       document.getElementById("shelfContent").addEventListener("change", (event) => {
         if (currentShelfItem()) updateShelfItemField("content", event.target.value);
       });
@@ -6380,7 +6409,7 @@
       document.getElementById("browseIcon").addEventListener("change", (event) => updateBrowseField("icon", event.target.value));
       document.getElementById("browseLive").addEventListener("change", (event) => updateBrowseField("live", event.target.checked));
       document.getElementById("browseDetailTitle").addEventListener("input", (event) => updateBrowseField("detailTitle", event.target.value));
-      document.getElementById("browseCardSize").addEventListener("change", (event) => updateBrowseField("cardSize", event.target.value));
+      document.getElementById("browseCardSize").addEventListener("change", (event) => updateBrowseField("cardSize", normalizeCardShape(event.target.value)));
       document.getElementById("browseFilter").addEventListener("input", (event) => updateBrowseField("filter", event.target.value));
       document.getElementById("browseTopicThemes").addEventListener("input", (event) => updateBrowseField("topicThemes", event.target.value.split(/\n+/).map((item) => item.trim()).filter(Boolean)));
       document.getElementById("addBrowseButton").addEventListener("click", () => {
