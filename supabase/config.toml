@@ -1,0 +1,3 @@
+[functions.oih-onboarding]
+# Requests authenticate in the function: worker/webhook secret, or opaque opt-out token.
+verify_jwt = false

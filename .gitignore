@@ -1,3 +1,5 @@
 
 assets/Templates/
 *.psd
+
+node_modules/

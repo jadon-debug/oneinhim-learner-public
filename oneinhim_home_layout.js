@@ -227,7 +227,7 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
       "key": "podcast-shows",
       "icon": "shows",
       "title": "Podcast Shows",
-      "copy": "Video podcasts and series",
+      "copy": "Podcasts and conversations",
       "detailTitle": "Podcast Shows",
       "cardSize": "wide",
       "filter": "video watch podcast series"

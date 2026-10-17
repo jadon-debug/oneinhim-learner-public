@@ -1,0 +1,24 @@
+name: Process onboarding emails
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: oih-onboarding-emails
+  cancel-in-progress: false
+jobs:
+  deliver:
+    if: vars.OIH_EMAIL_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Process a bounded batch
+        env:
+          WORKER_SECRET: ${{ secrets.OIH_EMAIL_WORKER_SECRET }}
+        run: |
+          test -n "$WORKER_SECRET"
+          curl --fail-with-body --silent --show-error --max-time 120 \
+            --request POST \
+            --header "x-oih-secret: $WORKER_SECRET" \
+            'https://jlrgfcadmaoigybvzdsx.supabase.co/functions/v1/oih-onboarding'

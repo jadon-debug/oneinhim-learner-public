@@ -17,7 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
 <script>document.documentElement.classList.add("app-booting");</script>
-<link rel="stylesheet" href="./oneinhim_learner_styles.css?v=228" />
+<link rel="stylesheet" href="./oneinhim_learner_styles.css?v=230" />
 
 </head>
 <body class="gateway-mode dark-gateway-hero-active dark-app-chrome-active">
@@ -628,6 +628,7 @@
   <button class="primary-btn" type="button" data-gateway-nav="journey" data-i18n="account.continue">Continue your journey</button>
   <p class="device-storage-note" data-i18n="account.deviceNote">Cross-device accounts are not available yet. Clearing browser data removes locally saved progress and notes.</p>
 </section>
+<section id="learnerAccountControls" class="learner-account-controls" aria-label="Learner account"></section>
 <details class="team-account-details"><summary data-i18n="account.teamOnly">Team sign-in</summary>
 <div class="team-account-content">
 	          <section class="account-copy">
@@ -702,12 +703,13 @@
 	      <div class="onboarding-shell">
         <header class="onboarding-top">
           <button class="onboarding-back" type="button" id="onboardingBack" aria-label="Close">&times;</button>
+          <span class="onboarding-brand">ONE IN HIM</span>
         </header>
 
         <main class="onboarding-body">
           <div class="onboarding-guide">
             <img src="assets/oneinhim-characters-international.png" alt="" id="onboardingGuideArt" />
-            <div class="onboarding-bubble" id="onboardingPrompt">Where are you starting from?</div>
+            <div class="onboarding-heading"><p id="onboardingEyebrow">YOUR STARTING POINT</p><h1 class="onboarding-bubble" id="onboardingPrompt">Where are you starting from?</h1><p id="onboardingSupport">Choose what feels closest. You can change this later.</p></div>
           </div>
           <div id="onboardingContent"></div>
         </main>
@@ -1300,10 +1302,11 @@
 <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=228"></script>
-<script src="./oneinhim_journey_layout.js?v=228"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./oneinhim_learner_runtime.js?v=228"></script>
+<script src="./oneinhim_home_layout.js?v=230"></script>
+<script src="./oneinhim_journey_layout.js?v=230"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
+<script src="./oneinhim_learner_accounts.js?v=230"></script>
+<script src="./oneinhim_learner_runtime.js?v=230"></script>
 
 </body>
 </html>

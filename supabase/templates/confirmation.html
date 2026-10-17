@@ -1,0 +1,10 @@
+<!doctype html><html><body style="font:16px/1.6 Arial,sans-serif;max-width:560px;margin:32px auto;padding:24px;color:#202720">
+<p style="color:#a64710;font-weight:bold">ONE IN HIM</p>
+{{ if eq .Data.language "nl" }}
+<h1>Bevestig je e-mailadres</h1><p>Welkom bij One In Him. Bevestig je e-mailadres om je gratis account te gebruiken.</p>
+<p><a href="{{ .ConfirmationURL }}">Bevestig mijn e-mailadres</a></p><p>Heb je geen account aangevraagd? Dan kun je deze e-mail negeren.</p>
+{{ else }}
+<h1>Confirm your email address</h1><p>Welcome to One In Him. Confirm your email address to use your free account.</p>
+<p><a href="{{ .ConfirmationURL }}">Confirm my email address</a></p><p>If you did not request an account, you can ignore this email.</p>
+{{ end }}
+</body></html>
