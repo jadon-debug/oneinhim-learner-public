@@ -1,6 +1,8 @@
-const ONEINHIM_CACHE = "oneinhim-app-v227";
+const ONEINHIM_CACHE = "oneinhim-app-v228";
 
 const APP_SHELL = [
+  "./oneinhim_learner_app.html",
+  "./",
   "./oneinhim.webmanifest",
   "./oneinhim_team_sync_config.js",
   "./oneinhim_learner_styles.css",
@@ -48,7 +50,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(keys
-        .filter((key) => key !== ONEINHIM_CACHE)
+        .filter((key) => key.startsWith("oneinhim-app-") && key !== ONEINHIM_CACHE)
         .map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
@@ -88,7 +90,15 @@ self.addEventListener("fetch", (event) => {
     url.pathname.endsWith("oneinhim.webmanifest");
 
   if (isFreshAppFile) {
-    event.respondWith(fetch(request, { cache: "no-store" }));
+    event.respondWith(
+      fetch(request, { cache: "no-store" }).then(response => {
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(ONEINHIM_CACHE).then(cache => cache.put(request, copy));
+        }
+        return response;
+      }).catch(async () => (await caches.match(request)) || (await caches.match(url.pathname)) || Response.error())
+    );
     return;
   }
 

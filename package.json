@@ -1,0 +1,11 @@
+{
+  "name": "oneinhim-learner-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node tests/app-regression.cjs"
+  },
+  "devDependencies": {
+    "linkedom": "0.18.13"
+  }
+}

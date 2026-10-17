@@ -392,7 +392,7 @@ const pathOptions = [
     metaKey: "stage.explore.meta",
     topicsKey: "stage.explore.topics",
     rangeKey: "stage.explore.range",
-    progress: 100
+    progress: 0
   },
   {
     choice: "startFollowing",
@@ -404,7 +404,7 @@ const pathOptions = [
     metaKey: "stage.start.meta",
     topicsKey: "stage.start.topics",
     rangeKey: "stage.start.range",
-    progress: 68
+    progress: 0
   },
   {
     choice: "growRoots",
@@ -416,7 +416,7 @@ const pathOptions = [
     metaKey: "stage.grow.meta",
     topicsKey: "stage.grow.topics",
     rangeKey: "stage.grow.range",
-    progress: 28
+    progress: 0
   },
   {
     choice: "liveMission",
@@ -428,7 +428,7 @@ const pathOptions = [
     metaKey: "stage.mission.meta",
     topicsKey: "stage.mission.topics",
     rangeKey: "stage.mission.range",
-    progress: 12
+    progress: 0
   },
   {
     choice: "leadMultiply",
@@ -636,7 +636,7 @@ const i18n = {
 	    "feed.openJourney": "Open journey",
 	    "feed.shareButton": "Share thought",
 	    "feed.emptyThought": "Write a thought before sharing.",
-	    "feed.saved": "Shared on this device for now.",
+	    "feed.saved": "Saved on this device. This is not a public post.",
 	    "feed.shareReady": "Share ready",
 	    "feed.sharedThought": "shared a thought",
 	    "feed.completedStep": "completed a step",
@@ -913,9 +913,9 @@ const i18n = {
     "module.sessionPoints": "1 step today",
     "module.notesLabel": "Notes and thoughts",
     "module.notesPlaceholder": "Write what stood out, questions you have, or what you want to do next.",
-    "module.saveNotes": "Save to my profile",
+    "module.saveNotes": "Save on this device",
     "module.notesReady": "Saved on this device for now.",
-    "module.notesSaved": "Saved to your profile notes",
+    "module.notesSaved": "Saved on this device",
     "module.watchBody": "Watch the main teaching, then write down what stood out before you move on.",
     "module.listenBody": "Listen to the audio version for this session. This is useful while walking, driving, or when you want a quieter pace.",
     "module.readBody": "Read the guide at your own pace. Use this session when you want Scripture, notes, and reflection without video.",
@@ -999,7 +999,7 @@ const i18n = {
 	    "feed.openJourney": "Open reis",
 	    "feed.shareButton": "Deel gedachte",
 	    "feed.emptyThought": "Schrijf eerst een gedachte.",
-	    "feed.saved": "Voor nu gedeeld op dit apparaat.",
+	    "feed.saved": "Opgeslagen op dit apparaat. Dit is geen openbaar bericht.",
 	    "feed.shareReady": "Delen staat klaar",
 	    "feed.sharedThought": "deelde een gedachte",
 	    "feed.completedStep": "rondde een stap af",
@@ -1276,9 +1276,9 @@ const i18n = {
     "module.sessionPoints": "1 stap vandaag",
     "module.notesLabel": "Notities en gedachten",
     "module.notesPlaceholder": "Schrijf op wat opviel, welke vragen je hebt, of wat je volgende stap is.",
-    "module.saveNotes": "Bewaar in mijn profiel",
+    "module.saveNotes": "Bewaar op dit apparaat",
     "module.notesReady": "Voor nu opgeslagen op dit apparaat.",
-    "module.notesSaved": "Opgeslagen in je profielnotities",
+    "module.notesSaved": "Opgeslagen op dit apparaat",
     "module.watchBody": "Bekijk de hoofdteaching en schrijf daarna op wat je opviel voordat je verdergaat.",
     "module.listenBody": "Luister naar de audioversie van deze sessie. Dit is handig tijdens wandelen, reizen, of wanneer je een rustiger tempo wilt.",
     "module.readBody": "Lees de gids in je eigen tempo. Gebruik deze sessie wanneer je Bijbeltekst, notities en reflectie wilt zonder video.",
@@ -1440,7 +1440,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "227";
+const APP_RELEASE_VERSION = "228";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
@@ -1933,7 +1933,7 @@ function homeResolvedItemDisplay(item) {
   const isPlaceholder = item?.targetType === "none" || item?.placeholder || !(item?.target || item?.contentId);
   const artwork = isPlaceholder
     ? (item?.artwork || "")
-    : (item?.artworkOverride || item?.placementArtwork || homeResourceArtwork(linkedResource) || item?.artwork || "");
+    : (item?.artworkOverride || item?.placementArtwork || item?.artwork || homeResourceArtwork(linkedResource) || "");
   const title = localizedField(item?.titleOverride, resourceTitle(linkedResource, localizedField(item?.alt, item?.id || "Untitled")));
   const copy = localizedField(item?.descriptionOverride, resourceSummary(linkedResource, localizedField(item?.description, "")));
   const alt = localizedField(item?.alt, resourceTitle(linkedResource, title));
@@ -2698,7 +2698,7 @@ function stopGatewayHeroAutoplay() {
 function scheduleGatewayHeroAutoplay() {
   stopGatewayHeroAutoplay();
   const slides = document.querySelectorAll("[data-gateway-hero-slide]");
-  if (state.activeView !== "gatewayView" || document.hidden || slides.length < 2) return;
+  if (state.activeView !== "gatewayView" || document.hidden || slides.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches || document.querySelector(".home-hero:focus-within, .home-hero:hover")) return;
   gatewayHeroAutoplayTimer = window.setTimeout(() => {
     gatewayHeroAutoplayTimer = null;
     if (state.activeView !== "gatewayView" || document.hidden) return;
@@ -2840,17 +2840,21 @@ function wireGatewayHeroSwipe() {
 
 	function setGatewayNavActive(target) {
 	  document.querySelectorAll("[data-gateway-nav]").forEach((button) => {
-	    button.classList.toggle("active", button.dataset.gatewayNav === target);
+	    const selected = button.dataset.gatewayNav === target;
+      button.classList.toggle("active", selected);
+      if (selected) button.setAttribute("aria-current", "page");
+      else button.removeAttribute("aria-current");
 	  });
 	}
 
 	function appNavTargetForView(viewId) {
-	  if (viewId === "feedView") return "feed";
+	  if (["stageDetailView", "moduleDetailView", "moduleQuizView", "onboardingView"].includes(viewId)) return "journey";
+      if (viewId === "feedView") return "feed";
 	  if (viewId === "accountView") return "account";
 	  if (viewId === "libraryView") return "library";
 	  if (viewId === "gatewayView") return normalizeGatewayContentMode(state.gatewayContentMode);
 	  if (viewId === "shelfDetailView") return normalizeGatewayContentMode(state.gatewayContentMode);
-	  if (viewId === "discoveryDetailView") return "discover";
+	  if (viewId === "discoveryDetailView") return normalizeGatewayContentMode(state.gatewayContentMode);
 	  return "";
 	}
 
@@ -2878,6 +2882,8 @@ function openGatewayFilteredMode(target) {
   setGatewayContentMode(target);
   if (state.activeView !== "gatewayView") {
     setView("gatewayView");
+  } else if (state.bootComplete) {
+    recordAppRoute();
   }
   window.requestAnimationFrame(() => {
     scrollGatewayToTop();
@@ -3037,6 +3043,7 @@ async function handleAdminLogout() {
 }
 
 	function handleGatewayNav(target) {
+    if (target === "journey") { openDefaultJourneyPath(); return; }
 	  if (target === "account") {
 	    setGatewayNavActive(target);
 	    setGatewayContentMode("discover");
@@ -3076,6 +3083,8 @@ async function handleAdminLogout() {
     setGatewayContentMode("discover");
     if (state.activeView !== "gatewayView") {
       setView("gatewayView");
+    } else if (state.bootComplete) {
+      recordAppRoute();
     }
     window.requestAnimationFrame(scrollGatewayToTop);
     return;
@@ -3102,7 +3111,7 @@ function applyLanguage(language, showToast = false) {
   }
   document.documentElement.lang = nextLanguage;
   document.querySelectorAll("[data-i18n]").forEach((node) => {
-    node.textContent = t(node.dataset.i18n);
+    node.textContent = t(node.getAttribute("data-i18n"));
   });
   els.langButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.lang === nextLanguage);
@@ -3122,6 +3131,7 @@ function applyLanguage(language, showToast = false) {
   renderPathSelect();
   renderOnboarding();
   renderFeed();
+  renderLearnerAccount();
   renderLibrary();
   renderDiscoveryDetail();
   bindDynamicActions();
@@ -3865,18 +3875,26 @@ function handleLockedResource(resource) {
 
 async function shareResource(resource) {
   if (!resource) return;
-  const shareText = resource.shareLine || resource.summary || `I found this helpful: ${resource.title}`;
-  const shareUrl = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(resource.id)}`;
-  const earned = earnSeedsForShare(resource);
-  toast(earned ? `Shared. +${earned} Seeds.` : "Shared already. Seeds kept.");
+  const shareUrl = new URL(window.location.href);
+  shareUrl.searchParams.delete("refresh");
+  shareUrl.hash = encodeURIComponent(resource.id);
+  const shareText = resource.shareLine || resource.summary || resource.title;
   try {
+    let copied = false;
     if (navigator.share) {
-      await navigator.share({ title: resource.title, text: shareText, url: shareUrl });
+      await navigator.share({ title: resource.title, text: shareText, url: shareUrl.href });
     } else if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+      await navigator.clipboard.writeText(`${shareText}\n${shareUrl.href}`);
+      copied = true;
+    } else {
+      toast(state.language === "nl" ? "Delen is niet beschikbaar in deze browser." : "Sharing is unavailable in this browser.");
+      return;
     }
+    const earned = earnSeedsForShare(resource);
+    const message = state.language === "nl" ? (copied ? "Link gekopieerd." : "Gedeeld.") : (copied ? "Link copied." : "Shared.");
+    toast(`${message}${earned ? ` +${earned} Seeds.` : ""}`);
   } catch (error) {
-    // Sharing can be cancelled by the user; earning Seeds still reflects the intentional share action in this prototype.
+    if (error.name !== "AbortError") toast(state.language === "nl" ? "Delen is niet gelukt. Probeer het opnieuw." : "Could not share. Please try again.");
   }
 }
 
@@ -4024,8 +4042,9 @@ function loadFeedState() {
 function saveFeedPosts() {
   try {
     localStorage.setItem(FEED_POSTS_STORAGE_KEY, JSON.stringify(state.feedPosts.slice(0, 40)));
+    return true;
   } catch (error) {
-    // Feed still works for this session if local storage is unavailable.
+    return false;
   }
 }
 
@@ -4081,7 +4100,7 @@ function feedPostHtml(post) {
           </button>
           <button class="feed-action" type="button" data-feed-share="${esc(post.id)}" aria-label="Share ${esc(post.author || "post")}">↥</button>
         </div>
-        <div class="feed-liked">
+        <div class="feed-liked" ${post.id.startsWith("local_") ? "hidden" : ""}>
           <span class="feed-liked-faces" aria-hidden="true">
             ${likedFaces.map((face) => `<i style="--face-color:${face.color};">${face.label}</i>`).join("")}
           </span>
@@ -4122,12 +4141,14 @@ function handleFeedSubmit() {
   state.feedPosts = [post, ...state.feedPosts].slice(0, 40);
   els.feedComposer.value = "";
   if (els.feedStatus) els.feedStatus.textContent = t("feed.saved");
-  saveFeedPosts();
+  const saved = saveFeedPosts();
+  const message = saved ? t("feed.saved") : (state.language === "nl" ? "Alleen bewaard voor deze sessie; opslag is niet beschikbaar." : "Kept for this session only; device storage is unavailable.");
+  if (els.feedStatus) els.feedStatus.textContent = message;
   renderFeed();
-  toast(t("feed.saved"));
+  toast(message);
 }
 
-function handleFeedAction(event) {
+async function handleFeedAction(event) {
   const target = event.target instanceof Element ? event.target.closest("[data-feed-like], [data-feed-share]") : null;
   if (!target) return;
   const likeId = target.dataset.feedLike;
@@ -4139,7 +4160,19 @@ function handleFeedAction(event) {
     return;
   }
   if (target.dataset.feedShare) {
-    toast(t("feed.shareReady"));
+    const post = displayFeedPosts().find(post => post.id === target.dataset.feedShare);
+    if (!post) return;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "One In Him", text: post.text });
+        toast(state.language === "nl" ? "Gedeeld." : "Shared.");
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(post.text);
+        toast(state.language === "nl" ? "Gedachte gekopieerd." : "Thought copied.");
+      } else toast(state.language === "nl" ? "Delen is niet beschikbaar." : "Sharing is unavailable.");
+    } catch (error) {
+      if (error.name !== "AbortError") toast(state.language === "nl" ? "Delen is niet gelukt." : "Could not share.");
+    }
   }
 }
 
@@ -4346,12 +4379,17 @@ function setView(viewId, options = {}) {
 	  const [title, subtitle] = currentViewText(nextViewId);
 	  els.viewTitle.textContent = title;
 	  els.viewSubtitle.textContent = subtitle;
-	  if (nextViewId === "accountView") renderAdminAccount();
+	  if (nextViewId === "accountView") { renderLearnerAccount(); renderAdminAccount(); }
 	  if (nextViewId === "feedView") renderFeed();
   if (nextViewId === "onboardingView") renderOnboarding();
   window.scrollTo({ top: 0, behavior: "auto" });
   updateGatewayNavScrollState();
   primeMobileDocumentScroll(nextViewId);
+  if (state.bootComplete && options.history !== false) recordAppRoute();
+  if (!options.initial) {
+    const view = document.getElementById(nextViewId);
+    if (view) { view.tabIndex = -1; view.focus({ preventScroll: true }); }
+  }
   if (nextViewId === "stageDetailView") {
     const targetStageChoice = state.activeStageId;
     const targetSectionIndex = Number.isFinite(state.selectedSectionIndex) ? state.selectedSectionIndex : 0;
@@ -4677,7 +4715,7 @@ function discoveryRelatedItems(item) {
       .sort((a, b) => (a.episode || 0) - (b.episode || 0))
     : [];
   if (nextEpisodes.length) {
-    return { title: "Next episodes", items: nextEpisodes };
+    return { title: state.language === "nl" ? "Verder ontdekken" : "Keep exploring", items: nextEpisodes };
   }
   return {
     title: "Recommended next",
@@ -4895,7 +4933,7 @@ function renderDiscoveryAudioDetail(item) {
     buttons.innerHTML = `
       <button class="primary-btn" type="button" id="discoverJoinJourney">Open journey step</button>
       ${playableAudio && nextEpisode ? `<button class="soft-btn" type="button" data-audio-next>Next episode</button>` : ""}
-      <button class="soft-btn" type="button" data-nav-jump="gatewayView">Share</button>
+      <button class="soft-btn" type="button" data-share="${esc(item.id)}">${state.language === "nl" ? "Delen" : "Share"}</button>
     `;
     els.discoverJoinJourney = document.getElementById("discoverJoinJourney");
   }
@@ -5015,8 +5053,8 @@ function renderDiscoveryDetail() {
   shell?.classList.remove("audio-detail");
   if (buttons) {
     buttons.innerHTML = `
-      <button class="primary-btn" type="button" id="discoverJoinJourney">Join the journey</button>
-      <button class="soft-btn" type="button" data-nav-jump="gatewayView">Share</button>
+      <button class="primary-btn" type="button" id="discoverJoinJourney">${state.language === "nl" ? "Start deze les" : "Start this lesson"}</button>
+      <button class="soft-btn" type="button" data-share="${esc(item.id)}">${state.language === "nl" ? "Delen" : "Share"}</button>
     `;
     els.discoverJoinJourney = document.getElementById("discoverJoinJourney");
   }
@@ -5121,7 +5159,7 @@ function parseStageSections(stage) {
       title,
       subtitle,
       detail,
-      progress: Number(progress) || 0,
+      progress: 0,
       courses: courses.split(",").map((item) => item.trim()).filter(Boolean),
       range: `${index * 5 + 1} to ${index * 5 + 5}`
     };
@@ -5333,7 +5371,7 @@ function pieceProgressKey(stage, moduleIndex) {
 }
 
 function sectionDynamicProgress(stage, group, groupIndex, baseProgress) {
-  if (!group || !group.modules || !group.modules.length) return baseProgress || 0;
+  if (!group || !group.modules || !group.modules.length) return 0;
   const completedPieces = group.modules.filter((item) =>
     state.completedPieces.has(pieceProgressKey(stage, item.moduleIndex))
   ).length;
@@ -5341,7 +5379,7 @@ function sectionDynamicProgress(stage, group, groupIndex, baseProgress) {
   const key = sectionProgressKey(stage, groupIndex);
   const practicalBonus = state.completedPracticals.has(key) ? 10 : 0;
   const reviewBonus = state.completedReviews.has(key) ? 8 : 0;
-  return Math.min(100, Math.max(baseProgress || 0, contentProgress + practicalBonus + reviewBonus));
+  return Math.min(100, contentProgress + practicalBonus + reviewBonus);
 }
 
 function journeyNodeIcon(resource, type = "content") {
@@ -5357,7 +5395,7 @@ function stageSectionGroups(stage) {
   if (!packaged.length) {
     return modules.map((module, index) => ({
       title: `Unit ${index + 1}`,
-      progress: module.progress,
+      progress: sectionDynamicProgress(stage, { modules: [{ moduleIndex: index }] }, index, 0),
       range: module.range,
       modules: [{ ...module, moduleIndex: index }]
     }));
@@ -5956,16 +5994,17 @@ function renderStageDetail() {
   els.stageSummaryCard.className = `stage-summary-card ${stage.color}`;
   els.stageAppHeader.style.setProperty("--stage-color", stage.stageColor);
   els.stageSummaryCard.style.setProperty("--stage-color", stage.stageColor);
+  const stageProgress = sectionGroups.length ? Math.round(sectionGroups.reduce((sum, group) => sum + group.progress, 0) / sectionGroups.length) : 0;
   els.stageProgressFill.style.setProperty("--stage-color", stage.stageColor);
-  els.stageProgressFill.style.setProperty("--progress", `${stage.progress}%`);
+  els.stageProgressFill.style.setProperty("--progress", `${stageProgress}%`);
   els.stageStatusRow.style.setProperty("--stage-color", stage.stageColor);
   els.stageQuestProgress.style.setProperty("--stage-color", stage.stageColor);
-  els.stageQuestProgress.style.setProperty("--progress", `${Math.max(16, stage.progress)}%`);
+  els.stageQuestProgress.style.setProperty("--progress", `${stageProgress}%`);
   els.stageStatusRow.innerHTML = [
-    { icon: "▰", label: `${Math.round(stage.progress)}% complete` },
+    { icon: "▰", label: `${stageProgress}% ${state.language === "nl" ? "voltooid" : "complete"}` },
     { icon: "◆", label: `${sectionGroups.length} units` },
     { icon: "", label: `${state.seeds} Seeds`, seed: true },
-    { icon: "⚡", label: "1 step today" }
+    { icon: "⚡", label: state.language === "nl" ? "Doel: 1 stap per dag" : "Goal: 1 step a day" }
   ].map((item) => `
     <div class="status-pill">
       <span class="status-icon ${item.seed ? "seed-status-icon" : ""}">${item.seed ? "" : esc(item.icon)}</span>
@@ -6811,15 +6850,18 @@ function markCurrentLearningStepComplete() {
   const sectionKey = sectionProgressKey(stage, info.groupIndex);
   if (state.sectionReview) {
     state.completedReviews.add(sectionKey);
+    saveLearningProgress();
     return;
   }
   if (state.practicalUse) {
     state.completedPracticals.add(sectionKey);
+    saveLearningProgress();
     return;
   }
   state.completedPieces.add(pieceProgressKey(stage, state.activeModuleIndex));
   const resource = moduleResourceFor(stage, state.activeModuleIndex);
   if (resource) state.completed.add(resource.id);
+  saveLearningProgress();
 }
 
 function resetModuleStepState() {
@@ -7876,6 +7918,16 @@ function wireStaticActions() {
     updateGatewayNavScrollState();
     updateAllShelfArrowStates();
   });
+  window.addEventListener("popstate", () => restoreAppRoute());
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("[data-detail-back]")) handleGatewayNav(state.gatewayContentMode === "listen" ? "listen" : "watch");
+    if (event.target.closest(".feed-bell")) toast(state.language === "nl" ? "Dit is een voorbeeldfeed. Er zijn geen meldingen." : "This is a preview feed. There are no notifications.");
+  });
+  const hero = document.querySelector(".home-hero");
+  hero?.addEventListener("mouseenter", stopGatewayHeroAutoplay);
+  hero?.addEventListener("focusin", stopGatewayHeroAutoplay);
+  hero?.addEventListener("mouseleave", scheduleGatewayHeroAutoplay);
+  hero?.addEventListener("focusout", () => requestAnimationFrame(scheduleGatewayHeroAutoplay));
   document.addEventListener("click", handleJourneyOutsideClick);
   document.addEventListener("pointerdown", handleJourneyOutsideClick, { capture: true });
   document.addEventListener("click", handleJourneyShareAction, { capture: true });
@@ -8048,7 +8100,8 @@ async function ensureFreshAppVersion() {
     window.sessionStorage.setItem(refreshSessionKey, "1");
     if ("serviceWorker" in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.allSettled(registrations.map((registration) => registration.unregister()));
+      const appScope = new URL("./", window.location.href).href;
+      await Promise.allSettled(registrations.filter(registration => registration.scope === appScope).map(registration => registration.unregister()));
     }
     if ("caches" in window) {
       const keys = await caches.keys();
@@ -8099,6 +8152,7 @@ async function boot() {
   registerAppInstallWorker();
   await loadSchema();
   await loadContentPackages();
+  loadLearningProgress();
   loadFeedState();
   loadLibraryAccessState();
   loadOnboardingStageChoice();
@@ -8111,10 +8165,85 @@ async function boot() {
 	  renderLibrary();
 	  bindDynamicActions();
 	  if (!state.userNavigatedDuringBoot) {
-	    setView("gatewayView", { initial: true });
+	    if (!restoreAppRoute()) setView("gatewayView", { initial: true });
 	  }
 	  document.documentElement.classList.remove("app-booting");
 	  state.bootComplete = true;
+  recordAppRoute(true);
 	}
+
+
+const LEARNING_PROGRESS_KEY = "oneinhim.learning.progress.v1";
+const PROGRESS_FIELDS = ["completed", "completedPieces", "completedPracticals", "completedReviews"];
+function loadLearningProgress() {
+  const saved = readLocalJson(LEARNING_PROGRESS_KEY, {});
+  for (const key of PROGRESS_FIELDS) state[key] = new Set(Array.isArray(saved?.[key]) ? saved[key].filter(value => typeof value === "string") : []);
+}
+function saveLearningProgress() {
+  const saved = Object.fromEntries(PROGRESS_FIELDS.map(key => [key, [...state[key]]]));
+  if (!writeLocalJson(LEARNING_PROGRESS_KEY, saved)) toast(state.language === "nl" ? "Voortgang blijft alleen deze sessie bewaard." : "Progress is kept for this session only; device storage is unavailable.");
+}
+function renderLearnerAccount() {
+  const summary = document.getElementById("learnerProgressSummary");
+  if (summary) summary.textContent = state.language === "nl" ? `${state.completedPieces.size} lessen voltooid op dit apparaat` : `${state.completedPieces.size} ${state.completedPieces.size === 1 ? "lesson" : "lessons"} completed on this device`;
+}
+function recordAppRoute(replace = false) {
+  const route = { view: state.activeView, mode: state.gatewayContentMode, stage: state.activeStageId, module: state.activeModuleIndex, resource: state.activeResourceId, shelf: state.activeShelfIndex, browse: state.activeBrowseShelfKey };
+  const params = new URLSearchParams(route);
+  const url = new URL(window.location.href);
+  url.hash = params.toString();
+  if (!replace && url.href === window.location.href) return;
+  try { history[replace ? "replaceState" : "pushState"](route, "", url); } catch (_) { /* File previews still work without history. */ }
+}
+function restoreAppRoute() {
+  const raw = window.location.hash.slice(1);
+  if (!raw) { if (state.bootComplete) handleGatewayNav("discover"); return false; }
+  const params = new URLSearchParams(raw);
+  const legacyId = params.has("view") ? "" : (() => { try { return decodeURIComponent(raw); } catch (_) { return ""; } })();
+  const shared = resources.find(item => item.id === legacyId);
+  if (shared) {
+    const wasComplete = state.bootComplete;
+    state.bootComplete = false;
+    try { setDiscoveryResource(shared.id); } finally { state.bootComplete = wasComplete; }
+    return true;
+  }
+  const view = params.get("view");
+  if (!["gatewayView", "discoveryDetailView", "stageDetailView", "moduleDetailView", "moduleQuizView", "accountView", "feedView", "libraryView", "shelfDetailView", "onboardingView"].includes(view)) return false;
+  state.gatewayContentMode = normalizeGatewayContentMode(params.get("mode"));
+  state.activeStageId = pathOptions.some(stage => stage.choice === params.get("stage")) ? params.get("stage") : "exploreJesus";
+  state.activeModuleIndex = Math.max(0, Number(params.get("module")) || 0);
+  const resource = resources.find(item => item.id === params.get("resource"));
+  if (resource) state.activeResourceId = resource.id;
+  state.activeShelfIndex = Math.max(0, Number(params.get("shelf")) || 0);
+  state.activeBrowseShelfKey = params.get("browse") || "";
+  const wasComplete = state.bootComplete;
+  state.bootComplete = false;
+  try {
+    setGatewayContentMode(state.gatewayContentMode);
+    if (view === "shelfDetailView") {
+      if (state.activeBrowseShelfKey) openBrowseShelf(state.activeBrowseShelfKey);
+      else openShelfDetail(state.activeShelfIndex);
+    } else if (view === "discoveryDetailView") setDiscoveryResource(state.activeResourceId);
+    else {
+      if (view === "stageDetailView") renderStageDetail();
+      if (view === "moduleDetailView" || view === "moduleQuizView") renderModuleDetail();
+      setView(view === "moduleQuizView" ? "moduleDetailView" : view, { initial: !wasComplete, history: false });
+    }
+    bindDynamicActions();
+  } finally { state.bootComplete = wasComplete; }
+  return true;
+}
+Object.assign(i18n.en, {
+  "homeNav.journey": "Journey", "account.learnerTitle": "Your journey", "account.learnerCopy": "Learn at your own pace. Completed lessons and notes are saved in this browser on this device.",
+  "account.continue": "Continue your journey", "account.deviceNote": "Cross-device accounts are not available yet. Clearing browser data removes locally saved progress and notes.",
+  "account.teamOnly": "Team sign-in", "feed.preview": "Preview feed · Sample posts are shown below. Your thoughts stay on this device and are not published to other people.",
+  "feed.shareButton": "Save thought", "library.returnFree": "Explore the free journey", "library.accessPreview": "Partner sign-in is not available in this prototype. You can continue with the free journey.", "detail.back": "Back to browse"
+});
+Object.assign(i18n.nl, {
+  "homeNav.journey": "Reis", "account.learnerTitle": "Jouw reis", "account.learnerCopy": "Leer in je eigen tempo. Voltooide lessen en notities worden in deze browser op dit apparaat bewaard.",
+  "account.continue": "Ga verder met je reis", "account.deviceNote": "Accounts voor meerdere apparaten zijn nog niet beschikbaar. Als je browsergegevens wist, verdwijnen je lokale voortgang en notities.",
+  "account.teamOnly": "Inloggen voor het team", "feed.preview": "Voorbeeldfeed · Hieronder staan voorbeeldberichten. Je gedachten blijven op dit apparaat en worden niet met anderen gedeeld.",
+  "feed.shareButton": "Bewaar gedachte", "library.returnFree": "Ontdek de gratis reis", "library.accessPreview": "Inloggen als partner is nog niet beschikbaar in dit prototype. Je kunt verder met de gratis reis.", "detail.back": "Terug naar overzicht"
+});
 
 boot();

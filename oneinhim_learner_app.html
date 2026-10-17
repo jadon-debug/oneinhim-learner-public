@@ -17,12 +17,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
 <script>document.documentElement.classList.add("app-booting");</script>
-<link rel="stylesheet" href="./oneinhim_learner_styles.css?v=227" />
+<link rel="stylesheet" href="./oneinhim_learner_styles.css?v=228" />
 
 </head>
 <body class="gateway-mode dark-gateway-hero-active dark-app-chrome-active">
 <div class="app-shell">
-  <main class="main">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+<main class="main" id="main-content" tabindex="-1">
 	    <header class="topbar">
 	      <div>
 	        <h1 id="viewTitle">Start</h1>
@@ -67,7 +68,8 @@
 	          </span>
 	          <span data-i18n="homeNav.discover">Discover</span>
 	        </button>
-	        <button class="gateway-nav-btn" type="button" data-gateway-nav="watch">
+	        <button class="gateway-nav-btn" type="button" data-gateway-nav="journey"><span data-i18n="homeNav.journey">Journey</span></button>
+<button class="gateway-nav-btn" type="button" data-gateway-nav="watch">
 	          <span class="gateway-nav-icon watch" aria-hidden="true">
 	            <svg viewBox="0 0 32 32">
 	              <rect class="nav-icon-stroke" x="5" y="8" width="22" height="16" rx="3.6"></rect>
@@ -618,7 +620,16 @@
 
 	    <section class="view" id="accountView">
 	      <section class="account-shell">
-	        <main class="account-card">
+	        <main class="account-card"><section class="learner-account-panel">
+  <p class="eyebrow" data-i18n="account.eyebrow">Account</p>
+  <h2 data-i18n="account.learnerTitle">Your journey</h2>
+  <p data-i18n="account.learnerCopy">Learn at your own pace. Completed lessons and notes are saved in this browser on this device.</p>
+  <strong id="learnerProgressSummary"></strong>
+  <button class="primary-btn" type="button" data-gateway-nav="journey" data-i18n="account.continue">Continue your journey</button>
+  <p class="device-storage-note" data-i18n="account.deviceNote">Cross-device accounts are not available yet. Clearing browser data removes locally saved progress and notes.</p>
+</section>
+<details class="team-account-details"><summary data-i18n="account.teamOnly">Team sign-in</summary>
+<div class="team-account-content">
 	          <section class="account-copy">
 	            <p class="eyebrow" data-i18n="account.eyebrow">Account</p>
 	            <h2 data-i18n="account.title">Admin workshop</h2>
@@ -649,7 +660,7 @@
 	            </div>
 	            <p class="admin-note" data-i18n="account.nextSecurity">Next security step: real admin accounts in Supabase, then only approved admins can publish content.</p>
 	          </section>
-	        </main>
+	        </div></details></main>
 	      </section>
 	    </section>
 
@@ -669,11 +680,12 @@
 	          </button>
 	        </header>
 
-	        <section class="feed-composer" aria-label="Share a thought">
+	        <p class="feed-preview-note" data-i18n="feed.preview">Preview feed. Your thoughts stay on this device.</p>
+<section class="feed-composer" aria-label="Share a thought">
 	          <div class="feed-avatar" aria-hidden="true">Y</div>
 	          <div>
 	            <label for="feedComposer" data-i18n="feed.composerLabel">Share a thought from your journey</label>
-	            <textarea id="feedComposer" placeholder="What stood out from today's step?"></textarea>
+	            <textarea maxlength="2000" id="feedComposer" placeholder="What stood out from today's step?"></textarea>
 	            <div class="feed-composer-actions">
 	              <button class="soft-btn" type="button" data-nav-jump="stageDetailView" data-i18n="feed.openJourney">Open journey</button>
 	              <button class="primary-btn" type="button" id="feedPostButton" data-i18n="feed.shareButton">Share thought</button>
@@ -785,6 +797,7 @@
 
     <section class="view" id="discoveryDetailView">
       <div class="discover-watch-shell">
+<button class="detail-back" type="button" data-detail-back data-i18n="detail.back">Back to browse</button>
         <main class="discover-watch-main">
           <div class="discover-watch-media" id="discoverWatchMedia">
             <button class="discover-watch-play" type="button" id="discoverWatchPlay">▶</button>
@@ -1149,10 +1162,8 @@
           <h2 id="libraryPartnerTitle" data-i18n="library.partnerTitle">Become a partner for full access</h2>
           <p data-i18n="library.partnerCopy">Partners and supporters help keep One In Him resources free for people starting their journey. Partner access opens the growing library of teachings, audio, and study guides.</p>
           <button class="primary-btn" type="button" data-action="partner-access" data-i18n="library.partnerButton">Become a partner</button>
-          <button class="library-partner-signin" type="button" data-gateway-nav="account">
-            <span data-i18n="library.alreadyPartner">Already a partner?</span>
-            <strong data-i18n="library.signIn">Sign in</strong>
-          </button>
+          <button class="library-partner-signin" type="button" data-gateway-nav="journey" data-i18n="library.returnFree">Explore the free journey</button>
+          <p class="library-access-preview" data-i18n="library.accessPreview">Partner sign-in is not available in this prototype. Continue with the free journey.</p>
           <p class="library-partner-note" data-i18n="library.partnerNote">One In Him is a charity. This is support, not buying a product; the core journey remains free.</p>
         </section>
       </div>
@@ -1264,8 +1275,8 @@
 	        </span>
 	        <span data-i18n="homeNav.feed">Feed</span>
 	      </button>
-	      <button type="button" data-gateway-nav="library">
-	        <span class="gateway-nav-icon library" aria-hidden="true">
+	      <button type="button" data-gateway-nav="journey">
+	        <span class="gateway-nav-icon journey" aria-hidden="true">
 	          <svg viewBox="0 0 32 32">
 	            <path class="nav-icon-stroke" d="M6 7.5h8.5c1.4 0 2.5 1.1 2.5 2.5v17c0-1.4-1.1-2.5-2.5-2.5H6Z"></path>
 	            <path class="nav-icon-stroke" d="M17 10c0-1.4 1.1-2.5 2.5-2.5H28v17h-8.5c-1.4 0-2.5 1.1-2.5 2.5Z"></path>
@@ -1273,7 +1284,7 @@
 	            <path class="nav-icon-stroke" d="M21 12h4"></path>
 	          </svg>
 	        </span>
-	        <span data-i18n="homeNav.library">Library</span>
+	        <span data-i18n="homeNav.journey">Journey</span>
 	      </button>
 	    </nav>
 	  </main>
@@ -1286,13 +1297,13 @@
   </div>
 </section>
 
-<div class="toast" id="toast">Saved</div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">Saved</div>
 
 <script src="./oneinhim_team_sync_config.js"></script>
-<script src="./oneinhim_home_layout.js?v=227"></script>
-<script src="./oneinhim_journey_layout.js?v=227"></script>
+<script src="./oneinhim_home_layout.js?v=228"></script>
+<script src="./oneinhim_journey_layout.js?v=228"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./oneinhim_learner_runtime.js?v=227"></script>
+<script src="./oneinhim_learner_runtime.js?v=228"></script>
 
 </body>
 </html>
