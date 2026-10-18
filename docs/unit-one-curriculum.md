@@ -14,6 +14,6 @@ The written material is taken from `pkg_one_basics_1_1_eternal_life`, already su
 
 The ring and visible percentage advance 0 → 20 → 40 → 60 → 80 → 100 as the five content modules are completed. Continue records the current content module before its separate questions. Skip does not complete it. Practice/review completions never inflate the ring. Resume opens the first unfinished module. An older first-video completion is retained as one module (20%); new modules use stable resource IDs so numeric positions do not falsely complete added content.
 
-Existing future units are retained. Signup, email delivery and database permissions are unchanged.
+The former future-unit placeholders now contain five sourced written modules each: Saved by Grace and Intimacy with God. All stages follow the five-module rule; see [the full curriculum](five-module-curriculum.md). Signup, email delivery and database permissions are unchanged.
 
 References: [Mux audio UI](https://www.mux.com/docs/guides/player-core-functionality#audio-player), [Mux player attributes](https://www.mux.com/docs/guides/player-api-reference/html).
