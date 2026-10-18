@@ -16007,37 +16007,69 @@ body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-control .duo-nod
 #moduleDetailView .module-hero.listen-session mux-player[audio] { display: block; width: 100%; min-height: 80px; }
 
 /* Graded checks and personal choices have distinct, honest feedback states. */
-body.quiz-checked.quiz-incorrect #moduleQuizView .quiz-option.incorrect {
+body.quiz-checked.quiz-result-incorrect #moduleQuizView .quiz-option.incorrect {
   border-color: #a83525 !important;
   background: #fff0eb !important;
 }
-body.quiz-checked.quiz-incorrect #moduleQuizView .quiz-footer {
+body.quiz-checked.quiz-result-incorrect #moduleQuizView .quiz-footer {
   background: #fff0eb !important;
 }
-body.quiz-checked.quiz-incorrect.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-feedback.show,
-body.quiz-checked.quiz-incorrect #moduleQuizView .quiz-feedback.show {
+body.quiz-checked.quiz-result-incorrect.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-feedback.show,
+body.quiz-checked.quiz-result-incorrect #moduleQuizView .quiz-feedback.show {
   border-color: #a83525 !important;
   background: #fff0eb !important;
   color: #8f291c !important;
 }
-body.quiz-checked.quiz-incorrect.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-feedback.show::before,
-body.quiz-checked.quiz-incorrect #moduleQuizView .quiz-feedback.show::before {
+body.quiz-checked.quiz-result-incorrect.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-feedback.show::before,
+body.quiz-checked.quiz-result-incorrect #moduleQuizView .quiz-feedback.show::before {
   content: "!" !important;
   background: #a83525 !important;
   color: #fff !important;
 }
-body.quiz-checked.quiz-reflection #moduleQuizView .quiz-footer {
+body.quiz-checked.quiz-result-reflection #moduleQuizView .quiz-footer {
   background: #edf4fa !important;
 }
-body.quiz-checked.quiz-reflection.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-feedback.show,
-body.quiz-checked.quiz-reflection #moduleQuizView .quiz-feedback.show {
+body.quiz-checked.quiz-result-reflection.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-feedback.show,
+body.quiz-checked.quiz-result-reflection #moduleQuizView .quiz-feedback.show {
   border-color: #285a79 !important;
   background: #edf4fa !important;
   color: #204c68 !important;
 }
-body.quiz-checked.quiz-reflection.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-feedback.show::before,
-body.quiz-checked.quiz-reflection #moduleQuizView .quiz-feedback.show::before {
+body.quiz-checked.quiz-result-reflection.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-feedback.show::before,
+body.quiz-checked.quiz-result-reflection #moduleQuizView .quiz-feedback.show::before {
   content: "→" !important;
   background: #285a79 !important;
   color: #fff !important;
+}
+
+
+@media (max-width: 760px) {
+  body.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-main h2 {
+    font-size: clamp(26px, 7.2vw, 32px) !important;
+    line-height: 1.12 !important;
+  }
+  body.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-option {
+    grid-template-columns: 36px minmax(0, 1fr) !important;
+    grid-template-rows: auto !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+  body.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-option-symbol {
+    width: 36px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 22px !important;
+  }
+  body.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-option > span:not(.quiz-option-symbol) {
+    gap: 4px !important;
+  }
+  body.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-option strong {
+    font-size: 16px !important;
+  }
+  body.learning-mode:not(.section-picker-mode) #moduleQuizView .quiz-option small {
+    display: none !important;
+  }
+  #moduleQuizView .quiz-feedback {
+    scroll-margin-bottom: calc(130px + env(safe-area-inset-bottom));
+  }
 }
