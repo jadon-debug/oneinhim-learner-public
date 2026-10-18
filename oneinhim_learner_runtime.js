@@ -1440,7 +1440,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "230";
+const APP_RELEASE_VERSION = "231";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
@@ -4291,6 +4291,7 @@ async function loadContentPackages() {
       els.schemaPill.textContent = `${els.schemaPill.textContent} · team sync offline`;
     }
   }
+  installFirstJourneyUnit();
 }
 
 function primeMobileDocumentScroll(viewId) {
@@ -5255,6 +5256,47 @@ function rawPackageModulesForStage(stage) {
   return modules;
 }
 
+// A content module is a distinct source segment; questions remain separate steps.
+function installFirstJourneyUnit() {
+  const book = resources.find(item => item.id === "book_one_basics_1_1_eternal_life");
+  const video = resources.find(item => item.id === "mux_one_basics_1_1_full_video");
+  if (!book?.readBody?.length || !resourceMuxPlaybackId(video)) return;
+  const definitions = [
+    { slug: "opening", title: "Eternal Life · Part 1", medium: "watch", start: 0, end: 360 },
+    { slug: "living-forever", title: "More than living forever", medium: "read", paragraphs: [0, 2] },
+    { slug: "teaching-audio", title: "Eternal Life · Part 2 (audio)", medium: "listen", start: 360, end: 720 },
+    { slug: "knowing-the-father", title: "Knowing the Father through Jesus", medium: "read", paragraphs: [2, 6] },
+    { slug: "closing", title: "Eternal Life · Part 3", medium: "watch", start: 720, end: 1080 }
+  ];
+  definitions.forEach((definition, index) => {
+    const isReading = definition.medium === "read";
+    const body = isReading ? book.readBody.slice(...definition.paragraphs) : [];
+    const minutes = isReading ? Math.max(1, Math.ceil(body.join(" ").split(/\s+/).length / 200)) : (definition.end - definition.start) / 60;
+    const id = `journey_explore_unit_1_${definition.slug}`;
+    const resource = {
+      ...book, id, packageId: id, title: definition.title,
+      openingPrompt: definition.title, summary: isReading ? body[0] : `One Basics 1.1: Eternal Life · ${formatClock(definition.start)}–${formatClock(definition.end)}${definition.medium === "listen" ? " · audio from the original teaching" : ""}`,
+      primaryMedium: definition.medium, format: [definition.medium, "reflect"],
+      visualType: visualTypeForMedium(definition.medium),
+      contentType: isReading ? "book_excerpt" : definition.medium === "listen" ? "audio" : "short_clip",
+      sourceResourceId: isReading ? book.id : video.id,
+      sourceLabel: isReading ? "One Basics 1.1 · study guide" : "One Basics 1.1 · original teaching",
+      readBody: body, transcript: body, videoHost: isReading ? null : video.videoHost,
+      muxVirtualClip: null, isMuxClip: !isReading,
+      clipStartSeconds: isReading ? null : definition.start, clipEndSeconds: isReading ? null : definition.end,
+      length: `${minutes} min ${definition.medium === "read" ? "read" : definition.medium === "listen" ? "audio" : "video"}`,
+      seconds: minutes * 60, seriesId: "stage_1_explore_jesus", stage: "explore",
+      unitNumber: 1, unitTitle: "Knowing God through Jesus", pieceNumber: index + 1,
+      episode: index + 1, showInJourney: true, showInDiscover: false,
+      curatedUnit: true, access: { level: "free" }
+    };
+    const existing = resources.findIndex(item => item.id === id);
+    if (existing >= 0) resources[existing] = resource;
+    else resources.push(resource);
+  });
+  clearJourneyStructureCache();
+}
+
 function nodeMediumPreferenceKey(stage, unitNumber) {
   return `${stage.choice}:${unitNumber || 1}`;
 }
@@ -5292,6 +5334,7 @@ function effectiveNodeMediumPreference(stage, unitNumber, modules = []) {
 }
 
 function mixedNodeModules(modules = []) {
+  if (modules.some(resource => resource.curatedUnit)) return modules.filter(resource => resource.curatedUnit).sort((a,b) => a.pieceNumber - b.pieceNumber).slice(0, 5);
   const pattern = ["watch", "read", "watch", "read", "watch"];
   const selected = [];
   const usedIds = new Set();
@@ -5386,6 +5429,12 @@ function stageSections(stage) {
       quickCheck: resource.quickCheck
     };
   });
+  // Retain the existing future units after the five-part first unit.
+  if (stage.choice === "exploreJesus" && packaged.some(resource => resource.curatedUnit)) {
+    parseStageSections(stage).slice(1).forEach((module, index) => {
+      if (!sections.some(section => section.unitNumber === index + 2)) sections.push({ ...module, unitNumber: index + 2, unitTitle: `Unit ${index + 2}`, moduleIndex: sections.length });
+    });
+  }
   journeyStructureCache.sections.set(cacheKey, sections);
   return sections;
 }
@@ -5415,19 +5464,25 @@ function sectionProgressKey(stage, groupIndex) {
 }
 
 function pieceProgressKey(stage, moduleIndex) {
+  const resource = packageModulesForStage(stage)[moduleIndex];
+  if (resource?.curatedUnit) return `${stage.choice}:${resource.id}`;
   return `${stage.choice}:${moduleIndex}`;
+}
+
+function learningPieceComplete(stage, moduleIndex) {
+  if (state.completedPieces.has(pieceProgressKey(stage, moduleIndex))) return true;
+  const resource = packageModulesForStage(stage)[moduleIndex];
+  // Existing first-video completions remain one completed segment, never all five.
+  return Boolean(resource?.curatedUnit && resource.pieceNumber === 1 &&
+    (state.completedPieces.has("exploreJesus:0") || state.completed.has("mux_one_basics_1_1_opening_clip")));
 }
 
 function sectionDynamicProgress(stage, group, groupIndex, baseProgress) {
   if (!group || !group.modules || !group.modules.length) return 0;
   const completedPieces = group.modules.filter((item) =>
-    state.completedPieces.has(pieceProgressKey(stage, item.moduleIndex))
+    learningPieceComplete(stage, item.moduleIndex)
   ).length;
-  const contentProgress = Math.round((completedPieces / group.modules.length) * 82);
-  const key = sectionProgressKey(stage, groupIndex);
-  const practicalBonus = state.completedPracticals.has(key) ? 10 : 0;
-  const reviewBonus = state.completedReviews.has(key) ? 8 : 0;
-  return Math.min(100, contentProgress + practicalBonus + reviewBonus);
+  return Math.round((completedPieces / group.modules.length) * 100);
 }
 
 function journeyNodeIcon(resource, type = "content") {
@@ -5505,7 +5560,7 @@ function nodeLessonProgress(stage, moduleIndex) {
   const lessons = info.group && Array.isArray(info.group.modules) ? info.group.modules : [];
   if (!lessons.length) return { completed: 0, total: 1, percent: 0 };
   const completed = lessons.filter((item) =>
-    state.completedPieces.has(pieceProgressKey(stage, item.moduleIndex))
+    learningPieceComplete(stage, item.moduleIndex)
   ).length;
   return {
     completed,
@@ -5700,7 +5755,7 @@ function moduleFallbackInfo(resource, activeMode, modes, stage, sectionInfo) {
         .find(({ item, index, resource: itemResource }) =>
           index > sectionInfo.pieceIndex
             && resourceSupportsMode(itemResource, targetMode)
-            && !state.completedPieces.has(pieceProgressKey(stage, item.moduleIndex))
+            && !learningPieceComplete(stage, item.moduleIndex)
         );
       if (forward && forward.resource) {
         return {
@@ -5934,9 +5989,10 @@ function renderNodeLessonList(node, stage) {
     const title = resource ? resource.title.replace(/^One Basics\s+/, "") : item.title || `Lesson ${index + 1}`;
     const mode = nodeModeForResource(stage, node, resource);
     const meta = resource ? `${sectionContentFormat(resource, mode)} · ${resource.length || item.range || "Short"}` : item.range || "Lesson";
+    const complete = learningPieceComplete(stage, item.moduleIndex);
     return `
-      <span>
-        <b>${esc(index + 1)}</b>
+      <span class="${complete ? "is-complete" : ""}">
+        <b aria-label="${complete ? "Completed" : `Module ${index + 1}`}">${complete ? "✓" : esc(index + 1)}</b>
         <em>
           <strong>${esc(title)}</strong>
           <small>${esc(meta)}</small>
@@ -5978,12 +6034,13 @@ function renderDuoNodePopout(node, stage) {
     <div class="duo-node-popout ${node.locked ? "locked-popout" : ""}">
       <h3>${esc(node.title)}</h3>
       <p>${esc(sectionThemeDescription(stage, node))}</p>
+      <p class="duo-unit-summary">${esc(`${node.progress || 0}% ${state.language === "nl" ? "voltooid" : "complete"} · ${(node.modules || []).filter(item => learningPieceComplete(stage, item.moduleIndex)).length}/${(node.modules || []).length} modules`)}<small>${state.language === "nl" ? "Vragen en oefeningen tellen apart." : "Questions and practice are separate."}</small></p>
       ${renderNodeLessonList(node, stage)}
       ${node.locked ? `
         <button class="soft-btn" type="button" disabled>Locked</button>
       ` : `
         <div class="duo-popout-actions">
-          <button class="primary-btn" type="button" data-section-node-start="${esc(`${stage.choice}:${node.groupIndex}`)}">${node.completed ? "Review unit" : "Start unit"}</button>
+          <button class="primary-btn" type="button" data-section-node-start="${esc(`${stage.choice}:${node.groupIndex}`)}">${node.completed ? "Review unit" : node.progress > 0 ? "Continue unit" : "Start unit"}</button>
           <button class="soft-btn" type="button" data-share-journey-node="${esc(`${stage.choice}:${node.groupIndex}`)}">Share +5 Seeds</button>
         </div>
       `}
@@ -6105,6 +6162,7 @@ function renderStageDetail() {
         unitNumber: group.unitNumber,
         mediumPreference: group.mediumPreference,
         mediumAvailability: group.mediumAvailability,
+        progress: group.progress,
         sectionStart: index === 0,
         current,
         completed,
@@ -6120,12 +6178,12 @@ function renderStageDetail() {
         groupIndex: index,
         globalIndex,
         title: "Unit reward",
-        meta: contentLocked || group.progress < 65 ? "Complete the unit to unlock this." : "A small encouragement for finishing well.",
+        meta: contentLocked || group.progress < 100 ? "Complete the unit to unlock this." : "A small encouragement for finishing well.",
         icon: "▣",
         color: unitColor,
         current: false,
-        completed: group.progress >= 65,
-        locked: contentLocked || group.progress < 65,
+        completed: group.progress === 100,
+        locked: contentLocked || group.progress < 100,
         modules: group.modules
       });
       pathNodes.push({
@@ -6137,12 +6195,12 @@ function renderStageDetail() {
         groupIndex: index,
         globalIndex,
         title: "Practical use",
-        meta: contentLocked || group.progress < 80 ? "Complete the lessons above to unlock this." : "Live out one simple next step today.",
+        meta: contentLocked || group.progress < 100 ? "Complete the lessons above to unlock this." : "Live out one simple next step today.",
         icon: "↻",
         color: unitColor,
         current: false,
-        completed: group.progress >= 90,
-        locked: contentLocked || group.progress < 80,
+        completed: state.completedPracticals.has(sectionProgressKey(pathStage, index)),
+        locked: contentLocked || group.progress < 100,
         modules: group.modules
       });
       pathNodes.push({
@@ -6154,12 +6212,12 @@ function renderStageDetail() {
         groupIndex: index,
         globalIndex,
         title: `${group.title} review`,
-        meta: contentLocked || group.progress < 90 ? "Complete the unit first." : "Practice past concepts and strengthen the unit.",
+        meta: contentLocked || group.progress < 100 ? "Complete the unit first." : "Practice past concepts and strengthen the unit.",
         icon: "★",
         color: unitColor,
         current: false,
-        completed: completed,
-        locked: contentLocked || group.progress < 90,
+        completed: state.completedReviews.has(sectionProgressKey(pathStage, index)),
+        locked: contentLocked || group.progress < 100,
         modules: group.modules
       });
     });
@@ -6205,7 +6263,9 @@ function renderStageDetail() {
         <article class="duo-path-node ${node.kind} ${isSelected ? "selected" : ""}" data-stage-choice="${esc(node.stageChoice)}" data-section-index="${node.groupIndex}" data-section-title="${esc(node.title)}" style="--stage-color: ${esc(node.color || node.stage.stageColor)}; --section-color: ${esc(node.stage.stageColor)}; --section-text: ${esc(readableTextColor(node.stage.stageColor))}; --node-x: ${nodeOffset}px; --mobile-node-x: ${mobileNodeOffset}px;">
           <div class="duo-node-anchor">
             ${node.sectionStart ? `<div class="duo-start-tag">Start</div>` : ""}
+            ${node.kind === "content" ? `<span class="duo-unit-control"><svg class="duo-unit-ring" viewBox="0 0 100 100" preserveAspectRatio="none" role="progressbar" aria-label="${esc(`${node.title} completion`)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${node.progress}"><circle class="duo-unit-track" cx="50" cy="50" r="46"/><circle class="duo-unit-fill" cx="50" cy="50" r="46" pathLength="100" stroke-dasharray="${node.progress} 100" transform="rotate(-90 50 50)"/></svg>` : ""}
             <button class="duo-node-button ${node.kind} ${node.current ? "current" : ""} ${node.completed ? "completed" : ""} ${node.locked ? "locked" : ""}" type="button" data-duo-node-select="${esc(node.key)}" ${isPathSpine ? "data-path-spine=\"true\"" : ""} aria-label="${esc(node.title)}">${esc(node.icon)}</button>
+            ${node.kind === "content" ? `<span class="duo-unit-percentage">${node.progress}%</span></span>` : ""}
             ${isSelected ? renderDuoNodePopout(node, node.stage || stage) : ""}
           </div>
         </article>
@@ -6672,6 +6732,7 @@ function muxPlayerElementHtml(resource) {
     `playsinline`,
     `no-tooltips`
   ];
+  if (resource.primaryMedium === "listen") attrs.push("audio");
   if (poster) attrs.push(`poster="${esc(poster)}"`);
   const bounds = muxClipBounds(resource);
   if (bounds) {
@@ -6867,7 +6928,7 @@ function openSectionPicker(sectionIndex) {
   if (!section || !section.modules.length) return;
   state.selectedSectionIndex = sectionIndex;
   state.selectedPathNode = pathNodeKey("content", stage, sectionIndex);
-  const firstContent = section.modules[0];
+  const firstContent = section.modules.find(item => !learningPieceComplete(stage, item.moduleIndex)) || section.modules[0];
   state.activeModuleIndex = Number(firstContent.moduleIndex) || 0;
   const firstResource = moduleResourceFor(stage, state.activeModuleIndex);
   state.moduleMode = nodeModeForResource(stage, section, firstResource);
@@ -6906,9 +6967,10 @@ function markCurrentLearningStepComplete() {
     saveLearningProgress();
     return;
   }
-  state.completedPieces.add(pieceProgressKey(stage, state.activeModuleIndex));
   const resource = moduleResourceFor(stage, state.activeModuleIndex);
-  if (resource) state.completed.add(resource.id);
+  if (!resource) return;
+  if (!learningPieceComplete(stage, state.activeModuleIndex)) state.completedPieces.add(pieceProgressKey(stage, state.activeModuleIndex));
+  state.completed.add(resource.id);
   saveLearningProgress();
 }
 
@@ -6968,7 +7030,7 @@ function renderModuleQuiz() {
       `;
     }).join("");
     const pickerCompleted = picker.modules.filter((item) =>
-      state.completedPieces.has(pieceProgressKey(stage, item.moduleIndex))
+      learningPieceComplete(stage, item.moduleIndex)
     ).length;
     const pickerProgress = picker.modules.length
       ? Math.round((pickerCompleted / picker.modules.length) * 100)
@@ -7767,6 +7829,7 @@ function bindDynamicActions() {
       state.quizChecked = false;
       state.sectionReview = null;
       state.practicalUse = false;
+      markCurrentLearningStepComplete();
       renderModuleQuiz();
       setView("moduleQuizView");
       bindDynamicActions();
@@ -7829,7 +7892,7 @@ function bindDynamicActions() {
         return;
       }
       state.quizChecked = true;
-      markCurrentLearningStepComplete();
+      if (state.sectionReview || state.practicalUse) markCurrentLearningStepComplete();
       renderModuleQuiz();
       bindDynamicActions();
     };

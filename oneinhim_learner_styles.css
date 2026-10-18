@@ -15991,3 +15991,17 @@ body.onboarding-mode #onboardingView.view.active { margin: 0 !important; padding
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* Unit rings measure content modules only, independently of questions/practice. */
+#stageDetailView .duo-unit-control { position: relative; display: inline-grid; place-items: center; }
+#stageDetailView .duo-unit-ring { position: absolute; inset: -11px; width: calc(100% + 22px); height: calc(100% + 22px); overflow: visible; pointer-events: none; }
+#stageDetailView .duo-unit-ring circle { fill: none; stroke-width: 7; }
+#stageDetailView .duo-unit-track { stroke: #deded9; }
+#stageDetailView .duo-unit-fill { stroke: var(--stage-color, #ee7326); }
+body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-control .duo-node-button.content { position: relative; outline: none !important; box-shadow: inset 0 -7px 0 rgba(0,0,0,.14), 0 5px 10px rgba(0,0,0,.08) !important; }
+#stageDetailView .duo-unit-percentage { position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%); color: #576053; background: #fff; padding: 1px 6px; border-radius: 6px; font: 700 12px/1.4 Montserrat, sans-serif; white-space: nowrap; }
+#stageDetailView .duo-unit-summary { font-size: 14px !important; font-weight: 700; }
+#stageDetailView .duo-unit-summary small { display: block; font-weight: 400; font-size: 12px; margin-top: 4px; }
+#stageDetailView .duo-node-piece-list .is-complete b { background: #fff; color: #85501e; }
+#moduleDetailView .module-hero.listen-session .module-player.has-mux { aspect-ratio: auto !important; min-height: 100px !important; }
+#moduleDetailView .module-hero.listen-session mux-player[audio] { display: block; width: 100%; min-height: 80px; }
