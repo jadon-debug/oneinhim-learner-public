@@ -507,6 +507,7 @@ const DEFAULT_SEED_UNLOCK_COST = 10;
 let gatewayHeroAutoplayTimer = null;
 let discoveryAudioSleepTimer = null;
 let journeyContentVersion = 0;
+const journeyCurriculum = new Map();
 let stickyStageBannerFrame = 0;
 let duoPathCurveFrame = 0;
 let gatewayNavScrollFrame = 0;
@@ -1440,7 +1441,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "231";
+const APP_RELEASE_VERSION = "232";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
@@ -4292,6 +4293,7 @@ async function loadContentPackages() {
     }
   }
   installFirstJourneyUnit();
+  installFiveModuleCurriculum();
 }
 
 function primeMobileDocumentScroll(viewId) {
@@ -5241,6 +5243,7 @@ function journeyCacheKey(stage, suffix = "") {
 function rawPackageModulesForStage(stage) {
   const cacheKey = journeyCacheKey(stage);
   if (journeyStructureCache.rawModules.has(cacheKey)) return journeyStructureCache.rawModules.get(cacheKey);
+  if (journeyCurriculum.has(stage.choice)) return journeyCurriculum.get(stage.choice);
   const moduleId = stageChoiceModuleId(stage);
   if (!moduleId) return [];
   const modules = resources
@@ -5288,11 +5291,110 @@ function installFirstJourneyUnit() {
       seconds: minutes * 60, seriesId: "stage_1_explore_jesus", stage: "explore",
       unitNumber: 1, unitTitle: "Knowing God through Jesus", pieceNumber: index + 1,
       episode: index + 1, showInJourney: true, showInDiscover: false,
+      quickCheck: firstUnitChecks()[index],
       curatedUnit: true, access: { level: "free" }
     };
     const existing = resources.findIndex(item => item.id === id);
     if (existing >= 0) resources[existing] = resource;
     else resources.push(resource);
+  });
+  clearJourneyStructureCache();
+}
+
+
+// These checks are grounded in the supplied Eternal Life guide and its Scripture references.
+function firstUnitChecks() {
+  return [
+    ["According to John 17:3, what is eternal life?", "Knowing the Father and Jesus Christ", "Never needing to learn or grow", "Earning God's acceptance through good works", "John 17:3 describes eternal life as knowing the only true God and Jesus Christ whom he sent."],
+    ["According to John 3:16, why did God give his Son?", "So that whoever believes in him should not perish but have eternal life", "So that people could earn salvation by religious effort", "So that only people with no past mistakes could approach him", "John 3:16 connects God's love and the gift of his Son with salvation and eternal life for those who believe."],
+    ["In John 10:10, what does Jesus say he came to give?", "Life, and life more abundantly", "A life that never needs a relationship with God", "Acceptance based on perfect religious performance", "Jesus says he came so that people may have life, and have it more abundantly (John 10:10)."],
+    ["According to John 14:9, how does Jesus reveal the Father?", "Whoever has seen Jesus has seen the Father", "Jesus shows that the Father cannot be known", "Jesus reveals a completely different character from the Father", "Jesus says, 'He who has seen Me has seen the Father' (John 14:9)."],
+    ["According to John 14:6, how do we come to the Father?", "Through Jesus, the way, the truth and the life", "By being more religious than other people", "By knowing every answer before we begin", "In John 14:6, Jesus says that no one comes to the Father except through him."]
+  ].map(([question, correct, wrongOne, wrongTwo, feedback]) => ({
+    question, answers: [{id: "truth", label: correct}, {id: "wrong_one", label: wrongOne}, {id: "wrong_two", label: wrongTwo}],
+    correctAnswer: "truth", feedback
+  }));
+}
+
+function teachingParagraphs(resource) {
+  // PDF question pages sometimes start in the middle of a paragraph. Keep the teaching before them.
+  const result = [];
+  for (const raw of resource.readBody || []) {
+    const text = String(raw);
+    const boundary = text.search(/\bQUESTIONS\b|Answers in the back of the study guide|Reactions and discussion|(?:^|\s)\d*\s*Read:\s.*?\bQuestion:/);
+    const teaching = (boundary < 0 ? text : text.slice(0, boundary)).trim();
+    if (teaching) result.push(teaching);
+    if (boundary >= 0) break;
+  }
+  return result;
+}
+
+function splitReadingIntoModules(source, count, stage, legacyKeys = []) {
+  const body = teachingParagraphs(source);
+  if (body.length < count) throw new Error(`Not enough supplied teaching to split ${source.id} into ${count} modules`);
+  return Array.from({length: count}, (_, index) => {
+    const start = Math.floor(index * body.length / count);
+    const end = Math.floor((index + 1) * body.length / count);
+    const paragraphs = body.slice(start, end);
+    const minutes = Math.max(1, Math.ceil(paragraphs.join(" ").split(/\s+/).length / 200));
+    const title = `${source.title.replace(/^One Basics\s+\d+\.\d+:\s*/, "")} · Part ${index + 1} of ${count}`;
+    return {
+      ...source, id: `${source.id}__${stage.choice}_part_${index + 1}_of_${count}`,
+      title, openingPrompt: title, summary: paragraphs[0], readBody: paragraphs, transcript: paragraphs,
+      sourceResourceId: source.id, curriculumSourceId: source.id, sourceParagraphRange: [start, end], legacyProgressKeys: legacyKeys,
+      primaryMedium: "read", format: ["read", "reflect"], videoHost: null, isMuxClip: false,
+      clipStartSeconds: null, clipEndSeconds: null, visualType: "book", contentType: "book_excerpt",
+      length: `${minutes} min read`, seconds: minutes * 60, showInDiscover: false, curatedUnit: true
+    };
+  });
+}
+
+function installFiveModuleCurriculum() {
+  // Capture the v231 numeric ordering before rebuilding it. Stable IDs prevent regrouping from
+  // awarding progress to a different lesson; old completions still map to their actual source.
+  journeyCurriculum.clear();
+  clearJourneyStructureCache();
+  const previous = new Map(pathOptions.map(stage => [stage.choice, packageModulesForStage(stage).map(item => item.id)]));
+  pathOptions.forEach(stage => {
+    let modules = rawPackageModulesForStage(stage).map(resource => ({
+      ...resource, curriculumSourceId: resource.id,
+      legacyProgressKeys: previous.get(stage.choice).flatMap((id, index) => id === resource.id ? [`${stage.choice}:${index}`] : [])
+    }));
+    if (stage.choice === "exploreJesus") {
+      modules = modules.filter(resource => resource.curatedUnit);
+      ["book_one_basics_1_2_saved_by_grace", "book_one_basics_1_4_intimacy_with_god"].forEach(id => {
+        const source = resources.find(resource => resource.id === id);
+        if (source) modules.push(...splitReadingIntoModules(source, 5, stage));
+      });
+    } else {
+      // Episode values in book two start at 101. They are source order, not unit numbers.
+      modules.sort((a, b) => (Number(a.episode) || 0) - (Number(b.episode) || 0) || a.id.localeCompare(b.id));
+      modules = modules.map(resource => resource.primaryMedium === "read"
+        ? {...resource, readBody: teachingParagraphs(resource), transcript: teachingParagraphs(resource)}
+        : resource);
+      const remainder = modules.length % 5;
+      if (remainder) {
+        const tail = modules.splice(modules.length - remainder);
+        const counts = tail.map(() => 1);
+        while (counts.reduce((sum, count) => sum + count, 0) < 5) {
+          const candidates = tail.map((resource, index) => ({index, size: (resource.readBody || []).length / counts[index]}))
+            .filter(({index}) => tail[index].primaryMedium === "read" && tail[index].readBody.length > counts[index]);
+          candidates.sort((a, b) => b.size - a.size);
+          if (!candidates.length) throw new Error(`Five sourced modules unavailable for ${stage.choice}`);
+          counts[candidates[0].index] += 1;
+        }
+        tail.forEach((resource, index) => modules.push(...(counts[index] === 1 ? [resource]
+          : splitReadingIntoModules(resource, counts[index], stage, resource.legacyProgressKeys))));
+      }
+    }
+    modules = modules.map((resource, index) => {
+      const unitNumber = Math.floor(index / 5) + 1;
+      const titles = stageSectionTitles(stage);
+      const exploreTitles = ["Knowing God through Jesus", "Saved by grace", "Growing close to God"];
+      return {...resource, unitNumber, pieceNumber: index % 5 + 1, curatedUnit: true,
+        unitTitle: stage.choice === "exploreJesus" ? exploreTitles[unitNumber - 1] : titles[unitNumber - 1] || `Unit ${unitNumber}`};
+    });
+    journeyCurriculum.set(stage.choice, modules);
   });
   clearJourneyStructureCache();
 }
@@ -5391,7 +5493,7 @@ function resourceUnitNumber(resource, stage) {
   const explicit = Number(resource && resource.unitNumber);
   if (Number.isFinite(explicit) && explicit > 0) return explicit;
   const episode = Number(resource && resource.episode) || 1;
-  return Math.max(1, Math.ceil(episode / stageSectionSize(stage)));
+  return Math.max(1, Math.ceil(episode / ({growRoots: 6, liveMission: 6, leadMultiply: 4}[stage.choice] || 5)));
 }
 
 function resourceUnitTitle(resource, stage, unitNumber) {
@@ -5429,12 +5531,6 @@ function stageSections(stage) {
       quickCheck: resource.quickCheck
     };
   });
-  // Retain the existing future units after the five-part first unit.
-  if (stage.choice === "exploreJesus" && packaged.some(resource => resource.curatedUnit)) {
-    parseStageSections(stage).slice(1).forEach((module, index) => {
-      if (!sections.some(section => section.unitNumber === index + 2)) sections.push({ ...module, unitNumber: index + 2, unitTitle: `Unit ${index + 2}`, moduleIndex: sections.length });
-    });
-  }
   journeyStructureCache.sections.set(cacheKey, sections);
   return sections;
 }
@@ -5443,24 +5539,19 @@ function stageSectionTitles(stage) {
   return {
     exploreJesus: ["Exploring Jesus"],
     startFollowing: ["New Life in Jesus", "First Foundations", "Living as a Disciple", "Daily Walk"],
-    growRoots: ["Knowing God Deeply", "Freedom and Character", "Spirit-Led Life", "Hard Questions"],
-    liveMission: ["Share Faith", "Serve People", "Make Disciples"],
+    growRoots: ["Knowing God Deeply", "Grace, Rest and Worship", "Faith through Challenges", "Life in the Spirit", "Life and Eternity"],
+    liveMission: ["Share Faith", "Serve and Pray", "Gifts for Serving", "Generosity and Stewardship"],
     leadMultiply: ["Leadership Foundations", "Pastoral and Multiplying Callings"]
   }[stage.choice] || ["Section"];
 }
 
 function stageSectionSize(stage) {
-  return {
-    exploreJesus: 5,
-    startFollowing: 5,
-    growRoots: 6,
-    liveMission: 6,
-    leadMultiply: 4
-  }[stage.choice] || 5;
+  return 5;
 }
 
 function sectionProgressKey(stage, groupIndex) {
-  return `${stage.choice}:${groupIndex}`;
+  const ids = stageSectionGroups(stage)[groupIndex]?.modules.map(item => item.resourceId).join("|") || String(groupIndex);
+  return `${stage.choice}:unit:${stableQuizHash(ids)}`;
 }
 
 function pieceProgressKey(stage, moduleIndex) {
@@ -5472,8 +5563,8 @@ function pieceProgressKey(stage, moduleIndex) {
 function learningPieceComplete(stage, moduleIndex) {
   if (state.completedPieces.has(pieceProgressKey(stage, moduleIndex))) return true;
   const resource = packageModulesForStage(stage)[moduleIndex];
-  // Existing first-video completions remain one completed segment, never all five.
-  return Boolean(resource?.curatedUnit && resource.pieceNumber === 1 &&
+  if (resource?.legacyProgressKeys?.some(key => state.completedPieces.has(key))) return true;
+  return Boolean(stage.choice === "exploreJesus" && resource?.id === "journey_explore_unit_1_opening" &&
     (state.completedPieces.has("exploreJesus:0") || state.completed.has("mux_one_basics_1_1_opening_clip")));
 }
 
@@ -5680,21 +5771,32 @@ function practicalUsePrompt(stage, module, resource) {
     : stage.choice === "exploreJesus" ? "notice" : "practice";
   const answers = resource ? specificActions : (stageActions[stage.choice] || stageActions.startFollowing);
   return {
-    kicker: "Practical use",
+    kind: "reflection",
+    kicker: "Choose a practical step · No right or wrong answer",
     question: resource && resource.reflectionPrompt ? resource.reflectionPrompt : `How could you live out ${title} today?`,
     options: orderedQuizOptions(answers, answer, `${stage.choice}|${resource?.id || module.title}|practical`),
     answer,
-    feedback: "Good. The goal is not just to finish content, but to carry one faithful step into real life."
+    feedback: "Choose a time to put this step into practice."
   };
 }
 
 function moduleNoteKey(stage, moduleIndex) {
-  return `oneinhim.moduleNotes.${window.OIHLearnerAccounts?.owner() || "guest"}.${stage.choice}.${moduleIndex}`;
+  return `oneinhim.moduleNotes.${window.OIHLearnerAccounts?.owner() || "guest"}.${stage.choice}.${moduleResourceFor(stage, moduleIndex)?.id || moduleIndex}`;
 }
 
 function getModuleNote(stage, moduleIndex) {
   try {
-    return localStorage.getItem(moduleNoteKey(stage, moduleIndex)) || (!window.OIHLearnerAccounts?.owner() ? localStorage.getItem(`oneinhim.moduleNotes.${stage.choice}.${moduleIndex}`) : "") || "";
+    const saved = localStorage.getItem(moduleNoteKey(stage, moduleIndex));
+    if (saved !== null) return saved;
+    const resource = moduleResourceFor(stage, moduleIndex);
+    const owner = window.OIHLearnerAccounts?.owner() || "guest";
+    for (const key of resource?.legacyProgressKeys || []) {
+      const index = key.slice(key.lastIndexOf(":") + 1);
+      const legacy = localStorage.getItem(`oneinhim.moduleNotes.${owner}.${stage.choice}.${index}`)
+        ?? (owner === "guest" ? localStorage.getItem(`oneinhim.moduleNotes.${stage.choice}.${index}`) : null);
+      if (legacy !== null) return legacy;
+    }
+    return "";
   } catch (error) {
     return "";
   }
@@ -6817,6 +6919,7 @@ function renderModuleDetail() {
     : "";
   els.moduleEyebrow.textContent = `${isComingSoon ? t("module.comingSoon") : mode.label} · Unit ${sectionInfo.groupIndex + 1} · Lesson ${sectionInfo.pieceIndex + 1} of ${sectionInfo.pieceCount}`;
   els.moduleTitle.textContent = lessonPrompt;
+  els.moduleTitle.setAttribute("aria-label", lessonPrompt);
   els.moduleCopy.textContent = resource ? resource.title : module.subtitle;
   els.moduleTags.innerHTML = "";
   const fixedMediumNode = section && section.mediumPreference && section.mediumPreference !== "mixed";
@@ -6828,6 +6931,7 @@ function renderModuleDetail() {
       : activeMode === "listen"
         ? `Can't listen right now? ${fallback.label} instead`
         : `Can't read right now? ${fallback.label} instead`;
+    els.moduleFallback.setAttribute("aria-label", els.moduleFallback.textContent);
     els.moduleFallback.dataset.moduleFallbackMode = fallback.mode;
     els.moduleFallback.dataset.moduleFallbackResourceId = fallback.resourceId || "";
     els.moduleFallback.dataset.moduleFallbackIndex = Number.isFinite(Number(fallback.moduleIndex)) ? String(fallback.moduleIndex) : "";
@@ -7004,6 +7108,22 @@ function openNextModuleStep() {
   bindDynamicActions();
 }
 
+function currentLearningQuiz() {
+  const stage = activeStage();
+  const module = stageSections(stage)[state.activeModuleIndex];
+  const resource = moduleResourceFor(stage, state.activeModuleIndex);
+  const preferred = preferredModeForResource(resource);
+  const mode = resourceSupportsMode(resource, state.moduleMode) ? state.moduleMode : preferred;
+  return state.sectionReview ? sectionReviewQuiz(stage, state.sectionReview)
+    : state.practicalUse ? practicalUsePrompt(stage, module, resource)
+    : moduleQuiz(stage, module, {label: t(`module.mode${mode[0].toUpperCase()}${mode.slice(1)}`)});
+}
+
+function learningQuizOutcome(quiz) {
+  if (!quiz.options.some(option => option.id === state.quizChoice)) return "";
+  return quiz.kind === "reflection" ? "reflection" : state.quizChoice === quiz.answer ? "correct" : "incorrect";
+}
+
 function renderModuleQuiz() {
   const stage = activeStage();
   const sections = stageSections(stage);
@@ -7069,11 +7189,7 @@ function renderModuleQuiz() {
   const preferredMode = preferredModeForResource(resource);
   const requestedMode = modes[state.moduleMode] ? state.moduleMode : preferredMode;
   const activeMode = resourceSupportsMode(resource, requestedMode) ? requestedMode : preferredMode;
-  const quiz = review
-    ? sectionReviewQuiz(stage, review)
-    : state.practicalUse
-      ? practicalUsePrompt(stage, module, resource)
-      : moduleQuiz(stage, module, modes[activeMode]);
+  const quiz = currentLearningQuiz();
   const quizKey = [
     stage.choice,
     review ? `review:${review.groupIndex ?? review.title}` : `${state.activeModuleIndex}:${resource?.id || module?.title || ""}:${activeMode}`,
@@ -7095,9 +7211,10 @@ function renderModuleQuiz() {
   els.quizQuestion.textContent = quiz.question;
   els.quizOptions.innerHTML = quiz.options.map((option, index) => {
     const selected = state.quizChoice === option.id;
-    const correct = state.quizChecked && option.id === quiz.answer;
+    const correct = state.quizChecked && learningQuizOutcome(quiz) === "correct" && option.id === quiz.answer;
+    const incorrect = state.quizChecked && learningQuizOutcome(quiz) === "incorrect" && selected;
     return `
-      <button class="quiz-option ${selected ? "selected" : ""} ${correct ? "correct" : ""}" type="button" data-quiz-choice="${esc(option.id)}" style="--stage-color: ${esc(stage.stageColor)}">
+      <button class="quiz-option ${selected ? "selected" : ""} ${correct ? "correct" : ""} ${incorrect ? "incorrect" : ""}" type="button" aria-pressed="${selected}" data-quiz-choice="${esc(option.id)}" style="--stage-color: ${esc(stage.stageColor)}">
         <span class="quiz-option-symbol">${esc(option.icon)}</span>
         <span>
           <strong>${esc(option.label)}</strong>
@@ -7108,10 +7225,16 @@ function renderModuleQuiz() {
     `;
   }).join("");
   els.quizFeedback.classList.toggle("show", state.quizChecked);
-  els.quizFeedback.textContent = state.quizChecked ? quiz.feedback : "";
+  const outcome = state.quizChecked ? learningQuizOutcome(quiz) : "";
+  els.quizFeedback.textContent = !outcome ? "" : outcome === "incorrect"
+    ? "Not quite. Think back to the teaching and try another answer."
+    : outcome === "reflection" ? `Your choice: ${quiz.options.find(option => option.id === state.quizChoice).label}. ${quiz.feedback}`
+    : `Correct. ${quiz.feedback}`;
+  els.quizFeedback.setAttribute("role", "status");
+  ["correct", "incorrect", "reflection"].forEach(value => document.body.classList.toggle(`quiz-${value}`, outcome === value));
   document.body.classList.toggle("quiz-checked", Boolean(state.quizChecked));
   els.quizCheck.disabled = !state.quizChoice;
-  els.quizCheck.textContent = state.quizChecked ? "Continue" : "Check";
+  els.quizCheck.textContent = state.quizChecked ? (outcome === "incorrect" ? "Try again" : "Continue") : quiz.kind === "reflection" ? "Choose this step" : "Check";
   els.moduleNotesLabel.textContent = t("module.notesLabel");
   els.moduleNotes.placeholder = t("module.notesPlaceholder");
   els.moduleNotes.value = getModuleNote(stage, state.activeModuleIndex);
@@ -7857,7 +7980,15 @@ function bindDynamicActions() {
         return;
       }
       if (!state.quizChoice) return;
+      const quiz = currentLearningQuiz();
       if (state.quizChecked) {
+        if (learningQuizOutcome(quiz) === "incorrect") {
+          state.quizChecked = false;
+          state.quizChoice = "";
+          renderModuleQuiz();
+          bindDynamicActions();
+          return;
+        }
         if (state.sectionReview || state.practicalUse) {
           state.sectionReview = null;
           state.practicalUse = false;
@@ -7892,7 +8023,7 @@ function bindDynamicActions() {
         return;
       }
       state.quizChecked = true;
-      if (state.sectionReview || state.practicalUse) markCurrentLearningStepComplete();
+      if ((state.sectionReview || state.practicalUse) && learningQuizOutcome(quiz) !== "incorrect") markCurrentLearningStepComplete();
       renderModuleQuiz();
       bindDynamicActions();
     };

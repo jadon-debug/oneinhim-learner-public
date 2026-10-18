@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "node tests/app-regression.cjs && node tests/mobile-content.cjs && node tests/unit-progress.cjs && node --test tests/onboarding.test.mjs"
+    "test": "node tests/app-regression.cjs && node tests/mobile-content.cjs && node tests/unit-progress.cjs && node tests/quiz-and-curriculum.cjs && node --test tests/onboarding.test.mjs"
   },
   "devDependencies": {
     "@supabase/supabase-js": "2.118.0",
