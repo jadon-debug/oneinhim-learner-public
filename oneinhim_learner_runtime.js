@@ -1441,7 +1441,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "232";
+const APP_RELEASE_VERSION = "233";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
@@ -7218,7 +7218,7 @@ function renderModuleQuiz() {
         <span class="quiz-option-symbol">${esc(option.icon)}</span>
         <span>
           <strong>${esc(option.label)}</strong>
-          ${state.quizChecked && option.detail ? `<span class="quiz-option-detail">${esc(option.detail)}</span>` : ""}
+          ${state.quizChecked && selected && option.detail ? `<span class="quiz-option-detail">${esc(option.detail)}</span>` : ""}
           <small>${index + 1}</small>
         </span>
       </button>
@@ -7231,7 +7231,7 @@ function renderModuleQuiz() {
     : outcome === "reflection" ? `Your choice: ${quiz.options.find(option => option.id === state.quizChoice).label}. ${quiz.feedback}`
     : `Correct. ${quiz.feedback}`;
   els.quizFeedback.setAttribute("role", "status");
-  ["correct", "incorrect", "reflection"].forEach(value => document.body.classList.toggle(`quiz-${value}`, outcome === value));
+  ["correct", "incorrect", "reflection"].forEach(value => document.body.classList.toggle(`quiz-result-${value}`, outcome === value));
   document.body.classList.toggle("quiz-checked", Boolean(state.quizChecked));
   els.quizCheck.disabled = !state.quizChoice;
   els.quizCheck.textContent = state.quizChecked ? (outcome === "incorrect" ? "Try again" : "Continue") : quiz.kind === "reflection" ? "Choose this step" : "Check";
@@ -7987,6 +7987,7 @@ function bindDynamicActions() {
           state.quizChoice = "";
           renderModuleQuiz();
           bindDynamicActions();
+          if (window.matchMedia("(max-width: 760px)").matches) els.quizOptions.scrollIntoView({block: "center", behavior: "smooth"});
           return;
         }
         if (state.sectionReview || state.practicalUse) {
@@ -8026,6 +8027,7 @@ function bindDynamicActions() {
       if ((state.sectionReview || state.practicalUse) && learningQuizOutcome(quiz) !== "incorrect") markCurrentLearningStepComplete();
       renderModuleQuiz();
       bindDynamicActions();
+      if (window.matchMedia("(max-width: 760px)").matches) els.quizFeedback.scrollIntoView({block: "center", behavior: "smooth"});
     };
   }
   if (els.moduleSaveNotes) {

@@ -35,11 +35,11 @@ const assert = require('node:assert/strict');
     for(const option of quiz.options) {
       doc.querySelector(`[data-quiz-choice="${option.id}"]`).click();doc.getElementById('quizCheck').click();
       const correct=option.id===quiz.answer;
-      assert.equal(doc.body.classList.contains('quiz-correct'),correct);
-      assert.equal(doc.body.classList.contains('quiz-incorrect'),!correct);
+      assert.equal(doc.body.classList.contains('quiz-result-correct'),correct);
+      assert.equal(doc.body.classList.contains('quiz-result-incorrect'),!correct);
       assert.equal(doc.getElementById('quizCheck').textContent,correct?'Continue':'Try again');
       if(correct){correctCount++;assert.match(doc.getElementById('quizFeedback').textContent,/^Correct\./);}
-      else {incorrectCount++;assert.match(doc.getElementById('quizFeedback').textContent,/^Not quite\./);assert.equal(doc.querySelectorAll('.quiz-option.correct').length,0);}
+      else {incorrectCount++;assert.match(doc.getElementById('quizFeedback').textContent,/^Not quite\./);assert.equal(doc.querySelectorAll('.quiz-option:not(.selected) .quiz-option-detail').length,0,'A retry must not reveal the correct option');assert.equal(doc.querySelectorAll('.quiz-option.correct').length,0);}
     }
   }
   // A retry never moves to another module or grants review completion.
@@ -53,7 +53,7 @@ const assert = require('node:assert/strict');
   run('state.sectionReview=null;state.practicalUse=true;state.quizKey="";renderModuleQuiz();bindDynamicActions()');
   for(const option of run('currentLearningQuiz().options')) {
     doc.querySelector(`[data-quiz-choice="${option.id}"]`).click();assert.equal(doc.getElementById('quizCheck').textContent,'Choose this step');doc.getElementById('quizCheck').click();
-    assert.equal(doc.body.classList.contains('quiz-reflection'),true);assert.equal(doc.body.classList.contains('quiz-correct'),false);assert.equal(doc.querySelectorAll('.quiz-option.correct').length,0);
+    assert.equal(doc.body.classList.contains('quiz-result-reflection'),true);assert.equal(doc.body.classList.contains('quiz-reflection'),false,'Outcome classes must not reuse a hidden content component class');assert.equal(doc.body.classList.contains('quiz-result-correct'),false);assert.equal(doc.querySelectorAll('.quiz-option.correct').length,0);
     assert.match(doc.getElementById('quizFeedback').textContent,/^Your choice:/);
   }
   // Reordered v231 completions and notes remain on their source, never a new numeric neighbour.
