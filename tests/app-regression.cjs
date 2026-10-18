@@ -55,6 +55,12 @@ if (require.main === module) (async () => {
   a.run('handleGatewayNav("journey")');
   assert.equal(a.window.document.querySelector('.view.active').id,'stageDetailView');
   assert.match(a.window.document.getElementById('stageStatusRow').textContent,/0% complete/, 'New learners must start at zero');
+  a.window.document.querySelector('[data-section-node-start="exploreJesus:0"]').click();
+  assert.equal(a.run('state.activeView'), 'moduleDetailView', 'The visible Start unit button must work at zero progress');
+  a.run('handleGatewayNav("journey"); state.selectedPathNode="content:exploreJesus:1"; renderStageDetail(); bindDynamicActions()');
+  assert.equal(a.window.document.querySelector('[data-section-node-start="exploreJesus:1"]'), null, 'A later locked unit does not offer Start');
+  a.window.document.querySelector('[data-i18n="journey.viewProgress"]').click();
+  assert.equal(a.run('state.activeView'), 'accountView', 'View my progress opens Account rather than sharing a lesson');
   a.run('state.activeStageId="startFollowing"; state.activeModuleIndex=0; markCurrentLearningStepComplete();');
   assert.equal(a.run('state.completedPieces.size'),1);
   const b = await app();
@@ -89,7 +95,11 @@ if (require.main === module) (async () => {
   c.window.document.getElementById('discoverExploreJourney').click();
   assert.equal(c.run('state.activeView'), 'stageDetailView');
   c.run('handleGatewayNav("account")');
-  assert.ok(c.window.document.querySelector('#learnerAuthForm button[type="submit"]').disabled, 'Signup remains closed until SMTP is verified');
+  assert.equal(c.window.document.querySelector('#learnerAuthForm'), null, 'Closed registration does not ask learners to fill an unusable form');
+  c.window.document.querySelector('[data-auth-mode="signin"]').click();
+  assert.ok(c.window.document.querySelector('#learnerAuthForm input[name="email"]'), 'Existing learners can still sign in');
+  c.run('window.ONEINHIM_LEARNER_CONFIG={signupEnabled:true}');
+  c.window.document.querySelector('[data-auth-mode="signup"]').click();
   assert.equal(c.window.document.querySelector('#learnerAuthForm input[name="onboarding_emails"]').checked, undefined, 'Email consent is not preselected');
   c.run('applyLanguage("nl"); renderLearnerAccount()');
   assert.match(c.window.document.getElementById('learnerAccountControls').textContent, /Gratis account maken/);
@@ -108,7 +118,10 @@ if (require.main === module) (async () => {
   assert.equal(c.run('getModuleNote(activeStage(),0)'), '', 'Another account cannot see local personal notes');
   await c.run('OIHLearnerAccounts.changeUser(null)');
   assert.equal(c.run('state.completed.has("a")'), false, 'Signout restores guest storage');
+  storage.clear();
   const d = await app();
+  d.run('handleGatewayNav("account")');
+  assert.equal(d.window.document.querySelector('[data-i18n="account.continue"]').textContent,'Start your journey');
   assert.match(d.run('homeResolvedItemDisplay(readHomeContent().shelves[0].items[2]).artwork'),/outoftheshadows/,'Published documentary artwork must be preserved');
   d.run('applyLanguage("en"); handleGatewayNav("feed"); els.feedComposer.value="Test reflection"; handleFeedSubmit()');
   assert.match(d.window.document.getElementById('feedStatus').textContent,/not a public post/);

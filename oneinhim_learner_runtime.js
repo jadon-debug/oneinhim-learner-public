@@ -2397,7 +2397,9 @@ function renderShelfSearchResults() {
   const filter = state.searchFilter || "all";
   const query = state.searchQuery || "";
   document.querySelectorAll("[data-search-filter]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.searchFilter === filter);
+    const selected = button.dataset.searchFilter === filter;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", String(selected));
   });
   if (["topics", "people", "series"].includes(filter)) {
     results.className = "shelf-search-results topic-list";
@@ -7622,7 +7624,8 @@ function bindDynamicActions() {
       const groups = stageSectionGroups(stage);
       const section = groups[sectionIndex];
       const guidedTarget = state.guidedPathNode === pathNodeKey("content", stage, sectionIndex);
-      if (!section || !section.modules.length || (section.progress === 0 && !guidedTarget)) return;
+      const currentTarget = sectionIndex === currentSectionGroupIndex(groups);
+      if (!section || !section.modules.length || (section.progress === 0 && !currentTarget && !guidedTarget)) return;
       openSectionPicker(sectionIndex);
     };
   });
@@ -8234,6 +8237,8 @@ function saveLearningProgress() {
 }
 function renderLearnerAccount() {
   window.OIHLearnerAccounts?.render();
+  const continueButton = document.querySelector('#accountView [data-i18n="account.continue"]');
+  if (continueButton) continueButton.textContent = state.completedPieces.size ? t('account.continue') : (state.language === 'nl' ? 'Begin je reis' : 'Start your journey');
   const summary = document.getElementById("learnerProgressSummary");
   if (summary) summary.textContent = state.language === "nl" ? `${state.completedPieces.size} lessen voltooid${window.OIHLearnerAccounts?.user() ? " in je account" : " op dit apparaat"}` : `${state.completedPieces.size} ${state.completedPieces.size === 1 ? "lesson" : "lessons"} completed${window.OIHLearnerAccounts?.user() ? " in your account" : " on this device"}`;
 }
@@ -8285,12 +8290,14 @@ function restoreAppRoute() {
   return true;
 }
 Object.assign(i18n.en, {
+  "journey.savedTitle": "Your saved progress", "journey.deviceCopy": "Completed lessons and personal notes are saved in this browser. Open Account to see your progress and account options.", "journey.viewProgress": "View my progress",
   "homeNav.journey": "Journey", "account.learnerTitle": "Your journey", "account.learnerCopy": "Learn at your own pace. Completed lessons and notes are saved in this browser on this device.",
   "account.continue": "Continue your journey", "account.deviceNote": "Guest progress and personal notes are saved in this browser. Clearing browser data removes them.",
   "account.teamOnly": "Team sign-in", "feed.preview": "Preview feed · Sample posts are shown below. Your thoughts stay on this device and are not published to other people.",
   "feed.shareButton": "Save thought", "library.returnFree": "Explore the free journey", "library.accessPreview": "Partner sign-in is not available in this prototype. You can continue with the free journey.", "detail.back": "Back to browse"
 });
 Object.assign(i18n.nl, {
+  "journey.savedTitle": "Je opgeslagen voortgang", "journey.deviceCopy": "Voltooide lessen en persoonlijke notities worden in deze browser bewaard. Open Account voor je voortgang en accountopties.", "journey.viewProgress": "Bekijk mijn voortgang",
   "homeNav.journey": "Reis", "account.learnerTitle": "Jouw reis", "account.learnerCopy": "Leer in je eigen tempo. Voltooide lessen en notities worden in deze browser op dit apparaat bewaard.",
   "account.continue": "Ga verder met je reis", "account.deviceNote": "Gastvoortgang en persoonlijke notities blijven in deze browser. Ze verdwijnen als je browsergegevens wist.",
   "account.teamOnly": "Inloggen voor het team", "feed.preview": "Voorbeeldfeed · Hieronder staan voorbeeldberichten. Je gedachten blijven op dit apparaat en worden niet met anderen gedeeld.",

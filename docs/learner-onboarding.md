@@ -72,3 +72,7 @@ Database transaction tests exercised verified-profile creation, progress union, 
 Measure verified signup -> first lesson started -> first lesson completed -> return within seven days. Track unsubscribes, failed deliveries and daily usage. Keep private notes out of analytics. Tune timing from actual use rather than claiming this initial sequence is optimal.
 
 Pending external checks: live SMTP delivery, real confirmation/recovery links and mobile visual QA. The local browser preview was blocked by the browser environment, so no claim of completed mobile visual verification is made.
+
+## UI review, 18 October 2026
+
+The [live-site audit](ui-review/index.html) contains ten captured screens from release 228 and findings tied to each step. Those are before screenshots. Additional review-branch fixes remove the inner-page header divider, correct mobile header icon and feed text contrast, let the current unit start at zero progress, point the journey progress card to Account, simplify closed registration, and improve search filter sizing/selection. The [static mobile review](mobile-ui-review.html) includes updated Account, Feed, Podcast Shows and starting-point markup/styles. Updated browser visual QA remains pending because the managed preview sandbox cannot mount `/proc`.

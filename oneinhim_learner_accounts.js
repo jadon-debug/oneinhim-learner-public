@@ -31,10 +31,10 @@ window.OIHLearnerAccounts = (() => {
       ${recovery ? passwordForm() : ''}
       <p id="learnerAuthStatus" role="status" aria-live="polite">${esc(notice)}</p>` : `
       <h3>${text('Keep your place, wherever you learn', 'Ga verder waar je gebleven bent')}</h3>
-      <p>${text('Create a free account to save completed lessons across devices. You can also keep exploring as a guest.', 'Maak een gratis account om voltooide lessen op meerdere apparaten te bewaren. Je kunt ook als gast verdergaan.')}</p>
+      <p>${disabled ? text('Keep learning as a guest. Already have an account? Sign in below.', 'Leer verder als gast. Heb je al een account? Log hieronder in.') : text('Create a free account to save completed lessons across devices. You can also keep exploring as a guest.', 'Maak een gratis account om voltooide lessen op meerdere apparaten te bewaren. Je kunt ook als gast verdergaan.')}</p>
       ${disabled && signup ? `<p class="learner-callout">${text('Account registration is being prepared. You can use the free journey now; your progress stays on this device.', 'We bereiden registratie voor. Je kunt de gratis reis nu gebruiken; je voortgang blijft op dit apparaat.')}</p>` : ''}
       <div class="learner-tabs"><button type="button" data-auth-mode="signup" aria-pressed="${signup}">${text('Create account', 'Account maken')}</button><button type="button" data-auth-mode="signin" aria-pressed="${!signup}">${text('Sign in', 'Inloggen')}</button></div>
-      <form id="learnerAuthForm" class="learner-form">
+      ${disabled && signup ? '' : `<form id="learnerAuthForm" class="learner-form">
         ${signup ? `<label>${text('First name (optional)', 'Voornaam (optioneel)')}<input name="first_name" maxlength="80" autocomplete="given-name"></label>` : ''}
         <label>${text('Email address', 'E-mailadres')}<input name="email" type="email" required maxlength="254" autocomplete="username" inputmode="email"></label>
         <label>${text('Password', 'Wachtwoord')}<input name="password" type="password" required minlength="${signup ? 10 : 1}" autocomplete="${signup ? 'new-password' : 'current-password'}"></label>
@@ -42,7 +42,7 @@ window.OIHLearnerAccounts = (() => {
         <button class="primary-btn" type="submit" ${signup && disabled ? 'disabled' : ''}>${signup ? text('Create free account', 'Gratis account maken') : text('Sign in', 'Inloggen')}</button>
         <button class="learner-text-button" id="learnerReset" type="button">${text('Forgot your password?', 'Wachtwoord vergeten?')}</button>
         ${signup ? `<button class="learner-text-button" id="learnerResend" type="button">${text('Resend confirmation email', 'Bevestigingsmail opnieuw sturen')}</button>` : ''}
-      </form><p id="learnerAuthStatus" role="status" aria-live="polite">${esc(notice)}</p>`;
+      </form>`}<p id="learnerAuthStatus" role="status" aria-live="polite">${esc(notice)}</p>`;
     host.querySelectorAll('[data-auth-mode]').forEach(button => button.onclick = () => { mode = button.dataset.authMode; notice = ''; render(); });
     host.querySelector('#learnerAuthForm')?.addEventListener('submit', authSubmit);
     host.querySelector('#learnerReset')?.addEventListener('click', () => emailAction('reset'));

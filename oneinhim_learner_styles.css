@@ -14827,13 +14827,14 @@ body.shelf-detail-mode .app-top-chrome .gateway-nav-btn.active::after {
 }
 
 .shelf-search-tabs {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.84);
+  border-bottom: 1px solid #343a36;
   display: flex;
   gap: 28px;
   justify-content: center;
   margin: 0 -24px;
   overflow-x: auto;
-  padding: 0 24px;
+  overflow-y: hidden;
+  padding: 4px 24px;
 }
 
 .shelf-search-tab {
@@ -14843,6 +14844,9 @@ body.shelf-detail-mode .app-top-chrome .gateway-nav-btn.active::after {
   color: rgba(255, 255, 255, 0.58);
   font-size: 16px;
   font-weight: 650;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 0 13px;
   position: relative;
 }
@@ -14852,7 +14856,7 @@ body.shelf-detail-mode .app-top-chrome .gateway-nav-btn.active::after {
 }
 
 .shelf-search-tab.active::after {
-  background: #0a7cff;
+  background: #f47523;
   border-radius: 999px 999px 0 0;
   bottom: -1px;
   content: "";
@@ -15812,7 +15816,16 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
 .gateway-header.app-top-chrome :is(button, a, .gateway-language) { pointer-events: auto !important; }
 body:not(.gateway-mode) .gateway-header.app-top-chrome {
   background: #090a0a !important;
-  border-bottom: 1px solid #2e332f !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+/* Inner-page chrome stays dark before and after scrolling. */
+body:not(.gateway-mode):not(.gateway-nav-scrolled) .app-top-chrome .gateway-mobile-action,
+body:not(.gateway-mode).gateway-nav-scrolled .app-top-chrome .gateway-mobile-action {
+  color: #f3f5f3 !important;
+}
+body:not(.gateway-mode) .app-top-chrome .gateway-mobile-action[aria-current="page"] {
+  color: #ffad73 !important;
 }
 body:not(.gateway-mode) .app-top-chrome .gateway-nav-btn { color: #e6ebe7 !important; }
 body:not(.gateway-mode) .app-top-chrome .gateway-nav-btn.active { color: #fff !important; }
@@ -15841,7 +15854,7 @@ body.discovery-detail-mode, body.feed-mode, body:has(#accountView.active) { back
 #discoveryDetailView .discover-watch-media { border: 1px solid var(--audit-border); border-radius: 16px; overflow: hidden; }
 #discoveryDetailView .discover-related-card { background: var(--audit-surface) !important; color: #f3f5f3 !important; border-color: var(--audit-border) !important; }
 #discoveryDetailView .discover-related-card span span { color: var(--audit-muted) !important; }
-.detail-back { grid-column: 1 / -1; justify-self: start; display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border: 1px solid var(--audit-border); border-radius: 999px; background: var(--audit-surface); color: #e8eee9; font: 600 14px Montserrat, sans-serif; cursor: pointer; }
+.detail-back { grid-column: 1 / -1; justify-self: start; width: fit-content; max-width: 100%; display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border: 1px solid var(--audit-border); border-radius: 999px; background: var(--audit-surface); color: #e8eee9; font: 600 14px Montserrat, sans-serif; cursor: pointer; }
 .detail-back::before { content: '←'; margin-right: 10px; }
 #accountView .account-card { display: block !important; max-width: 940px; margin-inline: auto; background: transparent !important; }
 .learner-account-panel { max-width: 740px; display: grid; gap: 20px; }
@@ -15943,6 +15956,7 @@ body.onboarding-mode #onboardingView.view.active { margin: 0 !important; padding
 #feedView :is(h2, .eyebrow, .feed-composer label, .feed-post-head strong) { color: #f3f5f3 !important; }
 #feedView :is(.feed-heading > p:last-child, .feed-post-context, .feed-post-head > span, .feed-liked) { color: var(--audit-muted) !important; }
 #feedView :is(.feed-composer, .feed-bubble, .feed-milestone, .feed-bell, .feed-action) { background: var(--audit-surface) !important; border-color: var(--audit-border) !important; color: #edf2ee !important; box-shadow: none !important; }
+#feedView :is(.feed-post-text, .feed-milestone p) { color: #edf2ee !important; }
 #feedView textarea { background: #090a0a; border-color: #515c54; color: #f3f5f3; font-size: 16px; }
 #feedView textarea::placeholder { color: #a8b3ab; }
 .feed-preview-note { color: #d2dcd5; background: #212b23; border: 1px solid #415348; border-radius: 12px; padding: 14px 18px; line-height: 1.6; font-size: 14px; margin-bottom: 22px; }
