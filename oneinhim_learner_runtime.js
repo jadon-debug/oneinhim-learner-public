@@ -6106,9 +6106,15 @@ function renderNodeLessonList(node, stage) {
 }
 
 function renderDuoNodePopout(node, stage) {
+  const nl = state.language === "nl";
+  const close = `<button class="journey-panel-close" type="button" data-duo-node-select="${esc(node.key)}" aria-label="${nl ? "Sluiten" : "Close details"}">${nl ? "Sluiten" : "Close"} ×</button>`;
+  if (node.kind === "chest") {
+    return `<div class="duo-node-popout journey-reward-panel">${close}<h3>${nl ? "Een mijlpaal" : "Unit milestone"}</h3><p>${node.completed ? (nl ? "Je hebt alle vijf lessen van deze unit afgerond." : "You have completed all five lessons in this unit.") : (nl ? "Rond de vijf lessen af om deze mijlpaal te bereiken." : "Complete all five lessons to reach this milestone.")}</p></div>`;
+  }
   if (node.kind === "practice") {
     return `
       <div class="duo-node-popout ${node.locked ? "locked-popout" : ""}">
+        ${close}
         <h3>${esc(node.title)}</h3>
         <p>${esc(node.meta)}</p>
         ${node.locked ? `
@@ -6122,6 +6128,7 @@ function renderDuoNodePopout(node, stage) {
   if (node.kind === "review") {
     return `
       <div class="duo-node-popout ${node.locked ? "locked-popout" : ""}">
+        ${close}
         <h3>${esc(node.title)}</h3>
         <p>${esc(node.meta)}</p>
         ${node.locked ? `
@@ -6134,6 +6141,7 @@ function renderDuoNodePopout(node, stage) {
   }
   return `
     <div class="duo-node-popout ${node.locked ? "locked-popout" : ""}">
+      ${close}
       <h3>${esc(node.title)}</h3>
       <p>${esc(sectionThemeDescription(stage, node))}</p>
       <p class="duo-unit-summary">${esc(`${node.progress || 0}% ${state.language === "nl" ? "voltooid" : "complete"} · ${(node.modules || []).filter(item => learningPieceComplete(stage, item.moduleIndex)).length}/${(node.modules || []).length} modules`)}<small>${state.language === "nl" ? "Vragen en oefeningen tellen apart." : "Questions and practice are separate."}</small></p>
@@ -6364,10 +6372,11 @@ function renderStageDetail() {
       return `
         <article class="duo-path-node ${node.kind} ${isSelected ? "selected" : ""}" data-stage-choice="${esc(node.stageChoice)}" data-section-index="${node.groupIndex}" data-section-title="${esc(node.title)}" style="--stage-color: ${esc(node.color || node.stage.stageColor)}; --section-color: ${esc(node.stage.stageColor)}; --section-text: ${esc(readableTextColor(node.stage.stageColor))}; --node-x: ${nodeOffset}px; --mobile-node-x: ${mobileNodeOffset}px;">
           <div class="duo-node-anchor">
-            ${node.sectionStart ? `<div class="duo-start-tag">Start</div>` : ""}
+            ${node.sectionStart ? `<div class="duo-start-tag">${node.completed ? (state.language === "nl" ? "Voltooid" : "Complete") : node.progress > 0 ? (state.language === "nl" ? "Ga verder" : "Continue") : "Start"}</div>` : ""}
             ${node.kind === "content" ? `<span class="duo-unit-control"><svg class="duo-unit-ring" viewBox="0 0 100 100" preserveAspectRatio="none" role="progressbar" aria-label="${esc(`${node.title} completion`)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${node.progress}"><circle class="duo-unit-track" cx="50" cy="50" r="46"/><circle class="duo-unit-fill" cx="50" cy="50" r="46" pathLength="100" stroke-dasharray="${node.progress} 100" transform="rotate(-90 50 50)"/></svg>` : ""}
-            <button class="duo-node-button ${node.kind} ${node.current ? "current" : ""} ${node.completed ? "completed" : ""} ${node.locked ? "locked" : ""}" type="button" data-duo-node-select="${esc(node.key)}" ${isPathSpine ? "data-path-spine=\"true\"" : ""} aria-label="${esc(node.title)}">${esc(node.icon)}</button>
+            <button class="duo-node-button ${node.kind} ${node.current ? "current" : ""} ${node.completed ? "completed" : ""} ${node.locked ? "locked" : ""}" type="button" data-duo-node-select="${esc(node.key)}" ${isPathSpine ? "data-path-spine=\"true\"" : ""} aria-expanded="${Boolean(isSelected)}" aria-label="${esc(node.title)}">${esc(node.icon)}</button>
             ${node.kind === "content" ? `<span class="duo-unit-percentage">${node.progress}%</span></span>` : ""}
+            <span class="journey-node-caption">${node.kind === "content" ? `${(node.modules || []).filter(item => learningPieceComplete(node.stage || stage, item.moduleIndex)).length}/5 ${state.language === "nl" ? "lessen" : "lessons"}` : node.kind === "chest" ? (state.language === "nl" ? "Mijlpaal" : "Milestone") : node.kind === "practice" ? (state.language === "nl" ? "Oefening" : "Practice") : (state.language === "nl" ? "Herhaling" : "Review")}${node.locked ? `<small>${state.language === "nl" ? "Rond eerst de lessen af" : "Finish the lessons first"}</small>` : ""}</span>
             ${isSelected ? renderDuoNodePopout(node, node.stage || stage) : ""}
           </div>
         </article>
