@@ -114,7 +114,7 @@ window.OIHLearnerAccounts = (() => {
     revision++; const currentRevision = revision;
     clearTimeout(syncTimer); user = nextUser; owner = user?.id || ''; profile = null; ready = false;
     loadLearningProgress();
-    if (!user) { ready = true; renderLearnerAccount(); renderStageDetail(); return; }
+    if (!user) { ready = true; renderLearnerAccount(); renderStageDetail(); bindDynamicActions(); return; }
     try {
       const [{ data: p, error: pe }, { data: saved, error: se }] = await Promise.all([
         client().from('oih_learner_profiles').select('first_name,language,preferred_medium,onboarding_emails').eq('id', user.id).single(),
@@ -127,7 +127,7 @@ window.OIHLearnerAccounts = (() => {
       writeLocalJson(key(), progress()); ready = true;
       status(text('Progress synced.', 'Voortgang gesynchroniseerd.'));
       if (p?.language) applyLanguage(p.language);
-      renderLearnerAccount(); renderStageDetail();
+      renderLearnerAccount(); renderStageDetail(); bindDynamicActions();
       if (!recovery && !sessionStorage.getItem('oih.auth.return') && saved?.last_route && location.hash.includes('view=accountView')) sessionStorage.setItem('oih.auth.return', saved.last_route);
     } catch (_) { if (currentRevision !== revision) return; status(text('Saved on this device. Cloud sync is unavailable; sign in again to retry.', 'Bewaard op dit apparaat. Synchronisatie is niet beschikbaar; log opnieuw in om te proberen.')); render(); }
   }
@@ -152,7 +152,7 @@ window.OIHLearnerAccounts = (() => {
   async function importGuest() {
     const guest = readLocalJson(LEARNING_PROGRESS_KEY, {});
     for (const field of PROGRESS_FIELDS) for (const value of guest[field] || []) if (typeof value === 'string') state[field].add(value);
-    saveLearningProgress(); await sync(); renderLearnerAccount(); renderStageDetail();
+    saveLearningProgress(); await sync(); renderLearnerAccount(); renderStageDetail(); bindDynamicActions();
   }
   async function signout() {
     await guarded(async () => { await sync(); const { error } = await client().auth.signOut(); if (error) throw error; await changeUser(null); recovery = false; status(text('Signed out. Guest progress is separate from your account.', 'Uitgelogd. Gastvoortgang staat los van je account.')); });
