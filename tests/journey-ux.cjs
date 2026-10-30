@@ -1,5 +1,7 @@
 const { app, storage } = require('./app-regression.cjs');
 const assert = require('node:assert/strict');
+const { readFileSync } = require('node:fs');
+const path = require('node:path');
 (async () => {
   storage.clear();
   const a = await app();
@@ -21,5 +23,12 @@ const assert = require('node:assert/strict');
   assert.equal(doc.querySelector('.duo-start-tag').textContent, 'Ga verder');
   a.run('for(let i=3;i<5;i++) state.completedPieces.add("exploreJesus:"+i); state.language="en"; renderStageDetail(); bindDynamicActions()');
   assert.equal(doc.querySelector('.duo-start-tag').textContent, 'Complete');
+  // Supabase's delayed guest-session result redraws the path after boot.
+  a.run('getSupabaseAuthClient=()=>({auth:{onAuthStateChange(){},getSession:async()=>({data:{session:null}})}})');
+  a.run(readFileSync(path.join(__dirname, '../oneinhim_learner_accounts.js'), 'utf8'));
+  await a.run('window.OIHLearnerAccounts.init()');
+  a.run('state.selectedPathNode="";');
+  node().click();
+  assert.ok(doc.querySelector('.duo-node-popout'), 'Journey buttons must still work after account loading redraws the path');
   console.log('PASS: Journey labels follow actual progress, panels close, milestones are honest, and Dutch labels update.');
 })().catch(error => { console.error(error); process.exitCode = 1; });
