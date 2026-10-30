@@ -14,9 +14,18 @@
 <link rel="apple-touch-icon" href="assets/oih-logo-2023-orange.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" async></script>
 <script>document.documentElement.classList.add("app-booting");</script>
+<script src="./oneinhim_startup.js?v=240"></script>
+<style>
+  #appStartup { position: fixed; inset: 0; z-index: 1000; display: grid; place-content: center; gap: 16px; padding: 28px; background: #090a0a; color: #fff; text-align: center; font: 16px/1.5 system-ui,sans-serif; }
+  #appStartup h1 { font-size: 28px; margin: 0; }
+  #appStartup p { max-width: 360px; margin: 0; }
+  #appStartup a { display: inline-block; color: #151a15; background: #ff9957; border-radius: 8px; padding: 12px; text-decoration: none; }
+  #appStartup [hidden] { display: none !important; }
+  html:not(.app-booting) #appStartup { display: none; }
+</style>
 <link rel="stylesheet" href="./oneinhim_learner_styles.css?v=239" />
 <link rel="stylesheet" href="./oneinhim_media_home.css?v=239" />
 <link rel="stylesheet" href="./oneinhim_app_chrome.css?v=239" />
@@ -24,6 +33,7 @@
 
 </head>
 <body class="gateway-mode dark-gateway-hero-active dark-app-chrome-active">
+<section id="appStartup" role="status" aria-live="polite"><h1>One In Him</h1><p id="appStartupMessage">Opening your learning journey…</p><a href="./oneinhim_reopen.html?v=240" id="appStartupRetry" hidden>Reopen app</a></section>
 <div class="app-shell">
   <a class="skip-link" href="#main-content">Skip to content</a>
 <main class="main" id="main-content" tabindex="-1">
@@ -1307,9 +1317,9 @@
 <script src="./oneinhim_team_sync_config.js"></script>
 <script src="./oneinhim_home_layout.js?v=235"></script>
 <script src="./oneinhim_journey_layout.js?v=233"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0" async onload="window.dispatchEvent(new Event('oih-auth-ready'))"></script>
 <script src="./oneinhim_learner_accounts.js?v=236"></script>
-<script src="./oneinhim_learner_runtime.js?v=238"></script>
+<script src="./oneinhim_learner_runtime.js?v=240"></script>
 <script src="./oneinhim_journey_dialog.js?v=239"></script>
 
 </body>

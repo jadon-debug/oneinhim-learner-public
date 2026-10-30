@@ -1,4 +1,4 @@
-const ONEINHIM_CACHE = "oneinhim-app-v233";
+const ONEINHIM_CACHE = "oneinhim-app-v240";
 
 const APP_SHELL = [
   "./oneinhim_learner_app.html",
@@ -6,6 +6,11 @@ const APP_SHELL = [
   "./oneinhim.webmanifest",
   "./oneinhim_team_sync_config.js",
   "./oneinhim_learner_styles.css",
+  "./oneinhim_app_chrome.css",
+  "./oneinhim_media_home.css",
+  "./oneinhim_journey_ux.css",
+  "./oneinhim_startup.js",
+  "./oneinhim_journey_dialog.js",
   "./oneinhim_learner_runtime.js",
   "./oneinhim_learner_accounts.js",
   "./oneinhim_home_layout.js",
@@ -67,6 +72,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
   const isFreshAppFile =
+    /\/oneinhim_[^/]+\.(?:js|css|json)$/.test(url.pathname) ||
     url.pathname.endsWith("/oneinhim_learner_app.html") ||
     url.pathname.endsWith("oneinhim_learner_app.html") ||
     url.pathname.endsWith("/oneinhim_admin_workshop.html") ||

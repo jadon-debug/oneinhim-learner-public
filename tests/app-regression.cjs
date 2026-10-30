@@ -8,7 +8,7 @@ const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
 const source = readFileSync(path.join(root, 'oneinhim_learner_runtime.js'), 'utf8').replace(/boot\(\);\s*$/, '');
 const storage = new Map();
-async function app(hash = '') {
+async function app(hash = '', options = {}) {
   const { window } = parseHTML(readFileSync(path.join(root, 'oneinhim_learner_app.html'), 'utf8'));
   const location = new URL('https://example.test/oneinhim_learner_app.html' + hash);
   const historyCalls = [];
@@ -44,7 +44,8 @@ async function app(hash = '') {
   vm.runInContext(readFileSync(path.join(root,'oneinhim_journey_layout.js'),'utf8'), context);
   vm.runInContext(readFileSync(path.join(root,'oneinhim_learner_accounts.js'),'utf8'), context);
   vm.runInContext(source, context);
-  vm.runInContext('ensureFreshAppVersion = async () => {};', context);
+  if (!options.checkVersion) vm.runInContext('ensureFreshAppVersion = async () => {};', context);
+  if (options.setup) await options.setup({ window, run: code => vm.runInContext(code, context) });
   await vm.runInContext('boot()', context);
   return { window, context, historyCalls, run: code => vm.runInContext(code, context) };
 }

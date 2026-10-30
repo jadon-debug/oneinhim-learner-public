@@ -1441,7 +1441,7 @@ function esc(value) {
 
 const HOME_CONTENT_STORAGE_KEY = "oneinhim.homeContent.v2";
 const HOME_CONTENT_DRAFT_PARAM = "draft";
-const APP_RELEASE_VERSION = "233";
+const APP_RELEASE_VERSION = "240";
 const APP_RELEASE_STORAGE_KEY = "oneinhim.appReleaseVersion";
 const APP_LANGUAGE_STORAGE_KEY = "oneinhim.language";
 const DEFAULT_HOME_CONTENT = {
@@ -3399,12 +3399,28 @@ function finishOnboarding() {
   bindDynamicActions();
 }
 
+function startupDeadline(task, milliseconds = 3000) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = window.setTimeout(() => reject(new Error("Startup request timed out")), milliseconds);
+  });
+  return Promise.race([task, timeout]).finally(() => window.clearTimeout(timer));
+}
+
+async function startupJson(url, options = {}) {
+  const controller = new AbortController();
+  try {
+    return await startupDeadline(fetch(url, { ...options, signal: controller.signal }).then(response => {
+      if (!response.ok) throw new Error("Startup resource unavailable");
+      return response.json();
+    }));
+  } finally { controller.abort(); }
+}
+
 async function loadSchema() {
   try {
     if (window.location.protocol === "file:") throw new Error("Local file mode");
-    const response = await fetch("oneinhim_content_tagging_schema.json", { cache: "no-store" });
-    if (!response.ok) throw new Error("Schema file unavailable");
-    state.schema = await response.json();
+    state.schema = await startupJson("oneinhim_content_tagging_schema.json", { cache: "no-store" });
     els.schemaPill.textContent = `Schema ${state.schema.schemaVersion || "0.1"}`;
   } catch (error) {
     state.schema = embeddedSchema;
@@ -4235,9 +4251,7 @@ async function readTeamPublishedPackages() {
   const config = getTeamSyncConfig();
   if (!teamSyncIsReady(config)) return [];
   const url = `${config.supabaseUrl}/rest/v1/${encodeURIComponent(config.tableName)}?select=payload,updated_at&order=updated_at.desc`;
-  const response = await fetch(url, { headers: supabaseHeaders(config), cache: "no-store" });
-  if (!response.ok) throw new Error("Team sync unavailable");
-  const rows = await response.json();
+  const rows = await startupJson(url, { headers: supabaseHeaders(config), cache: "no-store" });
   return rows.map((row) => row.payload).filter(Boolean);
 }
 
@@ -4266,9 +4280,7 @@ async function loadContentPackages() {
   mergeSharedContentPackages(embeddedContentPackages);
   try {
     if (window.location.protocol === "file:") throw new Error("Local file mode");
-    const response = await fetch("oneinhim_content_packages.json", { cache: "no-store" });
-    if (!response.ok) throw new Error("Content packages unavailable");
-    const data = await response.json();
+    const data = await startupJson("oneinhim_content_packages.json", { cache: "no-store" });
     mergeSharedContentPackages(data.packages || []);
     els.schemaPill.textContent = `${els.schemaPill.textContent} · packages`;
   } catch (error) {
@@ -8395,28 +8407,10 @@ function toast(message) {
 }
 
 async function ensureFreshAppVersion() {
+  // Cache maintenance must never hide the app or depend on storage permissions.
+  // The versioned worker updates its own app caches without removing learner data.
   try {
-    const storedVersion = window.localStorage.getItem(APP_RELEASE_STORAGE_KEY);
-    if (storedVersion === APP_RELEASE_VERSION) return;
     window.localStorage.setItem(APP_RELEASE_STORAGE_KEY, APP_RELEASE_VERSION);
-    if (window.location.protocol === "file:") return;
-    const refreshSessionKey = `oneinhim-auto-refresh-${APP_RELEASE_VERSION}`;
-    if (window.sessionStorage.getItem(refreshSessionKey)) return;
-    window.sessionStorage.setItem(refreshSessionKey, "1");
-    if ("serviceWorker" in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      const appScope = new URL("./", window.location.href).href;
-      await Promise.allSettled(registrations.filter(registration => registration.scope === appScope).map(registration => registration.unregister()));
-    }
-    if ("caches" in window) {
-      const keys = await caches.keys();
-      await Promise.allSettled(keys.filter((key) => key.startsWith("oneinhim-")).map((key) => caches.delete(key)));
-    }
-    const freshUrl = new URL(window.location.href);
-    freshUrl.searchParams.set("v", APP_RELEASE_VERSION);
-    freshUrl.searchParams.set("refresh", String(Date.now()));
-    window.location.replace(freshUrl.toString());
-    await new Promise(() => {});
   } catch (error) {
     console.warn("App cache refresh skipped.", error);
   }
@@ -8455,8 +8449,7 @@ function registerAppInstallWorker() {
 async function boot() {
   await ensureFreshAppVersion();
   registerAppInstallWorker();
-  await loadSchema();
-  await loadContentPackages();
+  await Promise.all([loadSchema(), loadContentPackages()]);
   loadLearningProgress();
   loadFeedState();
   loadLibraryAccessState();
@@ -8466,7 +8459,7 @@ async function boot() {
 	  renderAll();
 	  renderAsk();
 	  renderOnboarding();
-	  await renderAdminAccount();
+	  renderAdminAccount().catch(error => console.warn("Team account unavailable.", error));
 	  renderLibrary();
 	  bindDynamicActions();
 	  if (!state.userNavigatedDuringBoot) {
