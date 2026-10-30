@@ -54,5 +54,7 @@ const path = require('node:path');
   escape.key = 'Escape';
   doc.dispatchEvent(escape);
   assert.equal(doc.querySelector('.duo-node-popout'), null, 'Escape closes the mobile detail sheet');
+  doc.querySelector('.journey-next-secondary').click();
+  assert.ok(doc.querySelector('.duo-node-popout'), 'The View all five lessons click must not immediately dismiss its own panel');
   console.log('PASS: Journey labels follow actual progress, panels close, milestones are honest, and Dutch labels update.');
 })().catch(error => { console.error(error); process.exitCode = 1; });
