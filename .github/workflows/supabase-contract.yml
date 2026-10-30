@@ -1,0 +1,32 @@
+name: Supabase contract
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/**'
+      - 'tests/database-*.sql'
+      - '.github/workflows/supabase-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.76.8
+      - name: Start isolated Supabase
+        run: supabase start
+      - name: Replay every tracked migration
+        run: supabase db reset --local
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install --yes postgresql-client
+      - name: Verify database permissions and onboarding behaviour
+        run: |
+          psql 'postgresql://postgres:postgres@localhost:54322/postgres' -v ON_ERROR_STOP=1 -f tests/database-permissions.sql
+          psql 'postgresql://postgres:postgres@localhost:54322/postgres' -v ON_ERROR_STOP=1 -f tests/database-onboarding.sql
