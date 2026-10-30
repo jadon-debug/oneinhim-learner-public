@@ -12266,9 +12266,6 @@ body:not(.gateway-mode) #stageDetailView .stage-shell {
     grid-area: brand !important;
     justify-self: center !important;
     justify-content: center !important;
-    width: 70px !important;
-    max-width: 70px !important;
-    min-width: 0 !important;
     gap: 0 !important;
     color: #fff !important;
   }
@@ -12293,8 +12290,6 @@ body:not(.gateway-mode) #stageDetailView .stage-shell {
   }
 
   .app-top-chrome .gateway-logo-img {
-    width: 52px !important;
-    height: 52px !important;
     object-fit: contain !important;
     object-position: center !important;
     border-radius: 999px !important;
@@ -12723,9 +12718,6 @@ body:not(.gateway-mode) .main {
     grid-area: brand !important;
     justify-self: center !important;
     justify-content: center !important;
-    width: 70px !important;
-    max-width: 70px !important;
-    min-width: 0 !important;
     gap: 0 !important;
     color: #fff !important;
   }
@@ -12737,8 +12729,6 @@ body:not(.gateway-mode) .main {
   }
 
   .app-top-chrome .gateway-logo-img {
-    width: 52px !important;
-    height: 52px !important;
     object-fit: contain !important;
     object-position: center !important;
     border-radius: 999px !important;
@@ -13410,9 +13400,6 @@ body:not(.gateway-mode) .main {
 /* Final mobile Journey polish. This block owns the phone Journey path, unit popout,
    section picker, and lesson session sizing after all older mobile rules. */
 @media (max-width: 760px) {
-  body.journey-mode:not(.gateway-mode) {
-    --app-top-chrome-space: calc(96px + env(safe-area-inset-top));
-  }
 
   body.journey-mode:not(.gateway-mode) .app-top-chrome,
   body.journey-mode:not(.gateway-mode).gateway-nav-scrolled .app-top-chrome {
@@ -13431,8 +13418,6 @@ body:not(.gateway-mode) .main {
   }
 
   body.journey-mode:not(.gateway-mode) .app-top-chrome .gateway-logo-img {
-    width: 48px !important;
-    height: 48px !important;
     box-shadow: 0 8px 18px rgba(9, 10, 10, 0.14) !important;
   }
 
@@ -13471,19 +13456,10 @@ body:not(.gateway-mode) .main {
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-banner {
-    position: fixed !important;
-    top: calc(var(--app-top-chrome-space) + 6px) !important;
-    left: max(22px, env(safe-area-inset-left)) !important;
-    right: max(22px, env(safe-area-inset-right)) !important;
     z-index: 92 !important;
-    width: auto !important;
     max-width: none !important;
-    min-height: 74px !important;
-    grid-template-columns: minmax(0, 1fr) 50px !important;
     gap: 8px !important;
     align-items: center !important;
-    padding: 10px 9px 12px 14px !important;
-    border-radius: 16px !important;
     box-shadow:
       inset 0 -5px 0 rgba(0, 0, 0, 0.16),
       0 8px 16px rgba(9, 10, 10, 0.09) !important;
@@ -13513,22 +13489,12 @@ body:not(.gateway-mode) .main {
     overflow: hidden !important;
     -webkit-line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
-    font-size: clamp(23px, 6.5vw, 28px) !important;
-    line-height: 1 !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-guidebook {
-    width: 50px !important;
     height: 50px !important;
-    min-height: 50px !important;
-    padding: 0 !important;
     border-width: 0 0 0 3px !important;
     border-radius: 0 12px 12px 0 !important;
-    font-size: 0 !important;
-  }
-
-  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-guidebook::before {
-    font-size: 25px !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .stage-section-list.duo-lesson-path {
@@ -13537,7 +13503,6 @@ body:not(.gateway-mode) .main {
     max-width: 100vw !important;
     margin: 0 !important;
     padding: 112px 0 calc(138px + env(safe-area-inset-bottom)) !important;
-    gap: 30px !important;
     overflow: visible !important;
   }
 
@@ -13553,7 +13518,6 @@ body:not(.gateway-mode) .main {
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-path-node {
     width: 100vw !important;
     max-width: 100vw !important;
-    min-height: 88px !important;
     justify-items: center !important;
   }
 
@@ -13569,7 +13533,6 @@ body:not(.gateway-mode) .main {
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-anchor {
     width: max-content !important;
-    max-width: 100vw !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-button {
@@ -13597,26 +13560,12 @@ body:not(.gateway-mode) .main {
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-divider.section-title-divider {
-    height: 0 !important;
-    min-height: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout {
-    position: fixed !important;
-    top: auto !important;
-    left: max(14px, env(safe-area-inset-left)) !important;
-    right: max(14px, env(safe-area-inset-right)) !important;
-    bottom: calc(var(--app-bottom-chrome-space) + 10px) !important;
-    z-index: 112 !important;
-    width: auto !important;
-    max-width: none !important;
     max-height: min(52svh, 410px) !important;
-    margin: 0 !important;
-    padding: 17px !important;
     overflow-y: auto !important;
     overscroll-behavior: contain !important;
     border-radius: 18px !important;
@@ -13624,19 +13573,8 @@ body:not(.gateway-mode) .main {
     -webkit-overflow-scrolling: touch !important;
   }
 
-  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout h3 {
-    font-size: clamp(25px, 7vw, 32px) !important;
-  }
-
-  body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout p {
-    margin: 8px 0 13px !important;
-    font-size: 15px !important;
-    line-height: 1.32 !important;
-  }
-
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-piece-list {
     margin-bottom: 13px !important;
-    padding: 9px !important;
   }
 
   body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout .primary-btn,
@@ -15533,13 +15471,7 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
     z-index: 2 !important;
   }
 
-  .gateway-header.app-top-chrome .gateway-logo span {
-    display: none !important;
-  }
-
   .gateway-header.app-top-chrome .gateway-logo-img {
-    height: 176px !important;
-    width: 176px !important;
     object-fit: contain !important;
   }
 
@@ -15592,10 +15524,6 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
     position: static !important;
     inset: auto !important;
     transform: none !important;
-    width: var(--oih-mobile-chrome-logo-size) !important;
-    max-width: var(--oih-mobile-chrome-logo-size) !important;
-    min-width: var(--oih-mobile-chrome-logo-size) !important;
-    height: var(--oih-mobile-chrome-logo-size) !important;
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
@@ -15608,25 +15536,15 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
     position: static !important;
     inset: auto !important;
     transform: none !important;
-    width: var(--oih-mobile-chrome-logo-size) !important;
-    max-width: var(--oih-mobile-chrome-logo-size) !important;
-    min-width: var(--oih-mobile-chrome-logo-size) !important;
-    height: var(--oih-mobile-chrome-logo-size) !important;
     display: flex !important;
     align-items: flex-start !important;
     justify-content: center !important;
     z-index: auto !important;
   }
 
-  .app-top-chrome .gateway-logo span {
-    display: none !important;
-  }
-
   body.gateway-mode .app-top-chrome .gateway-logo-img {
     border-radius: 0 !important;
     box-shadow: none !important;
-    height: var(--oih-mobile-chrome-logo-size) !important;
-    width: var(--oih-mobile-chrome-logo-size) !important;
     object-fit: contain !important;
     object-position: top center !important;
   }
@@ -15634,8 +15552,6 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   body:not(.gateway-mode) .app-top-chrome .gateway-logo-img {
     border-radius: 0 !important;
     box-shadow: none !important;
-    height: var(--oih-mobile-chrome-logo-size) !important;
-    width: var(--oih-mobile-chrome-logo-size) !important;
     object-fit: contain !important;
     object-position: top center !important;
   }
@@ -15687,10 +15603,6 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
     position: fixed !important;
     top: 0 !important;
     transform: translateX(-50%) !important;
-    width: 196px !important;
-    max-width: 196px !important;
-    min-width: 196px !important;
-    height: 196px !important;
     z-index: 2 !important;
   }
 
@@ -15699,16 +15611,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   body:not(.gateway-mode) .app-top-chrome .gateway-logo-img {
     border-radius: 0 !important;
     box-shadow: none !important;
-    height: 196px !important;
-    width: 196px !important;
     object-fit: contain !important;
     object-position: top center !important;
-  }
-
-  .gateway-header.app-top-chrome .gateway-logo span,
-  body.gateway-mode .app-top-chrome .gateway-logo span,
-  body:not(.gateway-mode) .app-top-chrome .gateway-logo span {
-    display: none !important;
   }
 
   .gateway-header.app-top-chrome .gateway-nav,
@@ -15770,17 +15674,13 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   body.shelf-detail-mode .app-top-chrome .gateway-logo {
     display: flex !important;
     grid-area: brand !important;
-    height: var(--oih-mobile-chrome-logo-size) !important;
     inset: auto !important;
     justify-content: center !important;
     justify-self: center !important;
     left: 50% !important;
-    max-width: var(--oih-mobile-chrome-logo-size) !important;
-    min-width: var(--oih-mobile-chrome-logo-size) !important;
     position: fixed !important;
     top: var(--oih-mobile-logo-top) !important;
     transform: translateX(-50%) !important;
-    width: var(--oih-mobile-chrome-logo-size) !important;
     z-index: 191 !important;
   }
 
@@ -15789,16 +15689,8 @@ body.gateway-mode .artwork-home-card .content-lock-badge {
   body:not(.gateway-mode) .app-top-chrome .gateway-logo-img {
     border-radius: 0 !important;
     box-shadow: none !important;
-    height: var(--oih-mobile-chrome-logo-size) !important;
     object-fit: contain !important;
     object-position: top center !important;
-    width: var(--oih-mobile-chrome-logo-size) !important;
-  }
-
-  .gateway-header.app-top-chrome .gateway-logo span,
-  body.gateway-mode .app-top-chrome .gateway-logo span,
-  body:not(.gateway-mode) .app-top-chrome .gateway-logo span {
-    display: none !important;
   }
 }
 
@@ -15834,8 +15726,6 @@ body:not(.gateway-mode) .app-top-chrome .lang-btn { color: #cbd2cd !important; }
 body:not(.gateway-mode) .app-top-chrome .lang-btn.active { color: #090a0a !important; background: #ff9957 !important; }
 @media (min-width: 761px) {
   body:not(.gateway-mode) .gateway-header.app-top-chrome { height: 88px !important; padding-top: 16px !important; }
-  body:not(.gateway-mode) .gateway-header.app-top-chrome .gateway-logo,
-  body:not(.gateway-mode) .gateway-header.app-top-chrome .gateway-logo-img { width: 140px !important; min-width: 140px !important; max-width: 140px !important; height: 140px !important; }
   .gateway-header.app-top-chrome .gateway-nav { gap: clamp(12px, 1.7vw, 26px) !important; }
   body.discovery-detail-mode #discoveryDetailView { padding-top: 120px !important; }
   .detail-back { margin-bottom: 18px; }

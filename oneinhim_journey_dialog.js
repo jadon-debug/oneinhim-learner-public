@@ -4,6 +4,11 @@
   if (!root) return;
   let active = null, returnKey = '';
   const isPhone = () => window.matchMedia('(max-width: 760px)').matches;
+  // The opener replaces its own DOM during rendering. Its original click must
+  // not reach the document's outside-click dismissal after the sheet opens.
+  root.addEventListener('click', event => {
+    if (event.target.closest('[data-journey-open-unit]')) event.stopPropagation();
+  });
   const refresh = () => {
     const panel = root.querySelector('.duo-node-popout');
     if (panel === active) return;

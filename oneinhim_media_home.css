@@ -1,32 +1,6 @@
 /* Compact content-first home, inspired by the NXR+ app's discovery screen.
    Scoped to gateway screens so lessons and progress retain their own layout. */
 body.gateway-mode { background: #050505 !important; }
-body.gateway-mode .gateway-header.app-top-chrome {
-  background: #050505 !important;
-  height: 76px !important;
-  min-height: 76px !important;
-  padding: 10px 32px !important;
-  align-items: center !important;
-  border-bottom: 1px solid #202020 !important;
-}
-body.gateway-mode .app-top-chrome .gateway-logo {
-  top: 8px !important;
-  width: 56px !important;
-  min-width: 56px !important;
-  max-width: 56px !important;
-  height: 56px !important;
-  transform: translateX(-50%) !important;
-}
-body.gateway-mode .app-top-chrome .gateway-logo-img {
-  width: 56px !important;
-  height: 56px !important;
-  min-width: 0 !important;
-  max-width: 56px !important;
-  object-fit: contain !important;
-}
-body.gateway-mode .app-top-chrome .gateway-nav-btn {
-  font: 600 13px/1.3 Montserrat, sans-serif !important;
-}
 body.gateway-mode .gateway-panel { padding-top: 88px !important; background: #050505 !important; }
 /* Discover opens directly on the shelves, as the native reference does. */
 body.gateway-mode:has(.gateway-nav-btn[data-gateway-nav="discover"].active) .home-hero { display: none !important; }
@@ -110,13 +84,6 @@ body.gateway-mode .home-browse-row { border-color: #252525 !important; border-ra
 body.gateway-mode .home-supporter-band { border-radius: 8px !important; margin: 36px 0 !important; }
 body.gateway-mode button:focus-visible { outline: 2px solid #ff9957 !important; outline-offset: 4px !important; }
 @media (max-width: 760px) {
-  body.gateway-mode .gateway-header.app-top-chrome {
-    height: calc(64px + env(safe-area-inset-top)) !important;
-    min-height: 64px !important;
-    padding: env(safe-area-inset-top) 16px 0 !important;
-  }
-  body.gateway-mode .app-top-chrome .gateway-logo { top: calc(8px + env(safe-area-inset-top)) !important; width: 48px !important; min-width: 48px !important; max-width: 48px !important; height: 48px !important; }
-  body.gateway-mode .app-top-chrome .gateway-logo-img { width: 48px !important; height: 48px !important; max-width: 48px !important; }
   body.gateway-mode .gateway-panel { padding-top: calc(82px + env(safe-area-inset-top)) !important; }
   body.gateway-mode .gateway-discover { padding: 0 16px 90px !important; }
   body.gateway-mode .artwork-home-shelf { margin-bottom: 24px !important; }
