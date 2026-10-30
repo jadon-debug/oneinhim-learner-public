@@ -48,28 +48,28 @@ window.ONEINHIM_PUBLISHED_HOME_CONTENT = {
   "shelves": [
     {
       "id": "start_this_week",
-      "title": "Start This Week",
+      "title": "Featured series",
       "mode": "discover",
-      "cardSize": "wide",
+      "cardSize": "poster",
       "items": [
         {
           "id": "one_basics_course",
-          "artwork": "assets/one-basics-1-1-eternal-life-course-cover.png",
+          "artwork": "assets/one-basics-1-1-eternal-life-desktop-hero-v3.jpg",
           "targetType": "discover",
           "target": "mux_one_basics_1_1_full_video",
           "contentId": "mux_one_basics_1_1_full_video",
           "alt": "One Basics 1.1 Eternal Life"
         },
         {
-          "id": "darkness_sonship",
-          "artwork": "assets/one-gospel-podcast-cover.png",
+          "id": "oneevent_featured",
+          "artwork": "assets/OE_May_PsDuaneS_friday.webp",
           "targetType": "discover",
-          "target": "aud_darkness_sonship_004",
-          "alt": "From Darkness to Sonship"
+          "target": "mux_oneevent_ps_duane_friday",
+          "alt": "ONEEVENT · Duane Sheriff"
         },
         {
           "id": "out_of_the_shadows",
-          "artwork": "assets/outoftheshadows_documentary-coverart_16x9.webp",
+          "artwork": "assets/outoftheshadows_documentary-coverart.webp",
           "targetType": "discover",
           "target": "mux_out_of_shadows_documentary",
           "alt": "Out of the Shadows",
