@@ -1,0 +1,34 @@
+const { app, storage } = require('./app-regression.cjs');
+const assert = require('node:assert/strict');
+const { readFileSync } = require('node:fs');
+const path = require('node:path');
+(async () => {
+  storage.clear();
+  const a = await app();
+  a.run('handleGatewayNav("journey")');
+  const doc = a.window.document;
+  const node = () => doc.querySelector('[data-duo-node-select="content:exploreJesus:0"]');
+  assert.equal(doc.querySelector('.duo-start-tag').textContent, 'Start');
+  a.run('for(let i=0;i<3;i++) state.completedPieces.add("exploreJesus:"+i); state.selectedPathNode=""; renderStageDetail(); bindDynamicActions()');
+  assert.equal(doc.querySelector('.duo-start-tag').textContent, 'Continue', 'Partial progress must not say Start');
+  assert.equal(node().closest('.duo-path-node').querySelector('.journey-node-caption').textContent, '3/5 lessons');
+  node().click();
+  assert.equal(node().getAttribute('aria-expanded'), 'true');
+  doc.querySelector('.journey-panel-close').click();
+  assert.equal(doc.querySelector('.duo-node-popout'), null, 'Details can be closed explicitly');
+  doc.querySelector('[data-duo-node-select="chest:exploreJesus:0"]').click();
+  assert.match(doc.querySelector('.journey-reward-panel').textContent, /Complete all five lessons/);
+  assert.equal(doc.querySelector('.journey-reward-panel .duo-unit-summary'), null, 'Milestones must not show fake zero progress');
+  a.run('state.language="nl"; renderStageDetail(); bindDynamicActions()');
+  assert.equal(doc.querySelector('.duo-start-tag').textContent, 'Ga verder');
+  a.run('for(let i=3;i<5;i++) state.completedPieces.add("exploreJesus:"+i); state.language="en"; renderStageDetail(); bindDynamicActions()');
+  assert.equal(doc.querySelector('.duo-start-tag').textContent, 'Complete');
+  // Supabase's delayed guest-session result redraws the path after boot.
+  a.run('getSupabaseAuthClient=()=>({auth:{onAuthStateChange(){},getSession:async()=>({data:{session:null}})}})');
+  a.run(readFileSync(path.join(__dirname, '../oneinhim_learner_accounts.js'), 'utf8'));
+  await a.run('window.OIHLearnerAccounts.init()');
+  a.run('state.selectedPathNode="";');
+  node().click();
+  assert.ok(doc.querySelector('.duo-node-popout'), 'Journey buttons must still work after account loading redraws the path');
+  console.log('PASS: Journey labels follow actual progress, panels close, milestones are honest, and Dutch labels update.');
+})().catch(error => { console.error(error); process.exitCode = 1; });
