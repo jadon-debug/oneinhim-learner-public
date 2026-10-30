@@ -42,10 +42,10 @@ create policy "Probe owner access"
 
 do $$
 begin
-  if not has_table_privilege('authenticated', 'public.oih_permission_grant_probe', 'select')
-     or not has_table_privilege('authenticated', 'public.oih_permission_grant_probe', 'insert')
-     or not has_table_privilege('authenticated', 'public.oih_permission_grant_probe', 'update')
-     or has_table_privilege('anon', 'public.oih_permission_grant_probe', 'select') then
+  if not has_column_privilege('authenticated', 'public.oih_permission_grant_probe', 'label', 'select')
+     or not has_column_privilege('authenticated', 'public.oih_permission_grant_probe', 'owner_id', 'insert')
+     or not has_column_privilege('authenticated', 'public.oih_permission_grant_probe', 'label', 'update')
+     or has_column_privilege('anon', 'public.oih_permission_grant_probe', 'label', 'select') then
     raise exception 'Explicit post-change Data API grants failed';
   end if;
   if not (select relrowsecurity from pg_class where oid = 'public.oih_permission_grant_probe'::regclass)
