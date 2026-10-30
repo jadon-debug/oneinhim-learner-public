@@ -6093,13 +6093,13 @@ function renderNodeLessonList(node, stage) {
     const meta = resource ? `${sectionContentFormat(resource, mode)} · ${resource.length || item.range || "Short"}` : item.range || "Lesson";
     const complete = learningPieceComplete(stage, item.moduleIndex);
     return `
-      <span class="${complete ? "is-complete" : ""}">
+      <button class="journey-lesson-item ${complete ? "is-complete" : ""}" type="button" data-journey-lesson="${esc(`${stage.choice}:${item.moduleIndex}`)}" ${node.locked ? "disabled" : ""} aria-label="${esc(`${index + 1}. ${title}${complete ? (state.language === "nl" ? " · Voltooid" : " · Completed") : ""}`)}">
         <b aria-label="${complete ? "Completed" : `Module ${index + 1}`}">${complete ? "✓" : esc(index + 1)}</b>
         <em>
           <strong>${esc(title)}</strong>
           <small>${esc(meta)}</small>
         </em>
-      </span>
+      </button>
     `;
   }).join("");
   return `<div class="duo-node-piece-list">${items}</div>`;
@@ -6156,6 +6156,26 @@ function renderDuoNodePopout(node, stage) {
       `}
     </div>
   `;
+}
+
+function renderJourneyNextStep(stage, group, groupIndex) {
+  if (!group || !group.modules.length) return "";
+  const nl = state.language === "nl";
+  const nextIndex = group.modules.findIndex(item => !learningPieceComplete(stage, item.moduleIndex));
+  const finished = nextIndex === -1;
+  const next = group.modules[Math.max(0, nextIndex)];
+  const resource = moduleResourceFor(stage, next.moduleIndex);
+  const completed = group.modules.filter(item => learningPieceComplete(stage, item.moduleIndex)).length;
+  const action = finished ? `data-section-review="${esc(`${stage.choice}:${groupIndex}`)}"` : `data-section-node-start="${esc(`${stage.choice}:${groupIndex}`)}"`;
+  return `<section class="journey-next-card" aria-label="${nl ? "Jouw volgende stap" : "Your next step"}">
+    <p class="journey-next-eyebrow">${finished ? (nl ? "Lessen afgerond" : "Lessons complete") : (nl ? "Jouw volgende les" : "Your next lesson")}</p>
+    <h2>${esc(finished ? group.title : resource?.title || next.title)}</h2>
+    <p class="journey-next-meta">${finished ? (nl ? "Klaar voor de herhaling" : "Ready to review what you learned") : esc(`${nl ? "Les" : "Lesson"} ${nextIndex + 1} ${nl ? "van" : "of"} ${group.modules.length} · ${sectionContentFormat(resource, nodeModeForResource(stage, group, resource))} · ${resource?.length || ""}`)}</p>
+    <div class="journey-next-progress"><progress value="${completed}" max="${group.modules.length}" aria-label="${nl ? "Voltooide lessen" : "Completed lessons"}"></progress><span>${completed}/${group.modules.length} ${nl ? "lessen voltooid" : "lessons complete"}</span></div>
+    <button class="journey-next-primary" type="button" ${action}>${finished ? (nl ? "Herhaal deze unit" : "Review this unit") : completed ? (nl ? "Ga verder met de les" : "Continue learning") : (nl ? "Begin de eerste les" : "Start first lesson")}</button>
+    <button class="journey-next-secondary" type="button" data-journey-open-unit="${esc(pathNodeKey("content", stage, groupIndex))}">${nl ? "Bekijk alle vijf lessen" : "View all five lessons"}</button>
+    <p class="journey-next-note">${nl ? "De oranje ring telt je vijf lessen. Vragen en oefeningen tellen apart." : "The orange ring tracks your five lessons. Questions and practice are separate."}</p>
+  </section>`;
 }
 
 function renderStageDetail() {
@@ -6354,6 +6374,7 @@ function renderStageDetail() {
       </button>
       <button class="duo-guidebook" type="button" data-duo-guidebook>Guidebook</button>
     </div>
+    ${renderJourneyNextStep(stage, sectionGroups[currentGroupIndex], currentGroupIndex)}
     <svg class="duo-path-curve" viewBox="0 0 620 1820" aria-hidden="true" focusable="false">
       <path />
     </svg>
@@ -6529,6 +6550,11 @@ function updateStickyStageBanner() {
 
 function scrollActiveJourneySectionIntoView(stageChoiceOverride = "", sectionIndexOverride = null) {
   if (state.activeView !== "stageDetailView" || !els.stageSectionList) return;
+  // Returning to Journey should reveal the next-lesson action, not scroll past it.
+  if (els.stageSectionList.querySelector(".journey-next-card")) {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    return;
+  }
   const rawStageChoice = stageChoiceOverride || state.activeStageId || activeStage().choice;
   const stageChoice = CSS.escape(rawStageChoice);
   const sectionIndex = Number.isFinite(sectionIndexOverride) ? sectionIndexOverride : (Number.isFinite(state.selectedSectionIndex) ? state.selectedSectionIndex : 0);
@@ -6986,8 +7012,9 @@ function renderModuleDetail() {
   els.moduleNotes.value = getModuleNote(stage, state.activeModuleIndex);
   els.moduleSaveNotes.textContent = t("module.saveNotes");
   els.moduleNoteStatus.textContent = t("module.notesReady");
-  if (els.moduleSkipStep) els.moduleSkipStep.textContent = "Skip";
-  els.moduleNextStep.textContent = "Continue";
+  if (els.moduleSkipStep) els.moduleSkipStep.textContent = state.language === "nl" ? "Sla les over" : "Skip lesson";
+  els.moduleNextStep.textContent = state.language === "nl" ? "Les afronden" : "Complete lesson";
+  els.moduleNextStep.setAttribute("aria-label", state.language === "nl" ? "Les afronden en vragen openen" : "Complete lesson and open questions");
   if (els.sectionContentQueue) {
     els.sectionContentQueue.style.setProperty("--stage-color", stage.stageColor);
     els.sectionContentQueue.style.display = "none";
@@ -7608,6 +7635,30 @@ function renderAll() {
 }
 
 function bindDynamicActions() {
+  document.querySelectorAll("[data-journey-open-unit]").forEach(button => {
+    button.onclick = () => {
+      const trigger = [...document.querySelectorAll(".duo-node-button[data-duo-node-select]")].find(node => node.dataset.duoNodeSelect === button.dataset.journeyOpenUnit);
+      trigger?.click();
+    };
+  });
+  document.querySelectorAll("[data-journey-lesson]").forEach(button => {
+    button.onclick = () => {
+      if (button.disabled) return;
+      const [choice, rawIndex] = button.dataset.journeyLesson.split(":");
+      const stage = stageForChoice(choice);
+      const index = Number(rawIndex);
+      const info = activeSectionPieceInfo(stage, index);
+      const groups = stageSectionGroups(stage);
+      if (!info.group || (info.group.progress === 0 && info.groupIndex !== currentSectionGroupIndex(groups) && state.guidedPathNode !== pathNodeKey("content", stage, info.groupIndex))) return;
+      stopModulePlayback();
+      state.activeStageId = stage.choice;
+      openSectionPicker(info.groupIndex);
+      state.activeModuleIndex = index;
+      state.moduleMode = nodeModeForResource(stage, info.group, moduleResourceFor(stage, index));
+      renderModuleDetail();
+      bindDynamicActions();
+    };
+  });
   normalizeRenderedContentTargets();
   refreshContentLockBadges();
   document.querySelectorAll("[data-open]").forEach((button) => {
