@@ -1,0 +1,34 @@
+const { app, storage } = require('./app-regression.cjs');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const realSetTimeout = setTimeout, realClearTimeout = clearTimeout;
+const watchdog = realSetTimeout(()=>{console.error('FAIL: startup did not settle');process.exit(1);},2000);
+(async()=>{
+  storage.clear();
+  storage.set('oneinhim.learning.progress.v1', JSON.stringify({completedPieces:['exploreJesus:0']}));
+  const a = await app('', { checkVersion:true, setup({window,run}) {
+    window.setTimeout=(fn,ms)=>realSetTimeout(fn,Math.min(ms,10));
+    window.clearTimeout=realClearTimeout;
+    window.fetch=()=>new Promise(()=>{});
+    window.navigator.serviceWorker={getRegistrations:()=>new Promise(()=>{}),addEventListener(){},register:()=>Promise.resolve({addEventListener(){},update:()=>Promise.resolve()})};
+    window.caches={keys:()=>new Promise(()=>{})};
+    run('teamSyncIsReady=()=>true; getTeamSyncConfig=()=>({supabaseUrl:"https://example.test",tableName:"content",supabaseAnonKey:"test"}); renderAdminAccount=()=>new Promise(()=>{})');
+  }});
+  assert.equal(a.window.document.documentElement.classList.contains('app-booting'),false,'Stalled content, team, account and cache calls must not leave the app hidden');
+  assert.equal(a.run('stageSectionGroups(pathOptions[0])[0].modules.length'),5,'Embedded lessons remain available');
+  assert.equal(a.run('state.completedPieces.has("exploreJesus:0")'),true,'Startup must preserve saved progress');
+  assert.equal(storage.get('oneinhim.appReleaseVersion'),'240');
+  const scripts=[...a.window.document.querySelectorAll('script[src^="https:"]')];
+  assert.ok(scripts.every(script=>script.hasAttribute('async')),'Optional CDN scripts must not block the parser');
+  assert.equal(a.window.document.querySelector('link[rel="stylesheet"][href*="fonts.googleapis"]').getAttribute('media'),'print','Remote fonts must not block initial rendering');
+  a.window.document.documentElement.classList.add('app-booting');
+  let recovery;
+  a.window.setTimeout=callback=>{recovery=callback;return 1;};
+  a.run(fs.readFileSync(path.join(__dirname,'../oneinhim_startup.js'),'utf8'));
+  recovery();
+  assert.equal(a.window.document.getElementById('appStartupRetry').hidden,false,'A stalled boot offers a visible retry');
+  assert.match(a.window.document.getElementById('appStartupMessage').textContent,/saved progress has not been cleared/);
+  assert.equal(a.run('state.completedPieces.has("exploreJesus:0")'),true);
+  console.log('PASS: stalled startup requests recover, embedded lessons open, optional CDNs do not block, and saved progress is preserved.');
+})().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>realClearTimeout(watchdog));
