@@ -37,7 +37,11 @@ body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout {
   transform: none !important; margin: 20px auto 12px !important;
   max-height: none !important; overflow: visible !important;
   box-sizing: border-box !important; z-index: 40 !important;
+  background: #fff !important; color: #252b24 !important;
+  border: 2px solid var(--stage-color, #ed7326) !important;
 }
+body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout :is(h3,p,strong,small,em) { color: #252b24 !important; }
+body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-piece-list { background: #f4f4f0 !important; }
 body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout::before,
 body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout::after { display: none !important; }
 body.journey-mode:not(.gateway-mode) #stageDetailView .duo-unit-percentage { color: #bd4e12 !important; }
