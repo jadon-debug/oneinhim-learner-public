@@ -104,6 +104,8 @@ body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout .primary-
   background: #f47721 !important; color: #252b24 !important; border-color: #a74c10 !important;
   text-shadow: none !important; min-height: 48px !important;
 }
+body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-popout .soft-btn { color: #252b24 !important; background: #f4f4f0 !important; border: 1px solid #b9bdb6 !important; }
+body.journey-mode:not(.gateway-mode) #stageDetailView .duo-node-piece-list b { color: #7d340e !important; }
 @media (max-width: 760px) {
   body.gateway-mode .gateway-header.app-top-chrome .gateway-logo { width: 166px !important; min-width: 166px !important; max-width: 166px !important; height: 48px !important; }
   body.gateway-mode .gateway-header.app-top-chrome .gateway-logo-img { width: 34px !important; min-width: 34px !important; max-width: 34px !important; height: 34px !important; }
