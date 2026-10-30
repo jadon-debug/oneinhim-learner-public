@@ -1,4 +1,29 @@
 /* Journey owns its contrast, spacing and inline detail panels. */
+:root { --journey-ink: #252b24; --journey-muted: #4d554b; --journey-accent: #f47721; --journey-border: #d8ddd4; }
+body.journey-mode #stageDetailView .journey-next-card {
+  position: relative; z-index: 2; box-sizing: border-box;
+  width: min(560px, calc(100% - 32px)); margin: 0 auto 28px;
+  padding: 22px; border: 1px solid var(--journey-border); border-radius: 16px;
+  background: #fff; color: var(--journey-ink); text-align: left;
+  box-shadow: 0 5px 18px rgba(37,43,36,.05);
+}
+body.journey-mode #stageDetailView .journey-next-eyebrow { margin: 0 0 8px; color: #7d340e; font: 800 12px/1.4 Montserrat,sans-serif; text-transform: uppercase; letter-spacing: .06em; }
+body.journey-mode #stageDetailView .journey-next-card h2 { margin: 0 0 8px; font: 800 23px/1.25 Montserrat,sans-serif; color: var(--journey-ink); overflow-wrap: anywhere; }
+body.journey-mode #stageDetailView .journey-next-meta { margin: 0 0 16px; color: var(--journey-muted); font: 500 14px/1.5 Montserrat,sans-serif; }
+body.journey-mode #stageDetailView .journey-next-progress { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; font: 600 13px/1.5 Montserrat,sans-serif; }
+body.journey-mode #stageDetailView .journey-next-progress progress { width: 100%; height: 8px; accent-color: var(--journey-accent); border: 0; border-radius: 8px; overflow: hidden; background: #e7e9e4; }
+body.journey-mode #stageDetailView .journey-next-progress progress::-webkit-progress-bar { background: #e7e9e4; border-radius: 8px; }
+body.journey-mode #stageDetailView .journey-next-progress progress::-webkit-progress-value { background: var(--journey-accent); border-radius: 8px; }
+body.journey-mode #stageDetailView .journey-next-card button { display: block; width: 100%; min-height: 48px; padding: 12px; font: 750 15px/1.4 Montserrat,sans-serif; border-radius: 9px; cursor: pointer; }
+body.journey-mode #stageDetailView .journey-next-primary { color: var(--journey-ink); background: var(--journey-accent); border: 1px solid #a74c10; }
+body.journey-mode #stageDetailView .journey-next-secondary { color: var(--journey-ink); background: #fff; border: 1px solid #b9bdb6; margin-top: 9px; }
+body.journey-mode #stageDetailView .journey-next-note { margin: 14px 0 0; color: var(--journey-muted); font: 400 12px/1.6 Montserrat,sans-serif; }
+body.journey-mode #stageDetailView .duo-node-piece-list .journey-lesson-item { width: 100%; display: grid; grid-template-columns: 26px minmax(0,1fr); align-items: start; gap: 9px; min-height: 64px; padding: 10px 5px; text-align: left; border: 0; border-bottom: 1px solid #d8ddd4; border-radius: 0; background: transparent; color: var(--journey-ink); cursor: pointer; }
+body.journey-mode #stageDetailView .journey-lesson-item:last-child { border-bottom: 0; }
+body.journey-mode #stageDetailView .journey-lesson-item em { font-style: normal; display: grid; gap: 5px; }
+body.journey-mode #stageDetailView .journey-lesson-item strong { font: 700 14px/1.4 Montserrat,sans-serif; }
+body.journey-mode #stageDetailView .journey-lesson-item small { display: block; font: 500 12px/1.4 Montserrat,sans-serif; }
+body.journey-mode #stageDetailView .journey-lesson-item:disabled { cursor: default; }
 /* Use the clear symbol plus live wordmark rather than tiny text inside artwork. */
 body .gateway-header.app-top-chrome .gateway-logo {
   display: flex !important; flex-direction: row !important; align-items: center !important;
