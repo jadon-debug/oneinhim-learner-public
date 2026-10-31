@@ -50,7 +50,14 @@ window.OIHLearnerAccounts = (() => {
         <button class="learner-text-button" id="learnerReset" type="button">${text('Forgot your password?', 'Wachtwoord vergeten?')}</button>
         ${signup ? `<button class="learner-text-button" id="learnerResend" type="button">${text('Resend confirmation email', 'Bevestigingsmail opnieuw sturen')}</button>` : ''}
       </form>`}`;
-    host.querySelectorAll('[data-auth-mode]').forEach(button => button.onclick = () => { draft.email = host.querySelector('[name="email"]')?.value.trim() || draft.email; mode = button.dataset.authMode; notice = ''; render(); });
+    host.querySelectorAll('[data-auth-mode]').forEach(button => button.onclick = () => {
+      draft.email = host.querySelector('[name="email"]')?.value.trim() || draft.email;
+      const firstName = host.querySelector('[name="first_name"]'), consent = host.querySelector('[name="onboarding_emails"]');
+      if (firstName) draft.first_name = firstName.value;
+      if (consent) draft.onboarding_emails = Boolean(consent.checked);
+      mode = button.dataset.authMode; notice = ''; render();
+      host.querySelector('[name="email"]')?.focus?.();
+    });
     host.querySelector('#learnerAuthForm')?.addEventListener('submit', authSubmit);
     host.querySelector('#learnerReset')?.addEventListener('click', () => emailAction('reset'));
     host.querySelector('#learnerResend')?.addEventListener('click', () => emailAction('resend'));
