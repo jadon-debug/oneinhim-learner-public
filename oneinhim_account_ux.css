@@ -1,0 +1,32 @@
+/* Account tasks precede the guest progress summary while authenticating. */
+#accountView.learner-auth-first .learner-account-controls {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+#accountView.learner-auth-first .learner-account-panel {
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid #343934;
+}
+#accountView .learner-account-controls #learnerAuthStatus:empty {
+  display: none;
+}
+#accountView .learner-account-controls .primary-btn {
+  color: #151a15;
+  background: #ff9957;
+}
+@media (max-width: 760px) {
+  #accountView .learner-account-controls .learner-form {
+    gap: 14px;
+    margin-top: 18px;
+  }
+  #accountView .learner-account-controls .learner-tabs {
+    margin-top: 18px;
+  }
+  #accountView .learner-account-controls .learner-tabs button {
+    padding: 12px 10px;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+}

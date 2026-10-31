@@ -5,7 +5,7 @@ const postcss = require('postcss');
 const root = path.join(__dirname, '..');
 for(const file of fs.readdirSync(root).filter(file=>file.endsWith('.css'))) {
   const css = postcss.parse(fs.readFileSync(path.join(root,file),'utf8'),{from:file});
-  if(!['oneinhim_app_chrome.css','oneinhim_journey_ux.css'].includes(file))continue;
+  if(!['oneinhim_app_chrome.css','oneinhim_journey_ux.css','oneinhim_account_ux.css'].includes(file))continue;
   const rules = new Set();
   css.walkRules(rule=>{
     const context=[];
