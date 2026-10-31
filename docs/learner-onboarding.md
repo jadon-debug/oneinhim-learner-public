@@ -14,7 +14,11 @@
 
 The additive `learner_accounts_and_onboarding` database migration has been applied to OIH App Test. Transactional test fixtures were rolled back; no test accounts or emails were retained.
 
-**Registration and delivery are disabled.** No Brevo credentials or verified sender were available. No real emails were sent. The GitHub workflow is also disabled unless the explicit repository variable is enabled.
+**Public registration and account-email actions remain disabled.** The 31 October 2026 read-only check confirmed that Supabase permits email signup and requires confirmation. Custom SMTP, permitted redirects and real email delivery have not been verified: the dashboard requires sign-in, and the connected database tools do not expose those settings. No real emails were sent. `signupEnabled` and `authEmailEnabled` stay false until the checks below pass. Existing password sign-in and guest use remain available.
+
+The dedicated `oneinhim_auth.html` callback waits for Supabase to consume the confirmation/recovery link before opening the app. This prevents the app's startup routing from overwriting auth fragments before the asynchronously loaded SDK reads them. Tokens are never copied into the learner app URL. Expired links and SDK timeout show a return-to-account action.
+
+Account confirmation and password recovery need Supabase custom SMTP. Optional onboarding messages use the separate Edge Function worker; enabling that worker is **not** a prerequisite for account registration. Keep its delivery flag off until its own tests pass.
 
 **The permission-tightening migration was approved and applied on 2026-10-17.** The SQL is `supabase/restrict-learner-privileges.sql`. It removes Supabase's default broad table grants on the new profile table while retaining explicit grants on editable columns. It also removes anonymous access grants on the new progress table. Existing owner-based RLS policies already isolate rows; this additional step prevents learners from changing delivery suppression or reading internal profile columns. Verified that profile reading/preference editing work while token reads, suppression edits and anonymous progress access are denied.
 
@@ -28,15 +32,15 @@ Source SQL files are reproducible migration records, ordered as:
 1. Re-run privilege / RLS tests when deploying to a new environment.
 2. Connect a Brevo Free account, authenticate the OIH sending domain and verify the sender. Choose an existing monitored reply mailbox; do not invent a new address that nobody receives.
 3. Configure Supabase custom SMTP with Brevo's SMTP credentials. Set the account email rate limits and password policy; require email confirmation. Default Supabase demo SMTP must not be used for public signup.
-4. Set the Supabase Site URL to `https://jadon-debug.github.io/oneinhim-learner-public/oneinhim_learner_app.html`. Allow this exact callback URL for signup/recovery: `https://jadon-debug.github.io/oneinhim-learner-public/oneinhim_learner_app.html`. Callback fragments open Account, then resume the previous route. Restrict additional preview callback URLs to known deployments.
+4. Set the Supabase Site URL to `https://jadon-debug.github.io/oneinhim-learner-public/oneinhim_learner_app.html`. Allow this exact callback URL for signup/recovery: `https://jadon-debug.github.io/oneinhim-learner-public/oneinhim_auth.html`. It must match `authRedirectUrl` in the frontend config. The callback opens Account (password recovery opens the new-password form); sign-in resumes the saved route on the same device. Restrict additional preview callback URLs to known deployments. Replace old main-page redirects in newly sent emails; already-issued old links may need to be resent.
 5. Apply `supabase/templates/confirmation.html` and `recovery.html`. Suggested subjects: `Confirm your email / Bevestig je e-mailadres` and `Reset your password / Herstel je wachtwoord`. The body chooses EN/NL from user metadata. Resends use Supabase's existing signup template.
-6. Deploy `supabase/functions/oih-onboarding` with its `deno.json` and `messages.mjs`. `verify_jwt=false` is intentional: the handler authenticates worker/webhook requests with separate private secrets; opt-outs use opaque per-user tokens. An anonymous request cannot process jobs.
+6. For optional lifecycle delivery, deploy `supabase/functions/oih-onboarding` with its `deno.json` and `messages.mjs`. Steps 6–10 apply only to that separate worker. `verify_jwt=false` is intentional: the handler authenticates worker/webhook requests with separate private secrets; opt-outs use opaque per-user tokens. An anonymous request cannot process jobs.
 7. Set private Edge Function secrets: `BREVO_API_KEY`, `OIH_EMAIL_FROM`, `OIH_EMAIL_REPLY_TO`, `OIH_EMAIL_WORKER_SECRET`, `OIH_EMAIL_WEBHOOK_SECRET`. Keep `OIH_EMAIL_ENABLED` unset until test delivery succeeds. Never put these in frontend config, commits or chat.
 8. Configure Brevo hard-bounce, spam, blocked and unsubscribed events to POST to `https://jlrgfcadmaoigybvzdsx.supabase.co/functions/v1/oih-onboarding?event=1`, authenticating with `x-oih-secret: <webhook secret>`. Match by provider message ID; unknown IDs do not change users.
 9. Configure an INSERT webhook on `oih_learner_profiles` to POST to the worker URL with `x-oih-secret: <worker secret>`. This invokes welcome processing after confirmation. The body is ignored; recipients and consent always come from the database. GitHub scheduling is the fallback, normally every 30 minutes, subject to GitHub scheduling delays.
 10. In GitHub, add the private `OIH_EMAIL_WORKER_SECRET` Actions secret. Only after test sends pass, set the repository variable `OIH_EMAIL_ENABLED=true` and the matching Edge Function secret `OIH_EMAIL_ENABLED=true`.
 11. Verify signup, email confirmation, returning on another device, password recovery, opted-in/opted-out reminders, unsubscribe and webhook authentication using an explicitly authorised test inbox. Verify current and expired links in both languages. Do not enable real recipients before these checks.
-12. Set `signupEnabled: true` in `oneinhim_team_sync_config.js`, publish the reviewed frontend and smoke-test on an actual mobile viewport. Until then the app clearly offers guest use and explains that registration is being prepared.
+12. After account-email tests pass, set `signupEnabled: true` and `authEmailEnabled: true` in `oneinhim_team_sync_config.js`, publish the reviewed frontend and smoke-test on an actual mobile viewport. Until then the app clearly offers guest use and explains that registration is being prepared. Do not change table grants or RLS to solve an SMTP or redirect failure.
 
 ## Rules for delivery
 
@@ -61,7 +65,7 @@ Use the selected shared or monitored OIH inbox. Assign an owner for technical qu
 
 ## Validation
 
-`npm test` covers the existing learner regression flow, unlinked sermon routing, closed registration, bilingual screens, separate accounts/local notes, all email variants and behaviour/consent suppression.
+`npm test` covers the existing learner regression flow, unlinked sermon routing, closed registration, bilingual screens, separate accounts/local notes, all email variants and behaviour/consent suppression. `tests/registration.cjs` additionally exercises signup payloads, opt-in consent, preserving email after submission, safe errors, reset/resend redirects, single auth subscription, confirmation/recovery callbacks, expired links and callback timeout. These use a mocked auth transport; they do not prove SMTP delivery or the hosted redirect allowlist.
 
 `npm ci` then `npx deno check --node-modules-dir=manual supabase/functions/oih-onboarding/index.ts`
 
@@ -71,7 +75,7 @@ Database transaction tests exercised verified-profile creation, progress union, 
 
 Measure verified signup -> first lesson started -> first lesson completed -> return within seven days. Track unsubscribes, failed deliveries and daily usage. Keep private notes out of analytics. Tune timing from actual use rather than claiming this initial sequence is optimal.
 
-Pending external checks: live SMTP delivery, real confirmation/recovery links and mobile visual QA. The local browser preview was blocked by the browser environment, so no claim of completed mobile visual verification is made.
+The 31 October registration update was checked in a 390 × 844 browser preview. Signup/sign-in now precede the guest progress summary, password recovery precedes account preferences, and account submission uses dark text on a lighter orange button. No real email was submitted in this preview. Pending external checks: hosted SMTP delivery, real confirmation/recovery links and an actual-phone test.
 
 ## UI review, 18 October 2026
 

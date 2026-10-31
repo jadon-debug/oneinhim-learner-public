@@ -1,0 +1,61 @@
+const {app,storage}=require('./app-regression.cjs');
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const {parseHTML}=require('linkedom');
+const tick=()=>new Promise(resolve=>setImmediate(resolve));
+(async()=>{
+  storage.clear();
+  const a=await app();
+  const doc=a.window.document;
+  const calls=[];let subscriptionCount=0,result={data:{session:null},error:null};
+  const api={auth:{onAuthStateChange(){subscriptionCount++;},getSession:async()=>({data:{session:null}}),signUp:async input=>{calls.push(input);return result;},resend:async input=>{calls.push(input);return {error:null};},resetPasswordForEmail:async(email,options)=>{calls.push({email,options});return {error:null};}}};
+  a.window.mockAuth=api;
+  a.run('getSupabaseAuthClient=()=>window.mockAuth; window.ONEINHIM_LEARNER_CONFIG={signupEnabled:true,authEmailEnabled:true,authRedirectUrl:"https://example.test/oneinhim_auth.html"}; setView("accountView")');
+  await Promise.all([a.run('window.OIHLearnerAccounts.init()'),a.run('window.OIHLearnerAccounts.init()')]);
+  await a.run('window.OIHLearnerAccounts.init()');
+  assert.equal(subscriptionCount,1,'SDK readiness and startup must not create duplicate auth listeners');
+  assert.equal(doc.querySelector('#accountView .account-card').firstElementChild.id,'learnerAccountControls','Registration must appear before the guest progress summary');
+  function fields(){const f=doc.getElementById('learnerAuthForm');f.elements=Object.fromEntries([...f.querySelectorAll('input')].map(e=>[e.name,e]));return f;}
+  let form=fields();form.elements.email.value=' learner@example.test ';form.elements.password.value='very-good-password';form.elements.first_name.value='Learner';
+  form.dispatchEvent(new a.window.Event('submit',{bubbles:true,cancelable:true}));await tick();await tick();
+  assert.equal(calls[0].email,'learner@example.test');
+  assert.equal(calls[0].options.emailRedirectTo,'https://example.test/oneinhim_auth.html');
+  assert.equal(calls[0].options.data.onboarding_emails,false,'Marketing consent must be opt in');
+  assert.match(doc.getElementById('learnerAuthStatus').textContent,/Check your inbox/);
+  assert.equal(doc.querySelector('[name="email"]').value,'learner@example.test','Submission must retain email for resend');
+  assert.equal(doc.querySelector('[name="password"]').value,'','Passwords must not be rendered back into the form');
+  result={data:{},error:{code:'weak_password'}};
+  form=fields();form.elements.password.value='short';form.dispatchEvent(new a.window.Event('submit',{bubbles:true,cancelable:true}));await tick();await tick();
+  assert.match(doc.getElementById('learnerAuthStatus').textContent,/stronger password/);
+  form=fields();form.elements.email.checkValidity=()=>true;
+  doc.getElementById('learnerResend').click();await tick();await tick();
+  assert.equal(calls.at(-1).type,'signup');
+  assert.equal(calls.at(-1).options.emailRedirectTo,'https://example.test/oneinhim_auth.html');
+  form=fields();form.elements.email.checkValidity=()=>true;
+  doc.getElementById('learnerReset').click();await tick();await tick();
+  assert.equal(calls.at(-1).email,'learner@example.test');
+  assert.equal(calls.at(-1).options.redirectTo,'https://example.test/oneinhim_auth.html');
+  a.run('window.ONEINHIM_LEARNER_CONFIG.signupEnabled=false; window.OIHLearnerAccounts.render()');
+  assert.equal(doc.querySelector('#learnerAuthForm'),null,'Unverified production delivery must remain gated');
+
+  const callbackSource=fs.readFileSync(path.join(__dirname,'../oneinhim_auth.js'),'utf8');
+  async function callback(hash,session,timeout=false){
+    const {window}=parseHTML(fs.readFileSync(path.join(__dirname,'../oneinhim_auth.html'),'utf8'));
+    let target='',cleaned=false,expire;
+    const location=new URL('https://example.test/oneinhim_auth.html'+hash);location.replace=url=>{target=url;};
+    Object.assign(window,{URL,URLSearchParams,location,history:{replaceState(){cleaned=true;}},setTimeout:fn=>{expire=fn;return 1;},clearTimeout(){},ONEINHIM_TEAM_SYNC:{supabaseUrl:'https://example.supabase.co',supabaseAnonKey:'public'},supabase:{createClient:()=>({auth:{getSession:async()=>({data:{session}})}})}});
+    vm.runInContext(callbackSource,vm.createContext(window));if(timeout)expire();await tick();await tick();return {window,target,cleaned};
+  }
+  const confirmed=await callback('#access_token=test&type=signup',{user:{id:'learner'}});
+  assert.equal(confirmed.target,'https://example.test/oneinhim_learner_app.html#view=accountView');
+  const recovery=await callback('#access_token=test&type=recovery',{user:{id:'learner'}});
+  assert.ok(recovery.target.endsWith('#view=accountView&type=recovery'));
+  assert.ok(!recovery.target.includes('access_token'),'Auth tokens must never be copied to app routes');
+  const expired=await callback('#error=access_denied&error_description=expired',null);
+  assert.equal(expired.target,'');assert.equal(expired.cleaned,true);
+  assert.equal(expired.window.document.getElementById('authCallbackReturn').hidden,false);
+  const timedOut=await callback('#access_token=test&type=signup',{user:{id:'learner'}},true);
+  assert.equal(timedOut.target,'','A late session must not redirect after the timeout message');
+  assert.equal(timedOut.window.document.getElementById('authCallbackReturn').hidden,false);
+  console.log('PASS: registration, confirmation callback, reset callback, resend, safe errors, preserved form state and single auth subscription.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

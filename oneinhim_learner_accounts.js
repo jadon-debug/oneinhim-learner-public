@@ -4,11 +4,13 @@ window.OIHLearnerAccounts = (() => {
   const initialAuthParams = new URLSearchParams(location.hash.slice(1));
   let recovery = initialAuthParams.get('type') === 'recovery', mode = 'signup', notice = '', syncTimer, syncInFlight = false, syncAgain = false;
   let revision = 0;
+  let subscribedClient = null, initialization = null, onlineBound = false;
+  const draft = { email: '', first_name: '', onboarding_emails: false };
   const config = () => window.ONEINHIM_LEARNER_CONFIG || {};
   const text = (en, nl) => state.language === 'nl' ? nl : en;
   const client = () => getSupabaseAuthClient();
   const route = () => location.hash.startsWith('#view=') ? location.hash : '#view=stageDetailView&stage=startFollowing';
-  const destination = () => new URL('oneinhim_learner_app.html', location.href).href + '#view=accountView';
+  const destination = () => config().authRedirectUrl || new URL('oneinhim_auth.html', location.href).href;
   const progress = () => Object.fromEntries(PROGRESS_FIELDS.map(key => [key, [...state[key]]]));
   const key = () => owner ? `${LEARNING_PROGRESS_KEY}.${owner}` : LEARNING_PROGRESS_KEY;
   function status(message) { notice = message; const el = document.getElementById('learnerAuthStatus'); if (el) el.textContent = message; }
@@ -17,7 +19,12 @@ window.OIHLearnerAccounts = (() => {
     if (!host) return;
     const signup = mode === 'signup';
     const disabled = !config().signupEnabled;
+    const authFirst = !user && (!disabled || !signup) || recovery;
+    const panel = document.querySelector('#accountView .learner-account-panel');
+    document.getElementById('accountView')?.classList.toggle('learner-auth-first', authFirst);
+    if (panel) { if (authFirst) panel.before(host); else panel.after(host); }
     host.innerHTML = user ? `
+      ${recovery ? passwordForm() : ''}
       <div class="learner-identity"><strong>${esc(profile?.first_name || user.email)}</strong><span>${esc(user.email)}</span></div>
       <p>${text('Your completed lessons sync across devices. Personal notes stay in this browser.', 'Je voltooide lessen worden tussen apparaten gesynchroniseerd. Persoonlijke notities blijven in deze browser.')}</p>
       <form id="learnerPreferences" class="learner-form">
@@ -28,22 +35,29 @@ window.OIHLearnerAccounts = (() => {
         <button class="soft-btn" type="submit">${text('Save preferences', 'Voorkeuren opslaan')}</button>
       </form>
       <div class="learner-actions"><button class="soft-btn" id="learnerImport" type="button">${text('Add guest progress from this device', 'Gastvoortgang van dit apparaat toevoegen')}</button><button class="soft-btn" id="learnerSignout" type="button">${text('Sign out', 'Uitloggen')}</button></div>
-      ${recovery ? passwordForm() : ''}
       <p id="learnerAuthStatus" role="status" aria-live="polite">${esc(notice)}</p>` : `
       <h3>${text('Keep your place, wherever you learn', 'Ga verder waar je gebleven bent')}</h3>
-      <p>${disabled ? text('Keep learning as a guest. Already have an account? Sign in below.', 'Leer verder als gast. Heb je al een account? Log hieronder in.') : text('Create a free account to save completed lessons across devices. You can also keep exploring as a guest.', 'Maak een gratis account om voltooide lessen op meerdere apparaten te bewaren. Je kunt ook als gast verdergaan.')}</p>
+      <p>${disabled ? text('Keep learning as a guest. Already have an account? Sign in below.', 'Leer verder als gast. Heb je al een account? Log hieronder in.') : text('Save your completed lessons across devices.', 'Bewaar je voltooide lessen op meerdere apparaten.')}</p>
       ${disabled && signup ? `<p class="learner-callout">${text('Account registration is being prepared. You can use the free journey now; your progress stays on this device.', 'We bereiden registratie voor. Je kunt de gratis reis nu gebruiken; je voortgang blijft op dit apparaat.')}</p>` : ''}
       <div class="learner-tabs"><button type="button" data-auth-mode="signup" aria-pressed="${signup}">${text('Create account', 'Account maken')}</button><button type="button" data-auth-mode="signin" aria-pressed="${!signup}">${text('Sign in', 'Inloggen')}</button></div>
+      <p id="learnerAuthStatus" role="status" aria-live="polite" tabindex="-1">${esc(notice)}</p>
       ${disabled && signup ? '' : `<form id="learnerAuthForm" class="learner-form">
-        ${signup ? `<label>${text('First name (optional)', 'Voornaam (optioneel)')}<input name="first_name" maxlength="80" autocomplete="given-name"></label>` : ''}
-        <label>${text('Email address', 'E-mailadres')}<input name="email" type="email" required maxlength="254" autocomplete="username" inputmode="email"></label>
+        ${signup ? `<label>${text('First name (optional)', 'Voornaam (optioneel)')}<input name="first_name" maxlength="80" autocomplete="given-name" value="${esc(draft.first_name)}"></label>` : ''}
+        <label>${text('Email address', 'E-mailadres')}<input name="email" type="email" required maxlength="254" autocomplete="username" inputmode="email" value="${esc(draft.email)}"></label>
         <label>${text('Password', 'Wachtwoord')}<input name="password" type="password" required minlength="${signup ? 10 : 1}" autocomplete="${signup ? 'new-password' : 'current-password'}"></label>
-        ${signup ? `<p class="learner-small">${text('Use at least 10 characters.', 'Gebruik minimaal 10 tekens.')}</p><label class="learner-check"><input type="checkbox" name="onboarding_emails">${text('Email me helpful starting ideas and reminders (optional).', 'Mail mij tips en herinneringen om op weg te komen (optioneel).')}</label>` : ''}
+        ${signup ? `<p class="learner-small">${text('Use at least 10 characters.', 'Gebruik minimaal 10 tekens.')}</p><label class="learner-check"><input type="checkbox" name="onboarding_emails" ${draft.onboarding_emails ? 'checked' : ''}>${text('Email me helpful starting ideas and reminders (optional).', 'Mail mij tips en herinneringen om op weg te komen (optioneel).')}</label>` : ''}
         <button class="primary-btn" type="submit" ${signup && disabled ? 'disabled' : ''}>${signup ? text('Create free account', 'Gratis account maken') : text('Sign in', 'Inloggen')}</button>
         <button class="learner-text-button" id="learnerReset" type="button">${text('Forgot your password?', 'Wachtwoord vergeten?')}</button>
         ${signup ? `<button class="learner-text-button" id="learnerResend" type="button">${text('Resend confirmation email', 'Bevestigingsmail opnieuw sturen')}</button>` : ''}
-      </form>`}<p id="learnerAuthStatus" role="status" aria-live="polite">${esc(notice)}</p>`;
-    host.querySelectorAll('[data-auth-mode]').forEach(button => button.onclick = () => { mode = button.dataset.authMode; notice = ''; render(); });
+      </form>`}`;
+    host.querySelectorAll('[data-auth-mode]').forEach(button => button.onclick = () => {
+      draft.email = host.querySelector('[name="email"]')?.value.trim() || draft.email;
+      const firstName = host.querySelector('[name="first_name"]'), consent = host.querySelector('[name="onboarding_emails"]');
+      if (firstName) draft.first_name = firstName.value;
+      if (consent) draft.onboarding_emails = Boolean(consent.checked);
+      mode = button.dataset.authMode; notice = ''; render();
+      host.querySelector('[name="email"]')?.focus?.();
+    });
     host.querySelector('#learnerAuthForm')?.addEventListener('submit', authSubmit);
     host.querySelector('#learnerReset')?.addEventListener('click', () => emailAction('reset'));
     host.querySelector('#learnerResend')?.addEventListener('click', () => emailAction('resend'));
@@ -51,7 +65,7 @@ window.OIHLearnerAccounts = (() => {
     host.querySelector('#learnerPasswordForm')?.addEventListener('submit', updatePassword);
     host.querySelector('#learnerSignout')?.addEventListener('click', signout);
     host.querySelector('#learnerImport')?.addEventListener('click', importGuest);
-    host.querySelectorAll('button[type="submit"]').forEach(button => { if (busy) button.disabled = true; });
+    host.querySelectorAll('button').forEach(button => { if (busy) button.disabled = true; });
     const copy = document.querySelector('[data-i18n="account.learnerCopy"]');
     if (copy) copy.textContent = user ? text('Learn at your own pace. Your completed lessons are connected to your account.', 'Leer in je eigen tempo. Je voltooide lessen zijn gekoppeld aan je account.') : t('account.learnerCopy');
     const device = document.querySelector('[data-i18n="account.deviceNote"]');
@@ -62,7 +76,7 @@ window.OIHLearnerAccounts = (() => {
     if (busy) return;
     busy = true; status(text('Please wait…', 'Even wachten…')); render();
     try { await action(); } catch (error) { status(text('We could not complete that. Check your connection and try again.', 'Dat is niet gelukt. Controleer je verbinding en probeer het opnieuw.')); }
-    finally { busy = false; render(); }
+    finally { busy = false; render(); if (!user) document.getElementById('learnerAuthStatus')?.focus?.(); }
   }
   async function authSubmit(event) {
     event.preventDefault();
@@ -71,6 +85,7 @@ window.OIHLearnerAccounts = (() => {
     const password = form.elements.password.value;
     const firstName = form.elements.first_name?.value.trim() || '';
     const consent = Boolean(form.elements.onboarding_emails?.checked);
+    Object.assign(draft, { email, first_name: firstName, onboarding_emails: consent });
     await guarded(async () => {
       const api = client();
       if (!api || (mode === 'signup' && !config().signupEnabled)) throw new Error('unavailable');
@@ -78,7 +93,11 @@ window.OIHLearnerAccounts = (() => {
       const result = mode === 'signup'
         ? await api.auth.signUp({ email, password, options: { emailRedirectTo: destination(), data: { first_name: firstName, language: state.language, onboarding_emails: consent, consent_version: 'onboarding-v1' } } })
         : await api.auth.signInWithPassword({ email, password });
-      if (result.error) { status(text('Unable to sign in or register. Check your details, confirm your email, or try resetting your password.', 'Inloggen of registreren is niet gelukt. Controleer je gegevens, bevestig je e-mail of herstel je wachtwoord.')); return; }
+      if (result.error) {
+        const code = result.error.code;
+        status(code === 'weak_password' ? text('Choose a stronger password with at least 10 characters.', 'Kies een sterker wachtwoord met minimaal 10 tekens.') : code === 'over_email_send_rate_limit' || code === 'over_request_rate_limit' ? text('Too many attempts. Please wait before trying again.', 'Te veel pogingen. Wacht even voordat je opnieuw probeert.') : code === 'email_address_not_authorized' ? text('Account email delivery is not ready yet. You can keep learning as a guest.', 'Accountmails zijn nog niet beschikbaar. Je kunt verder leren als gast.') : text('Unable to sign in or register. Check your details, confirm your email, or try resetting your password.', 'Inloggen of registreren is niet gelukt. Controleer je gegevens, bevestig je e-mail of herstel je wachtwoord.'));
+        return;
+      }
       if (result.data?.session) { await changeUser(result.data.session.user); continueLearning(); }
       else status(text('Check your inbox for a confirmation link. If you already have an account, sign in or reset your password.', 'Controleer je inbox voor de bevestigingslink. Heb je al een account? Log in of herstel je wachtwoord.'));
     });
@@ -88,8 +107,9 @@ window.OIHLearnerAccounts = (() => {
     const input = form?.elements.email;
     if (!input?.value || !input.checkValidity()) { input?.reportValidity(); return; }
     const email = input.value.trim();
+    draft.email = email;
     await guarded(async () => {
-      if (!client() || !config().signupEnabled) { status(text('Email delivery is not available yet. Please continue as a guest.', 'E-mail is nog niet beschikbaar. Ga voorlopig verder als gast.')); return; }
+      if (!client() || !(config().authEmailEnabled ?? config().signupEnabled)) { status(text('Email delivery is not available yet. Please continue as a guest.', 'E-mail is nog niet beschikbaar. Ga voorlopig verder als gast.')); return; }
       const result = action === 'reset' ? await client().auth.resetPasswordForEmail(email, { redirectTo: destination() }) : await client().auth.resend({ type: 'signup', email, options: { emailRedirectTo: destination() } });
       status(result.error ? text('Unable to send. Please wait a moment and try again.', 'Versturen is niet gelukt. Wacht even en probeer opnieuw.') : text('If that address is eligible, an email is on its way. Check spam too.', 'Als dit adres in aanmerking komt, ontvang je een e-mail. Controleer ook je spam.'));
     });
@@ -159,18 +179,26 @@ window.OIHLearnerAccounts = (() => {
   }
   async function init() {
     const api = client();
+    if (initialization) return initialization;
+    initialization = initialize(api).finally(() => { initialization = null; });
+    return initialization;
+  }
+  async function initialize(api) {
     const params = initialAuthParams;
     if (params.has('error_description')) { notice = text('That link has expired or is invalid. Request another confirmation or password reset.', 'Deze link is verlopen of ongeldig. Vraag een nieuwe bevestiging of wachtwoordherstel aan.'); history.replaceState(null, '', '#view=accountView'); }
     if (!api) { ready = true; render(); return; }
+    if (subscribedClient !== api) {
+    subscribedClient = api;
     api.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY') recovery = true;
       // Defer Supabase calls until the auth callback has released its lock.
       setTimeout(async () => { await changeUser(session?.user || null); if (recovery) { setView('accountView'); render(); } else if (event === 'SIGNED_IN' && sessionStorage.getItem('oih.auth.return')) continueLearning(); }, 0);
     });
+    }
     const { data, error } = await api.auth.getSession();
     if (error) status(text('Your sign-in link could not be opened. Try signing in again.', 'Je inloglink kon niet worden geopend. Probeer opnieuw in te loggen.'));
     await changeUser(data?.session?.user || null);
-    window.addEventListener('online', scheduleSync);
+    if (!onlineBound) { window.addEventListener('online', scheduleSync); onlineBound = true; }
     if (recovery) setView('accountView');
     scheduleSync();
     render();
